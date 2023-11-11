@@ -31,6 +31,14 @@ const config = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ["src/components/ui/**"],
+      rules: {
+        "@typescript-eslint/consistent-type-imports": "off",
+      },
+    },
+  ]
 };
 
 module.exports = config;

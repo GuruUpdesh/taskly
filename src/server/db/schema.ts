@@ -1,15 +1,13 @@
-import { relations, sql, InferSelectModel, InferInsertModel } from "drizzle-orm";
+import { type InferSelectModel } from "drizzle-orm";
+import { createSelectSchema } from 'drizzle-zod';
 import {
   bigint,
-  index,
-  int,
+  mysqlEnum,
   mysqlTableCreator,
-  primaryKey,
   text,
-  timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
-import { type AdapterAccount } from "next-auth/adapters";
+import { z } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -19,21 +17,47 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const mysqlTable = mysqlTableCreator((name) => `taskly_${name}`);
 
-export const posts = mysqlTable(
-  "post",
+export const task = mysqlTable(
+  "task",
   {
     id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-    createdByName:  varchar("name", { length: 255 }).notNull(),
-    content: varchar("content", { length: 255 }).notNull(),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt").onUpdateNow(),
-  },
-);
+    title: varchar("title", { length: 255 }).notNull(),
+    description: text("description"),
+    status: mysqlEnum("status", ["todo", "inprogress", "done"]),
+    priority: mysqlEnum("priority", ["low", "medium", "high"]),
+    type: mysqlEnum("type", ["task", "bug", "feature"]),
+  }
+)
+export const insertTaskSchema = z.object({
+  title: z.string().refine((val) => val !== "", {
+    message: "Title is required",
+  }),
+  description: z.string().refine((val) => val !== "", {
+    message: "Description is required",
+  }),
+  status: z.enum(["todo", "inprogress", "done"]),
+  priority: z.enum(["low", "medium", "high"]),
+  type: z.enum(["task", "bug", "feature"]),
+});
+export const selectTaskSchema = createSelectSchema(task);
+export type Task = InferSelectModel<typeof task>;
+export type NewTask = z.infer<typeof insertTaskSchema>;
 
-export type Post = InferSelectModel<typeof posts>;
-export type NewPost = InferInsertModel<typeof posts>;
+// export const posts = mysqlTable(
+//   "post",
+//   {
+//     id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+//     createdByName:  varchar("name", { length: 255 }).notNull(),
+//     content: varchar("content", { length: 255 }).notNull(),
+//     createdAt: timestamp("created_at")
+//       .default(sql`CURRENT_TIMESTAMP`)
+//       .notNull(),
+//     updatedAt: timestamp("updatedAt").onUpdateNow(),
+//   },
+// );
+
+// export type Post = InferSelectModel<typeof posts>;
+// export type NewPost = InferInsertModel<typeof posts>;
 
 // export const users = mysqlTable("user", {
 //   id: varchar("id", { length: 255 }).notNull().primaryKey(),

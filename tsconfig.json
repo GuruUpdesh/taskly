@@ -37,6 +37,6 @@
     "**/*.cjs",
     "**/*.mjs",
     ".next/types/**/*.ts"
-  ],
+, "src/components/Posts.disable"  ],
   "exclude": ["node_modules"]
 }

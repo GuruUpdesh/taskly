@@ -1,18 +1,27 @@
-import Posts from "~/components/Posts";
-import { fetchPosts } from "./_actions";
+import { getAllTasks } from "~/actions/taskActions";
+import TaskTable from "~/components/task/TaskTable";
 
 export default async function HomePage() {
-  const posts = await fetchPosts();
+	const tasks = await getAllTasks();
+	if (!tasks) return null;
 
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b bg-background">
-      <div className="container flex flex-col items-center justify-center gap-4 px-4 py-16 ">
-        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-          Posts Example
-        </h3>
-        {posts ? <Posts posts={posts}/> : null}
-        
-      </div>
-    </main>
-  );
+	return (
+		<main className="bg-background">
+			<div className="container flex flex-col gap-4 px-4 py-16 ">
+				<p className="text-sm text-muted-foreground">
+					Organization / Projects / Project Name
+				</p>
+				<header className="flex items-center gap-2">
+					<h3 className="scroll-m-20 text-2xl font-normal tracking-tight">
+						Project Name
+					</h3>
+					<p>{">"}</p>
+					<h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+						Backlog
+					</h3>
+				</header>
+				<TaskTable tasks={tasks} />
+			</div>
+		</main>
+	);
 }
