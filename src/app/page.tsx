@@ -13,7 +13,7 @@ export default async function HomePage() {
 				</p>
 				<header className="flex items-center gap-2">
 					<h3 className="scroll-m-20 text-2xl font-normal tracking-tight">
-						Project Name
+						Project Name (example)
 					</h3>
 					<p>{">"}</p>
 					<h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
