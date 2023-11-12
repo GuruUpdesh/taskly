@@ -7,9 +7,10 @@
     "db:push": "dotenv drizzle-kit push:mysql",
     "db:studio": "dotenv drizzle-kit studio",
     "dev": "next dev",
+    "start": "next start",
     "lint": "next lint",
-    "tsc": "tsc",
-    "start": "next start"
+    "style:all": "tsc && next lint && prettier --check 'src/**/*.{js,jsx,ts,tsx}'",
+    "style:fix": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.5",

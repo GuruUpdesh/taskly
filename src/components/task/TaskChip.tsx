@@ -18,7 +18,8 @@ export const taskChipVariants = cva(
 		variants: {
 			chipType: {
 				priority_low: "border-gray-600 bg-gray-900 text-gray-300",
-				priority_medium: "border-yellow-600 bg-yellow-900 text-yellow-300",
+				priority_medium:
+					"border-yellow-600 bg-yellow-900 text-yellow-300",
 				priority_high: "border-red-600 bg-red-900 text-red-300",
 				status_todo: "border-violet-600 bg-violet-900 text-violet-300",
 				status_inprogress: "border-sky-600 bg-sky-900 text-sky-300",

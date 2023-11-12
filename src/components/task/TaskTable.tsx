@@ -5,7 +5,7 @@ import React, { useTransition, useOptimistic } from "react";
 import { useForm } from "react-hook-form";
 
 // data
-import { type Task, type NewTask, insertTaskSchema} from "~/server/db/schema";
+import { type Task, type NewTask, insertTaskSchema } from "~/server/db/schema";
 
 // utils
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -109,7 +109,9 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 				</TableCell>
 				<TableCell>
 					<Button
-						onClick={() => startTransition(() => handleDelete(task))}
+						onClick={() =>
+							startTransition(() => handleDelete(task))
+						}
 						variant="outline"
 						size="icon"
 					>
@@ -149,20 +151,18 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 		}
 	}
 
-  async function handleDelete(task: Task) {
-    try {
-      dispatch({ type: "DELETE", payload: task });
-      if (error) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, 1000),
-        );
-        throw new Error("Something went wrong");
-      }
-      await deleteTask(task.id);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+	async function handleDelete(task: Task) {
+		try {
+			dispatch({ type: "DELETE", payload: task });
+			if (error) {
+				await new Promise((resolve) => setTimeout(resolve, 1000));
+				throw new Error("Something went wrong");
+			}
+			await deleteTask(task.id);
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
 	return (
 		<>
