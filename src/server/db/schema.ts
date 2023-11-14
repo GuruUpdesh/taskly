@@ -25,6 +25,14 @@ export const task = mysqlTable("task", {
 	priority: mysqlEnum("priority", ["low", "medium", "high"]),
 	type: mysqlEnum("type", ["task", "bug", "feature"]),
 });
+
+export const project = mysqlTable("project", {
+	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	name: varchar("name", { length: 255 }).notNull(),
+	description: text("description"),
+	status: mysqlEnum("status", ["active", "inactive"]),
+});
+
 export const insertTaskSchema = z.object({
 	title: z.string().refine((val) => val !== "", {
 		message: "Title is required",
@@ -36,9 +44,24 @@ export const insertTaskSchema = z.object({
 	priority: z.enum(["low", "medium", "high"]),
 	type: z.enum(["task", "bug", "feature"]),
 });
+
+export const insertProjectSchema = z.object({
+	name: z.string().refine((val) => val !== "", {
+		message: "Name is required",
+	}),
+	description: z.string().refine((val) => val !== "", {
+		message: "Description is required",
+	}),
+	status: z.enum(["active", "inactive"]),
+});
+
 export const selectTaskSchema = createSelectSchema(task);
 export type Task = InferSelectModel<typeof task>;
 export type NewTask = z.infer<typeof insertTaskSchema>;
+
+export const selectProjectSchema = createSelectSchema(project);
+export type Project = InferSelectModel<typeof project>;
+export type NewProject = z.infer<typeof insertProjectSchema>;
 
 // export const posts = mysqlTable(
 //   "post",
