@@ -30,6 +30,14 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "~/components/ui/dialog";
+import {
 	Form,
 	FormControl,
 	FormField,
@@ -50,6 +58,7 @@ import {
 	Bot,
 } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
+import { Label } from "@radix-ui/react-select";
 
 type OptimisticTask = Task & { pending: boolean };
 
@@ -234,7 +243,9 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>
-											<SelectItem value="low">Low</SelectItem>
+											<SelectItem value="low">
+												Low
+											</SelectItem>
 											<SelectItem value="medium">
 												Medium
 											</SelectItem>
@@ -267,7 +278,9 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 											<SelectItem value="task">
 												Task
 											</SelectItem>
-											<SelectItem value="bug">Bug</SelectItem>
+											<SelectItem value="bug">
+												Bug
+											</SelectItem>
 											<SelectItem value="feature">
 												Feature
 											</SelectItem>
@@ -293,14 +306,34 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 						</Button>
 					</form>
 				</Form>
-				<Button
-					variant="outline"
-					size="icon"
-					className="rounded-full"
-				>
-					<Bot className="h-6 w-6" />
-				</Button>
-			</div>					
+				<Dialog>
+					<DialogTrigger>
+						<Button
+							variant="outline"
+							size="icon"
+							className="rounded-full"
+						>
+							<Bot className="h-6 w-6" />
+						</Button>
+					</DialogTrigger>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>
+								AI Task Creation
+							</DialogTitle>
+							<DialogDescription>
+								Describe the task you would like to create, and our AI model will create it for you.
+							</DialogDescription>
+						</DialogHeader>
+						<div>
+							<form>
+								<Label htmlFor="description">Task Description</Label>
+								<Input id="description"></Input>
+							</form>
+						</div>
+					</DialogContent>
+				</Dialog>
+			</div>
 			<section className=" flex items-center justify-between">
 				<p>Options:</p>
 				<div className="flex items-center space-x-2">

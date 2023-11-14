@@ -34,7 +34,7 @@ export async function createCompletion() {
 			},
 		],
 		model: "gpt-3.5-turbo",
-        // response_format: { type: "json_object" },
+		// response_format: { type: "json_object" },
 	});
 
 	return chatCompletion;
