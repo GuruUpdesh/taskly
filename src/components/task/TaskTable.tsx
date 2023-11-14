@@ -29,14 +29,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "~/components/ui/dialog";
+
 import {
 	Form,
 	FormControl,
@@ -48,7 +41,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { createTask, deleteTask } from "~/actions/taskActions";
 import TaskChip, { type taskChipVariants } from "./TaskChip";
-import { Textarea } from "~/components/ui/textarea";
+
 import {
 	ChevronRight,
 	Flag,
@@ -60,7 +53,7 @@ import {
 } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "~/components/ui/label";
-import { createCompletion } from "~/actions/artificialIntelligenceActions";
+import AiDialog from "./AiDialog";
 
 type OptimisticTask = Task & { pending: boolean };
 
@@ -308,47 +301,7 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 						</Button>
 					</form>
 				</Form>
-				<Dialog>
-					<DialogTrigger>
-						<Button
-							variant="outline"
-							size="icon"
-							className="rounded-full"
-						>
-							<Bot className="h-6 w-6" />
-						</Button>
-					</DialogTrigger>
-					<DialogContent>
-						<DialogHeader>
-							<DialogTitle>AI Task Creation</DialogTitle>
-							<DialogDescription>
-								Describe the task you would like to create, and
-								our AI model will create it for you.
-							</DialogDescription>
-						</DialogHeader>
-						<div>
-							<form
-								action={async (formData: FormData) => {
-									const description = formData.get(
-										"description",
-									) as string;
-									if (!description) return;
-									await createCompletion(description);
-								}}
-							>
-								<Label htmlFor="description">
-									Task Description
-								</Label>
-								<Textarea
-									name="description"
-									id="description"
-									placeholder="Type your task description here..."
-								/>
-								<Button className="mt-4">Submit</Button>
-							</form>
-						</div>
-					</DialogContent>
-				</Dialog>
+				<AiDialog dispatch={dispatch} />
 			</div>
 			<section className=" flex items-center justify-between">
 				<p>Options:</p>
