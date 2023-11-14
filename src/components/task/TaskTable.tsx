@@ -216,7 +216,6 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 							</FormItem>
 						)}
 					/>
-
 					{/* Priority Select */}
 					<FormField
 						control={form.control}
