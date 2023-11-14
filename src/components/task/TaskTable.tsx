@@ -60,7 +60,7 @@ import {
 } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "~/components/ui/label";
-import {createCompletion} from "~/actions/artificialIntelligenceActions";
+import { createCompletion } from "~/actions/artificialIntelligenceActions";
 
 type OptimisticTask = Task & { pending: boolean };
 
@@ -320,21 +320,28 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 					</DialogTrigger>
 					<DialogContent>
 						<DialogHeader>
-							<DialogTitle>
-								AI Task Creation
-							</DialogTitle>
+							<DialogTitle>AI Task Creation</DialogTitle>
 							<DialogDescription>
-								Describe the task you would like to create, and our AI model will create it for you.
+								Describe the task you would like to create, and
+								our AI model will create it for you.
 							</DialogDescription>
 						</DialogHeader>
 						<div>
-							<form action={ async (formData: FormData)=>{
-								const description = formData.get("description");
-								await createCompletion(description);
-
-							}}>
-								<Label htmlFor="description">Task Description</Label>
-								<Textarea name="description" id="description" placeholder="Type your task description here..."/>
+							<form
+								action={async (formData: FormData) => {
+									const description =
+										formData.get("description");
+									await createCompletion(description);
+								}}
+							>
+								<Label htmlFor="description">
+									Task Description
+								</Label>
+								<Textarea
+									name="description"
+									id="description"
+									placeholder="Type your task description here..."
+								/>
 								<Button className="mt-4">Submit</Button>
 							</form>
 						</div>

@@ -1,6 +1,5 @@
 "use server";
 
-import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
 import { task, insertTaskSchema } from "~/server/db/schema";
@@ -8,7 +7,7 @@ import { type Task, type NewTask } from "~/server/db/schema";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-	apiKey: "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", // defaults to process.env["OPENAI_API_KEY"]
+	apiKey:  process.env["OPENAI_API_KEY"], 
 });
 
 export async function createCompletion(description: string) {
@@ -36,8 +35,7 @@ export async function createCompletion(description: string) {
 			},
 			{
 				role: "user",
-				content:
-					description,
+				content: description,
 			},
 		],
 		model: "gpt-3.5-turbo",
@@ -47,8 +45,8 @@ export async function createCompletion(description: string) {
 	const aiResponse = chatCompletion.choices[0]?.message.content;
 	if (aiResponse === null || aiResponse === undefined) {
 		throw new Error("No response from AI.");
-	} 
+	}
 	const newTask: NewTask = insertTaskSchema.parse(JSON.parse(aiResponse));
 	await db.insert(task).values(newTask);
-	revalidatePath("/");;
+	revalidatePath("/");
 }
