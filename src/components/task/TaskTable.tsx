@@ -48,6 +48,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { createTask, deleteTask } from "~/actions/taskActions";
 import TaskChip, { type taskChipVariants } from "./TaskChip";
+import { Textarea } from "~/components/ui/textarea";
 import {
 	ChevronRight,
 	Flag,
@@ -328,7 +329,8 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 						<div>
 							<form>
 								<Label htmlFor="description">Task Description</Label>
-								<Input id="description"></Input>
+								<Textarea id="description" placeholder="Type your task description here..."/>
+								<Button className="mt-4">Submit</Button>
 							</form>
 						</div>
 					</DialogContent>
