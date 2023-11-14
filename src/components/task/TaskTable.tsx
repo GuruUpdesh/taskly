@@ -58,7 +58,7 @@ import {
 	Bot,
 } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
-import { Label } from "@radix-ui/react-select";
+import { Label } from "~/components/ui/label";
 
 type OptimisticTask = Task & { pending: boolean };
 
