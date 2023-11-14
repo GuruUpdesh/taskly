@@ -329,8 +329,10 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 						<div>
 							<form
 								action={async (formData: FormData) => {
-									const description =
-										formData.get("description");
+									const description = formData.get(
+										"description",
+									) as string;
+									if (!description) return;
 									await createCompletion(description);
 								}}
 							>

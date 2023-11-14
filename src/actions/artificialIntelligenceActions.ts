@@ -3,11 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
 import { task, insertTaskSchema } from "~/server/db/schema";
-import { type Task, type NewTask } from "~/server/db/schema";
+import { type NewTask } from "~/server/db/schema";
 import OpenAI from "openai";
+import { env } from "~/env.mjs";
 
 const openai = new OpenAI({
-	apiKey:  process.env["OPENAI_API_KEY"], 
+	apiKey: env.OPENAI_API_KEY,
 });
 
 export async function createCompletion(description: string) {
