@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { OpenAIStream, StreamingTextResponse  } from "ai";
+import { OpenAIStream, StreamingTextResponse } from "ai";
 import { env } from "~/env.mjs";
 
 export const runtime = "edge";
@@ -9,7 +9,9 @@ const openai = new OpenAI({
 });
 
 export async function POST(req: Request) {
-    const { messages } = await req.json() as { messages: OpenAI.ChatCompletionMessageParam[] };
+	const { messages } = (await req.json()) as {
+		messages: OpenAI.ChatCompletionMessageParam[];
+	};
 	messages.unshift(systemMessage);
 
 	// Request the OpenAI API for the response based on the prompt
