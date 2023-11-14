@@ -49,10 +49,8 @@ import {
 	Loader2,
 	Component,
 	Trash,
-	Bot,
 } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
-import { Label } from "~/components/ui/label";
 import AiDialog from "./AiDialog";
 
 type OptimisticTask = Task & { pending: boolean };

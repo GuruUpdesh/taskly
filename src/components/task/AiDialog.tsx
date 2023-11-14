@@ -17,8 +17,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { Label } from "~/components/ui/label";
 import { Bot, ChevronRight, Loader2 } from "lucide-react";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { set } from "zod";
-import { Task, insertTaskSchema } from "~/server/db/schema";
+import { type Task, insertTaskSchema } from "~/server/db/schema";
 import { createTask } from "~/actions/taskActions";
 
 type AiTask = { [K in keyof Omit<Task, "id">]?: Task[K] };
@@ -27,7 +26,7 @@ type Props = {
 	dispatch: (action: { type: "ADD" | "DELETE"; payload: Task }) => void;
 };
 
-function extractValidJson(data: string) {
+function extractValidJson(data: string): unknown {
 	// Check if the last character is a closing brace
 	if (data.endsWith("}")) {
 		try {
@@ -39,7 +38,7 @@ function extractValidJson(data: string) {
 	}
 
 	// Count the number of quotation marks
-	const quotes = data.match(/"/g) || [];
+	const quotes = data.match(/"/g) ?? [];
 	if (quotes.length < 4) {
 		return null; // Not enough data to form a valid JSON object
 	}
