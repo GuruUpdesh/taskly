@@ -44,14 +44,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { createProject, deleteProject } from "~/actions/projectActions";
 import ProjectChip, { type projectChipVariants } from "./ProjectChip";
-import {
-	ChevronRight,
-	Flag,
-	Target,
-	Loader2,
-	Component,
-	Trash,
-} from "lucide-react";
+import { ChevronRight, Target, Loader2, Trash } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 
 type OptimisticProject = Project & { pending: boolean };

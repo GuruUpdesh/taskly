@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 import { cn } from "~/lib/utils";
-import { BugIcon, LayoutList, Feather } from "lucide-react";
+
 import {
 	Tooltip,
 	TooltipContent,
