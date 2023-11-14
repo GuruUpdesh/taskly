@@ -60,6 +60,7 @@ import {
 } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "~/components/ui/label";
+import {createCompletion} from "~/actions/artificialIntelligenceActions";
 
 type OptimisticTask = Task & { pending: boolean };
 
@@ -327,9 +328,13 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 							</DialogDescription>
 						</DialogHeader>
 						<div>
-							<form>
+							<form action={ async (formData: FormData)=>{
+								const description = formData.get("description");
+								await createCompletion(description);
+
+							}}>
 								<Label htmlFor="description">Task Description</Label>
-								<Textarea id="description" placeholder="Type your task description here..."/>
+								<Textarea name="description" id="description" placeholder="Type your task description here..."/>
 								<Button className="mt-4">Submit</Button>
 							</form>
 						</div>
