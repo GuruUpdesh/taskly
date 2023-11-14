@@ -272,6 +272,7 @@ function getChipType(
 	field: string | null,
 ): VariantProps<typeof projectChipVariants>["chipType"] {
 	if (!field) return "null";
+	// @ts-expect-error we know this is a valid type and field
 	// todo refactor this
 	return `${type}_${field}`;
 }
