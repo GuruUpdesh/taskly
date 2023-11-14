@@ -47,6 +47,7 @@ import {
 	Loader2,
 	Component,
 	Trash,
+	Bot,
 } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 
@@ -166,132 +167,140 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 
 	return (
 		<>
-			<Form {...form}>
-				<form
-					onSubmit={form.handleSubmit((data: NewTask) =>
-						startTransition(() => onSubmit(data)),
-					)}
-					className="flex items-center gap-1 rounded-full bg-foreground/5 p-1"
-				>
-					<Input
-						type="text"
-						{...form.register("title")}
-						placeholder="Title"
-						className="rounded-l-full"
-					/>
-					<Input
-						type="text"
-						{...form.register("description")}
-						placeholder="Description"
-					/>
-
-					{/* Status Select */}
-					<FormField
-						control={form.control}
-						name="status"
-						render={({ field }) => (
-							<FormItem>
-								<Select
-									onValueChange={field.onChange}
-									defaultValue={field.value as string}
-								>
-									<FormControl>
-										<SelectTrigger>
-											<SelectValue placeholder="Select status" />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										<SelectItem value="todo">
-											To Do
-										</SelectItem>
-										<SelectItem value="inprogress">
-											In Progress
-										</SelectItem>
-										<SelectItem value="done">
-											Done
-										</SelectItem>
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
+			<div className="flex items-center gap-2">
+				<Form {...form}>
+					<form
+						onSubmit={form.handleSubmit((data: NewTask) =>
+							startTransition(() => onSubmit(data)),
 						)}
-					/>
-					{/* Priority Select */}
-					<FormField
-						control={form.control}
-						name="priority"
-						render={({ field }) => (
-							<FormItem>
-								<Select
-									onValueChange={field.onChange}
-									defaultValue={field.value as string}
-								>
-									<FormControl>
-										<SelectTrigger>
-											<SelectValue placeholder="Select priority" />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										<SelectItem value="low">Low</SelectItem>
-										<SelectItem value="medium">
-											Medium
-										</SelectItem>
-										<SelectItem value="high">
-											High
-										</SelectItem>
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					{/* Type Select */}
-					<FormField
-						control={form.control}
-						name="type"
-						render={({ field }) => (
-							<FormItem>
-								<Select
-									onValueChange={field.onChange}
-									defaultValue={field.value as string}
-								>
-									<FormControl>
-										<SelectTrigger>
-											<SelectValue placeholder="Select type" />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										<SelectItem value="task">
-											Task
-										</SelectItem>
-										<SelectItem value="bug">Bug</SelectItem>
-										<SelectItem value="feature">
-											Feature
-										</SelectItem>
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<Button
-						type="submit"
-						variant="outline"
-						disabled={isLoading}
-						className="rounded-r-full"
+						className="flex flex-grow items-center gap-1 rounded-full bg-foreground/5 p-1"
 					>
-						{isLoading ? "Submitting" : "Submit"}
-						{isLoading ? (
-							<Loader2 className="ml-2 h-4 w-4 animate-spin" />
-						) : (
-							<ChevronRight className="ml-2 h-4 w-4" />
-						)}
-					</Button>
-				</form>
-			</Form>
+						<Input
+							type="text"
+							{...form.register("title")}
+							placeholder="Title"
+							className="rounded-l-full"
+						/>
+						<Input
+							type="text"
+							{...form.register("description")}
+							placeholder="Description"
+						/>
 
+						{/* Status Select */}
+						<FormField
+							control={form.control}
+							name="status"
+							render={({ field }) => (
+								<FormItem>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value as string}
+									>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder="Select status" />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<SelectItem value="todo">
+												To Do
+											</SelectItem>
+											<SelectItem value="inprogress">
+												In Progress
+											</SelectItem>
+											<SelectItem value="done">
+												Done
+											</SelectItem>
+										</SelectContent>
+									</Select>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						{/* Priority Select */}
+						<FormField
+							control={form.control}
+							name="priority"
+							render={({ field }) => (
+								<FormItem>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value as string}
+									>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder="Select priority" />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<SelectItem value="low">Low</SelectItem>
+											<SelectItem value="medium">
+												Medium
+											</SelectItem>
+											<SelectItem value="high">
+												High
+											</SelectItem>
+										</SelectContent>
+									</Select>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						{/* Type Select */}
+						<FormField
+							control={form.control}
+							name="type"
+							render={({ field }) => (
+								<FormItem>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value as string}
+									>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder="Select type" />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<SelectItem value="task">
+												Task
+											</SelectItem>
+											<SelectItem value="bug">Bug</SelectItem>
+											<SelectItem value="feature">
+												Feature
+											</SelectItem>
+										</SelectContent>
+									</Select>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<Button
+							type="submit"
+							variant="outline"
+							disabled={isLoading}
+							className="rounded-r-full"
+						>
+							{isLoading ? "Submitting" : "Submit"}
+							{isLoading ? (
+								<Loader2 className="ml-2 h-4 w-4 animate-spin" />
+							) : (
+								<ChevronRight className="ml-2 h-4 w-4" />
+							)}
+						</Button>
+					</form>
+				</Form>
+				<Button
+					variant="outline"
+					size="icon"
+					className="rounded-full"
+				>
+					<Bot className="h-6 w-6" />
+				</Button>
+			</div>					
 			<section className=" flex items-center justify-between">
 				<p>Options:</p>
 				<div className="flex items-center space-x-2">
