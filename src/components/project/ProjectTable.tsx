@@ -5,7 +5,11 @@ import React, { useTransition, useOptimistic } from "react";
 import { useForm } from "react-hook-form";
 
 // data
-import { type Project, type NewProject, insertProjectSchema } from "~/server/db/schema";
+import {
+	type Project,
+	type NewProject,
+	insertProjectSchema,
+} from "~/server/db/schema";
 
 // utils
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -96,7 +100,9 @@ const ProjectTable = ({ projects }: ProjectTableProps) => {
 					</p>
 				</TableCell>
 				<TableCell>
-					<ProjectChip chipType={getChipType("status", project.status)} />
+					<ProjectChip
+						chipType={getChipType("status", project.status)}
+					/>
 				</TableCell>
 				<TableCell>
 					<Button
@@ -122,8 +128,8 @@ const ProjectTable = ({ projects }: ProjectTableProps) => {
 		defaultValues: {
 			name: "",
 			description: "",
-			status: "active",		
-        },
+			status: "active",
+		},
 	});
 
 	async function onSubmit(data: NewProject) {
