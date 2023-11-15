@@ -21,6 +21,6 @@ jobs:
           git fetch origin ${{ github.head_ref }}
           git checkout ${{ github.head_ref }}
           git commit --amend --no-edit --author="Guru Updesh Singh <guruupdeshsingh@gmail.com>"
-          git push origin ${{ github.head_ref }} --force
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/GuruUpdesh/taskly.git ${{ github.head_ref }} --force
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
