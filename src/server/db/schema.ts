@@ -76,9 +76,9 @@ export const insertUserSchema = z.object({
 	password: z.string().min(8),
 	timezone: z.string().min(3).max(50),
 	phone: z.string().min(10).max(15),
-	role: z.enum(['1', '2', '3']),
-	status: z.enum(['active', 'inactive']),
-  });
+	role: z.enum(["1", "2", "3"]),
+	status: z.enum(["active", "inactive"]),
+});
 
 export const selectTaskSchema = createSelectSchema(task);
 export type Task = InferSelectModel<typeof task>;
