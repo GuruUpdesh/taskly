@@ -33,6 +33,19 @@ export const project = mysqlTable("project", {
 	status: mysqlEnum("status", ["active", "inactive"]),
 });
 
+export const user = mysqlTable("user", {
+	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	username: varchar("username", { length: 255 }).notNull(),
+	name: varchar("name", { length: 255 }).notNull(),
+	email: varchar("email", { length: 255 }).notNull(),
+	avatar: varchar("avatar", { length: 255 }).notNull(),
+	password: varchar("password", { length: 255 }).notNull(),
+	timezone: varchar("timezone", { length: 255 }).notNull(),
+	phone: varchar("phone", { length: 255 }).notNull(),
+	role: mysqlEnum("role", ["1", "2", "3"]),
+	status: mysqlEnum("status", ["active", "inactive"]),
+});
+
 export const insertTaskSchema = z.object({
 	title: z.string().refine((val) => val !== "", {
 		message: "Title is required",
@@ -55,6 +68,18 @@ export const insertProjectSchema = z.object({
 	status: z.enum(["active", "inactive"]),
 });
 
+export const insertUserSchema = z.object({
+	username: z.string().min(3).max(20),
+	name: z.string().min(1).max(50),
+	email: z.string().email(),
+	avatar: z.string().url(),
+	password: z.string().min(8),
+	timezone: z.string().min(3).max(50),
+	phone: z.string().min(10).max(15),
+	role: z.enum(['1', '2', '3']),
+	status: z.enum(['active', 'inactive']),
+  });
+
 export const selectTaskSchema = createSelectSchema(task);
 export type Task = InferSelectModel<typeof task>;
 export type NewTask = z.infer<typeof insertTaskSchema>;
@@ -62,6 +87,10 @@ export type NewTask = z.infer<typeof insertTaskSchema>;
 export const selectProjectSchema = createSelectSchema(project);
 export type Project = InferSelectModel<typeof project>;
 export type NewProject = z.infer<typeof insertProjectSchema>;
+
+export const selectUserSchema = createSelectSchema(user);
+export type User = InferSelectModel<typeof user>;
+export type NewUser = z.infer<typeof insertUserSchema>;
 
 // export const posts = mysqlTable(
 //   "post",
