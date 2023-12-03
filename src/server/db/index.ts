@@ -1,12 +1,25 @@
 import { Client } from "@planetscale/database";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
-
-import { env } from "~/env.mjs";
+import { drizzle as drizzlePS } from "drizzle-orm/planetscale-serverless";
 import * as schema from "./schema";
+import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
+import { env } from "~/env.mjs";
 
-export const db = drizzle(
-	new Client({
-		url: env.DATABASE_URL,
-	}).connection(),
-	{ schema },
-);
+let db;
+
+if (env.NODE_ENV === "development") {
+	const connection = await mysql.createConnection({
+		uri: env.DATABASE_URL,
+	});
+
+	db = drizzle(connection);
+} else {
+	db = drizzlePS(
+		new Client({
+			url: env.DATABASE_URL,
+		}).connection(),
+		{ schema },
+	);
+}
+
+export { db };
