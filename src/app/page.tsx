@@ -1,15 +1,16 @@
 import { getAllTasks } from "~/actions/taskActions";
 import TaskTable from "~/components/task/TaskTable";
+import { env } from "~/env.mjs";
 
 export default async function HomePage() {
 	const tasks = await getAllTasks();
-	if (!tasks) return null;
+	if (tasks === undefined) return null;
 
 	return (
 		<main className="bg-background">
 			<div className="container flex flex-col gap-4 px-4 py-16 ">
 				<p className="text-sm text-muted-foreground">
-					Organization / Projects / Project Name
+					Organization / Projects / Project Name ({env.NODE_ENV})
 				</p>
 				<header className="flex items-center gap-2">
 					<h3 className="scroll-m-20 text-2xl font-normal tracking-tight">
