@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  pantry-tracker-db:
+    image: mysql:latest
+    restart: always
+    container_name: taskly-db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: taskly
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
