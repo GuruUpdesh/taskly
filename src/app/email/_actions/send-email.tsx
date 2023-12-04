@@ -9,7 +9,7 @@ export async function sendSampleEmailAction(userName: string, emailTo: string) {
 	await resend.emails.send({
 		from: "no-reply@tasklypm.com",
 		to: emailTo,
-		subject: `Thans for using Taskly`,
+		subject: `(sample email) Thanks for using Taskly`,
 		react: <SampleEmail name={userName} />,
 	});
 }
