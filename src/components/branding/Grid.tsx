@@ -6,8 +6,6 @@ const Grid = () => {
 	const [cols, setCols] = useState(0);
 	const [rows, setRows] = useState(0);
 
-	console.log(cols, rows);
-
 	useEffect(() => {
 		function handleResize() {
 			const size = 160;
