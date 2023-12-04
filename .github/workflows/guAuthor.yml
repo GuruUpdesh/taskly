@@ -2,7 +2,7 @@ name: Add as Contributor on PR
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened]
 
 jobs:
   add-contributor:
@@ -14,13 +14,13 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.head_ref }}
 
-      - name: Add as Co-Author
+      - name: Add to Contributors File
         run: |
+          echo "Guru Updesh Singh <guruupdeshsingh@gmail.com>" >> CONTRIBUTORS.md
           git config user.name "Guru Updesh Singh"
           git config user.email "guruupdeshsingh@gmail.com"
-          git fetch origin ${{ github.head_ref }}
-          git checkout ${{ github.head_ref }}
-          git commit --amend --no-edit --author="Guru Updesh Singh <guruupdeshsingh@gmail.com>"
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/GuruUpdesh/taskly.git ${{ github.head_ref }} --force
+          git add CONTRIBUTORS.md
+          git commit -m "Add Guru Updesh Singh as a contributor"
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/GuruUpdesh/taskly.git ${{ github.head_ref }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
