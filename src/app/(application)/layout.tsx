@@ -1,4 +1,5 @@
 import "~/styles/globals.css";
+import { UserButton } from "@clerk/nextjs";
 
 export const metadata = {
 	title: "Taskly",
@@ -11,5 +12,10 @@ export default function ApplicationLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	return <div>{children}</div>;
+	return (
+		<div>
+			<UserButton afterSignOutUrl="/" />
+			{children}
+		</div>
+	);
 }
