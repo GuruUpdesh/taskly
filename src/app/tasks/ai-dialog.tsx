@@ -18,7 +18,7 @@ import { Label } from "~/components/ui/label";
 import { Bot, ChevronRight, Loader2 } from "lucide-react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { type Task, insertTaskSchema } from "~/server/db/schema";
-import { createTask } from "~/actions/taskActions";
+import { createTask } from "~/app/tasks/_actions/task-actions";
 
 type AiTask = { [K in keyof Omit<Task, "id">]?: Task[K] };
 
