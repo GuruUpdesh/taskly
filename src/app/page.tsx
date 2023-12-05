@@ -4,6 +4,7 @@ import { cn } from "~/lib/utils";
 import { Brain, LampDesk, Rabbit } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import Grid from "~/components/branding/Grid";
+import Link from "next/link";
 
 const plexSans = IBM_Plex_Sans({ weight: ["700"], subsets: ["latin"] });
 
@@ -50,7 +51,9 @@ export default async function HomePage() {
 					</p>
 				</div>
 				<div className="flex items-center justify-center gap-4">
-					<Button>Get Started</Button>
+					<Link href="/tasks">
+						<Button>Get Started</Button>
+					</Link>
 					<Button variant="secondary">Documentation</Button>
 				</div>
 			</div>
