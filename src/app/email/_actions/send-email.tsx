@@ -2,6 +2,7 @@
 
 import { Resend } from "resend";
 import { env } from "~/env.mjs";
+import { render } from "@react-email/render";
 import SampleEmail from "~/emails/SampleEmail";
 
 export async function sendSampleEmailAction(userName: string, emailTo: string) {
@@ -10,6 +11,6 @@ export async function sendSampleEmailAction(userName: string, emailTo: string) {
 		from: "no-reply@tasklypm.com",
 		to: emailTo,
 		subject: `(sample email) Thanks for using Taskly`,
-		react: <SampleEmail name={userName} />,
+		html: render(<SampleEmail name={userName} />),
 	});
 }
