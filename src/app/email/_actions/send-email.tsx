@@ -2,7 +2,7 @@
 
 import { Resend } from "resend";
 import { env } from "~/env.mjs";
-import {render} from "@react-email/render"
+import { render } from "@react-email/render";
 import SampleEmail from "~/emails/SampleEmail";
 
 export async function sendSampleEmailAction(userName: string, emailTo: string) {
