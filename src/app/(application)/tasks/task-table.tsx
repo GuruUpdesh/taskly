@@ -37,12 +37,13 @@ import {
 	FormItem,
 	FormMessage,
 } from "~/components/ui/form";
-import { Input } from "../../components/ui/input";
-import { Button } from "../../components/ui/button";
-import { createTask, deleteTask } from "~/app/tasks/_actions/task-actions";
-import TaskChip, {
-	type taskChipVariants,
-} from "./task-chip";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
+import {
+	createTask,
+	deleteTask,
+} from "~/app/(application)/tasks/_actions/task-actions";
+import TaskChip, { type taskChipVariants } from "./task-chip";
 
 import {
 	ChevronRight,
@@ -52,7 +53,7 @@ import {
 	Component,
 	Trash,
 } from "lucide-react";
-import { Checkbox } from "../../components/ui/checkbox";
+import { Checkbox } from "../../../components/ui/checkbox";
 import AiDialog from "./ai-dialog";
 
 type OptimisticTask = Task & { pending: boolean };

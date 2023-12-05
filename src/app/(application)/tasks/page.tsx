@@ -1,5 +1,5 @@
-import { getAllTasks } from "~/app/tasks/_actions/task-actions";
-import TaskTable from "~/app/tasks/task-table";
+import { getAllTasks } from "~/app/(application)/tasks/_actions/task-actions";
+import TaskTable from "~/app/(application)/tasks/task-table";
 import { env } from "~/env.mjs";
 
 export default async function TaskPage() {

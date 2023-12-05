@@ -40,15 +40,15 @@ import {
 	FormItem,
 	FormMessage,
 } from "~/components/ui/form";
-import { Input } from "../../components/ui/input";
-import { Button } from "../../components/ui/button";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
 import {
 	createProject,
 	deleteProject,
-} from "~/app/projects/_actions/project-actions";
+} from "~/app/(application)/projects/_actions/project-actions";
 import ProjectChip, { type projectChipVariants } from "./project-chip";
 import { ChevronRight, Target, Loader2, Trash } from "lucide-react";
-import { Checkbox } from "../../components/ui/checkbox";
+import { Checkbox } from "../../../components/ui/checkbox";
 
 type OptimisticProject = Project & { pending: boolean };
 
