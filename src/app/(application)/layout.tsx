@@ -11,9 +11,5 @@ export default function ApplicationLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	return (
-        <div>
-            {children}
-        </div>
-	);
+	return <div>{children}</div>;
 }
