@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.5",
+    "@clerk/nextjs": "^4.27.3",
     "@hookform/resolvers": "^3.3.2",
     "@planetscale/database": "^1.11.0",
     "@radix-ui/react-checkbox": "^1.0.4",
