@@ -4,6 +4,7 @@ import { cn } from "~/lib/utils";
 import { Brain, LampDesk, Rabbit } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import Grid from "~/components/branding/Grid";
+import Link from "next/link";
 
 const plexSans = IBM_Plex_Sans({ weight: ["700"], subsets: ["latin"] });
 
@@ -31,26 +32,28 @@ export default async function HomePage() {
 				</p>
 				<div className="flex justify-between text-muted-foreground">
 					<p className="flex items-center gap-2 rounded border border-red-500 bg-red-900 py-1 pl-1 pr-2 text-red-400">
-						<div className="rounded bg-red-500 p-1 text-red-900">
+						<span className="rounded bg-red-500 p-1 text-red-900">
 							<Rabbit size={16} />
-						</div>
+						</span>
 						Fast Setup
 					</p>
 					<p className="flex items-center gap-2 rounded border border-green-500 bg-green-900 py-1 pl-1 pr-2 text-green-400">
-						<div className="rounded bg-green-500 p-1 text-green-900">
+						<span className="rounded bg-green-500 p-1 text-green-900">
 							<Brain size={16} />
-						</div>
+						</span>
 						AI Workflows
 					</p>
 					<p className="flex items-center gap-2 rounded border border-yellow-500 bg-yellow-900 py-1 pl-1 pr-2 text-yellow-400">
-						<div className="rounded bg-yellow-500 p-1 text-yellow-900">
+						<span className="rounded bg-yellow-500 p-1 text-yellow-900">
 							<LampDesk size={16} />
-						</div>
+						</span>
 						Familiar Features
 					</p>
 				</div>
 				<div className="flex items-center justify-center gap-4">
-					<Button>Get Started</Button>
+					<Link href="/tasks">
+						<Button>Get Started</Button>
+					</Link>
 					<Button variant="secondary">Documentation</Button>
 				</div>
 			</div>
