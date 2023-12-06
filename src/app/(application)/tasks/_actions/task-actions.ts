@@ -40,7 +40,7 @@ export async function updateTask(id: number, data: NewTask) {
 		await db.update(task)
 			 .set(updatedTaskData)
 			 .where(eq(task.id, id));
-		console.log("updated task");
+		// console.log("updated task");
 		revalidatePath("/");
 	} catch (error) {
 		if (error instanceof Error) console.log(error.stack);

@@ -111,10 +111,10 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 					type: "ADD",
 					payload: { ...task, id: Math.random() },
 				});
-				if (error) {
-					await new Promise((resolve) => setTimeout(resolve, 1000));
-					throw new Error("Something went wrong");
-				}
+				// if (error) {
+				// 	await new Promise((resolve) => setTimeout(resolve, 1000));
+				// 	throw new Error("Something went wrong");
+				// }
 				await createTask(task);
 			} catch (error) {
 				console.log(error);
@@ -125,10 +125,10 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 				startTransition(() =>
 					dispatch({ type: "DELETE", payload: task }),
 				);
-				if (error) {
-					await new Promise((resolve) => setTimeout(resolve, 1000));
-					throw new Error("Something went wrong");
-				}
+				// if (error) {
+				// 	await new Promise((resolve) => setTimeout(resolve, 1000));
+				// 	throw new Error("Something went wrong");
+				// }
 				await deleteTask(task.id);
 			} catch (error) {
 				console.log(error);
@@ -168,245 +168,13 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 				/>
 			);
 		});
-		// return optimisticTasks.map((task) => (
-		// 	<TableRow
-		// 		key={task.id}
-		// 		className={cn({
-		// 			"pointer-events-none opacity-50": task.pending,
-		// 		})}
-		// 	>
-		// 		<TableCell className="min-w-[150px] border py-1">
-		// 			<p className="line-clamp-2 font-semibold tracking-tight">
-		// 				{task.title}
-		// 			</p>
-		// 		</TableCell>
-		// 		<TableCell className="border py-1">
-		// 			<p className="line-clamp-2 text-muted-foreground">
-		// 				{task.description}
-		// 			</p>
-		// 		</TableCell>
-		// 		<TableCell className="border py-1">
-		// 			{/* <TaskStatus status={task.status} /> */}
-		// 			<TaskChip chipType={getChipType("status", task.status)} />
-		// 		</TableCell>
-		// 		<TableCell className="border py-1">
-		// 			<TaskChip
-		// 				chipType={getChipType("priority", task.priority)}
-		// 			/>
-		// 		</TableCell>
-		// 		<TableCell className="border py-1">
-		// 			<TaskChip chipType={getChipType("type", task.type)} />
-		// 		</TableCell>
-		// 		<TableCell className="border py-1">
-		// 			<Button
-		// 				onClick={() =>
-		// 					startTransition(() => handleDelete(task))
-		// 				}
-		// 				variant="outline"
-		// 				size="icon"
-		// 			>
-		// 				<Trash className="h-4 w-4" />
-		// 			</Button>
-		// 		</TableCell>
-		// 	</TableRow>
-		// ));
 	}
-
-	// options
-	const [error, setError] = React.useState(false);
-
-	// form hooks
-	const form = useForm<NewTask>({
-		resolver: zodResolver(insertTaskSchema),
-		defaultValues: {
-			title: "",
-			description: "",
-			status: "todo",
-			priority: "medium",
-			type: "task",
-		},
-	});
-
-	async function onSubmit(data: NewTask) {
-		try {
-			// dispatch({ type: "ADD", payload: { ...data, id: Math.random() } });
-			// if (error) {
-			// 	await new Promise((resolve) => setTimeout(resolve, 1000));
-			// 	throw new Error("Something went wrong");
-			// }
-			// await createTask(data);
-			await optimisticActions.createTask(data);
-			form.reset();
-		} catch (error) {
-			console.log(error);
-		}
-	}
-
-	// async function handleDelete(task: Task) {
-	// 	try {
-	// 		dispatch({ type: "DELETE", payload: task });
-	// 		if (error) {
-	// 			await new Promise((resolve) => setTimeout(resolve, 1000));
-	// 			throw new Error("Something went wrong");
-	// 		}
-	// 		await deleteTask(task.id);
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 	}
-	// }
 
 	return (
 		<>
 			<div className="flex items-center gap-2">
-				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit((data: NewTask) =>
-							startTransition(() => onSubmit(data)),
-						)}
-						className="flex flex-grow items-center gap-1 rounded-full bg-foreground/5 p-1"
-					>
-						<Input
-							type="text"
-							{...form.register("title")}
-							placeholder="Title"
-							className="rounded-l-full"
-						/>
-						<Input
-							type="text"
-							{...form.register("description")}
-							placeholder="Description"
-						/>
-
-						{/* Status Select */}
-						<FormField
-							control={form.control}
-							name="status"
-							render={({ field }) => (
-								<FormItem>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value as string}
-									>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="Select status" />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											<SelectItem value="todo">
-												To Do
-											</SelectItem>
-											<SelectItem value="inprogress">
-												In Progress
-											</SelectItem>
-											<SelectItem value="done">
-												Done
-											</SelectItem>
-										</SelectContent>
-									</Select>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						{/* Priority Select */}
-						<FormField
-							control={form.control}
-							name="priority"
-							render={({ field }) => (
-								<FormItem>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value as string}
-									>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="Select priority" />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											<SelectItem value="low">
-												Low
-											</SelectItem>
-											<SelectItem value="medium">
-												Medium
-											</SelectItem>
-											<SelectItem value="high">
-												High
-											</SelectItem>
-										</SelectContent>
-									</Select>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						{/* Type Select */}
-						<FormField
-							control={form.control}
-							name="type"
-							render={({ field }) => (
-								<FormItem>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value as string}
-									>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="Select type" />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											<SelectItem value="task">
-												Task
-											</SelectItem>
-											<SelectItem value="bug">
-												Bug
-											</SelectItem>
-											<SelectItem value="feature">
-												Feature
-											</SelectItem>
-										</SelectContent>
-									</Select>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<Button
-							type="submit"
-							variant="outline"
-							disabled={isLoading}
-							className="rounded-r-full"
-						>
-							{isLoading ? "Submitting" : "Submit"}
-							{isLoading ? (
-								<Loader2 className="ml-2 h-4 w-4 animate-spin" />
-							) : (
-								<ChevronRight className="ml-2 h-4 w-4" />
-							)}
-						</Button>
-					</form>
-				</Form>
 				<AiDialog dispatch={dispatch} />
 			</div>
-			<section className=" flex items-center justify-between">
-				<p>Options:</p>
-				<div className="flex items-center space-x-2">
-					<Checkbox
-						id="error"
-						checked={error}
-						onClick={() => setError(!error)}
-						className="rounded"
-					/>
-					<label
-						htmlFor="error"
-						className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-					>
-						Error durring optimistic update
-					</label>
-				</div>
-			</section>
-
 			<Table className="border">
 				<TableCaption>
 					{!tasks ? "isPending..." : "A list of tasks"}

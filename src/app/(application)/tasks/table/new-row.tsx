@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Bot, ChevronRight, Plus, X } from "lucide-react";
+import { Bot, ChevronRight, Loader2, Plus, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import {
 	Form,
@@ -28,6 +28,7 @@ import { NewTask, Task, insertTaskSchema } from "~/server/db/schema";
 import DataTableRow from "./data-table-row";
 import { OptimisticActions } from "./task-table";
 import { useChat } from "ai/react";
+import { cn } from "~/lib/utils";
 
 type NewRowProps = {
 	optimisticActions: OptimisticActions;
@@ -77,7 +78,9 @@ const NewRow = ({ optimisticActions }: NewRowProps) => {
 		setAiResponse(true);
 		if (!filtered[0]) return;
 
-		const taskObject = extractValidJson(filtered[0].content.toLowerCase()) as AiTask;
+		const taskObject = extractValidJson(
+			filtered[0].content.toLowerCase(),
+		) as AiTask;
 		console.log(taskObject);
 		if (taskObject) {
 			setTaskObject(taskObject);
@@ -105,35 +108,50 @@ const NewRow = ({ optimisticActions }: NewRowProps) => {
 	if (showAiForm) {
 		return (
 			<>
-				<DataTableRow
-					variant="ai"
-					task={{
-						...defaultValues,
-						...taskObject,
-						id: Math.random(),
-					}}
-					optimisticActions={optimisticActions}
-				/>
-
 				<TableRow>
 					<TableCell className="p-0" colSpan={6}>
-						<form
-							className="flex"
-							id="chat"
-							onSubmit={handleSubmit}
-						>
-							<span className="flex items-center gap-1 bg-muted p-1 px-4">
-								<Bot className="h-4 w-4" />
+						<div className="flex">
+							<span
+								className={cn(
+									"flex items-center justify-center gap-1 bg-muted p-1 px-4",
+									{
+										grow:
+											isLoading ||
+											insertTaskSchema.safeParse(
+												taskObject,
+											).success === true,
+										"bg-blue-500":
+											insertTaskSchema.safeParse(
+												taskObject,
+											).success === true,
+									},
+								)}
+							>
+								<Bot
+									className={cn("h-4 w-4", {
+										"animate-bounce": isLoading,
+									})}
+								/>
 							</span>
-							<Input
-								className="border-none"
-								name="description"
-								id="description"
-								placeholder="Describe a task and TaskerBot will create it..."
-								value={input}
-								onChange={handleInputChange}
-							/>
-							<div className="absolute right-[1px]">
+							<form
+								className={cn("flex", {
+									"max-w-0 overflow-hidden":
+										isLoading ||
+										insertTaskSchema.safeParse(taskObject)
+											.success === true,
+									grow: !isLoading,
+								})}
+								id="chat"
+								onSubmit={handleSubmit}
+							>
+								<Input
+									className="border-none"
+									name="description"
+									id="description"
+									placeholder="Describe a task and TaskerBot will create it..."
+									value={input}
+									onChange={handleInputChange}
+								/>
 								<Button
 									onClick={() => setShowAiForm(false)}
 									size="icon"
@@ -143,12 +161,21 @@ const NewRow = ({ optimisticActions }: NewRowProps) => {
 									<X className="h-4 w-4" />
 								</Button>
 								<Button type="submit" size="icon">
-									<ChevronRight className="h-4 w-4" />
+									<ChevronRight className="ml-2 h-4 w-4" />
 								</Button>
-							</div>
-						</form>
+							</form>
+						</div>
 					</TableCell>
 				</TableRow>
+				<DataTableRow
+					variant="ai"
+					task={{
+						...defaultValues,
+						...taskObject,
+						id: Math.random(),
+					}}
+					optimisticActions={optimisticActions}
+				/>
 			</>
 		);
 	}

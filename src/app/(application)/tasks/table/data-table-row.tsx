@@ -24,6 +24,8 @@ import { OptimisticActions } from "./task-table";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "~/lib/utils";
+import { getTaskConfig, taskSchema } from "~/entities/task-entity";
+import DataCellSelect from "./cells/data-cell-select";
 
 type DataTableRowProps = {
 	variant: "new" | "data" | "ai";
@@ -49,7 +51,7 @@ const DataTableRow = ({
 	};
 
 	const form = useForm<NewTask>({
-		resolver: zodResolver(insertTaskSchema),
+		resolver: zodResolver(taskSchema),
 		defaultValues: defaultTaskValues,
 	});
 
@@ -58,13 +60,7 @@ const DataTableRow = ({
 		form.reset(defaultTaskValues);
 	}, [task]);
 
-	async function updateDataValue(key: keyof Task, value: string) {
-		const updatedTask = { ...task, [key]: value };
-		await optimisticActions.updateTask(updatedTask);
-	}
-
 	async function onSubmit(newTask: NewTask) {
-		console.log(newTask);
 		if (variant === "data") {
 			// get changes
 			const changes = Object.keys(newTask).reduce((acc, key) => {
@@ -73,6 +69,8 @@ const DataTableRow = ({
 				}
 				return acc;
 			}, {});
+
+			console.log("Submit - Changes", changes)
 
 			// if no changes return
 			if (Object.keys(changes).length === 0) return;
@@ -89,20 +87,37 @@ const DataTableRow = ({
 	}
 
 	return (
-		<TableRow className={cn({
-			"pointer-events-none": variant === "ai",
-		})}>
+		<TableRow
+			className={cn({
+				"pointer-events-none": variant === "ai",
+			})}
+		>
 			{Object.keys(task)
 				.filter((col) => col !== "id" && col !== "pending")
-				.map((col) => {
-					return (
-						<DataCell
-							key={col}
-							col={col as keyof NewTask}
-							form={form}
-							onSubmit={onSubmit}
-						/>
-					);
+				.map((col, idx) => {
+					const config = getTaskConfig(col);
+					if (config.type === "text")
+						return (
+							<DataCell
+								key={col}
+								config={config}
+								col={col as keyof NewTask}
+								form={form}
+								onSubmit={onSubmit}
+								autoFocus={idx === 0 && variant === "new"}
+							/>
+						);
+					if (config.type === "select")
+						return (
+							<DataCellSelect
+								key={col}
+								config={config}
+								col={col as keyof NewTask}
+								form={form}
+								onSubmit={onSubmit}
+								isNew={variant === "new"}
+							/>
+						);
 				})}
 			{variant === "data" ? (
 				<TableCell className="flex justify-between p-0">
@@ -138,8 +153,7 @@ const DataTableRow = ({
 					</TableCell>
 				</>
 			) : (
-				<>
-				</>
+				<></>
 			)}
 		</TableRow>
 	);

@@ -1,77 +1,137 @@
 "use client";
 
-import React, {useEffect} from "react";
+import React, { useEffect, useRef } from "react";
 
 // ui
-import {
-	Table,
-	TableBody,
-	TableCaption,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "~/components/ui/table";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
-} from "~/components/ui/form";
+import { TableCell } from "~/components/ui/table";
 import { Input } from "~/components/ui/input";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Button } from "~/components/ui/button";
-import { Task } from "~/server/db/schema";
+import {
+	Controller,
+	ControllerRenderProps,
+	UseFormReturn,
+} from "react-hook-form";
+import { NewTask } from "~/server/db/schema";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "~/components/ui/tooltip";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "~/components/ui/select";
+import {
+	EntityConfigFormSelectOption,
+	EntityFieldConfig,
+} from "~/entities/entityTypes";
+import { getTaskConfig } from "~/entities/task-entity";
+import { cva } from "class-variance-authority";
+import { cn } from "~/lib/utils";
+import { options } from "prettier-plugin-tailwindcss";
+
+export const optionVariants = cva(
+	[
+		"rounded-full border pl-2 pr-3 py-1 flex items-center space-x-2 whitespace-nowrap flex",
+	],
+	{
+		variants: {
+			color: {
+				grey: "border-gray-600 bg-gray-900 text-gray-300 focus:bg-gray-800 focus:border-gray-300 focus:text-gray-200",
+				yellow: "border-yellow-600 bg-yellow-900 text-yellow-300 focus:bg-yellow-800 focus:border-yellow-300 focus:text-yellow-200",
+				red: "border-red-600 bg-red-900 text-red-300 focus:bg-red-800 focus:border-red-300 focus:text-red-200",
+				purple: "border-violet-600 bg-violet-900 text-violet-300 focus:bg-violet-800 focus:border-violet-300 focus:text-violet-200",
+				blue: "border-sky-600 bg-sky-900 text-sky-300 focus:bg-sky-800 focus:border-sky-300 focus:text-sky-200 ",
+				green: "border-green-600 bg-green-900 text-green-300 focus:text-green-200 focus:bg-green-800 focus:border-green-300",
+			},
+		},
+		defaultVariants: {
+			color: "grey",
+		},
+	},
+);
 
 type DataCellProps = {
-    col: keyof Task;
-	value: string;
-	validator: z.ZodObject<{ value: z.ZodTypeAny }>;
-    updateValue: (key: keyof Task, value: string) => Promise<void>;
+	config: ReturnType<typeof getTaskConfig>;
+	col: keyof NewTask;
+	form: UseFormReturn<NewTask>;
+	onSubmit: (newTask: NewTask) => Promise<void>;
+	isNew: boolean;
+	autoFocus?: boolean;
 };
 
-function DataCell({ col, value, validator, updateValue }: DataCellProps) {
-	console.log(value);
-	type FormValues = {
-		value: string;
-	};
-
-	const form = useForm<FormValues>({
-		resolver: zodResolver(validator),
-		defaultValues: {
-			value: value,
-		},
-	});
+function DataCellSelect({ config, col, form, onSubmit, isNew, autoFocus=false }: DataCellProps) {
 
 	useEffect(() => {
-		form.reset({ value: value });
-	}, [value]);
+		if (isNew) return;
 
-	async function onSubmit(data: FormValues) {
-        if (data.value === value) return;
-        await updateValue(col, data.value);
+		console.log(`WATCHTOWER(${col})`, form.watch(col), "current", form.getValues());
+		onSubmit(form.getValues());
+	}, [form.watch(col)]);
+
+	if (config.type !== "select") return null;
+
+	function getSelectedOption(value: string) {
+		if (config.type !== "select") return "grey";
+
+		const selectedOption = config.form?.options.find(
+			(option) => option.value === value,
+		);
+		if (!selectedOption) return "grey";
+		return selectedOption.color;
 	}
-
-	const handleBlur = () => {
-		form.handleSubmit(onSubmit)();
-	};
 
 	return (
 		<TableCell className="border p-0">
-			<form onSubmit={form.handleSubmit(onSubmit)}>
-				<Input
-					className="focus-visible:-ring-offset-2 m-0 border-none px-4"
-					type="text"
-					{...form.register("value")}
-					onBlur={handleBlur}
-					placeholder="Untitled"
+			<div className="flex items-center justify-center px-2">
+				<Controller
+					control={form.control}
+					name={col}
+					render={({ field }) => (
+						<Select
+							onValueChange={(value) => field.onChange(value)}
+							defaultValue={field.value}
+						>
+							<SelectTrigger
+								className={cn(
+									"h-min",
+									optionVariants({
+										color: getSelectedOption(field.value),
+									}),
+								)}
+							>
+								<SelectValue
+									placeholder={config.form.placeholder}
+								/>
+							</SelectTrigger>
+							<SelectContent>
+								{config.form?.options.map((option) => (
+									<SelectItem
+										className={cn("mb-2",
+											optionVariants({
+												color: option.color,
+											})
+										)}
+										value={option.value as string}
+									>
+										<div className="flex items-center gap-1">
+											<span className="">
+												{option.icon}
+											</span>
+											<p>{option.displayName}</p>
+										</div>
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					)}
 				/>
-			</form>
+			</div>
 		</TableCell>
 	);
 }
 
-export default DataCell;
+export default DataCellSelect;
