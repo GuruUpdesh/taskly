@@ -8,13 +8,15 @@ import {
 	NavigationMenuItem,
 	NavigationMenuLink,
 	NavigationMenuList,
-	NavigationMenuTrigger,
-	NavigationMenuContent,
 } from "~/components/ui/navigation-menu";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import Image from "next/image";
 
-const Navbar = () => {
+type NavbarProps = {
+	children: React.ReactNode;
+};
+
+const Navbar = ({ children }: NavbarProps) => {
 	return (
 		<nav className="fixed z-50 flex w-full justify-between p-4">
 			<div>
@@ -35,22 +37,7 @@ const Navbar = () => {
 							Home
 						</NavigationMenuLink>
 					</NavigationMenuItem>
-					<NavigationMenuItem>
-						<NavigationMenuTrigger>Projects</NavigationMenuTrigger>
-						<NavigationMenuContent className="absolute left-0 top-0 w-full">
-							<ul className="grid w-[200px] gap-3 p-4 md:grid-cols-1">
-								<NavigationMenuLink>
-									Project 1
-								</NavigationMenuLink>
-								<NavigationMenuLink>
-									Project 2
-								</NavigationMenuLink>
-								<NavigationMenuLink>
-									Project 3
-								</NavigationMenuLink>
-							</ul>
-						</NavigationMenuContent>
-					</NavigationMenuItem>
+					{children}
 					<NavigationMenuItem className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
 						<NavigationMenuLink href="/email">
 							Email
