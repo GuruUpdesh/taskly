@@ -81,7 +81,6 @@ function reducer(
 					? { ...task, ...action.payload, pending: true }
 					: task,
 			);
-			console.log("newState", newState)
 			return newState;
 		default:
 			throw new Error("Invalid action type");
@@ -92,6 +91,12 @@ type TaskTableProps = {
 	tasks: Task[];
 };
 
+export type OptimisticActions = {
+	createTask: (task: NewTask) => Promise<void>;
+	deleteTask: (task: Task) => Promise<void>;
+	updateTask: (task: Task) => Promise<void>;
+};
+
 const TaskTable = ({ tasks }: TaskTableProps) => {
 	const [isLoading, startTransition] = useTransition();
 	const [optimisticTasks, dispatch] = useOptimistic(
@@ -99,22 +104,58 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 		reducer,
 	);
 
-	async function updateTaskHelper(task: Task) {
-		startTransition(() => dispatch({ type: "UPDATE", payload: task }))
-		console.log("updateTaskHelper", task)
-		const data = {
-			title: task.title,
-			description: task.description,
-			status: task.status,
-			priority: task.priority,
-			type: task.type,
-		};
-		const validated = insertTaskSchema.safeParse(data);
-		if (!validated.success) {
-			return;
-		}
-		await updateTask(task.id, validated.data);
-	}
+	const optimisticActions: OptimisticActions = {
+		createTask: async (task: NewTask) => {
+			try {
+				dispatch({
+					type: "ADD",
+					payload: { ...task, id: Math.random() },
+				});
+				if (error) {
+					await new Promise((resolve) => setTimeout(resolve, 1000));
+					throw new Error("Something went wrong");
+				}
+				await createTask(task);
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		deleteTask: async (task: Task) => {
+			try {
+				startTransition(() =>
+					dispatch({ type: "DELETE", payload: task }),
+				);
+				if (error) {
+					await new Promise((resolve) => setTimeout(resolve, 1000));
+					throw new Error("Something went wrong");
+				}
+				await deleteTask(task.id);
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		updateTask: async (task: Task) => {
+			try {
+				startTransition(() =>
+					dispatch({ type: "UPDATE", payload: task }),
+				);
+				const data = {
+					title: task.title,
+					description: task.description,
+					status: task.status,
+					priority: task.priority,
+					type: task.type,
+				};
+				const validated = insertTaskSchema.safeParse(data);
+				if (!validated.success) {
+					return;
+				}
+				await updateTask(task.id, validated.data);
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	};
 
 	function renderTaskRows() {
 		return optimisticTasks.map((task) => {
@@ -122,7 +163,7 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 				<DataTableRow
 					key={task.id}
 					task={task as Task}
-					updateTask={updateTaskHelper}
+					optimisticActions={optimisticActions}
 				/>
 			);
 		});
@@ -187,30 +228,31 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 
 	async function onSubmit(data: NewTask) {
 		try {
-			dispatch({ type: "ADD", payload: { ...data, id: Math.random() } });
-			if (error) {
-				await new Promise((resolve) => setTimeout(resolve, 1000));
-				throw new Error("Something went wrong");
-			}
-			await createTask(data);
+			// dispatch({ type: "ADD", payload: { ...data, id: Math.random() } });
+			// if (error) {
+			// 	await new Promise((resolve) => setTimeout(resolve, 1000));
+			// 	throw new Error("Something went wrong");
+			// }
+			// await createTask(data);
+			await optimisticActions.createTask(data);
 			form.reset();
 		} catch (error) {
 			console.log(error);
 		}
 	}
 
-	async function handleDelete(task: Task) {
-		try {
-			dispatch({ type: "DELETE", payload: task });
-			if (error) {
-				await new Promise((resolve) => setTimeout(resolve, 1000));
-				throw new Error("Something went wrong");
-			}
-			await deleteTask(task.id);
-		} catch (error) {
-			console.log(error);
-		}
-	}
+	// async function handleDelete(task: Task) {
+	// 	try {
+	// 		dispatch({ type: "DELETE", payload: task });
+	// 		if (error) {
+	// 			await new Promise((resolve) => setTimeout(resolve, 1000));
+	// 			throw new Error("Something went wrong");
+	// 		}
+	// 		await deleteTask(task.id);
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// }
 
 	return (
 		<>
@@ -397,9 +439,8 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{/* <DataTableRow /> */}
 					{renderTaskRows()}
-					<NewRow />
+					<NewRow optimisticActions={optimisticActions} />
 				</TableBody>
 			</Table>
 		</>

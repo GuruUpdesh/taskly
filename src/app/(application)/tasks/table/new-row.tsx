@@ -25,10 +25,14 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { NewTask, insertTaskSchema } from "~/server/db/schema";
+import DataTableRow from "./data-table-row";
+import { OptimisticActions } from "./task-table";
 
-type Props = {};
+type NewRowProps = {
+	optimisticActions: OptimisticActions;
+};
 
-const NewRow = (props: Props) => {
+const NewRow = ({ optimisticActions }: NewRowProps) => {
 	const [showForm, setShowForm] = useState(false);
 
 	// form hooks
@@ -44,7 +48,13 @@ const NewRow = (props: Props) => {
 	});
 
 	if (showForm) {
-		return <></>;
+		return (
+			<DataTableRow
+				variant="new"
+				task={{ ...form.getValues(), id: Math.random() }}
+				optimisticActions={optimisticActions}
+			/>
+		);
 	}
 
 	return (

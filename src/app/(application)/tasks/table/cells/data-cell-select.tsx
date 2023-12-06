@@ -51,7 +51,7 @@ function DataCell({ col, value, validator, updateValue }: DataCellProps) {
 	}, [value]);
 
 	async function onSubmit(data: FormValues) {
-		if (data.value === value) return;
+        if (data.value === value) return;
         await updateValue(col, data.value);
 	}
 

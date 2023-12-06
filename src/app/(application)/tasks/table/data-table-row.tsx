@@ -13,20 +13,27 @@ import {
 import DataCell from "./cells/data-cell-text";
 import { z } from "zod";
 import { Task, selectTaskSchema } from "~/server/db/schema";
+import { Button } from "~/components/ui/button";
+import { Trash } from "lucide-react";
+import { OptimisticActions } from "./task-table";
 
 type DataTableRowProps = {
+	variant?: "new" | "data";
 	task: Task;
-  updateTask: (task: Task) => Promise<void>;
+	optimisticActions: OptimisticActions;
 };
 
-const DataTableRow = ({ task, updateTask }: DataTableRowProps) => {
+const DataTableRow = ({
+	task,
+	optimisticActions,
+	variant = "data",
+}: DataTableRowProps) => {
 	if (!task) return null;
 
-  async function updateValue(key: keyof Task, value: string) {
-    console.log("updateValue", key, value);
-    const updatedTask = { ...task, [key]: value };
-    await updateTask(updatedTask);
-  }
+	async function updateDataValue(key: keyof Task, value: string) {
+		const updatedTask = { ...task, [key]: value };
+		await optimisticActions.updateTask(updatedTask);
+	}
 
 	return (
 		<TableRow>
@@ -41,7 +48,7 @@ const DataTableRow = ({ task, updateTask }: DataTableRowProps) => {
 						value: valueValidator,
 					});
 
-					if (!value) {
+					if (value === null) {
 						return (
 							<TableCell key={col} className="border p-0">
 								null
@@ -52,13 +59,24 @@ const DataTableRow = ({ task, updateTask }: DataTableRowProps) => {
 					return (
 						<DataCell
 							key={col}
-              col={col as keyof Task}
+							col={col as keyof Task}
 							value={value as string}
 							validator={validator}
-              updateValue={updateValue}
+							updateValue={updateDataValue}
 						/>
 					);
 				})}
+			{variant === "data" ? (
+				<TableCell className="border p-0">
+					<Button
+						onClick={() => optimisticActions.deleteTask(task)}
+						variant="outline"
+						size="icon"
+					>
+						<Trash className="h-4 w-4" />
+					</Button>
+				</TableCell>
+			) : null}
 		</TableRow>
 	);
 };
