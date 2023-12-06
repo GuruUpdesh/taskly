@@ -162,6 +162,7 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 			return (
 				<DataTableRow
 					key={task.id}
+					variant="data"
 					task={task as Task}
 					optimisticActions={optimisticActions}
 				/>
@@ -433,8 +434,8 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 								<Component className="mr-2 h-4 w-4" /> Type
 							</p>
 						</TableHead>
-						<TableHead>
-							<p className="uppercase">Action</p>
+						<TableHead className="p-0">
+							{/* <p className="uppercase">Action</p> */}
 						</TableHead>
 					</TableRow>
 				</TableHeader>
