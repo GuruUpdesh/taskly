@@ -1,30 +1,23 @@
+// hooks
 import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 // ui
-import {
-	Table,
-	TableBody,
-	TableCaption,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "~/components/ui/table";
+import { TableCell, TableRow } from "~/components/ui/table";
 import DataCell from "./cells/data-cell-text";
-import { z } from "zod";
-import {
-	NewTask,
-	Task,
-	insertTaskSchema,
-	selectTaskSchema,
-} from "~/server/db/schema";
+import type { NewTask, Task } from "~/server/db/schema";
 import { Button } from "~/components/ui/button";
-import { ChevronRight, Expand, SidebarCloseIcon, Trash, X } from "lucide-react";
-import { OptimisticActions } from "./task-table";
-import { useForm } from "react-hook-form";
+import { ChevronRight, Expand, Trash, X } from "lucide-react";
+
+// types
+import { type OptimisticActions } from "./task-table";
+
+// utils
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "~/lib/utils";
 import { getTaskConfig, taskSchema } from "~/entities/task-entity";
+
+// components
 import DataCellSelect from "./cells/data-cell-select";
 
 type DataTableRowProps = {
@@ -40,14 +33,12 @@ const DataTableRow = ({
 	optimisticActions,
 	closeForm,
 }: DataTableRowProps) => {
-	if (!task) return null;
-
 	const defaultTaskValues = {
 		title: task.title,
-		description: task.description || "",
-		status: task.status || "todo",
-		priority: task.priority || "medium",
-		type: task.type || "task",
+		description: task.description ?? "",
+		status: task.status ?? "todo",
+		priority: task.priority ?? "medium",
+		type: task.type ?? "task",
 	};
 
 	const form = useForm<NewTask>({
@@ -70,7 +61,7 @@ const DataTableRow = ({
 				return acc;
 			}, {});
 
-			console.log("Submit - Changes", changes)
+			console.log("Submit - Changes", changes);
 
 			// if no changes return
 			if (Object.keys(changes).length === 0) return;

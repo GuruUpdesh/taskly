@@ -37,9 +37,7 @@ export async function deleteTask(id: number) {
 export async function updateTask(id: number, data: NewTask) {
 	try {
 		const updatedTaskData: NewTask = insertTaskSchema.parse(data);
-		await db.update(task)
-			 .set(updatedTaskData)
-			 .where(eq(task.id, id));
+		await db.update(task).set(updatedTaskData).where(eq(task.id, id));
 		// console.log("updated task");
 		revalidatePath("/");
 	} catch (error) {

@@ -5,15 +5,15 @@ import React, { useEffect } from "react";
 // ui
 import { TableCell } from "~/components/ui/table";
 import { Input } from "~/components/ui/input";
-import { UseFormReturn } from "react-hook-form";
-import { NewTask } from "~/server/db/schema";
+import { type UseFormReturn } from "react-hook-form";
+import { type NewTask } from "~/server/db/schema";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { EntityFieldConfig } from "~/entities/entityTypes";
+import { type EntityFieldConfig } from "~/entities/entityTypes";
 import { cn } from "~/lib/utils";
 
 type DataCellProps = {
@@ -24,11 +24,19 @@ type DataCellProps = {
 	autoFocus?: boolean;
 };
 
-function DataCell({ config, col, form, onSubmit, autoFocus=false }: DataCellProps) {
+function DataCell({
+	config,
+	col,
+	form,
+	onSubmit,
+	autoFocus = false,
+}: DataCellProps) {
 	// handle enter key
-	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+	const handleKeyDown = async (
+		event: React.KeyboardEvent<HTMLInputElement>,
+	) => {
 		if (event.key === "Enter") {
-			form.handleSubmit(onSubmit)();
+			await form.handleSubmit(onSubmit)();
 		}
 	};
 
@@ -60,8 +68,7 @@ function DataCell({ config, col, form, onSubmit, autoFocus=false }: DataCellProp
 							className={cn(
 								"focus-visible:-ring-offset-2 m-0 border-none px-4",
 								{
-									"opacity-80":
-										col === "description",
+									"opacity-80": col === "description",
 									"font-medium": col === "title",
 								},
 							)}

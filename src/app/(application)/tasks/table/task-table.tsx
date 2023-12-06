@@ -2,64 +2,27 @@
 
 // hooks
 import React, { useTransition, useOptimistic } from "react";
-import { useForm } from "react-hook-form";
 
 // data
-import {
-	type Task,
-	type NewTask,
-	insertTaskSchema,
-	task,
-} from "~/server/db/schema";
-
-// utils
-import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "~/lib/utils";
-import { type VariantProps } from "class-variance-authority";
+import { type Task, type NewTask, insertTaskSchema } from "~/server/db/schema";
 
 // ui
 import {
 	Table,
 	TableBody,
 	TableCaption,
-	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "~/components/ui/select";
-
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
-} from "~/components/ui/form";
-import { Input } from "../../../../components/ui/input";
-import { Button } from "../../../../components/ui/button";
-import {
 	createTask,
 	deleteTask,
 	updateTask,
 } from "~/app/(application)/tasks/_actions/task-actions";
-import TaskChip, { type taskChipVariants } from "../task-chip";
+import { Flag, Target, Component } from "lucide-react";
 
-import {
-	ChevronRight,
-	Flag,
-	Target,
-	Loader2,
-	Component,
-	Trash,
-} from "lucide-react";
-import { Checkbox } from "../../../../components/ui/checkbox";
+// components
 import AiDialog from "../ai-dialog";
 import NewRow from "./new-row";
 import DataTableRow from "./data-table-row";
@@ -98,7 +61,7 @@ export type OptimisticActions = {
 };
 
 const TaskTable = ({ tasks }: TaskTableProps) => {
-	const [isLoading, startTransition] = useTransition();
+	const [_, startTransition] = useTransition();
 	const [optimisticTasks, dispatch] = useOptimistic(
 		tasks.map((task) => ({ ...task, pending: false })),
 		reducer,
@@ -111,10 +74,6 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 					type: "ADD",
 					payload: { ...task, id: Math.random() },
 				});
-				// if (error) {
-				// 	await new Promise((resolve) => setTimeout(resolve, 1000));
-				// 	throw new Error("Something went wrong");
-				// }
 				await createTask(task);
 			} catch (error) {
 				console.log(error);
@@ -125,10 +84,6 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 				startTransition(() =>
 					dispatch({ type: "DELETE", payload: task }),
 				);
-				// if (error) {
-				// 	await new Promise((resolve) => setTimeout(resolve, 1000));
-				// 	throw new Error("Something went wrong");
-				// }
 				await deleteTask(task.id);
 			} catch (error) {
 				console.log(error);
@@ -202,9 +157,7 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 								<Component className="mr-2 h-4 w-4" /> Type
 							</p>
 						</TableHead>
-						<TableHead className="p-0">
-							{/* <p className="uppercase">Action</p> */}
-						</TableHead>
+						<TableHead className="p-0"></TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
@@ -217,13 +170,3 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 };
 
 export default TaskTable;
-
-function getChipType(
-	type: string,
-	field: string | null,
-): VariantProps<typeof taskChipVariants>["chipType"] {
-	if (!field) return "null";
-	// @ts-expect-error we know this is a valid type and field
-	// todo refactor this
-	return `${type}_${field}`;
-}

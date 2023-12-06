@@ -1,32 +1,15 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Bot, ChevronRight, Loader2, Plus, X } from "lucide-react";
+import { Bot, ChevronRight, Plus, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
-} from "~/components/ui/form";
-import { useForm } from "react-hook-form";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
 // ui
-import {
-	Table,
-	TableBody,
-	TableCaption,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "~/components/ui/table";
-import { NewTask, Task, insertTaskSchema } from "~/server/db/schema";
+import { TableCell, TableRow } from "~/components/ui/table";
+import { type NewTask, type Task, insertTaskSchema } from "~/server/db/schema";
 import DataTableRow from "./data-table-row";
-import { OptimisticActions } from "./task-table";
+import type { OptimisticActions } from "./task-table";
 import { useChat } from "ai/react";
 import { cn } from "~/lib/utils";
 

@@ -1,22 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+// hooks
+import React, { useEffect } from "react";
 
 // ui
 import { TableCell } from "~/components/ui/table";
-import { Input } from "~/components/ui/input";
-import {
-	Controller,
-	ControllerRenderProps,
-	UseFormReturn,
-} from "react-hook-form";
-import { NewTask } from "~/server/db/schema";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "~/components/ui/tooltip";
+import { Controller, type UseFormReturn } from "react-hook-form";
+import { type NewTask } from "~/server/db/schema";
 import {
 	Select,
 	SelectContent,
@@ -24,14 +14,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import {
-	EntityConfigFormSelectOption,
-	EntityFieldConfig,
-} from "~/entities/entityTypes";
-import { getTaskConfig } from "~/entities/task-entity";
+
+// utils
+import { type getTaskConfig } from "~/entities/task-entity";
 import { cva } from "class-variance-authority";
 import { cn } from "~/lib/utils";
-import { options } from "prettier-plugin-tailwindcss";
 
 export const optionVariants = cva(
 	[
@@ -40,12 +27,12 @@ export const optionVariants = cva(
 	{
 		variants: {
 			color: {
-				grey: "border-gray-600 bg-gray-900 text-gray-300 focus:bg-gray-800 focus:border-gray-300 focus:text-gray-200",
-				yellow: "border-yellow-600 bg-yellow-900 text-yellow-300 focus:bg-yellow-800 focus:border-yellow-300 focus:text-yellow-200",
-				red: "border-red-600 bg-red-900 text-red-300 focus:bg-red-800 focus:border-red-300 focus:text-red-200",
-				purple: "border-violet-600 bg-violet-900 text-violet-300 focus:bg-violet-800 focus:border-violet-300 focus:text-violet-200",
-				blue: "border-sky-600 bg-sky-900 text-sky-300 focus:bg-sky-800 focus:border-sky-300 focus:text-sky-200 ",
-				green: "border-green-600 bg-green-900 text-green-300 focus:text-green-200 focus:bg-green-800 focus:border-green-300",
+				grey: "border-gray-700 bg-gray-900 text-gray-300 focus:bg-gray-700 focus:text-gray-100",
+				yellow: "border-yellow-700 bg-yellow-900 text-yellow-300 focus:bg-yellow-700 focus:text-yellow-100",
+				red: "border-red-700 bg-red-900 text-red-300 focus:bg-red-700 focus:text-red-100",
+				purple: "border-violet-700 bg-violet-900 text-violet-300 focus:bg-violet-700 focus:text-violet-100",
+				blue: "border-sky-700 bg-sky-900 text-sky-300 focus:bg-sky-700 focus:text-sky-100 ",
+				green: "border-green-700 bg-green-900 text-green-300 focus:bg-green-700 focus:text-green-100",
 			},
 		},
 		defaultVariants: {
@@ -60,20 +47,16 @@ type DataCellProps = {
 	form: UseFormReturn<NewTask>;
 	onSubmit: (newTask: NewTask) => Promise<void>;
 	isNew: boolean;
-	autoFocus?: boolean;
 };
 
-function DataCellSelect({ config, col, form, onSubmit, isNew, autoFocus=false }: DataCellProps) {
-
+function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 	useEffect(() => {
 		if (isNew) return;
 
-		console.log(`WATCHTOWER(${col})`, form.watch(col), "current", form.getValues());
-		onSubmit(form.getValues());
+		void onSubmit(form.getValues());
 	}, [form.watch(col)]);
 
-	if (config.type !== "select") return null;
-
+	// get selected option
 	function getSelectedOption(value: string) {
 		if (config.type !== "select") return "grey";
 
@@ -83,6 +66,8 @@ function DataCellSelect({ config, col, form, onSubmit, isNew, autoFocus=false }:
 		if (!selectedOption) return "grey";
 		return selectedOption.color;
 	}
+
+	if (config.type !== "select") return null;
 
 	return (
 		<TableCell className="border p-0">
@@ -110,10 +95,12 @@ function DataCellSelect({ config, col, form, onSubmit, isNew, autoFocus=false }:
 							<SelectContent>
 								{config.form?.options.map((option) => (
 									<SelectItem
-										className={cn("mb-2",
+										key={option.value}
+										className={cn(
+											"mb-2",
 											optionVariants({
 												color: option.color,
-											})
+											}),
 										)}
 										value={option.value as string}
 									>

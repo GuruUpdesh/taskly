@@ -4,13 +4,11 @@ import {
 	ArrowUpIcon,
 	CheckCircledIcon,
 	CircleIcon,
-	PlusCircledIcon,
-	QuestionMarkCircledIcon,
 	StopwatchIcon,
 } from "@radix-ui/react-icons";
-import GenericEntityConfig from "./entityTypes";
+import type GenericEntityConfig from "./entityTypes";
 import { z } from "zod";
-import { Task } from "~/server/db/schema";
+import { type Task } from "~/server/db/schema";
 import { BugIcon, Feather, LayoutList } from "lucide-react";
 
 const taskConfig: GenericEntityConfig<Task> = {
