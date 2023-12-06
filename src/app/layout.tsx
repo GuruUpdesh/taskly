@@ -1,7 +1,7 @@
 import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { ClerkProvider } from "@clerk/nextjs";
-import Navbar from "~/components/ui/navbar";
+import Navbar from "~/components/navbar";
 
 export const metadata = {
 	title: "Taskly",

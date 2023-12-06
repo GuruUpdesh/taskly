@@ -2,7 +2,7 @@ import { IBM_Plex_Sans } from "next/font/google";
 import { cn } from "~/lib/utils";
 import { Brain, LampDesk, Rabbit } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import Grid from "~/app/(landing)/backgroun-grid";
+import Grid from "~/app/(landing)/background-grid";
 import Link from "next/link";
 
 const plexSans = IBM_Plex_Sans({ weight: ["700"], subsets: ["latin"] });
