@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { Project } from "~/server/db/schema";
+import { type Project } from "~/server/db/schema";
 import {
 	NavigationMenuContent,
 	NavigationMenuItem,
@@ -24,6 +24,9 @@ const ProjectMenuItem = ({ projects }: ProjectMenuItemProps) => {
 							{project.name}
 						</NavigationMenuLink>
 					))}
+					<NavigationMenuLink href="/projects">
+						Create Project
+					</NavigationMenuLink>
 				</ul>
 			</NavigationMenuContent>
 		</NavigationMenuItem>
