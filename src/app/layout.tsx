@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "~/components/ui/theme-provider";
+import Navbar from "~/components/navbar";
 
 export const metadata = {
 	title: "Taskly",
@@ -27,6 +28,7 @@ export default function RootLayout({
 						enableSystem
 						disableTransitionOnChange
 					>
+            <Navbar/>
 						{children}
 					</ThemeProvider>
 				</body>
