@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { env } from "~/env.mjs";
 import { Resend } from "resend";
-import SampleEmail from "~/emails/SampleEmail";
+import SampleEmail from "~/components/email/sample-email";
 
 export async function GET(request: NextRequest) {
 	const authHeader = request.headers.get("authorization");
