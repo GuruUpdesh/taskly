@@ -33,3 +33,15 @@ export async function deleteTask(id: number) {
 		if (error instanceof Error) console.log(error.stack);
 	}
 }
+
+export async function updateTask(id: number, data: NewTask) {
+	try {
+		const updatedTaskData: NewTask = insertTaskSchema.parse(data);
+		await db.update(task)
+			 .set(updatedTaskData)
+			 .where(eq(task.id, id));
+		revalidatePath("/");
+	} catch (error) {
+		if (error instanceof Error) console.log(error.stack);
+	}
+}

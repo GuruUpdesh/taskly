@@ -5,14 +5,19 @@ import React, { useTransition, useOptimistic } from "react";
 import { useForm } from "react-hook-form";
 
 // data
-import { type Task, type NewTask, insertTaskSchema } from "~/server/db/schema";
+import {
+	type Task,
+	type NewTask,
+	insertTaskSchema,
+	task,
+} from "~/server/db/schema";
 
 // utils
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "~/lib/utils";
 import { type VariantProps } from "class-variance-authority";
 
-//ui
+// ui
 import {
 	Table,
 	TableBody,
@@ -37,13 +42,14 @@ import {
 	FormItem,
 	FormMessage,
 } from "~/components/ui/form";
-import { Input } from "../../../components/ui/input";
-import { Button } from "../../../components/ui/button";
+import { Input } from "../../../../components/ui/input";
+import { Button } from "../../../../components/ui/button";
 import {
 	createTask,
 	deleteTask,
+	updateTask,
 } from "~/app/(application)/tasks/_actions/task-actions";
-import TaskChip, { type taskChipVariants } from "./task-chip";
+import TaskChip, { type taskChipVariants } from "../task-chip";
 
 import {
 	ChevronRight,
@@ -53,20 +59,30 @@ import {
 	Component,
 	Trash,
 } from "lucide-react";
-import { Checkbox } from "../../../components/ui/checkbox";
-import AiDialog from "./ai-dialog";
+import { Checkbox } from "../../../../components/ui/checkbox";
+import AiDialog from "../ai-dialog";
+import NewRow from "./new-row";
+import DataTableRow from "./data-table-row";
 
-type OptimisticTask = Task & { pending: boolean };
+type OptimisticTask = Task & { pending?: boolean };
 
 function reducer(
 	state: OptimisticTask[],
-	action: { type: "ADD" | "DELETE"; payload: Task },
+	action: { type: "ADD" | "DELETE" | "UPDATE"; payload: Task },
 ) {
 	switch (action.type) {
 		case "ADD":
 			return [...state, { ...action.payload, pending: true }];
 		case "DELETE":
 			return state.filter((task) => task.id !== action.payload.id);
+		case "UPDATE":
+			const newState = state.map((task) =>
+				task.id === action.payload.id
+					? { ...task, ...action.payload, pending: true }
+					: task,
+			);
+			console.log("newState", newState)
+			return newState;
 		default:
 			throw new Error("Invalid action type");
 	}
@@ -83,49 +99,75 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 		reducer,
 	);
 
+	async function updateTaskHelper(task: Task) {
+		startTransition(() => dispatch({ type: "UPDATE", payload: task }))
+		console.log("updateTaskHelper", task)
+		const data = {
+			title: task.title,
+			description: task.description,
+			status: task.status,
+			priority: task.priority,
+			type: task.type,
+		};
+		const validated = insertTaskSchema.safeParse(data);
+		if (!validated.success) {
+			return;
+		}
+		await updateTask(task.id, validated.data);
+	}
+
 	function renderTaskRows() {
-		return optimisticTasks.map((task) => (
-			<TableRow
-				key={task.id}
-				className={cn({
-					"pointer-events-none opacity-50": task.pending,
-				})}
-			>
-				<TableCell className="min-w-[150px]">
-					<p className="line-clamp-2 font-semibold tracking-tight">
-						{task.title}
-					</p>
-				</TableCell>
-				<TableCell>
-					<p className="line-clamp-2 text-muted-foreground">
-						{task.description}
-					</p>
-				</TableCell>
-				<TableCell>
-					{/* <TaskStatus status={task.status} /> */}
-					<TaskChip chipType={getChipType("status", task.status)} />
-				</TableCell>
-				<TableCell>
-					<TaskChip
-						chipType={getChipType("priority", task.priority)}
-					/>
-				</TableCell>
-				<TableCell>
-					<TaskChip chipType={getChipType("type", task.type)} />
-				</TableCell>
-				<TableCell>
-					<Button
-						onClick={() =>
-							startTransition(() => handleDelete(task))
-						}
-						variant="outline"
-						size="icon"
-					>
-						<Trash className="h-4 w-4" />
-					</Button>
-				</TableCell>
-			</TableRow>
-		));
+		return optimisticTasks.map((task) => {
+			return (
+				<DataTableRow
+					key={task.id}
+					task={task as Task}
+					updateTask={updateTaskHelper}
+				/>
+			);
+		});
+		// return optimisticTasks.map((task) => (
+		// 	<TableRow
+		// 		key={task.id}
+		// 		className={cn({
+		// 			"pointer-events-none opacity-50": task.pending,
+		// 		})}
+		// 	>
+		// 		<TableCell className="min-w-[150px] border py-1">
+		// 			<p className="line-clamp-2 font-semibold tracking-tight">
+		// 				{task.title}
+		// 			</p>
+		// 		</TableCell>
+		// 		<TableCell className="border py-1">
+		// 			<p className="line-clamp-2 text-muted-foreground">
+		// 				{task.description}
+		// 			</p>
+		// 		</TableCell>
+		// 		<TableCell className="border py-1">
+		// 			{/* <TaskStatus status={task.status} /> */}
+		// 			<TaskChip chipType={getChipType("status", task.status)} />
+		// 		</TableCell>
+		// 		<TableCell className="border py-1">
+		// 			<TaskChip
+		// 				chipType={getChipType("priority", task.priority)}
+		// 			/>
+		// 		</TableCell>
+		// 		<TableCell className="border py-1">
+		// 			<TaskChip chipType={getChipType("type", task.type)} />
+		// 		</TableCell>
+		// 		<TableCell className="border py-1">
+		// 			<Button
+		// 				onClick={() =>
+		// 					startTransition(() => handleDelete(task))
+		// 				}
+		// 				variant="outline"
+		// 				size="icon"
+		// 			>
+		// 				<Trash className="h-4 w-4" />
+		// 			</Button>
+		// 		</TableCell>
+		// 	</TableRow>
+		// ));
 	}
 
 	// options
@@ -322,7 +364,7 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 				</div>
 			</section>
 
-			<Table>
+			<Table className="border">
 				<TableCaption>
 					{!tasks ? "isPending..." : "A list of tasks"}
 				</TableCaption>
@@ -354,7 +396,11 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 						</TableHead>
 					</TableRow>
 				</TableHeader>
-				<TableBody>{renderTaskRows()}</TableBody>
+				<TableBody>
+					{/* <DataTableRow /> */}
+					{renderTaskRows()}
+					<NewRow />
+				</TableBody>
 			</Table>
 		</>
 	);
