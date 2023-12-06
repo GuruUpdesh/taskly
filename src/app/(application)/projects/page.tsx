@@ -1,5 +1,5 @@
-import { getAllProjects } from "~/actions/projectActions";
-import ProjectTable from "~/components/project/ProjectTable";
+import { getAllProjects } from "~/app/(application)/projects/_actions/project-actions";
+import ProjectTable from "~/app/(application)/projects/project-table";
 
 export default async function ProjectsPage() {
 	const projects = await getAllProjects();
