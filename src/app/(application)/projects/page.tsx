@@ -18,7 +18,7 @@ export default async function ProjectsPage() {
 						Create
 					</h3>
 				</header>
-				<ProjectTable projects={projects} />
+				<ProjectTable />
 			</div>
 		</main>
 	);

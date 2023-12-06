@@ -1,15 +1,11 @@
 "use client";
 
 // hooks
-import React, { useTransition, useOptimistic } from "react";
+import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 // data
-import {
-	type Project,
-	type NewProject,
-	insertProjectSchema,
-} from "~/server/db/schema";
+import { type NewProject, insertProjectSchema } from "~/server/db/schema";
 
 // utils
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,11 +30,7 @@ import { Button } from "../../../components/ui/button";
 import { createProject } from "~/app/(application)/projects/_actions/project-actions";
 import { ChevronRight, Loader2 } from "lucide-react";
 
-type ProjectTableProps = {
-	projects: Project[];
-};
-
-const ProjectTable = ({ projects }: ProjectTableProps) => {
+const ProjectTable = () => {
 	const [isLoading, startTransition] = useTransition();
 
 	// options
