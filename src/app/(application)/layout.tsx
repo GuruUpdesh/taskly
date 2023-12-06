@@ -1,5 +1,6 @@
 import "~/styles/globals.css";
 import { UserButton } from "@clerk/nextjs";
+import { ModeToggle } from "~/components/themes-switcher";
 
 export const metadata = {
 	title: "Taskly",
@@ -15,6 +16,7 @@ export default function ApplicationLayout({
 	return (
 		<div>
 			<UserButton afterSignOutUrl="/" />
+			<ModeToggle />
 			{children}
 		</div>
 	);

@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "~/components/ui/theme-provider";
 
 export const metadata = {
 	title: "Taskly",
@@ -19,7 +20,16 @@ export default function RootLayout({
 				lang="en"
 				className="min-h-screen bg-background font-sans antialiased"
 			>
-				<body className={GeistSans.className}>{children}</body>
+				<body className={GeistSans.className}>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="dark"
+						enableSystem
+						disableTransitionOnChange
+					>
+						{children}
+					</ThemeProvider>
+				</body>
 			</html>
 		</ClerkProvider>
 	);
