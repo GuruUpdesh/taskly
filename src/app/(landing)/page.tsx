@@ -9,7 +9,7 @@ const plexSans = IBM_Plex_Sans({ weight: ["700"], subsets: ["latin"] });
 
 export default function HomePage() {
 	return (
-		<main className="flex h-screen justify-center bg-blue-500/10">
+		<div className="flex justify-center">
 			<div className="z-30 flex max-w-[900px] flex-col gap-6 py-28 text-center">
 				<h1
 					className={cn(
@@ -53,11 +53,11 @@ export default function HomePage() {
 					<Button variant="secondary">Documentation</Button>
 				</div>
 			</div>
-			<div className="absolute left-0 top-0 z-20 h-screen w-screen bg-gradient-to-b from-transparent to-background" />
+			<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent to-background" />
 			<Grid />
 			<div className="absolute left-0 top-0 z-0 h-full w-full overflow-hidden">
-				<div className="absolute h-64 w-screen animate-to-bottom-infinite bg-blue-500 opacity-25 mix-blend-overlay blur-[150px]" />
+				<div className="absolute h-[300px] w-screen animate-to-bottom-infinite bg-blue-500/50 dark:bg-muted mix-blend-overlay blur-[150px]" />
 			</div>
-		</main>
+		</div>
 	);
 }

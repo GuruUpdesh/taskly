@@ -26,16 +26,14 @@ const Grid = () => {
 	}
 
 	return (
-		<div className="absolute z-10">
-			<div
-				className="grid h-screen w-screen overflow-hidden"
-				style={{
-					gridTemplateColumns: `repeat(${cols}, 1fr)`,
-					gridTemplateRows: `repeat(${rows}, 1fr)`,
-				}}
-			>
-				{renderTiles(cols * rows)}
-			</div>
+		<div
+			className="absolute grid h-full w-full overflow-hidden z-10 bg-muted dark:bg-muted/25 top-0"
+			style={{
+				gridTemplateColumns: `repeat(${cols}, 1fr)`,
+				gridTemplateRows: `repeat(${rows}, 1fr)`,
+			}}
+		>
+			{renderTiles(cols * rows)}
 		</div>
 	);
 };

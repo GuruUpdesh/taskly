@@ -1,3 +1,5 @@
+"use client";
+
 // Import necessary modules
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";

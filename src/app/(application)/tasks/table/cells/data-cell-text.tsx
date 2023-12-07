@@ -59,7 +59,7 @@ function DataCell({
 	}
 
 	return (
-		<TableCell className="border p-0">
+		<TableCell className={"border p-0"}>
 			<TooltipProvider>
 				<Tooltip open={isTipOpen} onOpenChange={handleOpenChange}>
 					<TooltipTrigger asChild>

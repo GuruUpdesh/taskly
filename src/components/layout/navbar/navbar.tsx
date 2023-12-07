@@ -1,17 +1,12 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import {
 	NavigationMenu,
 	NavigationMenuItem,
 	NavigationMenuLink,
 	NavigationMenuList,
 } from "~/components/ui/navigation-menu";
-import { Button } from "../ui/button";
-import Image from "next/image";
-import { ModeToggle } from "../themes-switcher";
 
 type NavbarProps = {
 	children: React.ReactNode;
@@ -19,15 +14,7 @@ type NavbarProps = {
 
 const Navbar = ({ children }: NavbarProps) => {
 	return (
-		<nav className="fixed z-50 flex w-full justify-between bg-black/50 p-4 py-2 backdrop-blur-lg">
-			<div>
-				<Image
-					src="/static/taskly-logo.png"
-					alt="logo"
-					height="38"
-					width="100"
-				/>
-			</div>
+		<nav className="flex justify-between">
 			<NavigationMenu>
 				<NavigationMenuList>
 					<NavigationMenuItem>
@@ -51,17 +38,6 @@ const Navbar = ({ children }: NavbarProps) => {
 					</NavigationMenuItem>
 				</NavigationMenuList>
 			</NavigationMenu>
-			<div className="flex items-center space-x-2">
-				<ModeToggle />
-				<SignedIn>
-					<UserButton afterSignOutUrl="/" />
-				</SignedIn>
-				<SignedOut>
-					<Link href="/tasks">
-						<Button>Login</Button>
-					</Link>
-				</SignedOut>
-			</div>
 		</nav>
 	);
 };

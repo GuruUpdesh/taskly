@@ -21,19 +21,22 @@ export default async function ProjectsCreatePage({
 	if (tasks === undefined) return null;
 
 	return (
-		<div className="container flex flex-col gap-4 px-4 py-16 pt-24 ">
-			<p className="text-sm text-muted-foreground">
-				{env.NODE_ENV.toLocaleUpperCase()} / Projects / {project.name}
-			</p>
-			<header className="flex items-center gap-2">
-				<h3 className="scroll-m-20 text-2xl font-normal tracking-tight">
+		<div className="container mt-6 flex flex-col">
+			<section className="mb-3">
+				<p className="text-sm text-muted-foreground">
+					{env.NODE_ENV.toLocaleUpperCase()} {">"} Projects {">"}{" "}
 					{project.name}
-				</h3>
-				<p>{">"}</p>
-				<h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-					Backlog
-				</h3>
-			</header>
+				</p>
+				<header className="flex items-center gap-2">
+					<h3 className="scroll-m-20 text-2xl font-bold tracking-tight">
+						Backlog
+					</h3>
+					{/* <p>{">"}</p>
+					<h3 className="scroll-m-20 text-2xl font-bold tracking-tight">
+						Backlog
+					</h3> */}
+				</header>
+			</section>
 			<TaskTable tasks={tasks} />
 		</div>
 	);

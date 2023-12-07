@@ -128,37 +128,35 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 
 	return (
 		<>
-			<div className="flex items-center gap-2">
-				<AiDialog dispatch={dispatch} />
-			</div>
+			{/* <AiDialog dispatch={dispatch} /> */}
 			<Table className="border">
 				<TableCaption>
 					{!tasks ? "isPending..." : "A list of tasks"}
 				</TableCaption>
 				<TableHeader>
 					<TableRow>
-						<TableHead>
-							<p className="uppercase">Title</p>
+						<TableHead className="w-full h-0 p-0">
+							{/* <p className="uppercase">Title</p> */}
 						</TableHead>
-						<TableHead>
-							<p className="uppercase">Description</p>
+						<TableHead className="h-0 p-0">
+							{/* <p className="uppercase">Description</p> */}
 						</TableHead>
-						<TableHead>
-							<p className="flex items-center uppercase">
+						<TableHead className="h-0 p-0">
+							{/* <p className="flex items-center uppercase">
 								<Target className="mr-2 h-4 w-4" /> Status
-							</p>
+							</p> */}
 						</TableHead>
-						<TableHead>
-							<p className="flex items-center uppercase">
+						<TableHead className="h-0 p-0">
+							{/* <p className="flex items-center uppercase">
 								<Flag className="mr-2 h-4 w-4" /> Priority
-							</p>
+							</p> */}
 						</TableHead>
-						<TableHead>
-							<p className="flex items-center uppercase">
+						<TableHead className="h-0 p-0">
+							{/* <p className="flex items-center uppercase">
 								<Component className="mr-2 h-4 w-4" /> Type
-							</p>
+							</p> */}
 						</TableHead>
-						<TableHead className="p-0"></TableHead>
+						<TableHead className="h-0 p-0"></TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
