@@ -30,7 +30,7 @@ import { Button } from "../../../components/ui/button";
 import { createProject } from "~/app/(application)/projects/_actions/project-actions";
 import { ChevronRight, Loader2 } from "lucide-react";
 
-const ProjectTable = () => {
+const ProjectCreateForm = () => {
 	const [isLoading, startTransition] = useTransition();
 
 	// options
@@ -158,4 +158,4 @@ const ProjectTable = () => {
 	);
 };
 
-export default ProjectTable;
+export default ProjectCreateForm;
