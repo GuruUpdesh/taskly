@@ -25,6 +25,18 @@ export async function getAllProjects() {
 	}
 }
 
+export async function getProject(id: number) {
+	try {
+		const projects: Project[] = await db
+			.select()
+			.from(project)
+			.where(eq(project.id, id));
+		return projects[0];
+	} catch (error) {
+		if (error instanceof Error) console.log(error.stack);
+	}
+}
+
 export async function deleteProject(id: number) {
 	try {
 		await db.delete(project).where(eq(project.id, id));
