@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "~/components/ui/theme-provider";
 import Navbar from "~/components/navbar/navbar";
 import ProjectList from "~/components/navbar/project-list";
 
@@ -22,10 +23,17 @@ export default function RootLayout({
 				className="min-h-screen bg-background font-sans antialiased"
 			>
 				<body className={GeistSans.className}>
-					<Navbar>
-						<ProjectList />
-					</Navbar>
-					{children}
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						<Navbar>
+							<ProjectList />
+						</Navbar>
+						<main>{children}</main>
+					</ThemeProvider>
 				</body>
 			</html>
 		</ClerkProvider>
