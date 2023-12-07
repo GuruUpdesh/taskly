@@ -61,6 +61,7 @@ export type OptimisticActions = {
 };
 
 const TaskTable = ({ tasks }: TaskTableProps) => {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_, startTransition] = useTransition();
 	const [optimisticTasks, dispatch] = useOptimistic(
 		tasks.map((task) => ({ ...task, pending: false })),

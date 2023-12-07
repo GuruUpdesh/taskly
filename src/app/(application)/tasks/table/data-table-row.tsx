@@ -79,7 +79,7 @@ const DataTableRow = ({
 
 	return (
 		<TableRow
-			className={cn({
+			className={cn(" bg-background", {
 				"pointer-events-none": variant === "ai",
 			})}
 		>
@@ -125,7 +125,7 @@ const DataTableRow = ({
 				</TableCell>
 			) : variant === "new" ? (
 				<>
-					<TableCell className="flex justify-between p-0">
+					<TableCell className="p-0 ">
 						<Button
 							onClick={() => {
 								if (closeForm) closeForm();
@@ -135,10 +135,10 @@ const DataTableRow = ({
 						>
 							<X className="h-4 w-4" />
 						</Button>
-						<Button
-							onClick={() => form.handleSubmit(onSubmit)()}
-							size="icon"
-						>
+					</TableCell>
+					<TableCell className="w-50 p-0">
+						<Button onClick={() => form.handleSubmit(onSubmit)()}>
+							Add
 							<ChevronRight className="h-4 w-4" />
 						</Button>
 					</TableCell>
