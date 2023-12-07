@@ -11,6 +11,7 @@ import {
 } from "~/components/ui/navigation-menu";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { ModeToggle } from "../themes-switcher";
 
 type NavbarProps = {
 	children: React.ReactNode;
@@ -50,7 +51,8 @@ const Navbar = ({ children }: NavbarProps) => {
 					</NavigationMenuItem>
 				</NavigationMenuList>
 			</NavigationMenu>
-			<div>
+			<div className="flex items-center space-x-2">
+				<ModeToggle/>
 				<SignedIn>
 					<UserButton afterSignOutUrl="/" />
 				</SignedIn>

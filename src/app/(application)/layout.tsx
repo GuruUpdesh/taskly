@@ -12,10 +12,5 @@ export default function ApplicationLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	return (
-		<div>
-			<ModeToggle />
-			{children}
-		</div>
-	);
+	return <div>{children}</div>;
 }
