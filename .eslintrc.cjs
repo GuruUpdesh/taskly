@@ -38,6 +38,12 @@ const config = {
         "@typescript-eslint/consistent-type-imports": "off",
       },
     },
+    {
+      files: ["src/**"],
+      rules: {
+        "react-hooks/exhaustive-deps": "off",
+      }
+    }
   ]
 };
 

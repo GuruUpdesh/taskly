@@ -18,5 +18,4 @@ export default function ApplicationLayout({
 			{children}
 		</div>
 	);
-
 }
