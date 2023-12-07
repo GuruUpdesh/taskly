@@ -18,7 +18,7 @@ type NavbarProps = {
 
 const Navbar = ({ children }: NavbarProps) => {
 	return (
-		<nav className="fixed z-50 flex w-full justify-between p-4">
+		<nav className="fixed z-50 flex w-full justify-between bg-black/50 p-4 backdrop-blur-lg">
 			<div>
 				<Image
 					src="/static/taskly-logo.png"
