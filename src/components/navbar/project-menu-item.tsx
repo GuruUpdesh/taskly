@@ -29,7 +29,7 @@ const ProjectMenuItem = ({ projects }: ProjectMenuItemProps) => {
 						</NavigationMenuLink>
 					))}
 					<NavigationMenuLink
-						href="/projects"
+						href="/projects/create"
 						className="flex items-center gap-1"
 					>
 						<Plus className="h-4 w-4" />
