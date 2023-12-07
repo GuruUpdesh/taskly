@@ -1,5 +1,4 @@
 import "~/styles/globals.css";
-import { ModeToggle } from "~/components/themes-switcher";
 
 export const metadata = {
 	title: "Taskly",

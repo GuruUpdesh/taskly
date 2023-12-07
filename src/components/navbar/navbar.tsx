@@ -52,7 +52,7 @@ const Navbar = ({ children }: NavbarProps) => {
 				</NavigationMenuList>
 			</NavigationMenu>
 			<div className="flex items-center space-x-2">
-				<ModeToggle/>
+				<ModeToggle />
 				<SignedIn>
 					<UserButton afterSignOutUrl="/" />
 				</SignedIn>
