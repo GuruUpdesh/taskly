@@ -15,11 +15,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
-import {
-	createTask,
-	deleteTask,
-	updateTask,
-} from "~/actions/task-actions";
+import { createTask, deleteTask, updateTask } from "~/actions/task-actions";
 
 // components
 import NewRow from "./new-row";
