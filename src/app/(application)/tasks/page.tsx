@@ -7,7 +7,7 @@ export default async function TaskPage() {
 	if (tasks === undefined) return null;
 
 	return (
-		<div className="container flex flex-col gap-4 px-4 py-16 ">
+		<div className="container flex flex-col gap-4 px-4 py-4 ">
 			<p className="text-sm text-muted-foreground">
 				Organization / Projects / Project Name ({env.NODE_ENV})
 			</p>
