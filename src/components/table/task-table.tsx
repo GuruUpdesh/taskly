@@ -19,7 +19,7 @@ import {
 	createTask,
 	deleteTask,
 	updateTask,
-} from "~/app/(application)/tasks/_actions/task-actions";
+} from "~/actions/task-actions";
 
 // components
 import NewRow from "./new-row";

@@ -1,7 +1,7 @@
-import { getProject } from "~/app/(application)/projects/_actions/project-actions";
+import { getProject } from "~/actions/project-actions";
 import { env } from "~/env.mjs";
-import { getAllTasks } from "../../tasks/_actions/task-actions";
-import TaskTable from "../../tasks/table/task-table";
+import { getAllTasks } from "../../../../actions/task-actions";
+import TaskTable from "../../../../components/table/task-table";
 
 type Params = {
 	params: {

@@ -23,7 +23,7 @@ const ProjectMenuItem = ({ projects }: ProjectMenuItemProps) => {
 					{projects.map((project) => (
 						<NavigationMenuLink
 							key={project.id}
-							href={`/projects/${project.id}`}
+							href={`/backlog/${project.id}`}
 						>
 							{project.name}
 						</NavigationMenuLink>
