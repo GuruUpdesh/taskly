@@ -27,7 +27,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { createProject } from "~/app/(application)/projects/_actions/project-actions";
+import { createProject } from "~/actions/project-actions";
 import { ChevronRight, Loader2 } from "lucide-react";
 
 const ProjectCreateForm = () => {
