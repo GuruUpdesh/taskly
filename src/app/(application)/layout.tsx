@@ -32,7 +32,7 @@ export default function ApplicationLayout({
 				maxSize={25}
 				defaultSize={15}
 			>
-				<div className="p-4 flex flex-col gap-4">
+				<div className="flex flex-col gap-4 p-4">
 					<div className="flex min-w-0 justify-between">
 						<h1>Project Name</h1>
 						<UserButton />
@@ -58,7 +58,9 @@ export default function ApplicationLayout({
 								<EnvelopeClosedIcon />
 								Inbox
 								<div className=" flex-1" />
-								<div className="rounded-full bg-accent px-4">1</div>
+								<div className="rounded-full bg-accent px-4">
+									1
+								</div>
 							</Button>
 						</Link>
 						<Link href="/">

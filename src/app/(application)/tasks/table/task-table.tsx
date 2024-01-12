@@ -20,10 +20,8 @@ import {
 	deleteTask,
 	updateTask,
 } from "~/app/(application)/tasks/_actions/task-actions";
-import { Flag, Target, Component } from "lucide-react";
 
 // components
-import AiDialog from "../ai-dialog";
 import NewRow from "./new-row";
 import DataTableRow from "./data-table-row";
 
@@ -135,7 +133,7 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 				</TableCaption>
 				<TableHeader>
 					<TableRow>
-						<TableHead className="w-full h-0 p-0">
+						<TableHead className="h-0 w-full p-0">
 							{/* <p className="uppercase">Title</p> */}
 						</TableHead>
 						<TableHead className="h-0 p-0">

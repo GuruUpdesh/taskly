@@ -27,7 +27,7 @@ const Grid = () => {
 
 	return (
 		<div
-			className="absolute grid h-full w-full overflow-hidden z-10 bg-muted dark:bg-muted/25 top-0"
+			className="absolute top-0 z-10 grid h-full w-full overflow-hidden bg-muted dark:bg-muted/25"
 			style={{
 				gridTemplateColumns: `repeat(${cols}, 1fr)`,
 				gridTemplateRows: `repeat(${rows}, 1fr)`,

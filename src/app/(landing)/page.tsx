@@ -56,7 +56,7 @@ export default function HomePage() {
 			<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent to-background" />
 			<Grid />
 			<div className="absolute left-0 top-0 z-0 h-full w-full overflow-hidden">
-				<div className="absolute h-[300px] w-screen animate-to-bottom-infinite bg-blue-500/50 dark:bg-muted mix-blend-overlay blur-[150px]" />
+				<div className="absolute h-[300px] w-screen animate-to-bottom-infinite bg-blue-500/50 mix-blend-overlay blur-[150px] dark:bg-muted" />
 			</div>
 		</div>
 	);
