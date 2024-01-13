@@ -2,9 +2,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "~/components/ui/theme-provider";
-import Navbar from "~/components/navbar/navbar";
-import ProjectList from "~/components/navbar/project-list";
-
+import { cn } from "~/lib/utils";
 export const metadata = {
 	title: "Taskly",
 	description: "Simplified project management tool",
@@ -18,21 +16,21 @@ export default function RootLayout({
 }) {
 	return (
 		<ClerkProvider>
-			<html
-				lang="en"
-				className="min-h-screen bg-background font-sans antialiased"
-			>
-				<body className={GeistSans.className}>
+			<html lang="en" suppressHydrationWarning>
+				<body
+					className={cn(
+						"min-h-screen bg-background font-sans antialiased",
+						GeistSans.className,
+					)}
+				>
 					<ThemeProvider
 						attribute="class"
 						defaultTheme="system"
 						enableSystem
-						disableTransitionOnChange
 					>
-						<Navbar>
-							<ProjectList />
-						</Navbar>
-						<main>{children}</main>
+						<div className="flex min-h-screen flex-col">
+							{children}
+						</div>
 					</ThemeProvider>
 				</body>
 			</html>
