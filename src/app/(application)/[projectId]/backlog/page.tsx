@@ -31,10 +31,6 @@ export default async function ProjectsCreatePage({
 					<h3 className="scroll-m-20 text-2xl font-bold tracking-tight">
 						Backlog
 					</h3>
-					{/* <p>{">"}</p>
-					<h3 className="scroll-m-20 text-2xl font-bold tracking-tight">
-						Backlog
-					</h3> */}
 				</header>
 			</section>
 			<TaskTable tasks={tasks} />

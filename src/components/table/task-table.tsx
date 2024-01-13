@@ -7,14 +7,7 @@ import React, { useTransition, useOptimistic } from "react";
 import { type Task, type NewTask, insertTaskSchema } from "~/server/db/schema";
 
 // ui
-import {
-	Table,
-	TableBody,
-	TableCaption,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "~/components/ui/table";
+import { Table, TableBody, TableCaption } from "~/components/ui/table";
 import { createTask, deleteTask, updateTask } from "~/actions/task-actions";
 
 // components
@@ -122,37 +115,10 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 
 	return (
 		<>
-			{/* <AiDialog dispatch={dispatch} /> */}
 			<Table className="border">
 				<TableCaption>
 					{!tasks ? "isPending..." : "A list of tasks"}
 				</TableCaption>
-				<TableHeader>
-					<TableRow>
-						<TableHead className="h-0 w-full p-0">
-							{/* <p className="uppercase">Title</p> */}
-						</TableHead>
-						<TableHead className="h-0 p-0">
-							{/* <p className="uppercase">Description</p> */}
-						</TableHead>
-						<TableHead className="h-0 p-0">
-							{/* <p className="flex items-center uppercase">
-								<Target className="mr-2 h-4 w-4" /> Status
-							</p> */}
-						</TableHead>
-						<TableHead className="h-0 p-0">
-							{/* <p className="flex items-center uppercase">
-								<Flag className="mr-2 h-4 w-4" /> Priority
-							</p> */}
-						</TableHead>
-						<TableHead className="h-0 p-0">
-							{/* <p className="flex items-center uppercase">
-								<Component className="mr-2 h-4 w-4" /> Type
-							</p> */}
-						</TableHead>
-						<TableHead className="h-0 p-0"></TableHead>
-					</TableRow>
-				</TableHeader>
 				<TableBody>
 					{renderTaskRows()}
 					<NewRow optimisticActions={optimisticActions} />
