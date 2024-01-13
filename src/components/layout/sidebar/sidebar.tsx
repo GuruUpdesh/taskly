@@ -9,7 +9,6 @@ import {
 	LayoutIcon,
 	TableIcon,
 } from "@radix-ui/react-icons";
-import { UserButton } from "@clerk/nextjs";
 import { Input } from "~/components/ui/input";
 import Link from "next/link";
 import SelectProject from "./select project/select-project";
@@ -27,12 +26,18 @@ const Sidebar = async ({ projectId }: SidebarProps) => {
 		if (!user || !user.hasImage || !user.imageUrl) return null;
 
 		return (
-			<Button variant="ghost" size="icon" className="p-1 aspect-square">
-				<Image src={user.imageUrl} alt="user-image" height={25} width={25} className="rounded-full border"/>
+			<Button variant="ghost" size="icon" className="aspect-square p-1">
+				<Image
+					src={user.imageUrl}
+					alt="user-image"
+					height={25}
+					width={25}
+					className="rounded-full border"
+				/>
 			</Button>
 		);
-	}
-	
+	};
+
 	return (
 		<div className="flex h-screen flex-col gap-4 p-4">
 			<div className="flex min-w-0 items-center justify-between gap-8">
