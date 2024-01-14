@@ -30,7 +30,7 @@ export default function ApplicationLayout({
 			</ResizablePanel>
 			<ResizableHandle className="" />
 			<ResizablePanel defaultSize={75}>
-				<main className="pt-4">{children}</main>
+				<main>{children}</main>
 			</ResizablePanel>
 		</ResizablePanelGroup>
 	);

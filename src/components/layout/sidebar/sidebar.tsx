@@ -56,7 +56,7 @@ const Sidebar = async ({ projectId }: SidebarProps) => {
 						Home
 					</Button>
 				</Link>
-				<Link href="/email">
+				<Link href={`/${projectId}/inbox`}>
 					<Button
 						variant="ghost"
 						size="sm"
