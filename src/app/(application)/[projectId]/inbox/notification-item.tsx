@@ -1,11 +1,35 @@
-import { CheckCircledIcon } from "@radix-ui/react-icons";
-import React from "react";
+"use client";
+
+import React, { useMemo } from "react";
+import { usePathname, useRouter } from "next/navigation";
+
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
+import { cn } from "~/lib/utils";
 
 const NotificationItem = () => {
+	const id = "test";
+
+	const router = useRouter();
+	const pathname = usePathname();
+
+	// check if URL ends with Id
+	const active = useMemo(() => {
+		const path = pathname.split("/");
+		return path[path.length - 1] === id;
+	}, [id, pathname]);
+
+	function handleClick() {
+		if (active) return;
+
+		router.push(`inbox/${id}`);
+	}
+
 	return (
-		<Card className="p-2">
+		<Card
+			onClick={handleClick}
+			className={cn("p-2 hover:bg-accent", active && "bg-accent")}
+		>
 			<div className="flex items-center justify-between">
 				<p className="font-semibold">Implement User Authentication</p>
 				<Button

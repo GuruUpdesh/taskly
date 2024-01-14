@@ -10,7 +10,6 @@ import {
 	TableIcon,
 } from "@radix-ui/react-icons";
 import { Input } from "~/components/ui/input";
-import Link from "next/link";
 import SelectProject from "./select project/select-project";
 import { currentUser } from "@clerk/nextjs";
 import Image from "next/image";
