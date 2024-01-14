@@ -3,7 +3,11 @@ import React from "react";
 import { Button } from "~/components/ui/button";
 
 import { env } from "~/env.mjs";
-import { DataCardLineGraph, DataCardFigure } from "./data-card";
+import {
+	DataCardLineGraph,
+	DataCardAreaGraph,
+	DataCardFigure,
+} from "../../../../components/dashboard/data-card";
 
 export default function DashboardPage() {
 	return (
@@ -30,7 +34,7 @@ export default function DashboardPage() {
 				<DataCardFigure />
 				<DataCardFigure />
 				<DataCardFigure />
-				<DataCardLineGraph />
+				<DataCardAreaGraph />
 				<DataCardLineGraph />
 			</section>
 		</div>
