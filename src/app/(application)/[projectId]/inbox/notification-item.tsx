@@ -10,8 +10,7 @@ type Props = {
 	id: string;
 };
 
-const NotificationItem = ({id}: Props) => {
-
+const NotificationItem = ({ id }: Props) => {
 	const router = useRouter();
 	const pathname = usePathname();
 
@@ -34,7 +33,7 @@ const NotificationItem = ({id}: Props) => {
 			<div
 				onClick={handleClick}
 				className={cn(
-					"rounded-none cursor-pointer p-2 hover:bg-accent",
+					"cursor-pointer rounded-none p-2 hover:bg-accent",
 					active && "bg-accent",
 				)}
 			>
