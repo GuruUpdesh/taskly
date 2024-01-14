@@ -14,6 +14,7 @@ import Link from "next/link";
 import SelectProject from "./select project/select-project";
 import { currentUser } from "@clerk/nextjs";
 import Image from "next/image";
+import SidebarButton from "./sidebar-button";
 
 interface SidebarProps {
 	projectId: string;
@@ -46,75 +47,39 @@ const Sidebar = async ({ projectId }: SidebarProps) => {
 			</div>
 			<Input placeholder="Search" className="h-8 min-w-0" />
 			<div className="border-b pb-4">
-				<Link href="/">
-					<Button
-						variant="ghost"
-						size="sm"
-						className="w-full justify-start gap-2 px-4 font-semibold"
-					>
-						<HomeIcon />
-						Home
-					</Button>
-				</Link>
-				<Link href={`/${projectId}/inbox`}>
-					<Button
-						variant="ghost"
-						size="sm"
-						className="w-full justify-start gap-2 px-4 font-semibold"
-					>
-						<EnvelopeClosedIcon />
-						Inbox
-						<div className=" flex-1" />
-						<div className="rounded-full bg-accent px-4">1</div>
-					</Button>
-				</Link>
-				<Link href="/">
-					<Button
-						variant="ghost"
-						size="sm"
-						className="w-full justify-start gap-2 px-4 font-semibold"
-					>
-						<DashboardIcon />
-						Dashboard
-					</Button>
-				</Link>
-				<Link href="/">
-					<Button
-						variant="ghost"
-						size="sm"
-						className="w-full justify-start gap-2 px-4 font-semibold"
-					>
-						<ReaderIcon />
-						Docs
-					</Button>
-				</Link>
+				<SidebarButton label="Home" icon={<HomeIcon />} url="/" />
+				<SidebarButton
+					label="Inbox"
+					icon={<EnvelopeClosedIcon />}
+					url={`/${projectId}/inbox`}
+				>
+					<div className=" flex-1" />
+					<div className="rounded-full bg-accent px-4">1</div>
+				</SidebarButton>
+				<SidebarButton
+					label="Dashboard"
+					icon={<DashboardIcon />}
+					url="/"
+				/>
+				<SidebarButton label="Docs" icon={<ReaderIcon />} url="/" />
 			</div>
 			<div>
-				<Button
-					variant="ghost"
-					size="sm"
-					className="w-full justify-start gap-2 px-4 font-semibold"
-				>
-					<TableIcon />
-					Backlog
-				</Button>
-				<Button
-					variant="ghost"
-					size="sm"
-					className="w-full justify-start gap-2 px-4 font-semibold"
-				>
-					<LayoutIcon />
-					Board
-				</Button>
+				<SidebarButton
+					label="Backlog"
+					icon={<TableIcon />}
+					url={`/${projectId}/backlog`}
+				/>
+				<SidebarButton
+					label="Board"
+					icon={<LayoutIcon />}
+					url={`/${projectId}/board`}
+				/>
 			</div>
-			<Button
-				variant="ghost"
-				size="sm"
-				className="w-full justify-start gap-2 px-4 font-semibold"
-			>
-				<GearIcon />
-				Settings
-			</Button>
+			<SidebarButton
+				label="Settings"
+				icon={<GearIcon />}
+				url="/settings"
+			/>
 		</div>
 	);
 };
