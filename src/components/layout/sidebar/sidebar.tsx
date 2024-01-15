@@ -58,7 +58,7 @@ const Sidebar = async ({ projectId }: SidebarProps) => {
 				<SidebarButton
 					label="Dashboard"
 					icon={<DashboardIcon />}
-					url="/"
+					url={`/${projectId}/dashboard`}
 				/>
 				<SidebarButton label="Docs" icon={<ReaderIcon />} url="/" />
 			</div>
