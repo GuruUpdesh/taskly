@@ -14,7 +14,13 @@ type Props = {
 	children?: React.ReactNode;
 };
 
-const SidebarButton = ({ label, icon, url, openInNewTab = false, children }: Props) => {
+const SidebarButton = ({
+	label,
+	icon,
+	url,
+	openInNewTab = false,
+	children,
+}: Props) => {
 	const pathname = usePathname();
 	const active = useMemo(() => pathname === url, [pathname, url]);
 	return (
