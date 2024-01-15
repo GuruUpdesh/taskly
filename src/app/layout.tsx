@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import { cn } from "~/lib/utils";
+import { SettingsContextProvider } from "~/hooks/context/SettingsContext";
 export const metadata = {
 	title: "Taskly",
 	description: "Simplified project management tool",
@@ -28,9 +29,11 @@ export default function RootLayout({
 						defaultTheme="system"
 						enableSystem
 					>
-						<div className="flex min-h-screen flex-col">
-							{children}
-						</div>
+						<SettingsContextProvider>
+							<div className="flex min-h-screen flex-col">
+								{children}
+							</div>
+						</SettingsContextProvider>
 					</ThemeProvider>
 				</body>
 			</html>
