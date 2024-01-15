@@ -68,7 +68,7 @@ const Sidebar = async ({ projectId }: SidebarProps) => {
 						<div className="rounded-full bg-accent px-4">1</div>
 					</Button>
 				</Link>
-				<Link href="/">
+				<Link href={`/${projectId}/dashboard`}>
 					<Button
 						variant="ghost"
 						size="sm"
