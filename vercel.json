@@ -4,5 +4,8 @@
         "path": "/api/cron",
         "schedule": "*/5 * * * *"
       }
-    ]
+    ],
+    "github": {
+      "autoJobCancelation": true
+    }
   }
