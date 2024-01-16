@@ -1,23 +1,25 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { useSettingsNavigationStore } from "~/store/settingsNavigation";
+import Link from "next/link";
 
 const SettingsBackButton = () => {
-	const router = useRouter();
-
-	function handleback() {
-		router.back();
+	let backUrl = useSettingsNavigationStore((state) => state.backUrl);
+	if (!backUrl) {
+		backUrl = "/";
 	}
+
 	return (
-		<button
-			onClick={handleback}
+		<Link
+			href={backUrl}
+			// onClick={handleback}
 			className="flex items-center gap-4 text-2xl font-semibold tracking-tight"
 		>
-            <ArrowLeft />
+			<ArrowLeft />
 			Settings
-		</button>
+		</Link>
 	);
 };
 
