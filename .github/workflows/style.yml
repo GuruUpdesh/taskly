@@ -28,7 +28,7 @@ jobs:
             - name: Run style check and capture output
               run: |
                   set +e
-                  npm run style:all > style_output.txt
+                  npm run style:all 2> style_output.txt
                   exit_status=$?
                   set -e
                   if [ $exit_status -ne 0 ]; then
