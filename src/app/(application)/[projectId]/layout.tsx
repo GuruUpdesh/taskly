@@ -20,7 +20,7 @@ export default function ApplicationLayout({
 	return (
 		<ResizablePanelGroup direction="horizontal">
 			<ResizablePanel
-				id="sidebar"
+					id="sidebar"
 				minSize={7}
 				collapsible={true}
 				maxSize={25}
