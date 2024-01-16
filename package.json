@@ -10,6 +10,9 @@
 		"start": "next start",
 		"lint": "next lint",
 		"style:all": "tsc && next lint && prettier --check 'src/**/*.{js,jsx,ts,tsx}'",
+		"style:tsc": "tsc",
+		"style:lint": "next lint",
+		"style:prettier": "prettier --check 'src/**/*.{js,jsx,ts,tsx}'",
 		"style:fix": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'"
 	},
 	"dependencies": {
