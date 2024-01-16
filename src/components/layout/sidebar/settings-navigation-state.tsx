@@ -2,24 +2,20 @@
 
 import { usePathname } from "next/navigation";
 import React from "react";
-import { useSettingsNavigationStore } from "~/store/settingsNavigation";
+import { useNavigationStore } from "~/store/navigation";
 
-type Props = {
-	children: React.ReactNode;
-};
-
-const SettingsNavigationState = ({ children }: Props) => {
-	const updateBackUrl = useSettingsNavigationStore(
-		(state) => state.updateBackUrl,
+const SettingsNavigationState = () => {
+	const updateLastApplicationPathname = useNavigationStore(
+		(state) => state.updateLastApplicationPathname,
 	);
 	const pathname = usePathname();
 
 	React.useEffect(() => {
-		updateBackUrl(pathname);
+		updateLastApplicationPathname(pathname);
 		console.log("🚀 ~ React.useEffect ~ pathname:", pathname);
 	}, [pathname]);
 
-	return children;
+	return null;
 };
 
 export default SettingsNavigationState;

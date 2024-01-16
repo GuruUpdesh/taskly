@@ -25,7 +25,8 @@ export default async function ApplicationLayout({
 		return <div>Project not found</div>;
 	}
 	return (
-		<ProjectState project={project}>
+		<>
+			<ProjectState project={project} />
 			<ResizablePanelGroup direction="horizontal">
 				<ResizablePanel
 					id="sidebar"
@@ -34,15 +35,14 @@ export default async function ApplicationLayout({
 					maxSize={25}
 					defaultSize={15}
 				>
-					<SettingsNavigationState>
-						<Sidebar projectId={projectId} />
-					</SettingsNavigationState>
+					<SettingsNavigationState />
+					<Sidebar projectId={projectId} />
 				</ResizablePanel>
 				<ResizableHandle className="" />
 				<ResizablePanel defaultSize={75}>
 					<main>{children}</main>
 				</ResizablePanel>
 			</ResizablePanelGroup>
-		</ProjectState>
+		</>
 	);
 }

@@ -4,6 +4,7 @@ import React from "react";
 import { useProjectStore } from "~/store/project";
 
 const Test = () => {
+	// We can remove this component (its here as an example of how to use the store)
 	const project = useProjectStore((state) => state.project);
 
 	if (!project) return null;
