@@ -40,14 +40,15 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: Set up Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: "18.x"
-                  cache:
-                      path: ~/.npm
-                      key: ${{ needs.setup.outputs.cache-key }}
+            uses: actions/setup-node@v3
+            with:
+                node-version: "18.x"
+                cache:
+                    path: ~/.npm
+                    key: ${{ needs.setup.outputs.cache-key }}
 
             - run: npm run style:tsc
+
 
     style_lint:
         needs: setup
@@ -55,12 +56,12 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: Set up Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: "18.x"
-                  cache:
-                      path: ~/.npm
-                      key: ${{ needs.setup.outputs.cache-key }}
+            uses: actions/setup-node@v3
+            with:
+                node-version: "18.x"
+                cache:
+                    path: ~/.npm
+                    key: ${{ needs.setup.outputs.cache-key }}
 
             - run: npm run style:lint
 
@@ -70,11 +71,11 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: Set up Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: "18.x"
-                  cache:
-                      path: ~/.npm
-                      key: ${{ needs.setup.outputs.cache-key }}
+            uses: actions/setup-node@v3
+            with:
+                node-version: "18.x"
+                cache:
+                    path: ~/.npm
+                    key: ${{ needs.setup.outputs.cache-key }}
 
             - run: npm run style:prettier
