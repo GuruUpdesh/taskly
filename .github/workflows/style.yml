@@ -1,80 +1,80 @@
 name: Style Check
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      cache-key: ${{ steps.cache-npm.outputs.cache-key }}
-    
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-          cache: 'npm'
+    setup:
+        runs-on: ubuntu-latest
+        outputs:
+            cache-key: ${{ steps.cache-npm.outputs.cache-key }}
 
-      - name: Install dependencies
-        run: npm ci
-        env:
-          SKIP_ENV_VALIDATION: '1'
+        steps:
+            - uses: actions/checkout@v3
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "18.x"
+                  cache: "npm"
 
-      - name: Cache NPM modules
-        id: cache-npm
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
+            - name: Install dependencies
+              run: npm ci
+              env:
+                  SKIP_ENV_VALIDATION: "1"
 
-  style_tsc:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-          cache:
-            path: ~/.npm
-            key: ${{ needs.setup.outputs.cache-key }}
+            - name: Cache NPM modules
+              id: cache-npm
+              uses: actions/cache@v3
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-npm-
 
-      - run: npm run style:tsc
+    style_tsc:
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "18.x"
+                  cache:
+                      path: ~/.npm
+                      key: ${{ needs.setup.outputs.cache-key }}
 
-  style_lint:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-          cache:
-            path: ~/.npm
-            key: ${{ needs.setup.outputs.cache-key }}
+            - run: npm run style:tsc
 
-      - run: npm run style:lint
+    style_lint:
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "18.x"
+                  cache:
+                      path: ~/.npm
+                      key: ${{ needs.setup.outputs.cache-key }}
 
-  style_prettier:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-          cache:
-            path: ~/.npm
-            key: ${{ needs.setup.outputs.cache-key }}
+            - run: npm run style:lint
 
-      - run: npm run style:prettier
+    style_prettier:
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "18.x"
+                  cache:
+                      path: ~/.npm
+                      key: ${{ needs.setup.outputs.cache-key }}
+
+            - run: npm run style:prettier
