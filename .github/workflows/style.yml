@@ -26,14 +26,22 @@ jobs:
                   cache: "npm"
             - run: npm ci
             - name: Run style check and capture output
-              run: npm run style:all > style_output.txt || true
+              run: |
+                  set +e
+                  npm run style:all > style_output.txt
+                  exit_status=$?
+                  set -e
+                  if [ $exit_status -ne 0 ]; then
+                      echo "Style check failed, exit status: $exit_status"
+                      exit $exit_status
+                  fi
             - name: Comment PR on style check failure
               if: failure()
               uses: thollander/actions-comment-pull-request@v1
               with:
-                message: |
-                  Style check failed. Here are the details:
-                  ```
-                  $(cat style_output.txt)
-                  ```
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  message: |
+                      Style check failed. Here are the details:
+                      ```
+                      $(cat style_output.txt)
+                      ```
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
