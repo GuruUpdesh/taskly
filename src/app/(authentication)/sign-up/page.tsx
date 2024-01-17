@@ -5,7 +5,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 export default function SignUpPage() {
 	return (
 		<div>
-            <ClerkLoading>
+			<ClerkLoading>
 				<Skeleton className="h-[536px] w-[400px] rounded-sm bg-background" />
 			</ClerkLoading>
 			<SignUp

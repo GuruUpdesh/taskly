@@ -17,8 +17,6 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    // Add ` on ID and SECRET if you want to make sure they're not empty
-
     OPENAI_API_KEY: z.string(),
     RESEND_API_KEY: z.string(),
     CRON_SECRET: z.string(),
@@ -32,7 +30,6 @@ export const env = createEnv({
 	 * `NEXT_PUBLIC_`.
 	 */
 	client: {
-		// NEXT_PUBLIC_CLIENTVAR: z.string(),
 		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
 	},
 

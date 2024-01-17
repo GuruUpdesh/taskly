@@ -38,9 +38,9 @@ async function validateRequest(request: Request) {
  * Now we can handle the webhook events with our own logic
  */
 async function onUserCreated(payload: UserWebhookEvent) {
-    const data = {
-        userId: payload.data.id,
-    }
+	const data = {
+		userId: payload.data.id,
+	};
 	const newUserInfo: NewUserInfo = insertUserInfoSchema.parse(data);
 	await db.insert(userInfo).values(newUserInfo);
 }
