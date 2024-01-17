@@ -53,6 +53,7 @@
 		"react-resizable-panels": "^1.0.8",
 		"recharts": "^2.10.4",
 		"resend": "^2.0.0",
+		"svix": "^1.15.0",
 		"tailwind-merge": "^2.0.0",
 		"tailwindcss-animate": "^1.0.7",
 		"zod": "^3.22.4"
