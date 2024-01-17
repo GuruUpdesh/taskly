@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import type { UserWebhookEvent, WebhookEvent } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { Webhook as svixWebhook } from "svix";
 import { env } from "~/env.mjs";
@@ -40,18 +41,16 @@ async function onUserCreated(payload: UserWebhookEvent) {
     const data = {
         userId: payload.data.id,
     }
-	// Create a new user in database
 	const newUserInfo: NewUserInfo = insertUserInfoSchema.parse(data);
 	await db.insert(userInfo).values(newUserInfo);
 }
 
 async function onUserDeleted(payload: UserWebhookEvent) {
-	// Delete the user from database
-}
-
-async function onUserUpdated(payload: UserWebhookEvent) {
-	// Update the user in database
-	// todo: do we need this?
+	const userId = payload.data.id;
+	if (!userId) {
+		throw new Error("No user ID provided");
+	}
+	await db.delete(userInfo).where(eq(userInfo.userId, userId));
 }
 
 export async function POST(request: Request) {
@@ -65,9 +64,6 @@ export async function POST(request: Request) {
 				break;
 			case "user.deleted":
 				await onUserDeleted(payload);
-				break;
-			case "user.updated":
-				await onUserUpdated(payload);
 				break;
 			default:
 				throw new Error("Unhandled webhook event");
