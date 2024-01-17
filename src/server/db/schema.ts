@@ -63,6 +63,23 @@ export const selectProjectSchema = createSelectSchema(project);
 export type Project = InferSelectModel<typeof project>;
 export type NewProject = z.infer<typeof insertProjectSchema>;
 
+export const userInfo = mysqlTable("userInfo", {
+	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	userId: varchar("user_id", { length: 32 }).notNull(),
+});
+
+export const insertUserInfoSchema = z.object({
+	userId: z
+		.string()
+		.length(32)
+		.refine((val) => val !== "", {
+			message: "User ID is required",
+		}),
+});
+
+export type UserInfo = InferSelectModel<typeof userInfo>;
+export type NewUserInfo = z.infer<typeof insertUserInfoSchema>;
+
 // export const posts = mysqlTable(
 //   "post",
 //   {
