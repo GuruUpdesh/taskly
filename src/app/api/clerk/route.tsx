@@ -51,8 +51,8 @@ async function onUserCreated(payload: UserWebhookEvent) {
 
 async function helperCreateUser(userId: string) {
 	const data: NewUserInfo = {
-		userId
-	}
+		userId,
+	};
 
 	const newUserInfo: NewUserInfo = insertUserInfoSchema.parse(data);
 	await db.insert(userInfo).values(newUserInfo);
@@ -77,7 +77,7 @@ async function onSessionCreated(payload: SessionWebhookEvent) {
 
 	// if not, create a new user
 	if (user.length === 0) {
-		await helperCreateUser(userId)
+		await helperCreateUser(userId);
 	}
 }
 
