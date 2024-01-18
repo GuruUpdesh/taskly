@@ -65,7 +65,7 @@ export type NewProject = z.infer<typeof insertProjectSchema>;
 
 export const userInfo = mysqlTable("userInfo", {
 	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-	userId: varchar("user_id", { length: 32 }).notNull(),
+	userId: varchar("user_id", { length: 32 }).notNull().unique(),
 });
 
 export const insertUserInfoSchema = z.object({

@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import type { UserWebhookEvent, WebhookEvent } from "@clerk/nextjs/server";
+import type {
+	SessionWebhookEvent,
+	UserWebhookEvent,
+	WebhookEvent,
+} from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { Webhook as svixWebhook } from "svix";
@@ -38,9 +42,18 @@ async function validateRequest(request: Request) {
  * Now we can handle the webhook events with our own logic
  */
 async function onUserCreated(payload: UserWebhookEvent) {
-	const data = {
-		userId: payload.data.id,
-	};
+	if (!payload.data.id) {
+		throw new Error("No user ID provided");
+	}
+
+	await helperCreateUser(payload.data.id);
+}
+
+async function helperCreateUser(userId: string) {
+	const data: NewUserInfo = {
+		userId
+	}
+
 	const newUserInfo: NewUserInfo = insertUserInfoSchema.parse(data);
 	await db.insert(userInfo).values(newUserInfo);
 }
@@ -51,6 +64,21 @@ async function onUserDeleted(payload: UserWebhookEvent) {
 		throw new Error("No user ID provided");
 	}
 	await db.delete(userInfo).where(eq(userInfo.userId, userId));
+}
+
+async function onSessionCreated(payload: SessionWebhookEvent) {
+	const userId = payload.data.user_id;
+
+	// check if the user exists in our database
+	const user = await db
+		.selectDistinct()
+		.from(userInfo)
+		.where(eq(userInfo.userId, userId));
+
+	// if not, create a new user
+	if (user.length === 0) {
+		await helperCreateUser(userId)
+	}
 }
 
 export async function POST(request: Request) {
@@ -64,6 +92,9 @@ export async function POST(request: Request) {
 				break;
 			case "user.deleted":
 				await onUserDeleted(payload);
+				break;
+			case "session.created":
+				await onSessionCreated(payload);
 				break;
 			default:
 				throw new Error("Unhandled webhook event");
