@@ -10,14 +10,21 @@ type Props = {
 	label: string;
 	icon: React.ReactNode;
 	url: string;
+	openInNewTab?: boolean;
 	children?: React.ReactNode;
 };
 
-const SidebarButton = ({ label, icon, url, children }: Props) => {
+const SidebarButton = ({
+	label,
+	icon,
+	url,
+	openInNewTab = false,
+	children,
+}: Props) => {
 	const pathname = usePathname();
 	const active = useMemo(() => pathname === url, [pathname, url]);
 	return (
-		<Link href={url}>
+		<Link href={url} target={openInNewTab ? "_blank" : ""}>
 			<Button
 				variant="ghost"
 				size="sm"
