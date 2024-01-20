@@ -8,6 +8,7 @@ import { type Task, type NewTask } from "~/server/db/schema";
 
 export async function createTask(data: NewTask) {
 	try {
+		console.log("data", data);
 		const newTask: NewTask = insertTaskSchema.parse(data);
 		await db.insert(task).values(newTask);
 		revalidatePath("/");
@@ -20,6 +21,18 @@ export async function getAllTasks() {
 	try {
 		const allTasks: Task[] = await db.select().from(task);
 		return allTasks;
+	} catch (error) {
+		if (error instanceof Error) console.log(error.stack);
+	}
+}
+
+export async function getTasksFromProject(projectId: number) {
+	try {
+		const tasks: Task[] = await db
+			.select()
+			.from(task)
+			.where(eq(task.projectId, projectId));
+		return tasks;
 	} catch (error) {
 		if (error instanceof Error) console.log(error.stack);
 	}

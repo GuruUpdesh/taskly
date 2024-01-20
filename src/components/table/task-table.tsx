@@ -39,6 +39,7 @@ function reducer(
 
 type TaskTableProps = {
 	tasks: Task[];
+	projectId: number;
 };
 
 export type OptimisticActions = {
@@ -47,7 +48,7 @@ export type OptimisticActions = {
 	updateTask: (task: Task) => Promise<void>;
 };
 
-const TaskTable = ({ tasks }: TaskTableProps) => {
+const TaskTable = ({ tasks, projectId }: TaskTableProps) => {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_, startTransition] = useTransition();
 	const [optimisticTasks, dispatch] = useOptimistic(
@@ -85,6 +86,7 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 				const data = {
 					title: task.title,
 					description: task.description,
+					project: task.projectId,
 					status: task.status,
 					priority: task.priority,
 					type: task.type,
@@ -121,7 +123,10 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 				</TableCaption>
 				<TableBody>
 					{renderTaskRows()}
-					<NewRow optimisticActions={optimisticActions} />
+					<NewRow
+						optimisticActions={optimisticActions}
+						projectId={projectId}
+					/>
 				</TableBody>
 			</Table>
 		</>

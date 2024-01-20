@@ -78,13 +78,15 @@ function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 					render={({ field }) => (
 						<Select
 							onValueChange={(value) => field.onChange(value)}
-							defaultValue={field.value}
+							defaultValue={field.value.toString()}
 						>
 							<SelectTrigger
 								className={cn(
 									"h-min",
 									optionVariants({
-										color: getSelectedOption(field.value),
+										color: getSelectedOption(
+											field.value.toString(),
+										),
 									}),
 								)}
 							>
