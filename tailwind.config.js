@@ -74,11 +74,16 @@ module.exports = {
           from: { top: "-50%" },
           to: { top: "100%" },
         },
+        "fade-in": {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "to-bottom-infinite": "to-bottom-infinite 10s linear infinite",
+        "fade-in": 'fade-in 5s cubic-bezier(0.075, 0.82, 0.165, 1) forwards',
       },
     },
   },

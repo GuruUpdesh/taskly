@@ -60,7 +60,12 @@ const Sidebar = async ({ projectId }: SidebarProps) => {
 					icon={<DashboardIcon />}
 					url={`/${projectId}/dashboard`}
 				/>
-				<SidebarButton label="Docs" icon={<ReaderIcon />} url="/" />
+				<SidebarButton
+					label="Docs"
+					icon={<ReaderIcon />}
+					url="https://docs.tasklypm.com"
+					openInNewTab
+				/>
 			</div>
 			<div>
 				<SidebarButton
