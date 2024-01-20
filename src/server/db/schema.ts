@@ -20,6 +20,7 @@ export const mysqlTable = mysqlTableCreator((name) => `taskly_${name}`);
 export const task = mysqlTable("task", {
 	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
 	title: varchar("title", { length: 255 }).notNull(),
+	projectId: bigint("project_id", { mode: "number" }).notNull(),
 	description: text("description"),
 	status: mysqlEnum("status", ["todo", "inprogress", "done"]),
 	priority: mysqlEnum("priority", ["low", "medium", "high"]),
@@ -39,6 +40,9 @@ export const insertTaskSchema = z.object({
 	}),
 	description: z.string().refine((val) => val !== "", {
 		message: "Description is required",
+	}),
+	projectId: z.number().refine((val) => val !== 0, {
+		message: "Project ID is required",
 	}),
 	status: z.enum(["todo", "inprogress", "done"]),
 	priority: z.enum(["low", "medium", "high"]),

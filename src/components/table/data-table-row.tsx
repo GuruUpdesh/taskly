@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 // ui
 import { TableCell, TableRow } from "~/components/ui/table";
 import DataCell from "./cells/data-cell-text";
-import type { NewTask, Task } from "~/server/db/schema";
+import { project, type NewTask, type Task } from "~/server/db/schema";
 import { Button } from "~/components/ui/button";
 import { ChevronRight, Expand, Trash, X } from "lucide-react";
 
@@ -36,6 +36,7 @@ const DataTableRow = ({
 	const defaultTaskValues = {
 		title: task.title,
 		description: task.description ?? "",
+		projectId: task.projectId ?? "",
 		status: task.status ?? "todo",
 		priority: task.priority ?? "medium",
 		type: task.type ?? "task",
@@ -52,6 +53,7 @@ const DataTableRow = ({
 	}, [task]);
 
 	async function onSubmit(newTask: NewTask) {
+		newTask.projectId = task.projectId;
 		if (variant === "data") {
 			// get changes
 			const changes = Object.keys(newTask).reduce((acc, key) => {
@@ -60,8 +62,6 @@ const DataTableRow = ({
 				}
 				return acc;
 			}, {});
-
-			console.log("Submit - Changes", changes);
 
 			// if no changes return
 			if (Object.keys(changes).length === 0) return;
@@ -86,29 +86,32 @@ const DataTableRow = ({
 			{Object.keys(task)
 				.filter((col) => col !== "id" && col !== "pending")
 				.map((col, idx) => {
-					const config = getTaskConfig(col);
-					if (config.type === "text")
-						return (
-							<DataCell
-								key={col}
-								config={config}
-								col={col as keyof NewTask}
-								form={form}
-								onSubmit={onSubmit}
-								autoFocus={idx === 0 && variant === "new"}
-							/>
-						);
-					if (config.type === "select")
-						return (
-							<DataCellSelect
-								key={col}
-								config={config}
-								col={col as keyof NewTask}
-								form={form}
-								onSubmit={onSubmit}
-								isNew={variant === "new"}
-							/>
-						);
+					if (col !== "projectId") {
+						const config = getTaskConfig(col);
+
+						if (config.type === "text")
+							return (
+								<DataCell
+									key={col}
+									config={config}
+									col={col as keyof NewTask}
+									form={form}
+									onSubmit={onSubmit}
+									autoFocus={idx === 0 && variant === "new"}
+								/>
+							);
+						if (config.type === "select")
+							return (
+								<DataCellSelect
+									key={col}
+									config={config}
+									col={col as keyof NewTask}
+									form={form}
+									onSubmit={onSubmit}
+									isNew={variant === "new"}
+								/>
+							);
+					}
 				})}
 			{variant === "data" ? (
 				<TableCell className="flex justify-between p-0">
