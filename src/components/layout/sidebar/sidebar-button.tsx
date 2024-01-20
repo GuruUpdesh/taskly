@@ -8,8 +8,8 @@ import { cn } from "~/lib/utils";
 
 export type SidebarButtonProps = {
 	label: string;
-	icon: React.ReactNode;
 	url: string;
+	icon?: React.ReactNode;
 	openInNewTab?: boolean;
 	children?: React.ReactNode;
 };
