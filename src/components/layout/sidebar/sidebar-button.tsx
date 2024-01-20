@@ -6,10 +6,10 @@ import { Button } from "~/components/ui/button";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
 
-type Props = {
+export type SidebarButtonProps = {
 	label: string;
-	icon: React.ReactNode;
 	url: string;
+	icon?: React.ReactNode;
 	openInNewTab?: boolean;
 	children?: React.ReactNode;
 };
@@ -20,7 +20,7 @@ const SidebarButton = ({
 	url,
 	openInNewTab = false,
 	children,
-}: Props) => {
+}: SidebarButtonProps) => {
 	const pathname = usePathname();
 	const active = useMemo(() => pathname === url, [pathname, url]);
 	return (
@@ -33,7 +33,7 @@ const SidebarButton = ({
 					active && "bg-accent",
 				)}
 			>
-				{icon}
+				{icon ? icon : null}
 				{label}
 				{children}
 			</Button>
