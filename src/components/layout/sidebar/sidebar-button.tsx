@@ -8,6 +8,7 @@ import { cn } from "~/lib/utils";
 
 export type SidebarButtonProps = {
 	label: string;
+	icon: React.ReactNode;
 	url: string;
 	openInNewTab?: boolean;
 	children?: React.ReactNode;
@@ -19,7 +20,7 @@ const SidebarButton = ({
 	url,
 	openInNewTab = false,
 	children,
-}: Props) => {
+}: SidebarButtonProps) => {
 	const pathname = usePathname();
 	const active = useMemo(() => pathname === url, [pathname, url]);
 	return (
