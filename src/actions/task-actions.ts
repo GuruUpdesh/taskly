@@ -8,7 +8,6 @@ import { type Task, type NewTask } from "~/server/db/schema";
 
 export async function createTask(data: NewTask) {
 	try {
-		console.log("data", data);
 		const newTask: NewTask = insertTaskSchema.parse(data);
 		await db.insert(task).values(newTask);
 		revalidatePath("/");
