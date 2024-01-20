@@ -2,6 +2,8 @@ import { type InferSelectModel } from "drizzle-orm";
 import { createSelectSchema } from "drizzle-zod";
 import {
 	bigint,
+	datetime,
+	int,
 	mysqlEnum,
 	mysqlTableCreator,
 	text,
@@ -62,6 +64,16 @@ export type NewTask = z.infer<typeof insertTaskSchema>;
 export const selectProjectSchema = createSelectSchema(project);
 export type Project = InferSelectModel<typeof project>;
 export type NewProject = z.infer<typeof insertProjectSchema>;
+
+export const invite = mysqlTable("invite", {
+	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	projectId: bigint("project_id", { mode: "number" }).notNull(),
+	userId: varchar("user_id", { length: 32 }).notNull(),
+	date: datetime("date", { mode: "date", fsp: 6 }).notNull(),
+	token: varchar("token", { length: 255 }).notNull().unique(),
+});
+
+export type Invite = InferSelectModel<typeof invite>;
 
 // export const posts = mysqlTable(
 //   "post",
