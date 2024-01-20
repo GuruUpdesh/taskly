@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { db } from "~/server/db";
 import { invite } from "~/server/db/schema";
 import { and, eq } from "drizzle-orm";
-import { differenceInDays, differenceInSeconds } from "date-fns";
+import { differenceInDays } from "date-fns";
 
 const getInviteSchema = z.object({
 	userId: z.string(),
@@ -12,10 +12,11 @@ const getInviteSchema = z.object({
 
 export async function createInvite(userId: string, projectId: string) {
 	const dataObject = { userId: userId, projectId: parseInt(projectId) };
-	const { success, data } = getInviteSchema.safeParse(dataObject);
-	if (!success) {
+	const inviteValidation = getInviteSchema.safeParse(dataObject);
+	if (!inviteValidation.success) {
 		return false;
 	}
+	const data = inviteValidation.data;
 	const date = new Date();
 	const newInvite = {
 		userId: data.userId,

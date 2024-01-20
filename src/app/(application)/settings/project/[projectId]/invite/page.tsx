@@ -1,8 +1,10 @@
 import { auth } from "@clerk/nextjs";
+import dynamic from "next/dynamic";
 import { createInvite } from "~/actions/invite-actions";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
+//import InviteLink from "~/components/invite/invite-link";
+const InviteLink = dynamic(() => import("~/components/invite/invite-link"), {
+	ssr: false,
+});
 
 type Params = {
 	params: {
@@ -18,34 +20,11 @@ export default async function ProjectSettingsInvite({
 	const inviteLink = await createInvite(userId, projectId);
 	if (inviteLink === false) return null;
 
-	console.log(inviteLink);
-
-	// const handleCopyToClipboard = async () => {
-	//     try {
-	//         await navigator.clipboard.writeText(randomLink);
-	//         alert('Copied to clipboard!');
-	//     } catch (error) {
-	//         console.error('Error copying to clipboard:', error);
-	//     }
-	// };
-
 	return (
 		<div className="container flex flex-col pt-4">
 			<h1>Invite with Link</h1>
 			<p>Invite a user using the link below!</p>
-			<div className="flex items-start">
-				<Textarea value={inviteLink} />
-				{/* <Button onClick={handleCopyToClipboard}>
-                    Copy to Clipboard
-                </Button> */}
-			</div>
-			<br />
-			<h1>Invite with User</h1>
-			<p>Invite a user using their email!</p>
-			<div className="flex items-start">
-				<Input placeholder="user@example.com" />
-				<Button>Send Invite</Button>
-			</div>
+			<InviteLink inviteLink={inviteLink} />
 		</div>
 	);
 }

@@ -3,7 +3,6 @@ import { createSelectSchema } from "drizzle-zod";
 import {
 	bigint,
 	datetime,
-	int,
 	mysqlEnum,
 	mysqlTableCreator,
 	text,
