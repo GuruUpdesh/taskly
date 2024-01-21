@@ -10,21 +10,7 @@ import { type NewProject, insertProjectSchema } from "~/server/db/schema";
 // utils
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "~/components/ui/select";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "~/components/ui/form";
+import { Form, FormLabel } from "~/components/ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { createProject } from "~/actions/project-actions";
@@ -43,8 +29,6 @@ const ProjectCreateForm = () => {
 		resolver: zodResolver(insertProjectSchema),
 		defaultValues: {
 			name: "",
-			description: "",
-			status: "active",
 		},
 	});
 
@@ -82,56 +66,6 @@ const ProjectCreateForm = () => {
 						{...form.register("name")}
 						placeholder="Name"
 						className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-					/>
-
-					<FormLabel
-						htmlFor="description"
-						className="pt-3 text-sm font-medium"
-					>
-						Description
-						<span className="text-red-500">*</span>
-					</FormLabel>
-					<Input
-						type="text"
-						{...form.register("description")}
-						placeholder="Description"
-						className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-					/>
-
-					{/* Status Select */}
-					<FormLabel
-						htmlFor="status"
-						className="pt-3 text-sm font-medium"
-					>
-						Status
-						<span className="text-red-500">*</span>
-					</FormLabel>
-					<FormField
-						control={form.control}
-						name="status"
-						render={({ field }) => (
-							<FormItem className="w-full">
-								<Select
-									onValueChange={field.onChange}
-									defaultValue={field.value as string}
-								>
-									<FormControl>
-										<SelectTrigger className="w-full cursor-pointer rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-											<SelectValue placeholder="Select status" />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent className="absolute mt-1 max-h-60 w-48 overflow-auto rounded-md py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-										<SelectItem value="active">
-											Active
-										</SelectItem>
-										<SelectItem value="inactive">
-											Inactive
-										</SelectItem>
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
-						)}
 					/>
 
 					<Button

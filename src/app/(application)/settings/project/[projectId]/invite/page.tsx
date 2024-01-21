@@ -18,7 +18,7 @@ export default async function ProjectSettingsInvite({
 	if (!userId) return null;
 	const inviteLink = await createInvite(userId, projectId);
 	if (inviteLink === false) return null;
-	
+
 	return (
 		<div className="container flex flex-col pt-4">
 			<h1>Invite with Link</h1>

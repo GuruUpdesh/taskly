@@ -95,7 +95,9 @@ const TaskTable = ({ tasks, projectId }: TaskTableProps) => {
 				if (!validated.success) {
 					return;
 				}
-				await updateTask(task.id, validated.data);
+				const validatedTask = validated.data;
+
+				await updateTask(task.id, validatedTask as NewTask);
 			} catch (error) {
 				console.log(error);
 			}

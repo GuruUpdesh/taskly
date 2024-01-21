@@ -3,13 +3,13 @@
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
-import { project, insertProjectSchema } from "~/server/db/schema";
+import { projects, insertProjectSchema } from "~/server/db/schema";
 import { type Project, type NewProject } from "~/server/db/schema";
 
 export async function createProject(data: NewProject) {
 	try {
 		const newProject: NewProject = insertProjectSchema.parse(data);
-		await db.insert(project).values(newProject);
+		await db.insert(projects).values(newProject);
 		revalidatePath("/");
 	} catch (error) {
 		if (error instanceof Error) console.log(error.stack);
@@ -18,7 +18,7 @@ export async function createProject(data: NewProject) {
 
 export async function getAllProjects() {
 	try {
-		const allProjects: Project[] = await db.select().from(project);
+		const allProjects: Project[] = await db.select().from(projects);
 		return allProjects;
 	} catch (error) {
 		if (error instanceof Error) console.log(error.stack);
@@ -27,11 +27,11 @@ export async function getAllProjects() {
 
 export async function getProject(id: number) {
 	try {
-		const projects: Project[] = await db
+		const allProjects: Project[] = await db
 			.select()
-			.from(project)
-			.where(eq(project.id, id));
-		return projects[0];
+			.from(projects)
+			.where(eq(projects.id, id));
+		return allProjects[0];
 	} catch (error) {
 		if (error instanceof Error) console.log(error.stack);
 	}
@@ -39,7 +39,7 @@ export async function getProject(id: number) {
 
 export async function deleteProject(id: number) {
 	try {
-		await db.delete(project).where(eq(project.id, id));
+		await db.delete(projects).where(eq(projects.id, id));
 		revalidatePath("/");
 	} catch (error) {
 		if (error instanceof Error) console.log(error.stack);

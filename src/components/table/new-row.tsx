@@ -43,7 +43,7 @@ const NewRow = ({ optimisticActions, projectId }: NewRowProps) => {
 		}
 	}, [popoverOpen]);
 
-	const defaultValues: NewTask = {
+	const defaultValues: Omit<NewTask, "id"> = {
 		title: "",
 		description: "",
 		projectId: projectId,
