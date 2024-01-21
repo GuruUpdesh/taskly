@@ -76,7 +76,7 @@ export type NewProject = z.infer<typeof insertProjectSchema>;
 // relations
 export const projectsRelations = relations(projects, ({ many }) => ({
 	tasks: many(tasks),
-	users: many(users),
+	usersToProjects: many(usersToProjects),
 }));
 
 /**
@@ -96,7 +96,7 @@ export type NewUser = z.infer<typeof insertUserSchema>;
 
 // relations
 export const usersRelations = relations(users, ({ many }) => ({
-	projects: many(projects),
+	usersToProjects: many(usersToProjects),
 }));
 
 /**

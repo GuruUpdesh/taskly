@@ -4,7 +4,11 @@
 import React, { useTransition, useOptimistic } from "react";
 
 // data
-import { type Task, type NewTask, insertTaskSchema__required } from "~/server/db/schema";
+import {
+	type Task,
+	type NewTask,
+	insertTaskSchema__required,
+} from "~/server/db/schema";
 
 // ui
 import { Table, TableBody, TableCaption } from "~/components/ui/table";
