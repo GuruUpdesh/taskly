@@ -13,11 +13,11 @@ export default async function ProjectSettingsInvite({
 	const decodedToken = decodeURIComponent(token);
 	const { userId }: { userId: string | null } = auth();
 	if (!userId) return null;
-	const success = await joinProject(decodedToken, userId);
+	const result = await joinProject(decodedToken, userId);
 
 	return (
 		<div className="container flex flex-col pt-4">
-			<p>{success}</p>
+			<p>{result.message}</p>
 		</div>
 	);
 }
