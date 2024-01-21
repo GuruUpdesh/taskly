@@ -3,12 +3,12 @@
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
-import { tasks, selectTaskSchema } from "~/server/db/schema";
+import { tasks, insertTaskSchema__required } from "~/server/db/schema";
 import { type Task, type NewTask } from "~/server/db/schema";
 
 export async function createTask(data: NewTask) {
 	try {
-		const newTask: NewTask = selectTaskSchema.parse(data);
+		const newTask = insertTaskSchema__required.parse(data);
 		await db.insert(tasks).values(newTask);
 		revalidatePath("/");
 	} catch (error) {
@@ -48,7 +48,7 @@ export async function deleteTask(id: number) {
 
 export async function updateTask(id: number, data: NewTask) {
 	try {
-		const updatedTaskData: NewTask = selectTaskSchema.parse(data);
+		const updatedTaskData: NewTask = insertTaskSchema__required.parse(data);
 		await db.update(tasks).set(updatedTaskData).where(eq(tasks.id, id));
 		revalidatePath("/");
 	} catch (error) {

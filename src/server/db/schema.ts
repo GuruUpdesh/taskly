@@ -36,6 +36,14 @@ export const tasks = mysqlTable("tasks", {
 // validators
 export const selectTaskSchema = createSelectSchema(tasks);
 export const insertTaskSchema = createInsertSchema(tasks);
+export const insertTaskSchema__required = insertTaskSchema.required({
+	title: true,
+	description: true,
+	status: true,
+	priority: true,
+	type: true,
+	projectId: true,
+});
 
 // types
 export type Task = InferSelectModel<typeof tasks>;
