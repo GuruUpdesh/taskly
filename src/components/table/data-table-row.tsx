@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 // ui
 import { TableCell, TableRow } from "~/components/ui/table";
 import DataCell from "./cells/data-cell-text";
-import { project, type NewTask, type Task } from "~/server/db/schema";
+import { type NewTask, type Task } from "~/server/db/schema";
 import { Button } from "~/components/ui/button";
 import { ChevronRight, Expand, Trash, X } from "lucide-react";
 
