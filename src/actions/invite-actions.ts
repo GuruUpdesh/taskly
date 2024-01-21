@@ -1,7 +1,7 @@
 import { z } from "zod";
 import crypto from "crypto";
 import { db } from "~/server/db";
-import { invite } from "~/server/db/schema";
+import { invite, userProject } from "~/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { differenceInDays } from "date-fns";
 
@@ -47,4 +47,31 @@ export async function createInvite(userId: string, projectId: string) {
 	const token = hash.digest("base64");
 	await db.insert(invite).values({ ...newInvite, token, date: date });
 	return token;
+}
+
+export async function joinProject(token: string, userId: string) {
+	console.log(token);
+	console.log(userId);
+	const requestInvite = await db
+		.selectDistinct()
+		.from(invite)
+		.where(eq(invite.token, token));
+	if (!requestInvite || requestInvite.length === 0) {
+		return false;
+	}
+	const inviteData = requestInvite[0];
+	if (!inviteData) {
+		return false;
+	}
+	const date = new Date();
+	const age = differenceInDays(date, inviteData.date);
+
+
+	if (age > 5) {
+		return false;
+	}
+	
+	await db.insert(userProject).values({userId: userId, projectId: inviteData.projectId});
+
+	return true;
 }

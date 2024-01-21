@@ -94,6 +94,12 @@ export const insertUserInfoSchema = z.object({
 export type UserInfo = InferSelectModel<typeof userInfo>;
 export type NewUserInfo = z.infer<typeof insertUserInfoSchema>;
 
+export const userProject = mysqlTable("userProject", {
+	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	userId: varchar("user_id", { length: 32 }).notNull(),
+	projectId: bigint("project_id", { mode: "number" }).notNull(),
+});
+
 // export const posts = mysqlTable(
 //   "post",
 //   {

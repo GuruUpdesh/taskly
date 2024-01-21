@@ -1,7 +1,6 @@
 import { auth } from "@clerk/nextjs";
 import dynamic from "next/dynamic";
 import { createInvite } from "~/actions/invite-actions";
-//import InviteLink from "~/components/invite/invite-link";
 const InviteLink = dynamic(() => import("~/components/invite/invite-link"), {
 	ssr: false,
 });
@@ -19,7 +18,7 @@ export default async function ProjectSettingsInvite({
 	if (!userId) return null;
 	const inviteLink = await createInvite(userId, projectId);
 	if (inviteLink === false) return null;
-
+	
 	return (
 		<div className="container flex flex-col pt-4">
 			<h1>Invite with Link</h1>
