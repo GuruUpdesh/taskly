@@ -25,6 +25,18 @@ export async function getAllTasks() {
 	}
 }
 
+export async function getTasksFromProject(projectId: number) {
+	try {
+		const tasks: Task[] = await db
+			.select()
+			.from(task)
+			.where(eq(task.projectId, projectId));
+		return tasks;
+	} catch (error) {
+		if (error instanceof Error) console.log(error.stack);
+	}
+}
+
 export async function deleteTask(id: number) {
 	try {
 		await db.delete(task).where(eq(task.id, id));

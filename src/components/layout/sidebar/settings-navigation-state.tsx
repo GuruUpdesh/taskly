@@ -12,7 +12,6 @@ const SettingsNavigationState = () => {
 
 	React.useEffect(() => {
 		updateLastApplicationPathname(pathname);
-		console.log("🚀 ~ React.useEffect ~ pathname:", pathname);
 	}, [pathname]);
 
 	return null;

@@ -16,7 +16,6 @@ const SettingsBackButton = () => {
 	return (
 		<Link
 			href={lastApplicationPathname}
-			// onClick={handleback}
 			className="flex items-center gap-4 text-2xl font-semibold tracking-tight"
 		>
 			<ArrowLeft />

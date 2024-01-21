@@ -21,6 +21,7 @@ export const mysqlTable = mysqlTableCreator((name) => `taskly_${name}`);
 export const task = mysqlTable("task", {
 	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
 	title: varchar("title", { length: 255 }).notNull(),
+	projectId: bigint("project_id", { mode: "number" }).notNull(),
 	description: text("description"),
 	status: mysqlEnum("status", ["todo", "inprogress", "done"]),
 	priority: mysqlEnum("priority", ["low", "medium", "high"]),
@@ -40,6 +41,9 @@ export const insertTaskSchema = z.object({
 	}),
 	description: z.string().refine((val) => val !== "", {
 		message: "Description is required",
+	}),
+	projectId: z.number().refine((val) => val !== 0, {
+		message: "Project ID is required",
 	}),
 	status: z.enum(["todo", "inprogress", "done"]),
 	priority: z.enum(["low", "medium", "high"]),
@@ -73,6 +77,22 @@ export const invite = mysqlTable("invite", {
 });
 
 export type Invite = InferSelectModel<typeof invite>;
+export const userInfo = mysqlTable("userInfo", {
+	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	userId: varchar("user_id", { length: 32 }).notNull().unique(),
+});
+
+export const insertUserInfoSchema = z.object({
+	userId: z
+		.string()
+		.length(32)
+		.refine((val) => val !== "", {
+			message: "User ID is required",
+		}),
+});
+
+export type UserInfo = InferSelectModel<typeof userInfo>;
+export type NewUserInfo = z.infer<typeof insertUserInfoSchema>;
 
 // export const posts = mysqlTable(
 //   "post",
