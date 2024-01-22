@@ -1,7 +1,7 @@
 import { z } from "zod";
 import crypto from "crypto";
 import { db } from "~/server/db";
-import { invite } from "~/server/db/schema";
+import { invites, usersToProjects } from "~/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { differenceInDays } from "date-fns";
 
@@ -25,11 +25,11 @@ export async function createInvite(userId: string, projectId: string) {
 	};
 	const currentInvites = await db
 		.select()
-		.from(invite)
+		.from(invites)
 		.where(
 			and(
-				eq(invite.userId, data.userId),
-				eq(invite.projectId, data.projectId),
+				eq(invites.userId, data.userId),
+				eq(invites.projectId, data.projectId),
 			),
 		);
 
@@ -39,12 +39,46 @@ export async function createInvite(userId: string, projectId: string) {
 		if (age < 5) {
 			return currentInvite.token;
 		}
-		await db.delete(invite).where(eq(invite.id, currentInvite.id));
+		await db.delete(invites).where(eq(invites.id, currentInvite.id));
 	}
 	const hash = crypto.createHash("sha256");
 	const stringified = JSON.stringify(newInvite);
 	hash.update(stringified);
-	const token = hash.digest("base64");
-	await db.insert(invite).values({ ...newInvite, token, date: date });
+	const token = hash.digest("base64").replace("/", "-");
+	await db.insert(invites).values({ ...newInvite, token, date: date });
 	return token;
+}
+
+export async function joinProject(token: string, userId: string) {
+	const requestInvite = await db
+		.selectDistinct()
+		.from(invites)
+		.where(eq(invites.token, token));
+	if (!requestInvite || requestInvite.length === 0) {
+		return { success: false, message: "Invalid invite link" };
+	}
+	const inviteData = requestInvite[0];
+	if (!inviteData) {
+		return { success: false, message: "Invalid invite link" };
+	}
+	const date = new Date();
+	const age = differenceInDays(date, inviteData.date);
+
+	if (age > 5) {
+		return { success: false, message: "Invite link expired" };
+	}
+	try {
+		await db
+			.insert(usersToProjects)
+			.values({ userId: userId, projectId: inviteData.projectId });
+		return {
+			success: true,
+			message: "You have successfully joined this project",
+		};
+	} catch (e) {
+		return {
+			success: false,
+			message: "You have already joined this project",
+		};
+	}
 }

@@ -10,11 +10,7 @@ import { headers } from "next/headers";
 import { Webhook as svixWebhook } from "svix";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
-import {
-	type NewUserInfo,
-	insertUserInfoSchema,
-	userInfo,
-} from "~/server/db/schema";
+import { type NewUser, insertUserSchema, users } from "~/server/db/schema";
 
 const webhookSecret = env.CLERK_WEBHOOK_SECRET;
 
@@ -50,12 +46,12 @@ async function onUserCreated(payload: UserWebhookEvent) {
 }
 
 async function helperCreateUser(userId: string) {
-	const data: NewUserInfo = {
+	const data: NewUser = {
 		userId,
 	};
 
-	const newUserInfo: NewUserInfo = insertUserInfoSchema.parse(data);
-	await db.insert(userInfo).values(newUserInfo);
+	const newUser = insertUserSchema.parse(data);
+	await db.insert(users).values(newUser);
 }
 
 async function onUserDeleted(payload: UserWebhookEvent) {
@@ -63,7 +59,7 @@ async function onUserDeleted(payload: UserWebhookEvent) {
 	if (!userId) {
 		throw new Error("No user ID provided");
 	}
-	await db.delete(userInfo).where(eq(userInfo.userId, userId));
+	await db.delete(users).where(eq(users.userId, userId));
 }
 
 async function onSessionCreated(payload: SessionWebhookEvent) {
@@ -72,8 +68,8 @@ async function onSessionCreated(payload: SessionWebhookEvent) {
 	// check if the user exists in our database
 	const user = await db
 		.selectDistinct()
-		.from(userInfo)
-		.where(eq(userInfo.userId, userId));
+		.from(users)
+		.where(eq(users.userId, userId));
 
 	// if not, create a new user
 	if (user.length === 0) {

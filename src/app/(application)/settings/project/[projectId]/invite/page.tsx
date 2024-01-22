@@ -1,7 +1,6 @@
 import { auth } from "@clerk/nextjs";
 import dynamic from "next/dynamic";
 import { createInvite } from "~/actions/invite-actions";
-//import InviteLink from "~/components/invite/invite-link";
 const InviteLink = dynamic(() => import("~/components/invite/invite-link"), {
 	ssr: false,
 });

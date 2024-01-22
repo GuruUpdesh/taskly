@@ -4,7 +4,11 @@
 import React, { useTransition, useOptimistic } from "react";
 
 // data
-import { type Task, type NewTask, insertTaskSchema } from "~/server/db/schema";
+import {
+	type Task,
+	type NewTask,
+	insertTaskSchema__required,
+} from "~/server/db/schema";
 
 // ui
 import { Table, TableBody, TableCaption } from "~/components/ui/table";
@@ -91,11 +95,13 @@ const TaskTable = ({ tasks, projectId }: TaskTableProps) => {
 					priority: task.priority,
 					type: task.type,
 				};
-				const validated = insertTaskSchema.safeParse(data);
+				const validated = insertTaskSchema__required.safeParse(data);
 				if (!validated.success) {
 					return;
 				}
-				await updateTask(task.id, validated.data);
+				const validatedTask = validated.data;
+
+				await updateTask(task.id, validatedTask as NewTask);
 			} catch (error) {
 				console.log(error);
 			}

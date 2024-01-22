@@ -10,7 +10,7 @@ async function createDbConnection() {
 		const connection = await mysql.createConnection({
 			uri: env.DATABASE_URL,
 		});
-		return drizzle(connection);
+		return drizzle(connection, { schema, mode: "planetscale" });
 	} else {
 		const client = new Client({
 			url: env.DATABASE_URL,
