@@ -16,8 +16,6 @@ import { auth } from "@clerk/nextjs";
 export async function initAction() {}
 
 export async function createProject(data: NewProject) {
-	"use server";
-	console.log("createProject", data);
 	try {
 		// get user from auth headers
 		const { userId } = auth();
