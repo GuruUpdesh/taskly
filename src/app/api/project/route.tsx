@@ -1,8 +1,13 @@
-import { NewProject } from "~/server/db/schema";
-import { createProject, updateProject } from "~/actions/project-actions";
+import { type NewProject, insertProjectSchema } from "~/server/db/schema";
+import { createProject } from "~/actions/project-actions";
 
 export async function POST(req: Request) {
-	const body = await req.json();
+	const validation = insertProjectSchema.safeParse(await req.json());
+	if (!validation.success) {
+		return new Response("Missing parameters", { status: 400 });
+	}
+
+	const body = validation.data;
 
 	if (!body.name) {
 		return new Response("Missing parameters", { status: 400 });

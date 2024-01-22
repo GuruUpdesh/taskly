@@ -63,6 +63,8 @@ export async function updateProject(id: number, data: NewProject) {
 		const newProject: NewProject = insertProjectSchema.parse(data);
 		await db.update(projects).set(newProject).where(eq(projects.id, id));
 		revalidatePath("/");
+
+		// todo return updated project
 	} catch (error) {
 		if (error instanceof Error) console.log(error.stack);
 	}

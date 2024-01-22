@@ -5,12 +5,25 @@ import {
 	getProject,
 	updateProject,
 } from "~/actions/project-actions";
-import { NewProject } from "~/server/db/schema";
+import { type NewProject, insertProjectSchema } from "~/server/db/schema";
 
-export async function POST(req: Request, context: any) {
+interface Context {
+	params: {
+		id: string;
+	};
+}
+
+export async function POST(req: Request, context: Context) {
 	const { params } = context;
 
-	const body = await req.json();
+	// validator
+
+	const validation = insertProjectSchema.safeParse(await req.json());
+	if (!validation.success) {
+		return new Response("Missing parameters", { status: 400 });
+	}
+
+	const body = validation.data;
 
 	if (!params.id || !body.name) {
 		return new Response("Missing parameters", { status: 400 });
@@ -27,31 +40,25 @@ export async function POST(req: Request, context: any) {
 
 	const project = await updateProject(parseInt(id), projectToUpdate);
 
-	return new Response(JSON.stringify(project), {
-		headers: { "content-type": "application/json" },
-	});
+	return new Response(JSON.stringify(project));
 }
 
-export async function GET(req: Request, context: any) {
+export async function GET(req: Request, context: Context) {
 	const { params } = context;
 
 	const { id } = params;
 
 	const project = await getProject(parseInt(id));
 
-	return new Response(JSON.stringify(project), {
-		headers: { "content-type": "application/json" },
-	});
+	return new Response(JSON.stringify(project));
 }
 
-export async function DELETE(req: Request, context: any) {
+export async function DELETE(req: Request, context: Context) {
 	const { params } = context;
 
 	const { id } = params;
 
 	const project = await deleteProject(parseInt(id));
 
-	return new Response(JSON.stringify(project), {
-		headers: { "content-type": "application/json" },
-	});
+	return new Response(JSON.stringify(project));
 }
