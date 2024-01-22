@@ -53,7 +53,7 @@ export default function HomePage() {
 						</p>
 					</div>
 					<div className="flex items-center justify-center gap-4">
-						<Link href="/tasks">
+						<Link href="/app">
 							<Button>Get Started</Button>
 						</Link>
 						<Button variant="secondary">Documentation</Button>

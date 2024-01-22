@@ -4,7 +4,11 @@
 import React, { useTransition, useOptimistic } from "react";
 
 // data
-import { type Task, type NewTask, insertTaskSchema } from "~/server/db/schema";
+import {
+	type Task,
+	type NewTask,
+	insertTaskSchema__required,
+} from "~/server/db/schema";
 
 // ui
 import { Table, TableBody, TableCaption } from "~/components/ui/table";
@@ -39,6 +43,7 @@ function reducer(
 
 type TaskTableProps = {
 	tasks: Task[];
+	projectId: number;
 };
 
 export type OptimisticActions = {
@@ -47,7 +52,7 @@ export type OptimisticActions = {
 	updateTask: (task: Task) => Promise<void>;
 };
 
-const TaskTable = ({ tasks }: TaskTableProps) => {
+const TaskTable = ({ tasks, projectId }: TaskTableProps) => {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_, startTransition] = useTransition();
 	const [optimisticTasks, dispatch] = useOptimistic(
@@ -85,15 +90,18 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 				const data = {
 					title: task.title,
 					description: task.description,
+					project: task.projectId,
 					status: task.status,
 					priority: task.priority,
 					type: task.type,
 				};
-				const validated = insertTaskSchema.safeParse(data);
+				const validated = insertTaskSchema__required.safeParse(data);
 				if (!validated.success) {
 					return;
 				}
-				await updateTask(task.id, validated.data);
+				const validatedTask = validated.data;
+
+				await updateTask(task.id, validatedTask as NewTask);
 			} catch (error) {
 				console.log(error);
 			}
@@ -121,7 +129,10 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
 				</TableCaption>
 				<TableBody>
 					{renderTaskRows()}
-					<NewRow optimisticActions={optimisticActions} />
+					<NewRow
+						optimisticActions={optimisticActions}
+						projectId={projectId}
+					/>
 				</TableBody>
 			</Table>
 		</>

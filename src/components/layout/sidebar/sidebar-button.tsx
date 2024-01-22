@@ -6,18 +6,25 @@ import { Button } from "~/components/ui/button";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
 
-type Props = {
+export type SidebarButtonProps = {
 	label: string;
-	icon: React.ReactNode;
 	url: string;
+	icon?: React.ReactNode;
+	openInNewTab?: boolean;
 	children?: React.ReactNode;
 };
 
-const SidebarButton = ({ label, icon, url, children }: Props) => {
+const SidebarButton = ({
+	label,
+	icon,
+	url,
+	openInNewTab = false,
+	children,
+}: SidebarButtonProps) => {
 	const pathname = usePathname();
 	const active = useMemo(() => pathname === url, [pathname, url]);
 	return (
-		<Link href={url}>
+		<Link href={url} target={openInNewTab ? "_blank" : ""}>
 			<Button
 				variant="ghost"
 				size="sm"
@@ -26,7 +33,7 @@ const SidebarButton = ({ label, icon, url, children }: Props) => {
 					active && "bg-accent",
 				)}
 			>
-				{icon}
+				{icon ? icon : null}
 				{label}
 				{children}
 			</Button>

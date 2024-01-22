@@ -17,7 +17,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { Label } from "~/components/ui/label";
 import { Bot, ChevronRight, Loader2 } from "lucide-react";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { type Task, insertTaskSchema } from "~/server/db/schema";
+import { type Task, selectTaskSchema } from "~/server/db/schema";
 import { createTask } from "~/actions/task-actions";
 
 type AiTask = { [K in keyof Omit<Task, "id">]?: Task[K] };
@@ -106,7 +106,7 @@ const AiDialog = ({ dispatch }: Props) => {
 	const [isPending, startTransition] = useTransition();
 	async function handleAccept() {
 		try {
-			const validatedTask = insertTaskSchema.parse(taskObject);
+			const validatedTask = selectTaskSchema.parse(taskObject);
 			dispatch({
 				type: "ADD",
 				payload: { ...validatedTask, id: Math.random() },
@@ -156,7 +156,7 @@ const AiDialog = ({ dispatch }: Props) => {
 					<div>
 						{taskObject ? (
 							<ul>
-								{insertTaskSchema.safeParse(taskObject)
+								{selectTaskSchema.safeParse(taskObject)
 									.success === false ? (
 									<div className="flex items-center gap-1">
 										<p>Creating Task</p>
@@ -233,7 +233,7 @@ const AiDialog = ({ dispatch }: Props) => {
 								}
 								disabled={
 									isPending ||
-									insertTaskSchema.safeParse(taskObject)
+									selectTaskSchema.safeParse(taskObject)
 										.success === false
 								}
 							>

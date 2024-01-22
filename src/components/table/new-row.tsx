@@ -18,9 +18,10 @@ import NewAiTask from "./new-ai-task";
 
 type NewRowProps = {
 	optimisticActions: OptimisticActions;
+	projectId: number;
 };
 
-const NewRow = ({ optimisticActions }: NewRowProps) => {
+const NewRow = ({ optimisticActions, projectId }: NewRowProps) => {
 	const [showForm, setShowForm] = useState(false);
 	const [showAiForm, setShowAiForm] = useState(false);
 
@@ -42,9 +43,10 @@ const NewRow = ({ optimisticActions }: NewRowProps) => {
 		}
 	}, [popoverOpen]);
 
-	const defaultValues: NewTask = {
+	const defaultValues: Omit<NewTask, "id"> = {
 		title: "",
 		description: "",
+		projectId: projectId,
 		status: "todo",
 		priority: "medium",
 		type: "task",
