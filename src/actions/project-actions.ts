@@ -9,8 +9,6 @@ import {
 	usersToProjects,
 } from "~/server/db/schema";
 import { type Project, type NewProject } from "~/server/db/schema";
-import { MySqlRawQueryResult } from "drizzle-orm/mysql2";
-import { FieldPacket } from "mysql2";
 import { auth } from "@clerk/nextjs";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
