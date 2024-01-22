@@ -1,82 +1,139 @@
+/* eslint-disable @next/next/no-img-element */
 import { IBM_Plex_Sans } from "next/font/google";
 import { cn } from "~/lib/utils";
-import { Brain, LampDesk, Rabbit } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import Grid from "~/app/(landing)/background-grid";
-import Link from "next/link";
-import MarketingBlock from "./marketing-block";
-import MarketingGrid from "./marketing-grid";
+import { BookIcon, Brain, LampDesk, Network, Rabbit } from "lucide-react";
+import MarketingBlock from "../../components/landing/marketing-block";
+import MarketingGrid from "../../components/landing/marketing-grid";
+import MarketingTaskChips from "../../components/landing/marketing-task-chips";
+import MarketingSubHeaderChips from "../../components/landing/marketing-subheader-chips";
+import ButtonOptions from "~/components/landing/button-options";
+import Grid from "~/components/landing/background-grid";
 
-const plexSans = IBM_Plex_Sans({ weight: ["700"], subsets: ["latin"] });
+const plexSans = IBM_Plex_Sans({
+	weight: ["300", "500", "700"],
+	subsets: ["latin"],
+});
 
 export default function HomePage() {
 	return (
-		<>
-			<div className="flex justify-center">
-				<div className="z-30 flex max-w-[900px] flex-col gap-12 py-28 text-center">
-					<div>
-						<h1
-							className={cn(
-								plexSans.className,
-								"scroll-m-20 text-7xl font-extrabold tracking-tight lg:text-5xl",
-							)}
-						>
-							Agile Project Management
-						</h1>
-						<p className="max-w-[600px] text-xs leading-5 text-muted-foreground mt-6">
-							Simplify Your Success. Taskly offers a streamlined,
-							user-friendly approach to project management, ideal for
-							small teams and startups. Say goodbye to complexity and
-							hello to efficient, effective project management.
-							Transform your projects with ease and confidence using
-							Taskly.
-						</p>
-					</div>
-					<div className="flex justify-between text-muted-foreground">
-						<p className="flex items-center gap-2 rounded border border-red-500 bg-red-900 py-1 pl-1 pr-2 text-red-400">
-							<span className="rounded bg-red-500 p-1 text-red-900">
-								<Rabbit size={16} />
-							</span>
-							Fast Setup
-						</p>
-						<p className="flex items-center gap-2 rounded border border-green-500 bg-green-900 py-1 pl-1 pr-2 text-green-400">
-							<span className="rounded bg-green-500 p-1 text-green-900">
-								<Brain size={16} />
-							</span>
-							AI Workflows
-						</p>
-						<p className="flex items-center gap-2 rounded border border-yellow-500 bg-yellow-900 py-1 pl-1 pr-2 text-yellow-400">
-							<span className="rounded bg-yellow-500 p-1 text-yellow-900">
-								<LampDesk size={16} />
-							</span>
-							Familiar Features
-						</p>
-					</div>
-					<div className="flex items-center justify-center gap-4">
-						<Link href="/app">
-							<Button>Get Started</Button>
-						</Link>
-						<Button variant="secondary">Documentation</Button>
-					</div>
+		<div>
+			<div className="absolute z-[-1] h-full w-full fade-in-5">
+				<Grid />
+				<img
+					className="absolute h-full w-full opacity-75"
+					src="/static/auth.gif"
+					alt="backdrop"
+				/>
+				<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent to-background" />
+			</div>
+			<div className="z-10 flex flex-col items-center justify-center p-16">
+				<div
+					className="mt-8 animate-fade-down"
+					style={{
+						maskImage:
+							"linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.5))",
+					}}
+				>
+					<h1
+						className={cn(
+							plexSans.className,
+							"scroll-m-20 text-center text-6xl font-normal tracking-tight drop-shadow-md lg:text-7xl",
+						)}
+					>
+						Agile project management
+					</h1>
+					<MarketingTaskChips />
+					<MarketingSubHeaderChips plexSans={plexSans.className} />
+				</div>
+				<p className="mt-6 max-w-[800px] animate-fade-down text-center text-xl leading-7 text-muted-foreground opacity-0">
+					Streamline your project management with Taskly. Perfect for
+					small teams and startups, it&apos;s user-friendly and
+					efficient. Simplify success and confidently transform your
+					projects.
+				</p>
+				<ButtonOptions />
+				<div
+					className="h-[700px] w-[1300px] py-12"
+					style={{ perspective: "2000px" }}
+				>
+					<MarketingGrid>
+						<MarketingBlock className="row-span-2  bg-indigo-800">
+							<div className="flex w-min items-center gap-2 rounded-lg border border-indigo-400 bg-indigo-900 p-1 text-indigo-400">
+								<Brain size={24} />
+								<p className=" whitespace-nowrap">
+									AI Integration
+								</p>
+							</div>
+							<p className="text-indigo-100 opacity-70">
+								Our AI integration allows you to automate your
+								workflow and make your project management
+								process more efficient.
+								<br />
+								<br />
+								We use the latest in machine learning to provide
+								you with the best experience possible.
+							</p>
+						</MarketingBlock>
+						<MarketingBlock className="z-10 col-span-2  col-start-2 bg-red-800">
+							<div className="flex w-min items-center gap-2 rounded-lg border border-red-400 bg-red-900 p-1 text-red-400">
+								<Rabbit size={24} />
+								<p className=" whitespace-nowrap">Fast</p>
+							</div>
+							<p className="text-red-100 opacity-70">
+								Our AI integration allows you to automate your
+								workflow and make your project management
+								process more efficient.
+								<br />
+								<br />
+								We use the latest in machine learning to provide
+								you with the best experience possible.
+							</p>
+						</MarketingBlock>
+						<MarketingBlock className="row-span-2  bg-yellow-800">
+							<div className="flex w-min items-center gap-2 rounded-lg border border-yellow-400 bg-yellow-900 p-1 text-yellow-400">
+								<LampDesk size={24} />
+								<p className=" whitespace-nowrap">Simple</p>
+							</div>
+							<p className="text-yellow-100 opacity-70">
+								Our AI integration allows you to automate your
+								workflow and make your project management
+								process more efficient.
+								<br />
+								<br />
+								We use the latest in machine learning to provide
+								you with the best experience possible.
+							</p>
+						</MarketingBlock>
+						<MarketingBlock className="bg-green-800 ">
+							<div className="flex w-min items-center gap-2 rounded-lg border border-green-400 bg-green-900 p-1 text-green-400">
+								<Network size={24} />
+								<p className=" whitespace-nowrap">
+									Powerfull API
+								</p>
+							</div>
+							<p className="text-green-100 opacity-70">
+								Our AI integration allows you to automate your
+								workflow and make your project management
+								process more efficient.
+							</p>
+						</MarketingBlock>
+						<MarketingBlock className="bg-blue-800 ">
+							<div className="flex w-min items-center gap-2 rounded-lg border border-blue-400 bg-blue-900 p-1 text-blue-400">
+								<BookIcon size={24} />
+								<p className=" whitespace-nowrap">Documented</p>
+							</div>
+							<p className="text-blue-100 opacity-70">
+								Our AI integration allows you to automate your
+								workflow and make your project management
+								process more efficient.
+							</p>
+						</MarketingBlock>
+					</MarketingGrid>
 				</div>
 			</div>
-			<div className="z-30 px-24 pb-24 overflow-x-clip mt-36" style={{perspective: "2000px"}}>
-				<MarketingGrid>
-					<MarketingBlock amount={0.39} className="row-span-2  bg-indigo-500" />
-					<MarketingBlock amount={0.7} className="col-start-2 col-span-2  bg-red-500 z-10" />
-					<MarketingBlock amount={0.39} className="row-span-2  bg-yellow-400" />
-					<MarketingBlock amount={0.01} className="bg-green-500 " />
-					<MarketingBlock amount={0.01} className="bg-blue-500 " />
-				</MarketingGrid>
-			</div>
-			<footer className="bg-black border-t p-24">
-				<h1>footer</h1>
+			<footer className="border-t bg-black p-24">
+				<h1>© Taskly PM | 2024</h1>
 			</footer>
-			<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent to-background" />
-			<Grid />
-			<div className="absolute left-0 top-0 z-0 h-full w-full overflow-hidden">
-				<div className="absolute h-[300px] w-screen animate-to-bottom-infinite bg-blue-500/50 mix-blend-overlay blur-[150px] dark:bg-muted" />
-			</div>
-		</>
+		</div>
 	);
 }

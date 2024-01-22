@@ -30,9 +30,7 @@ export default function RootLayout({
 						enableSystem
 					>
 						<SettingsContextProvider>
-							<div className="flex min-h-screen flex-col">
-								{children}
-							</div>
+							<main>{children}</main>
 						</SettingsContextProvider>
 					</ThemeProvider>
 				</body>
