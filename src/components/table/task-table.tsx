@@ -17,6 +17,7 @@ import { createTask, deleteTask, updateTask } from "~/actions/task-actions";
 // components
 import NewRow from "./new-row";
 import DataTableRow from "./data-table-row";
+import { useProjectStore } from "~/store/project";
 
 type OptimisticTask = Task & { pending?: boolean };
 
@@ -87,13 +88,13 @@ const TaskTable = ({ tasks, projectId }: TaskTableProps) => {
 				startTransition(() =>
 					dispatch({ type: "UPDATE", payload: task }),
 				);
-				const data = {
+				const data: NewTask = {
 					title: task.title,
 					description: task.description,
-					project: task.projectId,
 					status: task.status,
 					priority: task.priority,
 					type: task.type,
+					projectId: projectId,
 				};
 				const validated = insertTaskSchema__required.safeParse(data);
 				if (!validated.success) {
