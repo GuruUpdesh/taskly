@@ -8,7 +8,7 @@ const Grid = () => {
 
 	useEffect(() => {
 		function handleResize() {
-			const size = 160;
+			const size = 130;
 			setCols(Math.floor(document.body.clientWidth / size));
 			setRows(Math.floor(document.body.clientHeight / size));
 		}
@@ -21,13 +21,18 @@ const Grid = () => {
 
 	function renderTiles(quantity: number) {
 		return Array.from(Array(quantity)).map((tile, index) => {
-			return <div key={index} className="m-[1px] bg-background" />;
+			return (
+				<div
+					key={index}
+					className="m-[1px] aspect-square bg-background opacity-75"
+				/>
+			);
 		});
 	}
 
 	return (
 		<div
-			className="absolute top-0 z-10 grid h-full w-full overflow-hidden bg-muted dark:bg-muted/25"
+			className="absolute top-0 z-10 grid h-full w-full overflow-hidden backdrop-blur-[200px]"
 			style={{
 				gridTemplateColumns: `repeat(${cols}, 1fr)`,
 				gridTemplateRows: `repeat(${rows}, 1fr)`,
