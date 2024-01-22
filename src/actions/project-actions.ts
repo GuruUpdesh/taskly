@@ -16,9 +16,21 @@ export async function createProject(data: NewProject) {
 	}
 }
 
-export async function getAllProjects() {
+export async function getAllProjects(userId: string) {
 	try {
-		const allProjects: Project[] = await db.select().from(projects);
+		const projectsQuery = await db.query.users.findMany({
+			where: (user) => eq(user.userId, userId),
+			with: {
+				usersToProjects: {
+					with: {
+						project: true,
+					},
+				},
+			},
+		});
+		const allProjects = projectsQuery.flatMap((userToProject) =>
+			userToProject.usersToProjects.map((up) => up.project),
+		);
 		return allProjects;
 	} catch (error) {
 		if (error instanceof Error) console.log(error.stack);
