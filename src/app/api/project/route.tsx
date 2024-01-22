@@ -1,9 +1,7 @@
 import { NewProject } from "~/server/db/schema";
 import { createProject, updateProject } from "~/actions/project-actions";
 
-export async function POST(req: Request, context: any) {
-	const { params } = context;
-
+export async function POST(req: Request) {
 	const body = await req.json();
 
 	if (!body.name) {
