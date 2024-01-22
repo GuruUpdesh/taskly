@@ -17,7 +17,6 @@ import { createTask, deleteTask, updateTask } from "~/actions/task-actions";
 // components
 import NewRow from "./new-row";
 import DataTableRow from "./data-table-row";
-import { useProjectStore } from "~/store/project";
 
 type OptimisticTask = Task & { pending?: boolean };
 
