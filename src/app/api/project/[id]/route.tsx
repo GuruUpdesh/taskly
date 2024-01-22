@@ -55,27 +55,3 @@ export async function DELETE(req: Request, context: any) {
 		headers: { "content-type": "application/json" },
 	});
 }
-
-// export default function handler(req: NextApiRequest, res: NextApiResponse) {
-// 	const { id } = req.query;
-
-// 	console.log(req.method);
-
-// 	switch (req.method) {
-// 		case "GET":
-// 			// Handle the GET request - Get a single project by ID
-// 			res.status(200).json({ message: `Project ${id}` });
-// 			break;
-// 		case "PUT":
-// 			// Handle the PUT request - Update a project
-// 			res.status(200).json({ message: `Project ${id} updated` });
-// 			break;
-// 		case "DELETE":
-// 			// Handle the DELETE request - Delete a project
-// 			res.status(200).json({ message: `Project ${id} deleted` });
-// 			break;
-// 		default:
-// 			res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
-// 			res.status(405).end(`Method ${req.method} Not Allowed`);
-// 	}
-// }
