@@ -24,13 +24,7 @@ export async function createProject(data: NewProject) {
 		// insert project
 		const newProject: NewProject = insertProjectSchema.parse(data);
 		const result = await db.insert(projects).values(newProject);
-
-		// check if insert was successful
-		if (!(Array.isArray(result) && result[0])) {
-			throw new Error("Project creation failed");
-		}
-
-		const { insertId } = result[0];
+		const insertId = parseInt(result.insertId);
 
 		// add user to project
 		await db
