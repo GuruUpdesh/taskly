@@ -15,14 +15,12 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { createProject } from "~/actions/project-actions";
 import { ChevronRight, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const ProjectCreateForm = () => {
 	const [isLoading, startTransition] = useTransition();
-
-	// options
-	// const [error, setError] = React.useState(false);
-
 	const [showDiv, setShowDiv] = React.useState(false);
+	const router = useRouter();
 
 	// form hooks
 	const form = useForm<NewProject>({
@@ -33,23 +31,20 @@ const ProjectCreateForm = () => {
 	});
 
 	async function onSubmit(data: NewProject) {
-		try {
-			await createProject(data);
-
-			setShowDiv(!showDiv);
-			form.reset();
-		} catch (error) {
-			console.log(error);
+		const newProjectId = await createProject(data);
+		if (newProjectId) {
+			router.push(`/${newProjectId}/backlog`);
 		}
+
+		setShowDiv(!showDiv);
+		form.reset();
 	}
 
 	return (
-		<>
-			{showDiv && (
-				<div className="mb-4 flex w-full items-center justify-between rounded-md bg-green-100 px-4 py-2 text-sm font-medium text-green-800">
-					<p>Project created successfully</p>
-				</div>
-			)}
+		<div className="w-[600px]">
+			<h1 className="mb-2 text-2xl font-extrabold tracking-tight">
+				Create a new project
+			</h1>
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit((data: NewProject) =>
@@ -88,7 +83,12 @@ const ProjectCreateForm = () => {
 					</Button>
 				</form>
 			</Form>
-		</>
+			{showDiv && (
+				<div className="mb-4 flex w-full items-center justify-between rounded-md bg-green-100 px-4 py-2 text-sm font-medium text-green-800">
+					<p>Project created successfully</p>
+				</div>
+			)}
+		</div>
 	);
 };
 
