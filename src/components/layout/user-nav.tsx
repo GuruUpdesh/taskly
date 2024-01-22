@@ -10,7 +10,7 @@ const UserNav = () => {
 				<UserButton afterSignOutUrl="/" />
 			</SignedIn>
 			<SignedOut>
-				<Link href="/tasks">
+				<Link href="/app">
 					<Button>Login</Button>
 				</Link>
 			</SignedOut>

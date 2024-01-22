@@ -42,14 +42,14 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 						? projects.find(
 								(project) => String(project.id) === value,
 							)?.name
-						: "Select framework..."}
+						: "Select project..."}
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="w-full p-0">
 				<Command>
-					<CommandInput placeholder="Search framework..." />
-					<CommandEmpty>No framework found.</CommandEmpty>
+					<CommandInput placeholder="Search projects..." />
+					<CommandEmpty>No project found.</CommandEmpty>
 					<CommandGroup>
 						{projects.map((project) => (
 							<Link
@@ -78,7 +78,7 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 						))}
 					</CommandGroup>
 					<CommandGroup className=" border-t">
-						<Link href="/test">
+						<Link href="/projects">
 							<CommandItem className="flex justify-between">
 								New Project
 								<PlusIcon />

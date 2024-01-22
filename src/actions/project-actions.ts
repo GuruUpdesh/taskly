@@ -1,16 +1,39 @@
 "use server";
 
-import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
-import { projects, insertProjectSchema } from "~/server/db/schema";
+import { eq } from "drizzle-orm";
+import {
+	projects,
+	insertProjectSchema,
+	usersToProjects,
+} from "~/server/db/schema";
 import { type Project, type NewProject } from "~/server/db/schema";
+import { auth } from "@clerk/nextjs";
+
+// top level await workaround from https://github.com/vercel/next.js/issues/54282
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export async function initAction() {}
 
 export async function createProject(data: NewProject) {
 	try {
+		// get user from auth headers
+		const { userId } = auth();
+		if (!userId) throw new Error("userId not found");
+
+		// insert project
 		const newProject: NewProject = insertProjectSchema.parse(data);
-		await db.insert(projects).values(newProject);
+		const result = await db.insert(projects).values(newProject);
+		const insertId = parseInt(result.insertId);
+
+		// add user to project
+		await db
+			.insert(usersToProjects)
+			.values({ userId: userId, projectId: insertId });
+
 		revalidatePath("/");
+
+		return insertId;
 	} catch (error) {
 		if (error instanceof Error) console.log(error.stack);
 	}
