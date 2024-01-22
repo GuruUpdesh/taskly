@@ -1,5 +1,3 @@
-// pages/api/project/[id].ts
-
 import {
 	deleteProject,
 	getProject,
