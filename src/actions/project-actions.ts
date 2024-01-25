@@ -16,13 +16,28 @@ import { auth } from "@clerk/nextjs";
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export async function initAction() {}
 
-export async function createProject(data: NewProject) {
+type ProjectResponse = {
+	newProjectId: number;
+	status: boolean;
+	message: string;
+};
+
+export async function createProject(
+	data: NewProject,
+): Promise<ProjectResponse> {
 	try {
 		// get user from auth headers
 		const { userId } = auth();
-		if (!userId) return throwServerError("UserId not found");
+		if (!userId) {
+			return {
+				newProjectId: -1,
+				status: false,
+				message: "UserId not found",
+			};
+		}
 
 		// insert project
+
 		const newProject: NewProject = insertProjectSchema.parse(data);
 		const result = await db.insert(projects).values(newProject);
 		const insertId = parseInt(result.insertId);
@@ -34,9 +49,32 @@ export async function createProject(data: NewProject) {
 
 		revalidatePath("/");
 
-		return insertId;
+		return {
+			newProjectId: insertId,
+			status: true,
+			message: "Project created successfully",
+		};
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
+		if (error instanceof Error) {
+			if (error.message.includes("Duplicate entry")) {
+				return {
+					newProjectId: -1,
+					status: false,
+					message: "Project name already exists",
+				};
+			}
+			return {
+				newProjectId: -1,
+				status: false,
+				message: error.message,
+			};
+		} else {
+			return {
+				newProjectId: -1,
+				status: false,
+				message: "Unknown error",
+			};
+		}
 	}
 }
 

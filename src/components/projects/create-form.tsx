@@ -16,10 +16,11 @@ import { Button } from "../ui/button";
 import { createProject } from "~/actions/project-actions";
 import { ChevronRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { throwClientError } from "~/utils/errors";
+import { successToast } from "~/utils/success";
 
 const ProjectCreateForm = () => {
 	const [isLoading, startTransition] = useTransition();
-	const [showDiv, setShowDiv] = React.useState(false);
 	const router = useRouter();
 
 	// form hooks
@@ -31,12 +32,17 @@ const ProjectCreateForm = () => {
 	});
 
 	async function onSubmit(data: NewProject) {
-		const newProjectId = await createProject(data);
+		const { newProjectId, status, message } = await createProject(data);
+		if (!status) {
+			throwClientError(message);
+			return;
+		}
 		if (newProjectId) {
 			router.push(`/${newProjectId}/backlog`);
 		}
 
-		setShowDiv(!showDiv);
+		successToast(message);
+
 		form.reset();
 	}
 
@@ -83,11 +89,6 @@ const ProjectCreateForm = () => {
 					</Button>
 				</form>
 			</Form>
-			{showDiv && (
-				<div className="mb-4 flex w-full items-center justify-between rounded-md bg-green-100 px-4 py-2 text-sm font-medium text-green-800">
-					<p>Project created successfully</p>
-				</div>
-			)}
 		</div>
 	);
 };
