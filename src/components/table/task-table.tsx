@@ -17,7 +17,7 @@ import { createTask, deleteTask, updateTask } from "~/actions/task-actions";
 // components
 import NewRow from "./new-row";
 import DataTableRow from "./data-table-row";
-import { throwClientError, throwServerError } from "~/utils/errors";
+import { throwClientError } from "~/utils/errors";
 
 type OptimisticTask = Task & { pending?: boolean };
 

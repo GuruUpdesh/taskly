@@ -128,7 +128,7 @@ const taskConfig: GenericEntityConfig<TaskConfig> = {
 export function getTaskConfig(key: string) {
 	if (Object.keys(taskConfig).indexOf(key) === -1) {
 		throwClientError(`Configuration for key "${key}" not found.`);
-		return;
+		throw new Error(`Configuration for key "${key}" not found.`);
 	}
 	const config = taskConfig[key as keyof TaskConfig];
 	return config;
