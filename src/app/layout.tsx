@@ -4,6 +4,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import { cn } from "~/lib/utils";
 import { SettingsContextProvider } from "~/hooks/context/SettingsContext";
+import { Toaster } from "~/components/ui/sonner";
+
 export const metadata = {
 	title: "Taskly",
 	description: "Simplified project management tool",
@@ -33,6 +35,7 @@ export default function RootLayout({
 							<main>{children}</main>
 						</SettingsContextProvider>
 					</ThemeProvider>
+					<Toaster />
 				</body>
 			</html>
 		</ClerkProvider>

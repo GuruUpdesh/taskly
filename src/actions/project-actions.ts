@@ -9,6 +9,7 @@ import {
 	usersToProjects,
 } from "~/server/db/schema";
 import { type Project, type NewProject } from "~/server/db/schema";
+import { throwClientError, throwServerError } from "~/utils/errors";
 import { auth } from "@clerk/nextjs";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
@@ -19,7 +20,7 @@ export async function createProject(data: NewProject) {
 	try {
 		// get user from auth headers
 		const { userId } = auth();
-		if (!userId) throw new Error("userId not found");
+		if (!userId) return throwServerError("UserId not found");
 
 		// insert project
 		const newProject: NewProject = insertProjectSchema.parse(data);
@@ -35,7 +36,7 @@ export async function createProject(data: NewProject) {
 
 		return insertId;
 	} catch (error) {
-		if (error instanceof Error) console.log(error.stack);
+		if (error instanceof Error) throwServerError(error.message);
 	}
 }
 
@@ -56,7 +57,7 @@ export async function getAllProjects(userId: string) {
 		);
 		return allProjects;
 	} catch (error) {
-		if (error instanceof Error) console.log(error.stack);
+		if (error instanceof Error) throwServerError(error.message);
 	}
 }
 
@@ -68,7 +69,7 @@ export async function getProject(id: number) {
 			.where(eq(projects.id, id));
 		return allProjects[0];
 	} catch (error) {
-		if (error instanceof Error) console.log(error.stack);
+		if (error instanceof Error) throwServerError(error.message);
 	}
 }
 
@@ -77,7 +78,7 @@ export async function deleteProject(id: number) {
 		await db.delete(projects).where(eq(projects.id, id));
 		revalidatePath("/");
 	} catch (error) {
-		if (error instanceof Error) console.log(error.stack);
+		if (error instanceof Error) throwServerError(error.message);
 	}
 }
 
@@ -89,6 +90,6 @@ export async function updateProject(id: number, data: NewProject) {
 
 		// todo return updated project
 	} catch (error) {
-		if (error instanceof Error) console.log(error.stack);
+		if (error instanceof Error) throwServerError(error.message);
 	}
 }

@@ -10,6 +10,7 @@ import type GenericEntityConfig from "./entityTypes";
 import { z } from "zod";
 import { type Task } from "~/server/db/schema";
 import { BugIcon, Feather, LayoutList } from "lucide-react";
+import { throwClientError } from "~/utils/errors";
 
 type TaskConfig = Omit<Task, "projectId">;
 
@@ -126,7 +127,8 @@ const taskConfig: GenericEntityConfig<TaskConfig> = {
 
 export function getTaskConfig(key: string) {
 	if (Object.keys(taskConfig).indexOf(key) === -1) {
-		throw new Error(`Configuration for key "${key}" not found.`);
+		throwClientError(`Configuration for key "${key}" not found.`);
+		return;
 	}
 	const config = taskConfig[key as keyof TaskConfig];
 	return config;

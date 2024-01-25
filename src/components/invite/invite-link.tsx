@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { CopyIcon } from "lucide-react";
+import { throwClientError } from "~/utils/errors";
 
 type Props = {
 	inviteLink: string;
@@ -16,7 +17,7 @@ function InviteLink({ inviteLink }: Props) {
 			await navigator.clipboard.writeText(link);
 			alert("Copied to clipboard!");
 		} catch (error) {
-			console.error("Error copying to clipboard:", error);
+			if (error instanceof Error) throwClientError(error.message);
 		}
 	};
 	return (
