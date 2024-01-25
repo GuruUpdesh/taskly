@@ -74,11 +74,13 @@ export async function joinProject(token: string, userId: string) {
 		return {
 			success: true,
 			message: "You have successfully joined this project",
+			projectId: inviteData.projectId
 		};
 	} catch (e) {
 		return {
-			success: false,
+			success: true,
 			message: "You have already joined this project",
+			projectId: inviteData.projectId
 		};
 	}
 }
