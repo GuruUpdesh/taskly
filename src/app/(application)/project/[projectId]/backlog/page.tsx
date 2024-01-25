@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import { getProject } from "~/actions/project-actions";
 import { env } from "~/env.mjs";
 import { getTasksFromProject } from "~/actions/task-actions";

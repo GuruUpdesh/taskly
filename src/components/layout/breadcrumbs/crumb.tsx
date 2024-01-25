@@ -1,5 +1,5 @@
 import React from "react";
-import { Crumb as TypeCrumb } from "./breadcrumbs";
+import type { Crumb as TypeCrumb } from "./breadcrumbs";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
