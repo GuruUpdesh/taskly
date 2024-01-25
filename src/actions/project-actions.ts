@@ -9,7 +9,7 @@ import {
 	usersToProjects,
 } from "~/server/db/schema";
 import { type Project, type NewProject } from "~/server/db/schema";
-import { throwClientError, throwServerError } from "~/utils/errors";
+import { throwServerError } from "~/utils/errors";
 import { auth } from "@clerk/nextjs";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
