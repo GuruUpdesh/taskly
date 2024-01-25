@@ -18,6 +18,7 @@ import { createTask, deleteTask, updateTask } from "~/actions/task-actions";
 import NewRow from "./new-row";
 import DataTableRow from "./data-table-row";
 import { throwClientError } from "~/utils/errors";
+import AiDialog from "~/app/(application)/tasks/ai-dialog";
 
 type OptimisticTask = Task & { pending?: boolean };
 
@@ -125,6 +126,7 @@ const TaskTable = ({ tasks, projectId }: TaskTableProps) => {
 
 	return (
 		<>
+			<AiDialog dispatch={dispatch} />
 			<Table className="border">
 				<TableCaption>
 					{!tasks ? "isPending..." : "A list of tasks"}

@@ -16,7 +16,10 @@ export type Crumb = {
 	link: string;
 };
 
-function getCrumbs(pathname: string, fetchNameFromAPI: (id: string, type?: CrumbType) => string) {
+function getCrumbs(
+	pathname: string,
+	fetchNameFromAPI: (id: string, type?: CrumbType) => string,
+) {
 	const crumbs = pathname.split("/").filter((crumb) => crumb !== "");
 
 	const breadcrumbList: Crumb[] = [];
@@ -53,15 +56,15 @@ function getCrumbs(pathname: string, fetchNameFromAPI: (id: string, type?: Crumb
 const BreadCrumbs = () => {
 	const pathname = usePathname();
 	const [crumbs, setCrumbs] = React.useState<Crumb[]>([]);
-    const project = useProjectStore((state) => state.project);
+	const project = useProjectStore((state) => state.project);
 
-    function fetchNameFromAPI(id: string, type?: CrumbType) {
-        if (type === "project") {
-            return project?.name + ` (${id})` ?? "";
-        }
+	function fetchNameFromAPI(id: string, type?: CrumbType) {
+		if (type === "project") {
+			return project?.name + ` (${id})` ?? "";
+		}
 
-        return "Placeholder";
-    }
+		return "Placeholder";
+	}
 
 	useEffect(() => {
 		setCrumbs(getCrumbs(pathname, fetchNameFromAPI));

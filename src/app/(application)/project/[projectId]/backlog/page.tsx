@@ -3,7 +3,6 @@ import { getProject } from "~/actions/project-actions";
 import { env } from "~/env.mjs";
 import { getTasksFromProject } from "~/actions/task-actions";
 import TaskTable from "~/components/table/task-table";
-const Test = dynamic(() => import("./test"), { ssr: false });
 
 type Params = {
 	params: {
@@ -24,7 +23,6 @@ export default async function ProjectsCreatePage({
 
 	return (
 		<div className="container flex flex-col pt-4">
-			<Test />
 			<section className="mb-3">
 				<p className="text-sm text-muted-foreground">
 					{env.NODE_ENV.toLocaleUpperCase()} {">"} Projects {">"}{" "}
