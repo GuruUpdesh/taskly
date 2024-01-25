@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
 import { getProject } from "~/actions/project-actions";
 import { env } from "~/env.mjs";
-import { getTasksFromProject } from "../../../../actions/task-actions";
-import TaskTable from "../../../../components/table/task-table";
+import { getTasksFromProject } from "~/actions/task-actions";
+import TaskTable from "~/components/table/task-table";
 const Test = dynamic(() => import("./test"), { ssr: false });
 
 type Params = {

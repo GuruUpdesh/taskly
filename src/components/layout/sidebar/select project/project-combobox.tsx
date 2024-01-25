@@ -56,7 +56,7 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 							{projects.map((project) => (
 								<Link
 									key={project.id}
-									href={`/${project.id}/backlog`}
+									href={`/project/${project.id}/backlog`}
 								>
 									<CommandItem
 										className={cn(
@@ -71,7 +71,7 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 							))}
 						</CommandGroup>
 						<CommandGroup className=" border-t">
-							<Link href="/projects">
+							<Link href="/project">
 								<CommandItem className="flex justify-between">
 									New Project
 									<PlusIcon />

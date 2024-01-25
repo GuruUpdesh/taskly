@@ -50,7 +50,7 @@ const Sidebar = async ({ projectId }: SidebarProps) => {
 				<SidebarButton
 					label="Inbox"
 					icon={<EnvelopeClosedIcon />}
-					url={`/${projectId}/inbox`}
+					url={`/project/${projectId}/inbox`}
 				>
 					<div className=" flex-1" />
 					<div className="rounded-full bg-accent px-4">1</div>
@@ -58,7 +58,7 @@ const Sidebar = async ({ projectId }: SidebarProps) => {
 				<SidebarButton
 					label="Dashboard"
 					icon={<DashboardIcon />}
-					url={`/${projectId}/dashboard`}
+					url={`/project/${projectId}/dashboard`}
 				/>
 				<SidebarButton
 					label="Docs"
@@ -71,12 +71,12 @@ const Sidebar = async ({ projectId }: SidebarProps) => {
 				<SidebarButton
 					label="Backlog"
 					icon={<TableIcon />}
-					url={`/${projectId}/backlog`}
+					url={`/project/${projectId}/backlog`}
 				/>
 				<SidebarButton
 					label="Board"
 					icon={<LayoutIcon />}
-					url={`/${projectId}/board`}
+					url={`/project/${projectId}/board`}
 				/>
 			</div>
 			<SidebarButton
