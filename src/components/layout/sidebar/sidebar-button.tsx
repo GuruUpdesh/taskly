@@ -24,7 +24,11 @@ const SidebarButton = ({
 	const pathname = usePathname();
 	const active = useMemo(() => pathname === url, [pathname, url]);
 	return (
-		<Link href={url} target={openInNewTab ? "_blank" : ""}>
+		<Link
+			href={url}
+			target={openInNewTab ? "_blank" : ""}
+			className="flex-1"
+		>
 			<Button
 				variant="ghost"
 				size="sm"

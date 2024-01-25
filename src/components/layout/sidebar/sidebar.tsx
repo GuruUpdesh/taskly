@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "~/components/ui/button";
 import {
 	HomeIcon,
 	EnvelopeClosedIcon,
@@ -11,42 +10,25 @@ import {
 } from "@radix-ui/react-icons";
 import { Input } from "~/components/ui/input";
 import SelectProject from "./select project/select-project";
-import { currentUser } from "@clerk/nextjs";
-import Image from "next/image";
 import SidebarButton from "./sidebar-button";
+import { UserButton } from "@clerk/nextjs";
 
 interface SidebarProps {
 	projectId: string;
 }
 
-const Sidebar = async ({ projectId }: SidebarProps) => {
-	const user = await currentUser();
-
-	const renderUserButton = () => {
-		if (!user || !user.hasImage || !user.imageUrl) return null;
-
-		return (
-			<Button variant="ghost" size="icon" className="aspect-square p-1">
-				<Image
-					src={user.imageUrl}
-					alt="user-image"
-					height={25}
-					width={25}
-					className="rounded-full border"
-				/>
-			</Button>
-		);
-	};
-
+const Sidebar = ({ projectId }: SidebarProps) => {
 	return (
 		<div className="flex h-screen flex-col gap-4 p-4">
-			<div className="flex min-w-0 items-center justify-between gap-8">
-				<SelectProject projectId={projectId} />
-				{renderUserButton()}
-			</div>
-			<Input placeholder="Search" className="h-8 min-w-0" />
-			<div className="border-b pb-4">
+			<div className="flex min-w-0 items-center justify-between gap-8 border-b pb-2">
 				<SidebarButton label="Home" icon={<HomeIcon />} url="/" />
+				<UserButton />
+			</div>
+			<SelectProject projectId={projectId} />
+			<div className="border-b pb-4">
+				<Input placeholder="Search" className="h-8 min-w-0" />
+			</div>
+			<div className="border-b pb-4">
 				<SidebarButton
 					label="Inbox"
 					icon={<EnvelopeClosedIcon />}
@@ -67,7 +49,7 @@ const Sidebar = async ({ projectId }: SidebarProps) => {
 					openInNewTab
 				/>
 			</div>
-			<div>
+			<div className="border-b pb-4">
 				<SidebarButton
 					label="Backlog"
 					icon={<TableIcon />}
