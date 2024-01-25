@@ -5,6 +5,7 @@ import { ThemeProvider } from "~/components/ui/theme-provider";
 import { cn } from "~/lib/utils";
 import { SettingsContextProvider } from "~/hooks/context/SettingsContext";
 import { Toaster } from "~/components/ui/sonner";
+import { dark } from "@clerk/themes";
 
 export const metadata = {
 	title: "Taskly",
@@ -18,7 +19,15 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<ClerkProvider>
+		<ClerkProvider
+			appearance={{
+				baseTheme: dark,
+				variables: {
+					colorBackground: "#020817",
+					colorInputBackground: "#020817",
+				},
+			}}
+		>
 			<html lang="en" suppressHydrationWarning>
 				<body
 					className={cn(

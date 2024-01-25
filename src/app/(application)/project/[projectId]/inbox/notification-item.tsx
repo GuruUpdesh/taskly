@@ -25,7 +25,7 @@ const NotificationItem = ({ id }: Props) => {
 
 		// get path before inbox
 		const path = pathname.split("inbox")[0];
-		router.push(`${path}/inbox/${id}`);
+		router.push(`${path}/inbox/notification/${id}`);
 	}
 
 	return (

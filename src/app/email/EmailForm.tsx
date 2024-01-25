@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { sendSampleEmailAction } from "../../actions/email-actions";
+import { sendSampleEmailAction } from "~/actions/email-actions";
 import { ChevronRight, Loader2 } from "lucide-react";
 import { throwClientError } from "~/utils/errors";
 

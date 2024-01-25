@@ -38,7 +38,7 @@ const ProjectCreateForm = () => {
 			return;
 		}
 		if (newProjectId) {
-			router.push(`/${newProjectId}/backlog`);
+			router.push(`/project/${newProjectId}/backlog`);
 		}
 
 		successToast(message);

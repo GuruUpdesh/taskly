@@ -2,10 +2,10 @@
 import { IBM_Plex_Sans } from "next/font/google";
 import { cn } from "~/lib/utils";
 import { BookIcon, Brain, LampDesk, Network, Rabbit } from "lucide-react";
-import MarketingBlock from "../../components/landing/marketing-block";
-import MarketingGrid from "../../components/landing/marketing-grid";
-import MarketingTaskChips from "../../components/landing/marketing-task-chips";
-import MarketingSubHeaderChips from "../../components/landing/marketing-subheader-chips";
+import MarketingBlock from "~/components/landing/marketing-block";
+import MarketingGrid from "~/components/landing/marketing-grid";
+import MarketingTaskChips from "~/components/landing/marketing-task-chips";
+import MarketingSubHeaderChips from "~/components/landing/marketing-subheader-chips";
 import ButtonOptions from "~/components/landing/button-options";
 import Grid from "~/components/landing/background-grid";
 
