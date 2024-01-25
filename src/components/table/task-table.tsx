@@ -17,6 +17,7 @@ import { createTask, deleteTask, updateTask } from "~/actions/task-actions";
 // components
 import NewRow from "./new-row";
 import DataTableRow from "./data-table-row";
+import { throwClientError } from "~/utils/errors";
 
 type OptimisticTask = Task & { pending?: boolean };
 
@@ -37,6 +38,7 @@ function reducer(
 			);
 			return newState;
 		default:
+			throwClientError("Invalid action type");
 			throw new Error("Invalid action type");
 	}
 }
@@ -69,7 +71,7 @@ const TaskTable = ({ tasks, projectId }: TaskTableProps) => {
 				});
 				await createTask(task);
 			} catch (error) {
-				console.log(error);
+				if (error instanceof Error) throwClientError(error.message);
 			}
 		},
 		deleteTask: async (task: Task) => {
@@ -79,7 +81,7 @@ const TaskTable = ({ tasks, projectId }: TaskTableProps) => {
 				);
 				await deleteTask(task.id);
 			} catch (error) {
-				console.log(error);
+				if (error instanceof Error) throwClientError(error.message);
 			}
 		},
 		updateTask: async (task: Task) => {
@@ -103,7 +105,7 @@ const TaskTable = ({ tasks, projectId }: TaskTableProps) => {
 
 				await updateTask(task.id, validatedTask as NewTask);
 			} catch (error) {
-				console.log(error);
+				if (error instanceof Error) throwClientError(error.message);
 			}
 		},
 	};

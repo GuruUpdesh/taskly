@@ -19,6 +19,7 @@ import { Bot, ChevronRight, Loader2 } from "lucide-react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { type Task, selectTaskSchema } from "~/server/db/schema";
 import { createTask } from "~/actions/task-actions";
+import { throwClientError } from "~/utils/errors";
 
 type AiTask = { [K in keyof Omit<Task, "id">]?: Task[K] };
 
@@ -31,9 +32,8 @@ function extractValidJson(data: string): unknown {
 	if (data.endsWith("}")) {
 		try {
 			return JSON.parse(data);
-		} catch (e) {
-			console.error("JSON Error:", e);
-			return null;
+		} catch (error) {
+			if (error instanceof Error) throwClientError(error.message);
 		}
 	}
 
@@ -59,9 +59,8 @@ function extractValidJson(data: string): unknown {
 	// Parse the valid JSON string
 	try {
 		return JSON.parse(validJsonStr);
-	} catch (e) {
-		console.error("JSON Error:", e);
-		return null;
+	} catch (error) {
+		if (error instanceof Error) throwClientError(error.message);
 	}
 }
 
@@ -119,7 +118,7 @@ const AiDialog = ({ dispatch }: Props) => {
 			setReviewResponse(false);
 			// clear chat
 		} catch (error) {
-			console.log(error);
+			if (error instanceof Error) throwClientError(error.message);
 		}
 	}
 

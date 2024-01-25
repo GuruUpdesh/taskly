@@ -7,6 +7,7 @@ import { cn } from "~/lib/utils";
 import { Bot, ChevronRight, X } from "lucide-react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { throwClientError } from "~/utils/errors";
 
 type Props = {
 	optimisticActions: OptimisticActions;
@@ -127,9 +128,8 @@ function extractValidJson(data: string): unknown {
 	if (data.endsWith("}")) {
 		try {
 			return JSON.parse(data);
-		} catch (e) {
-			console.error("JSON Error:", e);
-			return null;
+		} catch (error) {
+			if (error instanceof Error) throwClientError(error.message);
 		}
 	}
 
@@ -155,8 +155,7 @@ function extractValidJson(data: string): unknown {
 	// Parse the valid JSON string
 	try {
 		return JSON.parse(validJsonStr);
-	} catch (e) {
-		console.error("JSON Error:", e);
-		return null;
+	} catch (error) {
+		if (error instanceof Error) throwClientError(error.message);
 	}
 }
