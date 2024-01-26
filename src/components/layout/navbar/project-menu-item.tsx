@@ -23,13 +23,13 @@ const ProjectMenuItem = ({ projects }: ProjectMenuItemProps) => {
 					{projects.map((project) => (
 						<NavigationMenuLink
 							key={project.id}
-							href={`/${project.id}/backlog`}
+							href={`/project/${project.id}/backlog`}
 						>
 							{project.name}
 						</NavigationMenuLink>
 					))}
 					<NavigationMenuLink
-						href="/projects"
+						href="project"
 						className="flex items-center gap-1"
 					>
 						<Plus className="h-4 w-4" />

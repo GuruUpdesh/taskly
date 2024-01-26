@@ -11,6 +11,7 @@ import { Webhook as svixWebhook } from "svix";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { type NewUser, insertUserSchema, users } from "~/server/db/schema";
+import { throwServerError } from "~/utils/errors";
 
 const webhookSecret = env.CLERK_WEBHOOK_SECRET;
 
@@ -39,7 +40,8 @@ async function validateRequest(request: Request) {
  */
 async function onUserCreated(payload: UserWebhookEvent) {
 	if (!payload.data.id) {
-		throw new Error("No user ID provided");
+		throwServerError("No user ID provided");
+		return;
 	}
 
 	await helperCreateUser(payload.data.id);
@@ -57,7 +59,8 @@ async function helperCreateUser(userId: string) {
 async function onUserDeleted(payload: UserWebhookEvent) {
 	const userId = payload.data.id;
 	if (!userId) {
-		throw new Error("No user ID provided");
+		throwServerError("No user ID provided");
+		return;
 	}
 	await db.delete(users).where(eq(users.userId, userId));
 }
@@ -80,7 +83,6 @@ async function onSessionCreated(payload: SessionWebhookEvent) {
 export async function POST(request: Request) {
 	try {
 		const payload = await validateRequest(request);
-		console.log(payload);
 
 		switch (payload.type) {
 			case "user.created":
@@ -93,7 +95,7 @@ export async function POST(request: Request) {
 				await onSessionCreated(payload);
 				break;
 			default:
-				throw new Error("Unhandled webhook event");
+				throwServerError("Unhandled webhook event");
 		}
 
 		return Response.json({ message: "Received" });

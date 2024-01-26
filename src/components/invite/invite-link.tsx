@@ -3,6 +3,7 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { CopyIcon } from "lucide-react";
+import { throwClientError } from "~/utils/errors";
 
 type Props = {
 	token: string;
@@ -15,7 +16,7 @@ function InviteLink({ token }: Props) {
 			await navigator.clipboard.writeText(link);
 			alert("Copied to clipboard!");
 		} catch (error) {
-			console.error("Error copying to clipboard:", error);
+			if (error instanceof Error) throwClientError(error.message);
 		}
 	};
 	return (

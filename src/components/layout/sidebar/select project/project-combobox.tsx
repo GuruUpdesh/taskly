@@ -12,6 +12,7 @@ import {
 	CommandGroup,
 	CommandInput,
 	CommandItem,
+	CommandList,
 } from "~/components/ui/command";
 import {
 	Popover,
@@ -28,7 +29,7 @@ type Props = {
 
 const ProjectCombobox = ({ projects, projectId }: Props) => {
 	const [open, setOpen] = React.useState(false);
-	const [value, setValue] = React.useState(projectId);
+
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
@@ -38,9 +39,9 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 					aria-expanded={open}
 					className="w-full justify-between"
 				>
-					{value
+					{projectId
 						? projects.find(
-								(project) => String(project.id) === value,
+								(project) => String(project.id) === projectId,
 							)?.name
 						: "Select project..."}
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -49,42 +50,35 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 			<PopoverContent className="w-full p-0">
 				<Command>
 					<CommandInput placeholder="Search projects..." />
-					<CommandEmpty>No project found.</CommandEmpty>
-					<CommandGroup>
-						{projects.map((project) => (
-							<Link
-								key={project.id}
-								href={`/${project.id}/backlog`}
-							>
-								<CommandItem
-									value={String(project.id)}
-									onSelect={(currentValue) => {
-										setValue(
-											currentValue === value
-												? ""
-												: currentValue,
-										);
-										setOpen(false);
-									}}
-									className={cn(
-										value === String(project.id)
-											? "bg-accent text-white"
-											: "",
-									)}
+					<CommandList>
+						<CommandEmpty>No project found.</CommandEmpty>
+						<CommandGroup>
+							{projects.map((project) => (
+								<Link
+									key={project.id}
+									href={`/project/${project.id}/backlog`}
 								>
-									{project.name}
+									<CommandItem
+										className={cn(
+											projectId === String(project.id)
+												? "bg-primary text-background hover:bg-primary/50"
+												: "",
+										)}
+									>
+										{project.name}
+									</CommandItem>
+								</Link>
+							))}
+						</CommandGroup>
+						<CommandGroup className=" border-t">
+							<Link href="/project">
+								<CommandItem className="flex justify-between">
+									New Project
+									<PlusIcon />
 								</CommandItem>
 							</Link>
-						))}
-					</CommandGroup>
-					<CommandGroup className=" border-t">
-						<Link href="/projects">
-							<CommandItem className="flex justify-between">
-								New Project
-								<PlusIcon />
-							</CommandItem>
-						</Link>
-					</CommandGroup>
+						</CommandGroup>
+					</CommandList>
 				</Command>
 			</PopoverContent>
 		</Popover>

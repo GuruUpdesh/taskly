@@ -7,7 +7,7 @@ import {
 	DataCardLineGraph,
 	DataCardAreaGraph,
 	DataCardFigure,
-} from "../../../../components/dashboard/data-card";
+} from "~/components/dashboard/data-card";
 
 export default function DashboardPage() {
 	return (

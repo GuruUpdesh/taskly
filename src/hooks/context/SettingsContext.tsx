@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext } from "react";
+import { throwClientError } from "~/utils/errors";
 
 const SettingsContext = createContext({
 	lastProject: null,
@@ -25,9 +26,10 @@ export const SettingsContextProvider = ({
 export function useSettingsContext() {
 	const settingsContext = useContext(SettingsContext);
 	if (settingsContext === undefined) {
-		throw new Error(
+		throwClientError(
 			"useSettingsContext must be used within a SettingsContextProvider",
 		);
+		return;
 	}
 
 	return settingsContext;

@@ -9,19 +9,35 @@ import {
 	usersToProjects,
 } from "~/server/db/schema";
 import { type Project, type NewProject } from "~/server/db/schema";
+import { throwServerError } from "~/utils/errors";
 import { auth } from "@clerk/nextjs";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export async function initAction() {}
 
-export async function createProject(data: NewProject) {
+type ProjectResponse = {
+	newProjectId: number;
+	status: boolean;
+	message: string;
+};
+
+export async function createProject(
+	data: NewProject,
+): Promise<ProjectResponse> {
 	try {
 		// get user from auth headers
 		const { userId } = auth();
-		if (!userId) throw new Error("userId not found");
+		if (!userId) {
+			return {
+				newProjectId: -1,
+				status: false,
+				message: "UserId not found",
+			};
+		}
 
 		// insert project
+
 		const newProject: NewProject = insertProjectSchema.parse(data);
 		const result = await db.insert(projects).values(newProject);
 		const insertId = parseInt(result.insertId);
@@ -33,9 +49,32 @@ export async function createProject(data: NewProject) {
 
 		revalidatePath("/");
 
-		return insertId;
+		return {
+			newProjectId: insertId,
+			status: true,
+			message: "Project created successfully",
+		};
 	} catch (error) {
-		if (error instanceof Error) console.log(error.stack);
+		if (error instanceof Error) {
+			if (error.message.includes("Duplicate entry")) {
+				return {
+					newProjectId: -1,
+					status: false,
+					message: "Project name already exists",
+				};
+			}
+			return {
+				newProjectId: -1,
+				status: false,
+				message: error.message,
+			};
+		} else {
+			return {
+				newProjectId: -1,
+				status: false,
+				message: "Unknown error",
+			};
+		}
 	}
 }
 
@@ -56,7 +95,7 @@ export async function getAllProjects(userId: string) {
 		);
 		return allProjects;
 	} catch (error) {
-		if (error instanceof Error) console.log(error.stack);
+		if (error instanceof Error) throwServerError(error.message);
 	}
 }
 
@@ -68,7 +107,7 @@ export async function getProject(id: number) {
 			.where(eq(projects.id, id));
 		return allProjects[0];
 	} catch (error) {
-		if (error instanceof Error) console.log(error.stack);
+		if (error instanceof Error) throwServerError(error.message);
 	}
 }
 
@@ -77,7 +116,7 @@ export async function deleteProject(id: number) {
 		await db.delete(projects).where(eq(projects.id, id));
 		revalidatePath("/");
 	} catch (error) {
-		if (error instanceof Error) console.log(error.stack);
+		if (error instanceof Error) throwServerError(error.message);
 	}
 }
 
@@ -89,6 +128,6 @@ export async function updateProject(id: number, data: NewProject) {
 
 		// todo return updated project
 	} catch (error) {
-		if (error instanceof Error) console.log(error.stack);
+		if (error instanceof Error) throwServerError(error.message);
 	}
 }
