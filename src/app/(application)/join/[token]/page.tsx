@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs";
 import { joinProject } from "~/actions/invite-actions";
+import Joining from "./joining";
 
 type Params = {
 	params: {
@@ -15,6 +16,9 @@ export default async function ProjectSettingsInvite({
 	if (!userId) return null;
 	const result = await joinProject(decodedToken, userId);
 
+	if (result.success && result.projectId) {
+		return <Joining redirectURL={`/${result.projectId}/backlog`} />;
+	}
 	return (
 		<div className="container flex flex-col pt-4">
 			<p>{result.message}</p>
