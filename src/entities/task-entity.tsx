@@ -8,7 +8,7 @@ import {
 } from "@radix-ui/react-icons";
 import type GenericEntityConfig from "./entityTypes";
 import { z } from "zod";
-import { type Task } from "~/server/db/schema";
+import { NewTask, type Task } from "~/server/db/schema";
 import { BugIcon, Feather, LayoutList } from "lucide-react";
 import { throwClientError } from "~/utils/errors";
 
@@ -123,6 +123,15 @@ const taskConfig: GenericEntityConfig<TaskConfig> = {
 			],
 		},
 	},
+};
+
+export const defaultValues: NewTask = {
+	title: "",
+	description: "",
+	projectId: -1,
+	status: "todo",
+	priority: "medium",
+	type: "task",
 };
 
 export function getTaskConfig(key: string) {

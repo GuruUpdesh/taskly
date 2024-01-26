@@ -4,7 +4,6 @@
 import React, { useEffect } from "react";
 
 // ui
-import { TableCell } from "~/components/ui/table";
 import { Controller, type UseFormReturn } from "react-hook-form";
 import { type NewTask } from "~/server/db/schema";
 import {
@@ -22,7 +21,7 @@ import { cn } from "~/lib/utils";
 
 export const optionVariants = cva(
 	[
-		"rounded-full border pl-2 pr-3 py-1 flex items-center space-x-2 whitespace-nowrap flex",
+		"rounded-sm border pl-2 pr-3 py-1 flex items-center space-x-2 whitespace-nowrap flex",
 	],
 	{
 		variants: {
@@ -45,14 +44,13 @@ type DataCellProps = {
 	config: ReturnType<typeof getTaskConfig>;
 	col: keyof NewTask;
 	form: UseFormReturn<NewTask>;
-	onSubmit: (newTask: NewTask) => Promise<void>;
+	onSubmit: (newTask: NewTask) => void;
 	isNew: boolean;
 };
 
 function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 	useEffect(() => {
 		if (isNew) return;
-
 		void onSubmit(form.getValues());
 	}, [form.watch(col)]);
 
@@ -70,22 +68,25 @@ function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 	if (config.type !== "select") return null;
 
 	return (
-		<TableCell className="border p-0">
-			<div className="flex items-center justify-center px-2">
+		<div className="p-0">
+			<div className="flex items-center justify-center">
 				<Controller
 					control={form.control}
 					name={col}
-					render={({ field }) => (
+					render={({ field: {onChange, value, ...fieldProps} }) => {
+						console.log("DataCellSelect", onChange, value, fieldProps)
+						return (
 						<Select
-							onValueChange={(value) => field.onChange(value)}
-							defaultValue={field.value.toString()}
+							onValueChange={onChange}
+							value={value.toString()}
+							defaultValue={value.toString()}
 						>
 							<SelectTrigger
 								className={cn(
 									"h-min",
 									optionVariants({
 										color: getSelectedOption(
-											field.value.toString(),
+											value.toString(),
 										),
 									}),
 								)}
@@ -104,7 +105,7 @@ function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 												color: option.color,
 											}),
 										)}
-										value={option.value as string}
+										value={option.value.toString()}
 									>
 										<div className="flex items-center gap-1">
 											<span className="">
@@ -116,10 +117,11 @@ function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 								))}
 							</SelectContent>
 						</Select>
-					)}
+						)
+					}}
 				/>
 			</div>
-		</TableCell>
+		</div>
 	);
 }
 

@@ -18,7 +18,7 @@ import { cn } from "~/lib/utils";
 import { getTaskConfig, taskSchema } from "~/entities/task-entity";
 
 // components
-import DataCellSelect from "./cells/data-cell-select";
+import DataCellSelect from "../backlog/propery-select";
 
 type DataTableRowProps = {
 	variant: "new" | "data" | "ai";
@@ -48,7 +48,6 @@ const DataTableRow = ({
 	});
 
 	useEffect(() => {
-		console.log("task changed", task);
 		form.reset(defaultTaskValues);
 	}, [task]);
 

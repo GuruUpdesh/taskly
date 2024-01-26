@@ -3,9 +3,9 @@ import { GeistSans } from "geist/font/sans";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import { cn } from "~/lib/utils";
-import { SettingsContextProvider } from "~/hooks/context/SettingsContext";
 import { Toaster } from "~/components/ui/sonner";
 import { dark } from "@clerk/themes";
+import Providers from './providers'
 
 export const metadata = {
 	title: "Taskly",
@@ -40,11 +40,11 @@ export default function RootLayout({
 						defaultTheme="system"
 						enableSystem
 					>
-						<SettingsContextProvider>
+						<Providers>
 							<main>{children}</main>
-						</SettingsContextProvider>
+						</Providers>
 					</ThemeProvider>
-					<Toaster />
+					<Toaster richColors />
 				</body>
 			</html>
 		</ClerkProvider>

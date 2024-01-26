@@ -8,6 +8,7 @@ import { type Task, type NewTask } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 
 export async function createTask(data: NewTask) {
+	console.log("createTask > data", data);
 	try {
 		const newTask = insertTaskSchema__required.parse(data);
 		await db.insert(tasks).values(newTask);
@@ -32,6 +33,7 @@ export async function getTasksFromProject(projectId: number) {
 			.select()
 			.from(tasks)
 			.where(eq(tasks.projectId, projectId));
+
 		return allTasks;
 	} catch (error) {
 		if (error instanceof Error) throwServerError(error.message);

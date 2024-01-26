@@ -42,7 +42,7 @@ export default async function ApplicationLayout({
 				<ResizableHandle className="" />
 				<ResizablePanel defaultSize={75}>
 					<main>
-						<BreadCrumbs />
+						{/* <BreadCrumbs /> */}
 						{children}
 					</main>
 				</ResizablePanel>

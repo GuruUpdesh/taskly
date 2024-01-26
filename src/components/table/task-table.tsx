@@ -126,7 +126,7 @@ const TaskTable = ({ tasks, projectId }: TaskTableProps) => {
 
 	return (
 		<>
-			<AiDialog dispatch={dispatch} />
+			{/* <AiDialog dispatch={dispatch} /> */}
 			<Table className="border">
 				<TableCaption>
 					{!tasks ? "isPending..." : "A list of tasks"}
