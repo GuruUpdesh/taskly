@@ -2,15 +2,14 @@
 
 import React from "react";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import { CopyIcon } from "lucide-react";
 
 type Props = {
-	inviteLink: string;
+	token: string;
 };
 
-function InviteLink({ inviteLink }: Props) {
-	const link = window.location.host + "/join/" + inviteLink;
+function InviteLink({ token }: Props) {
+	const link = window.location.host + "/join/" + token;
 	const handleCopyToClipboard = async () => {
 		try {
 			await navigator.clipboard.writeText(link);
@@ -20,8 +19,8 @@ function InviteLink({ inviteLink }: Props) {
 		}
 	};
 	return (
-		<div className="flex items-start">
-			<Input value={link} />
+		<div className="flex items-start gap-2">
+			<p className="flex-1 rounded-sm border p-2">{link}</p>
 			<Button onClick={handleCopyToClipboard} className="gap-1">
 				<CopyIcon className="h-4 w-4" />
 				Copy
