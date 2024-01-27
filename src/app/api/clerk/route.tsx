@@ -2,9 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import type {
 	SessionWebhookEvent,
+	UserJSON,
 	UserWebhookEvent,
 	WebhookEvent,
 } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { Webhook as svixWebhook } from "svix";
@@ -39,17 +41,24 @@ async function validateRequest(request: Request) {
  * Now we can handle the webhook events with our own logic
  */
 async function onUserCreated(payload: UserWebhookEvent) {
-	if (!payload.data.id) {
-		throwServerError("No user ID provided");
+	const data = payload.data as UserJSON;
+	if (!data.id || !data.username || !data.image_url) {
+		throwServerError("Required data not found in webhook payload");
 		return;
 	}
 
-	await helperCreateUser(payload.data.id);
+	await helperCreateUser(data.id, data.username, data.image_url);
 }
 
-async function helperCreateUser(userId: string) {
+async function helperCreateUser(
+	userId: string,
+	username: string,
+	profilePicture: string,
+) {
 	const data: NewUser = {
 		userId,
+		username,
+		profilePicture,
 	};
 
 	const newUser = insertUserSchema.parse(data);
@@ -66,6 +75,7 @@ async function onUserDeleted(payload: UserWebhookEvent) {
 }
 
 async function onSessionCreated(payload: SessionWebhookEvent) {
+	console.log("Session created", payload);
 	const userId = payload.data.user_id;
 
 	// check if the user exists in our database
@@ -76,13 +86,27 @@ async function onSessionCreated(payload: SessionWebhookEvent) {
 
 	// if not, create a new user
 	if (user.length === 0) {
-		await helperCreateUser(userId);
+		const user = await clerkClient.users.getUser(userId);
+		if (!user) {
+			throwServerError("User not found");
+			return;
+		}
+		if (!user.username) {
+			throwServerError("User does not have a username");
+			return;
+		}
+		if (!user.imageUrl) {
+			throwServerError("User does not have a profile picture");
+			return;
+		}
+		await helperCreateUser(userId, user.username, user.imageUrl);
 	}
 }
 
 export async function POST(request: Request) {
 	try {
 		const payload = await validateRequest(request);
+		console.log("Clerk Webhook Received >", payload.type);
 
 		switch (payload.type) {
 			case "user.created":

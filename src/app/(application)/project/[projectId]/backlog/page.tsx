@@ -3,12 +3,13 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
-import Tasks from "./tasks";
+import Tasks from "../../../../../components/backlog/tasks";
 import { getTasksFromProject } from "~/actions/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import { Bot, Plus } from "lucide-react";
+import { Bot } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import CreateTask from "~/components/backlog/create-task";
+import { getAsigneesForProject } from "~/actions/project-actions";
 
 type Params = {
 	params: {
@@ -17,30 +18,31 @@ type Params = {
 };
 
 export default async function BacklogPage({ params: { projectId } }: Params) {
-	const queryClient = new QueryClient();
+	const asignees = await getAsigneesForProject(parseInt(projectId));
 
+	// Prefetch tasks using react-query
+	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
 		queryKey: ["tasks"],
 		queryFn: () => getTasksFromProject(parseInt(projectId)),
 	});
-    
 
 	return (
-    <div className="pt-2 max-h-screen overflow-y-scroll">
-        <header className="flex items-center gap-2 justify-between pb-2 border-b container">
-            <BreadCrumbs />
-            <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
-                    <Bot className="h-4 w-4" />
-                </Button>
-                <CreateTask projectId={projectId}/>
-            </div>
-        </header>
-        <section className="container flex flex-col pt-4">
-            <HydrationBoundary state={dehydrate(queryClient)}>
-                <Tasks projectId={projectId} />
-            </HydrationBoundary>
-        </section>
-    </div>
+		<div className="max-h-screen overflow-y-scroll pt-2">
+			<header className="container flex items-center justify-between gap-2 border-b pb-2">
+				<BreadCrumbs />
+				<div className="flex items-center gap-2">
+					<Button variant="outline" size="sm">
+						<Bot className="h-4 w-4" />
+					</Button>
+					<CreateTask projectId={projectId} asignees={asignees} />
+				</div>
+			</header>
+			<section className="container flex flex-col pt-4">
+				<HydrationBoundary state={dehydrate(queryClient)}>
+					<Tasks projectId={projectId} asignees={asignees} />
+				</HydrationBoundary>
+			</section>
+		</div>
 	);
 }

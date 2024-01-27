@@ -15,7 +15,7 @@ import {
 } from "~/components/ui/select";
 
 // utils
-import { type getTaskConfig } from "~/entities/task-entity";
+import { type buildDynamicOptions } from "~/entities/task-entity";
 import { cva } from "class-variance-authority";
 import { cn } from "~/lib/utils";
 
@@ -41,7 +41,7 @@ export const optionVariants = cva(
 );
 
 type DataCellProps = {
-	config: ReturnType<typeof getTaskConfig>;
+	config: ReturnType<typeof buildDynamicOptions>;
 	col: keyof NewTask;
 	form: UseFormReturn<NewTask>;
 	onSubmit: (newTask: NewTask) => void;
@@ -61,6 +61,7 @@ function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 		const selectedOption = config.form?.options.find(
 			(option) => option.value === value,
 		);
+
 		if (!selectedOption) return "grey";
 		return selectedOption.color;
 	}
@@ -68,25 +69,23 @@ function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 	if (config.type !== "select") return null;
 
 	return (
-		<div className="p-0">
-			<div className="flex items-center justify-center">
-				<Controller
-					control={form.control}
-					name={col}
-					render={({ field: {onChange, value, ...fieldProps} }) => {
-						console.log("DataCellSelect", onChange, value, fieldProps)
-						return (
+		<div className="flex items-center justify-center">
+			<Controller
+				control={form.control}
+				name={col}
+				render={({ field: { onChange, value } }) => {
+					return (
 						<Select
 							onValueChange={onChange}
-							value={value.toString()}
-							defaultValue={value.toString()}
+							value={value ? value.toString() : ""}
+							defaultValue={value ? value.toString() : ""}
 						>
 							<SelectTrigger
 								className={cn(
 									"h-min",
 									optionVariants({
 										color: getSelectedOption(
-											value.toString(),
+											value ? value.toString() : "",
 										),
 									}),
 								)}
@@ -105,7 +104,11 @@ function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 												color: option.color,
 											}),
 										)}
-										value={option.value.toString()}
+										value={
+											option.value
+												? option.value.toString()
+												: ""
+										}
 									>
 										<div className="flex items-center gap-1">
 											<span className="">
@@ -117,10 +120,9 @@ function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 								))}
 							</SelectContent>
 						</Select>
-						)
-					}}
-				/>
-			</div>
+					);
+				}}
+			/>
 		</div>
 	);
 }

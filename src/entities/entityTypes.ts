@@ -18,11 +18,19 @@ interface EntityConfigSelect<T extends Entity, K extends keyof T> {
 	};
 }
 
+export type ColorOptions =
+	| "grey"
+	| "yellow"
+	| "red"
+	| "purple"
+	| "blue"
+	| "green";
+
 export interface EntityConfigFormSelectOption<T> {
 	value: T;
 	displayName: string;
 	icon?: React.ReactNode;
-	color: "grey" | "yellow" | "red" | "purple" | "blue" | "green";
+	color: ColorOptions;
 }
 
 type GenericEntityConfig<T extends Entity> = {

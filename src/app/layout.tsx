@@ -5,7 +5,7 @@ import { ThemeProvider } from "~/components/ui/theme-provider";
 import { cn } from "~/lib/utils";
 import { Toaster } from "~/components/ui/sonner";
 import { dark } from "@clerk/themes";
-import Providers from './providers'
+import Providers from "./providers";
 
 export const metadata = {
 	title: "Taskly",

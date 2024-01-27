@@ -2,23 +2,32 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { type NewTask, type Task } from "~/server/db/schema";
+import {
+	type User,
+	type NewTask,
+	type Task as TaskType,
+} from "~/server/db/schema";
 import Property from "./property/property";
 import { taskSchema } from "~/entities/task-entity";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";
-import type { UpdateTask } from "~/app/(application)/project/[projectId]/backlog/tasks";
-import ItemDropDownMenu from "./item-dropdown-menu";
+import type { UpdateTask } from "~/components/backlog/tasks";
+import TaskDropDownMenu from "./task-dropdown-menu";
 
 type Props = {
-	task: Task;
-	projectId: string;
+	task: TaskType;
+	asignees: User[];
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 };
 
-const BacklogItem = ({ task, projectId, addTaskMutation, deleteTaskMutation }: Props) => {
+const Task = ({
+	task,
+	asignees,
+	addTaskMutation,
+	deleteTaskMutation,
+}: Props) => {
 	const form = useForm<NewTask>({
 		resolver: zodResolver(taskSchema),
 		defaultValues: { ...task },
@@ -30,13 +39,13 @@ const BacklogItem = ({ task, projectId, addTaskMutation, deleteTaskMutation }: P
 
 	const order = [
 		["priority", "status", "title", "description"],
-		["type"],
-	] as (keyof Task)[][];
+		["type", "assignee"],
+	] as (keyof TaskType)[][];
 
 	function onSubmit(newTask: NewTask) {
 		newTask.projectId = task.projectId;
 		const changes = Object.keys(newTask).reduce((acc, key) => {
-			if (newTask[key as keyof NewTask] !== task[key as keyof Task]) {
+			if (newTask[key as keyof NewTask] !== task[key as keyof TaskType]) {
 				return { ...acc, [key]: newTask[key as keyof NewTask] };
 			}
 			return acc;
@@ -62,6 +71,7 @@ const BacklogItem = ({ task, projectId, addTaskMutation, deleteTaskMutation }: P
 							property={property as keyof NewTask}
 							form={form}
 							onSubmit={onSubmit}
+							assignees={asignees}
 						/>
 					);
 				})}
@@ -70,10 +80,10 @@ const BacklogItem = ({ task, projectId, addTaskMutation, deleteTaskMutation }: P
 	}
 
 	return (
-		<ItemDropDownMenu deleteTaskMutation={deleteTaskMutation} task={task}>
-				{renderProperties()}
-		</ItemDropDownMenu>
+		<TaskDropDownMenu deleteTaskMutation={deleteTaskMutation} task={task}>
+			{renderProperties()}
+		</TaskDropDownMenu>
 	);
 };
 
-export default BacklogItem;
+export default Task;

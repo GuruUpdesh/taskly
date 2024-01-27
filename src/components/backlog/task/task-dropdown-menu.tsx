@@ -18,19 +18,20 @@ type Props = {
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 };
 
-const ItemDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
+const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 	return (
 		<ContextMenu>
 			<ContextMenuTrigger className="flex items-center justify-between border-b py-2">
 				{children}
 			</ContextMenuTrigger>
 			<ContextMenuContent className="bg-accent/50 backdrop-blur-sm">
-				<ContextMenuItem onClick={() => {
-					deleteTaskMutation.mutate(task.id)
-					toast.warning("Task deleted");
-				}
-				}>
-					<Trash2Icon className="w-4 h-4 mr-2" />
+				<ContextMenuItem
+					onClick={() => {
+						deleteTaskMutation.mutate(task.id);
+						toast.warning("Task deleted");
+					}}
+				>
+					<Trash2Icon className="mr-2 h-4 w-4" />
 					Delete
 				</ContextMenuItem>
 			</ContextMenuContent>
@@ -38,4 +39,4 @@ const ItemDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 	);
 };
 
-export default ItemDropDownMenu;
+export default TaskDropDownMenu;

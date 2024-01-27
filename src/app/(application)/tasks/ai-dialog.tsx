@@ -88,7 +88,6 @@ const AiDialog = ({ dispatch }: Props) => {
 		if (!filtered[0]) return;
 
 		const taskObject = extractValidJson(filtered[0].content) as AiTask;
-		console.log(taskObject);
 		if (taskObject) {
 			setTaskObject(taskObject);
 		}
