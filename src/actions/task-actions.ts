@@ -6,6 +6,7 @@ import { db } from "~/server/db";
 import { tasks, insertTaskSchema__required } from "~/server/db/schema";
 import { type Task, type NewTask } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
+import { Task } from "~/server/db/schema";
 
 export async function createTask(data: NewTask) {
 	try {
@@ -52,6 +53,18 @@ export async function updateTask(id: number, data: NewTask) {
 		const updatedTaskData: NewTask = insertTaskSchema__required.parse(data);
 		await db.update(tasks).set(updatedTaskData).where(eq(tasks.id, id));
 		revalidatePath("/");
+	} catch (error) {
+		if (error instanceof Error) throwServerError(error.message);
+	}
+}
+
+export async function getTask(id: number) {
+	try {
+		const task: Task[] = await db
+			.select()
+			.from(tasks)
+			.where(eq(tasks.id, id));
+		return task[0];
 	} catch (error) {
 		if (error instanceof Error) throwServerError(error.message);
 	}
