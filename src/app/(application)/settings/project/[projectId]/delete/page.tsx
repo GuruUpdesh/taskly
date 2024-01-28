@@ -25,11 +25,8 @@ export default async function projectSettingsGeneral(
 
 	return (
 		<div className="container flex flex-col pt-4">
-			<h1>General</h1>
-			<div className="container flex flex-col pt-4 border-t border-red-500">
-				<Button className="bg-red-500 text-background"> Delete {currentProject ? currentProject.name : 'error'} </Button>
-			</div>
+			<h1>Are you sure you want to delete this Project: {currentProject ? currentProject.name : 'error'}.</h1>
+            <Button> Delete </Button>
 		</div>
 	);
 }
-
