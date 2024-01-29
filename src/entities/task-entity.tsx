@@ -4,13 +4,16 @@ import {
 	ArrowUpIcon,
 	CheckCircledIcon,
 	CircleIcon,
+	PersonIcon,
 	StopwatchIcon,
 } from "@radix-ui/react-icons";
 import type GenericEntityConfig from "./entityTypes";
 import { z } from "zod";
-import { type Task } from "~/server/db/schema";
+import type { NewTask, User, Task } from "~/server/db/schema";
 import { BugIcon, Feather, LayoutList } from "lucide-react";
 import { throwClientError } from "~/utils/errors";
+import type { ColorOptions } from "./entityTypes";
+import UserProfilePicture from "~/components/user-profile-picture";
 
 type TaskConfig = Omit<Task, "projectId">;
 
@@ -123,6 +126,32 @@ const taskConfig: GenericEntityConfig<TaskConfig> = {
 			],
 		},
 	},
+	assignee: {
+		value: "assignee",
+		displayName: "Assignee",
+		type: "select",
+		form: {
+			placeholder: "Assignee",
+			options: [
+				{
+					value: "unassigned",
+					displayName: "Unassigned",
+					icon: <PersonIcon className="h-[20px] w-[20px]" />,
+					color: "grey",
+				},
+			],
+		},
+	},
+};
+
+export const defaultValues: NewTask = {
+	title: "",
+	description: "",
+	projectId: -1,
+	status: "todo",
+	priority: "medium",
+	type: "task",
+	assignee: null,
 };
 
 export function getTaskConfig(key: string) {
@@ -147,4 +176,36 @@ export const taskSchema = z.object({
 	status: z.enum(["todo", "inprogress", "done"]),
 	priority: z.enum(["low", "medium", "high"]),
 	type: z.enum(["task", "bug", "feature"]),
+	assignee: z.string().optional(),
 });
+
+export function buildDynamicOptions(
+	config: ReturnType<typeof getTaskConfig>,
+	key: string,
+	asignees: User[],
+): ReturnType<typeof getTaskConfig> {
+	switch (key) {
+		case "assignee":
+			if (config.type !== "select" || !config.form.options) return config;
+			const newOptions = asignees.map((asignee) => ({
+				value: asignee.username,
+				displayName: asignee.username,
+				icon: <UserProfilePicture src={asignee.profilePicture} />,
+				color: "grey" as ColorOptions,
+			}));
+			const currentOptions = config.form.options.map((option) => ({
+				...option,
+				value: option.value as string,
+			}));
+			const options = [...currentOptions, ...newOptions];
+			return {
+				...config,
+				form: {
+					...config.form,
+					options,
+				},
+			};
+		default:
+			return config;
+	}
+}

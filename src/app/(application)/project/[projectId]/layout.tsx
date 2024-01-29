@@ -8,7 +8,6 @@ import {
 } from "~/components/ui/resizable";
 import ProjectState from "./project-state";
 import SettingsNavigationState from "~/components/layout/sidebar/settings-navigation-state";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 
 type Params = {
 	children: React.ReactNode;
@@ -41,10 +40,7 @@ export default async function ApplicationLayout({
 				</ResizablePanel>
 				<ResizableHandle className="" />
 				<ResizablePanel defaultSize={75}>
-					<main>
-						<BreadCrumbs />
-						{children}
-					</main>
+					<main>{children}</main>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</>

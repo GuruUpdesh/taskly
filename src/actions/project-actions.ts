@@ -131,3 +131,26 @@ export async function updateProject(id: number, data: NewProject) {
 		if (error instanceof Error) throwServerError(error.message);
 	}
 }
+
+export async function getAsigneesForProject(projectId: number) {
+	try {
+		const asigneesQuery = await db.query.projects.findMany({
+			where: (project) => eq(project.id, projectId),
+			with: {
+				usersToProjects: {
+					with: {
+						user: true,
+					},
+				},
+			},
+		});
+		const asignees = asigneesQuery.flatMap((userToProject) =>
+			userToProject.usersToProjects.map((up) => up.user),
+		);
+
+		return asignees;
+	} catch (error) {
+		if (error instanceof Error) throwServerError(error.message);
+		return [];
+	}
+}

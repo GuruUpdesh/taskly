@@ -49,7 +49,6 @@ function getCrumbs(
 		breadcrumbList.push({ name, link });
 	}
 
-	console.log(breadcrumbList);
 	return breadcrumbList;
 }
 

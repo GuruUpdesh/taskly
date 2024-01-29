@@ -1,7 +1,15 @@
-import { getProject } from "~/actions/project-actions";
-import { env } from "~/env.mjs";
+import {
+	dehydrate,
+	HydrationBoundary,
+	QueryClient,
+} from "@tanstack/react-query";
+import Tasks from "../../../../../components/backlog/tasks";
 import { getTasksFromProject } from "~/actions/task-actions";
-import TaskTable from "~/components/table/task-table";
+import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import { Bot } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import CreateTask from "~/components/backlog/create-task";
+import { getAsigneesForProject } from "~/actions/project-actions";
 
 type Params = {
 	params: {
@@ -9,31 +17,32 @@ type Params = {
 	};
 };
 
-export default async function ProjectsCreatePage({
-	params: { projectId },
-}: Params) {
-	const project = await getProject(parseInt(projectId));
+export default async function BacklogPage({ params: { projectId } }: Params) {
+	const asignees = await getAsigneesForProject(parseInt(projectId));
 
-	if (project === undefined)
-		return <p>project with id {projectId} doesnt exist</p>;
-
-	const tasks = await getTasksFromProject(parseInt(projectId));
-	if (tasks === undefined) return null;
+	// Prefetch tasks using react-query
+	const queryClient = new QueryClient();
+	await queryClient.prefetchQuery({
+		queryKey: ["tasks"],
+		queryFn: () => getTasksFromProject(parseInt(projectId)),
+	});
 
 	return (
-		<div className="container flex flex-col pt-4">
-			<section className="mb-3">
-				<p className="text-sm text-muted-foreground">
-					{env.NODE_ENV.toLocaleUpperCase()} {">"} Projects {">"}{" "}
-					{project.name}
-				</p>
-				<header className="flex items-center gap-2">
-					<h3 className="scroll-m-20 text-2xl font-bold tracking-tight">
-						Backlog
-					</h3>
-				</header>
+		<div className="max-h-screen overflow-y-scroll pt-2">
+			<header className="container flex items-center justify-between gap-2 border-b pb-2">
+				<BreadCrumbs />
+				<div className="flex items-center gap-2">
+					<Button variant="outline" size="sm">
+						<Bot className="h-4 w-4" />
+					</Button>
+					<CreateTask projectId={projectId} asignees={asignees} />
+				</div>
+			</header>
+			<section className="container flex flex-col pt-4">
+				<HydrationBoundary state={dehydrate(queryClient)}>
+					<Tasks projectId={projectId} asignees={asignees} />
+				</HydrationBoundary>
 			</section>
-			<TaskTable tasks={tasks} projectId={parseInt(projectId)} />
 		</div>
 	);
 }

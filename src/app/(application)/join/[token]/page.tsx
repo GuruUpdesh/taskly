@@ -17,7 +17,7 @@ export default async function ProjectSettingsInvite({
 	const result = await joinProject(decodedToken, userId);
 
 	if (result.success && result.projectId) {
-		return <Joining redirectURL={`/${result.projectId}/backlog`} />;
+		return <Joining redirectURL={`project/${result.projectId}/backlog`} />;
 	}
 	return (
 		<div className="container flex flex-col pt-4">

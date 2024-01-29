@@ -30,6 +30,7 @@ export const tasks = mysqlTable("tasks", {
 	type: mysqlEnum("type", ["task", "bug", "feature"])
 		.default("task")
 		.notNull(),
+	assignee: varchar("assignee", { length: 255 }),
 	projectId: int("project_id").notNull(),
 });
 
@@ -42,6 +43,7 @@ export const insertTaskSchema__required = insertTaskSchema.required({
 	status: true,
 	priority: true,
 	type: true,
+	assignee: true,
 	projectId: true,
 });
 
@@ -54,6 +56,10 @@ export const taskRelations = relations(tasks, ({ one }) => ({
 	project: one(projects, {
 		fields: [tasks.projectId],
 		references: [projects.id],
+	}),
+	assignee: one(users, {
+		fields: [tasks.assignee],
+		references: [users.userId],
 	}),
 }));
 
@@ -84,6 +90,8 @@ export const projectsRelations = relations(projects, ({ many }) => ({
  */
 export const users = mysqlTable("users", {
 	userId: varchar("user_id", { length: 32 }).primaryKey(),
+	username: varchar("username", { length: 255 }).notNull(),
+	profilePicture: varchar("profile_picture", { length: 255 }).notNull(),
 });
 
 // validators
@@ -97,6 +105,7 @@ export type NewUser = z.infer<typeof insertUserSchema>;
 // relations
 export const usersRelations = relations(users, ({ many }) => ({
 	usersToProjects: many(usersToProjects),
+	tasks: many(tasks),
 }));
 
 /**

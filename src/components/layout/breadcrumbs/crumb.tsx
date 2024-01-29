@@ -13,7 +13,7 @@ const Crumb = ({ name, link, last }: CrumbProps) => {
 		<>
 			<div
 				className={cn(
-					"flex items-center rounded-sm  py-1 hover:bg-accent",
+					"flex items-center rounded-sm   hover:bg-accent",
 					last
 						? "bg-accent px-2 font-bold"
 						: "bg-transparent px-1 text-muted-foreground",
