@@ -148,7 +148,6 @@ export async function getAsigneesForProject(projectId: number) {
 			userToProject.usersToProjects.map((up) => up.user),
 		);
 
-		console.log(asignees);
 		return asignees;
 	} catch (error) {
 		if (error instanceof Error) throwServerError(error.message);
