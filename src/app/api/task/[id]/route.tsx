@@ -1,5 +1,5 @@
 import { deleteTask, getTask, updateTask } from "~/actions/task-actions";
-import { type NewTask, insertTaskSchema } from "~/server/db/schema";
+import { type NewTask, insertTaskSchema__required } from "~/server/db/schema";
 
 interface Context {
 	params: {
@@ -12,7 +12,7 @@ export async function POST(req: Request, context: Context) {
 
 	// validator
 
-	const validation = insertTaskSchema.safeParse(await req.json());
+	const validation = insertTaskSchema__required.safeParse(await req.json());
 	if (!validation.success) {
 		return new Response("Missing parameters", { status: 400 });
 	}
@@ -21,18 +21,6 @@ export async function POST(req: Request, context: Context) {
 
 	const { id } = params;
 
-	if (
-		!body.id ||
-		!body.description ||
-		!body.status ||
-		!body.projectId ||
-		!body.priority ||
-		!body.type ||
-		!body.title
-	) {
-		return new Response("Missing parameters", { status: 400 });
-	}
-
 	const taskToUpdate: NewTask = {
 		title: body.title,
 		description: body.description,
@@ -40,6 +28,7 @@ export async function POST(req: Request, context: Context) {
 		projectId: body.projectId,
 		priority: body.priority,
 		type: body.type,
+		assignee: body.assignee,
 	};
 
 	const task = await updateTask(parseInt(id), taskToUpdate);

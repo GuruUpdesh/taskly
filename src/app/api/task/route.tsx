@@ -1,24 +1,13 @@
-import { type NewTask, insertTaskSchema } from "~/server/db/schema";
+import { type NewTask, insertTaskSchema__required } from "~/server/db/schema";
 import { createTask } from "~/actions/task-actions";
 
 export async function POST(req: Request) {
-	const validation = insertTaskSchema.safeParse(await req.json());
+	const validation = insertTaskSchema__required.safeParse(await req.json());
 	if (!validation.success) {
 		return new Response("Missing parameters", { status: 400 });
 	}
 
 	const body = validation.data;
-
-	if (
-		!body.description ||
-		!body.status ||
-		!body.projectId ||
-		!body.priority ||
-		!body.type ||
-		!body.title
-	) {
-		return new Response("Missing parameters", { status: 400 });
-	}
 
 	const taskToUpdate: NewTask = {
 		title: body.title,
@@ -27,6 +16,7 @@ export async function POST(req: Request) {
 		projectId: body.projectId,
 		priority: body.priority,
 		type: body.type,
+		assignee: body.assignee,
 	};
 
 	const task = await createTask(taskToUpdate);
