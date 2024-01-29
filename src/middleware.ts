@@ -11,6 +11,8 @@ export default authMiddleware({
 		"/sign-in",
 		`/api/project/(.*)`,
 		"/api/project",
+		`/api/task/(.*)`,
+		"/api/task",
 	],
 });
 
