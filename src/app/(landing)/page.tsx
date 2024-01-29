@@ -40,7 +40,7 @@ export default function HomePage() {
 							"scroll-m-20 text-center text-6xl font-normal tracking-tight drop-shadow-md lg:text-7xl",
 						)}
 					>
-						Agile project management
+						Agile project management (staging)
 					</h1>
 					<MarketingTaskChips />
 					<MarketingSubHeaderChips plexSans={plexSans.className} />
