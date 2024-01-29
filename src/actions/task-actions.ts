@@ -56,3 +56,15 @@ export async function updateTask(id: number, data: NewTask) {
 		if (error instanceof Error) throwServerError(error.message);
 	}
 }
+
+export async function getTask(id: number) {
+	try {
+		const task: Task[] = await db
+			.select()
+			.from(tasks)
+			.where(eq(tasks.id, id));
+		return task[0];
+	} catch (error) {
+		if (error instanceof Error) throwServerError(error.message);
+	}
+}
