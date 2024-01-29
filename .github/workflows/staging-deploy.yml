@@ -1,0 +1,21 @@
+name: Deploy to Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      sourceBranch:
+        description: 'Source Branch to Deploy'
+        required: true
+        default: 'main'
+
+jobs:
+  deploy-to-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.sourceBranch }}
+
+      - name: Force push to staging
+        run: git push origin +${{ github.event.inputs.sourceBranch }}:staging
