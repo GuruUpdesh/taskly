@@ -38,9 +38,17 @@ const Task = ({
 	}, [JSON.stringify(task)]);
 
 	const order = [
-		["priority", "status", "title", "description"],
-		["type", "assignee"],
-	] as (keyof TaskType)[][];
+		[
+			{ key: "priority", size: "icon" },
+			{ key: "status", size: "icon" },
+			{ key: "title", size: "default" },
+			{ key: "description", size: "icon" },
+		],
+		[
+			{ key: "type", size: "default" },
+			{ key: "assignee", size: "icon" },
+		],
+	] as { key: keyof TaskType; size: "default" | "icon" }[][];
 
 	function onSubmit(newTask: NewTask) {
 		newTask.projectId = task.projectId;
@@ -62,16 +70,17 @@ const Task = ({
 	function renderProperties() {
 		return order.map((group, groupIdx) => (
 			<div key={groupIdx} className="flex items-center gap-2">
-				{group.map((property, idx) => {
-					if (property === "id" || property === "projectId")
+				{group.map((item, idx) => {
+					if (item.key === "id" || item.key === "projectId")
 						return null;
 					return (
 						<Property
 							key={idx}
-							property={property as keyof NewTask}
+							property={item.key}
 							form={form}
 							onSubmit={onSubmit}
 							assignees={asignees}
+							size={item.size}
 						/>
 					);
 				})}

@@ -51,6 +51,8 @@ export async function deleteTask(id: number) {
 export async function updateTask(id: number, data: NewTask) {
 	try {
 		const updatedTaskData: NewTask = insertTaskSchema__required.parse(data);
+		if (updatedTaskData.assignee === "unassigned")
+			updatedTaskData.assignee = null;
 		await db.update(tasks).set(updatedTaskData).where(eq(tasks.id, id));
 		revalidatePath("/");
 	} catch (error) {

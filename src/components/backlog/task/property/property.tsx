@@ -10,9 +10,10 @@ type Props = {
 	form: UseFormReturn<NewTask>;
 	onSubmit: (newTask: NewTask) => void;
 	assignees: User[];
+	size: "default" | "icon";
 };
 
-function Property({ property, form, onSubmit, assignees }: Props) {
+function Property({ property, form, onSubmit, assignees, size }: Props) {
 	const config = buildDynamicOptions(
 		getTaskConfig(property),
 		property,
@@ -31,6 +32,7 @@ function Property({ property, form, onSubmit, assignees }: Props) {
 				config={config}
 				isNew={false}
 				onSubmit={onSubmit}
+				size={size}
 			/>
 		);
 	}

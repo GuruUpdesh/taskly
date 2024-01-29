@@ -4,6 +4,7 @@ import {
 	ArrowUpIcon,
 	CheckCircledIcon,
 	CircleIcon,
+	PersonIcon,
 	StopwatchIcon,
 } from "@radix-ui/react-icons";
 import type GenericEntityConfig from "./entityTypes";
@@ -131,7 +132,14 @@ const taskConfig: GenericEntityConfig<TaskConfig> = {
 		type: "select",
 		form: {
 			placeholder: "Assignee",
-			options: [],
+			options: [
+				{
+					value: "unassigned",
+					displayName: "Unassigned",
+					icon: <PersonIcon className="h-[20px] w-[20px]" />,
+					color: "grey",
+				},
+			],
 		},
 	},
 };
@@ -178,13 +186,18 @@ export function buildDynamicOptions(
 ): ReturnType<typeof getTaskConfig> {
 	switch (key) {
 		case "assignee":
-			if (config.type !== "select") return config;
-			const options = asignees.map((asignee) => ({
+			if (config.type !== "select" || !config.form.options) return config;
+			const newOptions = asignees.map((asignee) => ({
 				value: asignee.username,
 				displayName: asignee.username,
 				icon: <UserProfilePicture src={asignee.profilePicture} />,
 				color: "grey" as ColorOptions,
 			}));
+			const currentOptions = config.form.options.map((option) => ({
+				...option,
+				value: option.value as string,
+			}));
+			const options = [...currentOptions, ...newOptions];
 			return {
 				...config,
 				form: {

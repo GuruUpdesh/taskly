@@ -11,8 +11,13 @@ type Props = {
 const PropertyStatic = ({ form, property }: Props) => {
 	return (
 		<>
+			{property === "description" && form.watch(property) !== "" ? (
+				<span className="opacity-80">{">"}</span>
+			) : (
+				""
+			)}
 			<p
-				className={cn("w-min flex-grow-0 whitespace-nowrap px-4", {
+				className={cn("w-min flex-grow-0 whitespace-nowrap px-1", {
 					"opacity-80": property === "description",
 					"font-medium": property === "title",
 				})}

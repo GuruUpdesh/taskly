@@ -18,6 +18,8 @@ import {
 import { type buildDynamicOptions } from "~/entities/task-entity";
 import { cva } from "class-variance-authority";
 import { cn } from "~/lib/utils";
+import * as SelectPrimitive from "@radix-ui/react-select";
+import { ChevronDown } from "lucide-react";
 
 export const optionVariants = cva(
 	[
@@ -46,9 +48,17 @@ type DataCellProps = {
 	form: UseFormReturn<NewTask>;
 	onSubmit: (newTask: NewTask) => void;
 	isNew: boolean;
+	size?: "default" | "icon";
 };
 
-function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
+function DataCellSelect({
+	config,
+	col,
+	form,
+	onSubmit,
+	isNew,
+	size = "default",
+}: DataCellProps) {
 	useEffect(() => {
 		if (isNew) return;
 		void onSubmit(form.getValues());
@@ -66,6 +76,16 @@ function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 		return selectedOption.color;
 	}
 
+	function getOption(value: string) {
+		if (config.type !== "select") return null;
+
+		const option = config.form?.options.find(
+			(option) => option.value === value,
+		);
+
+		return option;
+	}
+
 	if (config.type !== "select") return null;
 
 	return (
@@ -77,32 +97,64 @@ function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 					return (
 						<Select
 							onValueChange={onChange}
-							value={value ? value.toString() : ""}
-							defaultValue={value ? value.toString() : ""}
+							value={value ? value.toString() : "unassigned"}
+							defaultValue={
+								value ? value.toString() : "unassigned"
+							}
 						>
 							<SelectTrigger
 								className={cn(
 									"h-min",
+									size === "icon"
+										? "aspect-square !p-1.5"
+										: "",
 									optionVariants({
 										color: getSelectedOption(
-											value ? value.toString() : "",
+											value
+												? value.toString()
+												: "unassigned",
 										),
 									}),
 								)}
 							>
 								<SelectValue
 									placeholder={config.form.placeholder}
-								/>
+									asChild
+								>
+									<span className="flex items-center gap-1">
+										{
+											getOption(
+												value
+													? value.toString()
+													: "unassigned",
+											)?.icon
+										}
+										{size === "icon"
+											? null
+											: getOption(
+													value
+														? value.toString()
+														: "unassigned",
+												)?.displayName}
+									</span>
+								</SelectValue>
+								{size === "icon" ? null : (
+									<SelectPrimitive.Icon asChild>
+										<ChevronDown className="h-4 w-4 opacity-50" />
+									</SelectPrimitive.Icon>
+								)}
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent
+								onCloseAutoFocus={(e) => e.preventDefault()}
+							>
 								{config.form?.options.map((option) => (
 									<SelectItem
 										key={option.value}
 										className={cn(
-											"mb-2",
 											optionVariants({
 												color: option.color,
 											}),
+											"border-none bg-transparent !pl-2",
 										)}
 										value={
 											option.value
@@ -110,10 +162,8 @@ function DataCellSelect({ config, col, form, onSubmit, isNew }: DataCellProps) {
 												: ""
 										}
 									>
-										<div className="flex items-center gap-1">
-											<span className="">
-												{option.icon}
-											</span>
+										<div className="flex min-w-[8rem] items-center gap-2">
+											<span>{option.icon}</span>
 											<p>{option.displayName}</p>
 										</div>
 									</SelectItem>
