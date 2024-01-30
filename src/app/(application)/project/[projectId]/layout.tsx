@@ -8,6 +8,7 @@ import {
 } from "~/components/ui/resizable";
 import ProjectState from "./project-state";
 import SettingsNavigationState from "~/components/layout/sidebar/settings-navigation-state";
+import { redirect } from "next/navigation";
 
 type Params = {
 	children: React.ReactNode;
@@ -22,7 +23,7 @@ export default async function ApplicationLayout({
 }: Params) {
 	const result = await getProject(Number(projectId));
 	if (!result?.success || !result.project) {
-		return <div>{result?.message}</div>;
+		redirect(`/?error=${result?.message}`);
 	}
 
 	return (

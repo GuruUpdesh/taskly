@@ -17,14 +17,14 @@ import TaskDropDownMenu from "./task-dropdown-menu";
 
 type Props = {
 	task: TaskType;
-	asignees: User[];
+	assignees: User[];
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 };
 
 const Task = ({
 	task,
-	asignees,
+	assignees,
 	addTaskMutation,
 	deleteTaskMutation,
 }: Props) => {
@@ -79,7 +79,7 @@ const Task = ({
 							property={item.key}
 							form={form}
 							onSubmit={onSubmit}
-							assignees={asignees}
+							assignees={assignees}
 							size={item.size}
 						/>
 					);

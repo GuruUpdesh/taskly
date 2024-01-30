@@ -162,11 +162,11 @@ export async function getAsigneesForProject(projectId: number) {
 				},
 			},
 		});
-		const asignees = asigneesQuery.flatMap((userToProject) =>
+		const assignees = asigneesQuery.flatMap((userToProject) =>
 			userToProject.usersToProjects.map((up) => up.user),
 		);
 
-		return asignees;
+		return assignees;
 	} catch (error) {
 		if (error instanceof Error) throwServerError(error.message);
 		return [];
