@@ -13,10 +13,10 @@ const Joining = (props: Props) => {
 
 	React.useEffect(() => {
 		if (!props.redirectURL) {
-			router.push("/");
+			router.replace("/");
 			return;
 		}
-		router.push(props.redirectURL);
+		router.replace(props.redirectURL);
 	}, [props.redirectURL]);
 
 	return (
