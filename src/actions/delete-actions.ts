@@ -1,9 +1,9 @@
 "use server";
 
 import { db } from "~/server/db";
-import { projects } from "~/server/db/schema";
-import { revalidatePath } from "next/cache";
+import { projects, usersToProjects } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 export async function handleDeleteProject(formData: FormData) {
 	const projectId = formData.get("projectId");
@@ -24,6 +24,8 @@ export async function handleDeleteProject(formData: FormData) {
 		return { success: false, message: "Project not found" };
 	}
 	await db.delete(projects).where(eq(projects.id, projectData.id));
-	revalidatePath("/");
-	return { success: true, message: "Project deleted" };
+	await db
+		.delete(usersToProjects)
+		.where(eq(usersToProjects.projectId, projectData.id));
+	redirect("/");
 }
