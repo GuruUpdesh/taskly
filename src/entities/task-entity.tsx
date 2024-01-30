@@ -182,12 +182,12 @@ export const taskSchema = z.object({
 export function buildDynamicOptions(
 	config: ReturnType<typeof getTaskConfig>,
 	key: string,
-	asignees: User[],
+	assignees: User[],
 ): ReturnType<typeof getTaskConfig> {
 	switch (key) {
 		case "assignee":
 			if (config.type !== "select" || !config.form.options) return config;
-			const newOptions = asignees.map((asignee) => ({
+			const newOptions = assignees.map((asignee) => ({
 				value: asignee.username,
 				displayName: asignee.username,
 				icon: <UserProfilePicture src={asignee.profilePicture} />,

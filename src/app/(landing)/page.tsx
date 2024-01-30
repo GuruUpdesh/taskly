@@ -8,6 +8,7 @@ import MarketingTaskChips from "~/components/landing/marketing-task-chips";
 import MarketingSubHeaderChips from "~/components/landing/marketing-subheader-chips";
 import ButtonOptions from "~/components/landing/button-options";
 import Grid from "~/components/landing/background-grid";
+import ErrorMessages from "~/components/error/ErrorMessages";
 
 const plexSans = IBM_Plex_Sans({
 	weight: ["300", "500", "700"],
@@ -17,6 +18,7 @@ const plexSans = IBM_Plex_Sans({
 export default function HomePage() {
 	return (
 		<div>
+			<ErrorMessages />
 			<div className="absolute z-[-1] h-full w-full fade-in-5">
 				<Grid />
 				<img

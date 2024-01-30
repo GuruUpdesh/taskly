@@ -18,10 +18,10 @@ export type UpdateTask = {
 
 type Props = {
 	projectId: string;
-	asignees: User[];
+	assignees: User[];
 };
 
-export default function Tasks({ projectId, asignees }: Props) {
+export default function Tasks({ projectId, assignees }: Props) {
 	const queryClient = useQueryClient();
 
 	const result = useQuery({
@@ -55,7 +55,7 @@ export default function Tasks({ projectId, asignees }: Props) {
 				<Task
 					key={task.id}
 					task={task}
-					asignees={asignees}
+					assignees={assignees}
 					addTaskMutation={addTaskMutation}
 					deleteTaskMutation={deleteTaskMutation}
 				/>
