@@ -20,13 +20,14 @@ export default async function ApplicationLayout({
 	children,
 	params: { projectId },
 }: Params) {
-	const project = await getProject(Number(projectId));
-	if (!project) {
-		return <div>Project not found</div>;
+	const result = await getProject(Number(projectId));
+	if (!result?.success || !result.project) {
+		return <div>{result?.message}</div>;
 	}
+
 	return (
 		<>
-			<ProjectState project={project} />
+			<ProjectState project={result.project} />
 			<ResizablePanelGroup direction="horizontal">
 				<ResizablePanel
 					id="sidebar"

@@ -8,7 +8,7 @@ import {
 	insertProjectSchema,
 	usersToProjects,
 } from "~/server/db/schema";
-import { type Project, type NewProject } from "~/server/db/schema";
+import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 import { auth } from "@clerk/nextjs";
 
@@ -99,13 +99,31 @@ export async function getAllProjects(userId: string) {
 	}
 }
 
-export async function getProject(id: number) {
+export async function getProject(projectId: number) {
 	try {
-		const allProjects: Project[] = await db
-			.select()
-			.from(projects)
-			.where(eq(projects.id, id));
-		return allProjects[0];
+		const { userId }: { userId: string | null } = auth();
+		if (!userId) {
+			return { success: false, message: "UserId not found" };
+		}
+		const projectQuery = await db.query.projects.findFirst({
+			where: (projects) => eq(projects.id, projectId),
+			with: {
+				usersToProjects: {
+					with: {
+						user: true,
+					},
+					where: (user) => eq(user.userId, userId),
+				},
+			},
+		});
+		if (!projectQuery) {
+			return { success: false, message: "Project not found" };
+		}
+		if (!projectQuery.usersToProjects.length) {
+			return { success: false, message: "Project not found" };
+		}
+
+		return { success: true, project: projectQuery };
 	} catch (error) {
 		if (error instanceof Error) throwServerError(error.message);
 	}
