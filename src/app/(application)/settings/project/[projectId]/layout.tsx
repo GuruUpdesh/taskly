@@ -12,10 +12,9 @@ export default async function ProjectSettingsLayout({
 	children,
 	params: { projectId },
 }: Params) {
-	const project = await getProject(Number(projectId));
-
-	if (!project) {
-		return <div>Project not found</div>;
+	const result = await getProject(Number(projectId));
+	if (!result?.success || !result.project) {
+		return <div>{result?.message}</div>;
 	}
 
 	return (
