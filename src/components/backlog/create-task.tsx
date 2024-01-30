@@ -36,10 +36,10 @@ import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
 type FormProps = {
 	onSubmit: (newTask: NewTask) => Promise<void>;
 	form: UseFormReturn<NewTask, undefined>;
-	asignees: User[];
+	assignees: User[];
 };
 
-const TaskCreateForm = ({ onSubmit, form, asignees }: FormProps) => {
+const TaskCreateForm = ({ onSubmit, form, assignees }: FormProps) => {
 	// Framer motion transition
 	const transition = {
 		opacity: { ease: [0.075, 0.82, 0.165, 1] },
@@ -92,7 +92,7 @@ const TaskCreateForm = ({ onSubmit, form, asignees }: FormProps) => {
 						const config = buildDynamicOptions(
 							getTaskConfig(col),
 							col,
-							asignees,
+							assignees,
 						);
 						if (config.type === "select")
 							return (
@@ -119,10 +119,10 @@ const TaskCreateForm = ({ onSubmit, form, asignees }: FormProps) => {
 
 type Props = {
 	projectId: string;
-	asignees: User[];
+	assignees: User[];
 };
 
-const CreateTask = ({ projectId, asignees }: Props) => {
+const CreateTask = ({ projectId, assignees }: Props) => {
 	const [open, setOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -178,7 +178,7 @@ const CreateTask = ({ projectId, asignees }: Props) => {
 				<TaskCreateForm
 					onSubmit={handleSubmit}
 					form={form}
-					asignees={asignees}
+					assignees={assignees}
 				/>
 				<DialogFooter className="border-t px-4 py-2">
 					<Button
