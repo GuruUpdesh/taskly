@@ -51,7 +51,6 @@ export async function deleteTask(id: number) {
 
 export async function updateTask(id: number, data: NewTask) {
 	try {
-		console.log("update task", id, data);
 		const updatedTaskData: NewTask = insertTaskSchema__required.parse(data);
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
@@ -63,7 +62,6 @@ export async function updateTask(id: number, data: NewTask) {
 }
 
 export async function getTask(id: number) {
-	console.log("get task", id);
 	try {
 		const { userId }: { userId: string | null } = auth();
 		if (!userId) {

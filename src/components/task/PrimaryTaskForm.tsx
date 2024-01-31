@@ -42,12 +42,10 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	}, [JSON.stringify(task)]);
 
 	function onSubmit(updatedTask: FormType) {
-		console.log("FORM SUBMIT", updatedTask);
 		editTaskMutation.mutate({ ...task, ...updatedTask });
 	}
 
 	async function handleChange() {
-		console.log("FORM CHANGE", form.getValues());
 		const isValid = await form.trigger();
 		if (isValid) {
 			await form.handleSubmit(onSubmit)();

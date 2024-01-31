@@ -38,7 +38,6 @@ const SecondaryTaskForm = ({ task, assignees, editTaskMutation }: Props) => {
 	}, [JSON.stringify(task)]);
 
 	function onSubmit(updatedTask: FormType) {
-		console.log("FORM SUBMIT", updatedTask);
 		editTaskMutation.mutate({ ...task, ...updatedTask });
 	}
 
