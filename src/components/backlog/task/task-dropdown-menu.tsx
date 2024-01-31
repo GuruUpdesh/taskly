@@ -21,9 +21,7 @@ type Props = {
 const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 	return (
 		<ContextMenu>
-			<ContextMenuTrigger className="relative flex max-w-full items-center justify-between overflow-hidden border-b py-2 hover:bg-accent/25">
-				{children}
-			</ContextMenuTrigger>
+			<ContextMenuTrigger>{children}</ContextMenuTrigger>
 			<ContextMenuContent className="bg-accent/50 backdrop-blur-sm">
 				<ContextMenuItem
 					onClick={() => {

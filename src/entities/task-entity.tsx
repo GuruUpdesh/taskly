@@ -17,7 +17,7 @@ import UserProfilePicture from "~/components/user-profile-picture";
 
 type TaskConfig = Omit<Task, "projectId">;
 
-const taskConfig: GenericEntityConfig<TaskConfig> = {
+export const taskConfig: GenericEntityConfig<TaskConfig> = {
 	id: {
 		value: "id",
 		displayName: "Task ID",
@@ -51,19 +51,19 @@ const taskConfig: GenericEntityConfig<TaskConfig> = {
 			options: [
 				{
 					value: "todo",
-					displayName: "To Do",
+					displayName: getStatusDisplayName("todo"),
 					icon: <CircleIcon className="h-4 w-4" />,
 					color: "grey",
 				},
 				{
 					value: "inprogress",
-					displayName: "In Progress",
+					displayName: getStatusDisplayName("inprogress"),
 					icon: <StopwatchIcon className="h-4 w-4" />,
 					color: "blue",
 				},
 				{
 					value: "done",
-					displayName: "Done",
+					displayName: getStatusDisplayName("done"),
 					icon: <CheckCircledIcon className="h-4 w-4" />,
 					color: "green",
 				},
@@ -208,4 +208,31 @@ export function buildDynamicOptions(
 		default:
 			return config;
 	}
+}
+
+export type Status = Task["status"];
+export const taskStatuses: Status[] = ["todo", "inprogress", "done"] as const;
+
+export function getStatusDisplayName(
+	status: (typeof taskStatuses)[number],
+): string {
+	const statusDisplayNames: {
+		[key in (typeof taskStatuses)[number]]?: string;
+	} = {
+		todo: "To Do",
+		inprogress: "In Progress",
+		done: "Done",
+	};
+
+	return statusDisplayNames[status] ?? status;
+}
+
+export function getOptionForStatus(status: Status) {
+	const formConfig = taskConfig.status.form;
+	if ("options" in formConfig) {
+		const options = formConfig.options;
+		const option = options.find((option) => option.value === status);
+		return option;
+	}
+	return undefined;
 }
