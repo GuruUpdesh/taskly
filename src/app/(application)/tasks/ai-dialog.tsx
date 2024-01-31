@@ -6,7 +6,6 @@ import { useChat } from "ai/react";
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -14,17 +13,16 @@ import {
 } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
-import { Label } from "~/components/ui/label";
-import { Bot, ChevronRight, Loader2 } from "lucide-react";
+import { Bot, ChevronRight, Loader2, SparkleIcon } from "lucide-react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { type Task, selectTaskSchema } from "~/server/db/schema";
 import { createTask } from "~/actions/task-actions";
 import { throwClientError } from "~/utils/errors";
 
-type AiTask = { [K in keyof Omit<Task, "id">]?: Task[K] };
+type AiTask = Task;
 
 type Props = {
-	dispatch: (action: { type: "ADD" | "DELETE"; payload: Task }) => void;
+	projectId: string;
 };
 
 function extractValidJson(data: string): unknown {
@@ -64,7 +62,7 @@ function extractValidJson(data: string): unknown {
 	}
 }
 
-const AiDialog = ({ dispatch }: Props) => {
+const AiDialog = ({ projectId }: Props) => {
 	const [open, setOpen] = useState(false);
 	const {
 		messages,
@@ -89,6 +87,9 @@ const AiDialog = ({ dispatch }: Props) => {
 
 		const taskObject = extractValidJson(filtered[0].content) as AiTask;
 		if (taskObject) {
+			taskObject.projectId = parseInt(projectId);
+			taskObject.assignee = null;
+			taskObject.id = Math.random() * 1000;
 			setTaskObject(taskObject);
 		}
 	}, [messages]);
@@ -105,17 +106,11 @@ const AiDialog = ({ dispatch }: Props) => {
 	async function handleAccept() {
 		try {
 			const validatedTask = selectTaskSchema.parse(taskObject);
-			dispatch({
-				type: "ADD",
-				payload: { ...validatedTask, id: Math.random() },
-			});
 			await createTask(validatedTask);
 			setOpen(false);
 
-			// reset state
 			setTaskObject(null);
 			setReviewResponse(false);
-			// clear chat
 		} catch (error) {
 			if (error instanceof Error) throwClientError(error.message);
 		}
@@ -135,21 +130,18 @@ const AiDialog = ({ dispatch }: Props) => {
 				}}
 			>
 				<DialogTrigger asChild>
-					<Button
-						variant="default"
-						size="icon"
-						className="rounded-full "
-					>
+					<Button variant="outline" size="sm">
 						<Bot className="h-4 w-4" />
 					</Button>
 				</DialogTrigger>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>AI Task Creation</DialogTitle>
-						<DialogDescription>
-							Describe the task you would like to create, and our
-							AI model will create it for you.
-						</DialogDescription>
+						<DialogTitle>
+							<Button size="iconSm" className="mr-2">
+								<SparkleIcon className="h-4 w-4" />
+							</Button>
+							AI Task Creation
+						</DialogTitle>
 					</DialogHeader>
 					<div>
 						{taskObject ? (
@@ -190,6 +182,12 @@ const AiDialog = ({ dispatch }: Props) => {
 										<strong>Type:</strong> {taskObject.type}
 									</li>
 								)}
+								{taskObject?.assignee && (
+									<li>
+										<strong>assignee:</strong>{" "}
+										{taskObject.assignee}
+									</li>
+								)}
 							</ul>
 						) : null}
 						{reviewResponse ? (
@@ -200,13 +198,10 @@ const AiDialog = ({ dispatch }: Props) => {
 								onSubmit={handleSubmit}
 								id="chat"
 							>
-								<Label htmlFor="description">
-									Task Description
-								</Label>
 								<Textarea
 									name="description"
 									id="description"
-									placeholder="Type your task description here..."
+									placeholder="Describe the task you would like to create, and our AI model will create it for you..."
 									value={input}
 									onChange={handleInputChange}
 								/>

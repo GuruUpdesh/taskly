@@ -51,7 +51,7 @@ export async function deleteTask(id: number) {
 
 export async function updateTask(id: number, data: NewTask) {
 	try {
-		console.log("update task", id, data)
+		console.log("update task", id, data);
 		const updatedTaskData: NewTask = insertTaskSchema__required.parse(data);
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
@@ -63,7 +63,7 @@ export async function updateTask(id: number, data: NewTask) {
 }
 
 export async function getTask(id: number) {
-	console.log("get task", id)
+	console.log("get task", id);
 	try {
 		const { userId }: { userId: string | null } = auth();
 		if (!userId) {
@@ -77,14 +77,14 @@ export async function getTask(id: number) {
 					with: {
 						usersToProjects: {
 							with: {
-								user: true
+								user: true,
 							},
 							where: (user) => eq(user.userId, userId),
-						}
-					}
-				}
-			}
-		})
+						},
+					},
+				},
+			},
+		});
 		if (!taskQuery) {
 			return { success: false, message: "Task not found" };
 		}

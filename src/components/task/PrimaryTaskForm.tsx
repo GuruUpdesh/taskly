@@ -1,29 +1,20 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo } from "react";
-import { NewTask, User, type Task } from "~/server/db/schema";
+import React, { useCallback, useEffect } from "react";
+import type { NewTask, Task } from "~/server/db/schema";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	buildDynamicOptions,
-	defaultValues,
-	getTaskConfig,
-	taskSchema,
-} from "~/entities/task-entity";
-import DataCellSelect from "../backlog/task/property/propery-select";
-import { UseMutationResult } from "@tanstack/react-query";
-import { UpdateTask } from "../backlog/tasks";
-import useDebounce from "~/hooks/useDebounce";
-import { Button } from "../ui/button";
+import type { UseMutationResult } from "@tanstack/react-query";
 import { z } from "zod";
 import _debounce from "lodash/debounce";
-import { filterProps } from "framer-motion";
+import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
+import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 
 type Props = {
 	task: Task;
-	assignees: User[];
 	editTaskMutation: UseMutationResult<void, Error, NewTask, unknown>;
 };
 
@@ -34,7 +25,7 @@ const insertTaskSchema__Primary = z.object({
 
 type FormType = Pick<NewTask, "title" | "description">;
 
-const PrimaryTaskForm = ({ task, assignees, editTaskMutation }: Props) => {
+const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	const form = useForm<FormType>({
 		resolver: zodResolver(insertTaskSchema__Primary),
 		defaultValues: {
@@ -63,15 +54,19 @@ const PrimaryTaskForm = ({ task, assignees, editTaskMutation }: Props) => {
 		}
 	}
 	const debouncedHandleChange = useCallback(
-		_debounce(handleChange, 1000),
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+		_debounce(handleChange, 1000) as () => void,
 		[],
 	);
 
 	return (
-		<form onSubmit={form.handleSubmit(onSubmit)} className="container pt-2">
+		<form
+			onSubmit={form.handleSubmit(onSubmit)}
+			className="container flex flex-grow flex-col gap-4 pb-4 pt-2"
+		>
 			<Input
 				type="text"
-				className="m-0 border-none p-0 text-2xl focus-visible:ring-transparent"
+				className="m-0 border-none p-0 py-2 text-2xl focus-visible:ring-transparent"
 				placeholder="Task Title"
 				autoFocus
 				autoComplete="off"
@@ -79,11 +74,26 @@ const PrimaryTaskForm = ({ task, assignees, editTaskMutation }: Props) => {
 				onChangeCapture={debouncedHandleChange}
 			/>
 			<Textarea
-				className="m-0 resize-none border-none px-0 pb-2 pt-1 focus-visible:ring-transparent"
+				className="flex-grow resize-none p-4 focus-visible:ring-transparent"
 				placeholder="Add a description..."
 				{...form.register("description")}
-                onChangeCapture={debouncedHandleChange}
+				onChangeCapture={debouncedHandleChange}
+				rows={
+					(form.watch("description").match(/\n/g) ?? []).length ?? 2
+				}
 			/>
+			<Separator />
+			<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+				Subtasks
+			</h3>
+			<Button variant="outline" className="w-fit gap-2">
+				Add Subtask
+				<ArrowTopRightIcon />
+			</Button>
+			<Separator />
+			<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+				Activity
+			</h3>
 		</form>
 	);
 };
