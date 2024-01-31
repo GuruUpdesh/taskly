@@ -14,12 +14,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";
 import type { UpdateTask } from "~/components/backlog/tasks";
 import TaskDropDownMenu from "./task-dropdown-menu";
+import Link from "next/link";
 
 type Props = {
 	task: TaskType;
 	assignees: User[];
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
+	projectId: string;
 };
 
 const Task = ({
@@ -27,6 +29,7 @@ const Task = ({
 	assignees,
 	addTaskMutation,
 	deleteTaskMutation,
+	projectId,
 }: Props) => {
 	const form = useForm<NewTask>({
 		resolver: zodResolver(taskSchema),
@@ -69,7 +72,10 @@ const Task = ({
 
 	function renderProperties() {
 		return order.map((group, groupIdx) => (
-			<div key={groupIdx} className="flex items-center gap-2">
+			<div
+				key={groupIdx}
+				className="flex flex-shrink items-center gap-2 first:min-w-0 first:flex-grow first:pl-8 last:pr-8"
+			>
 				{group.map((item, idx) => {
 					if (item.key === "id" || item.key === "projectId")
 						return null;
@@ -89,9 +95,14 @@ const Task = ({
 	}
 
 	return (
-		<TaskDropDownMenu deleteTaskMutation={deleteTaskMutation} task={task}>
-			{renderProperties()}
-		</TaskDropDownMenu>
+		<Link href={`/project/${projectId}/task/${task.id}`}>
+			<TaskDropDownMenu
+				deleteTaskMutation={deleteTaskMutation}
+				task={task}
+			>
+				{renderProperties()}
+			</TaskDropDownMenu>
+		</Link>
 	);
 };
 

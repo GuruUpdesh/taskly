@@ -58,6 +58,7 @@ export default function Tasks({ projectId, assignees }: Props) {
 					assignees={assignees}
 					addTaskMutation={addTaskMutation}
 					deleteTaskMutation={deleteTaskMutation}
+					projectId={projectId}
 				/>
 			))}
 		</div>
