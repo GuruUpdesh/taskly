@@ -17,10 +17,13 @@ const PropertyStatic = ({ form, property }: Props) => {
 				""
 			)}
 			<p
-				className={cn("w-min flex-grow-0 whitespace-nowrap px-1", {
-					"opacity-80": property === "description",
-					"font-medium": property === "title",
-				})}
+				className={cn(
+					"flex-shrink overflow-hidden text-ellipsis whitespace-nowrap px-1 ",
+					{
+						"min-w-[2ch] opacity-80": property === "description",
+						"min-w-fit font-medium": property === "title",
+					},
+				)}
 			>
 				{form.watch(property)}
 			</p>

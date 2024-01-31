@@ -27,6 +27,8 @@ export async function POST(req: Request) {
 const systemMessage: OpenAI.ChatCompletionMessageParam = {
 	role: "system",
 	content: `
+	RESPOND IN JSON FORMAT!
+	
     Create a new task for project management. Provide the following details:
     - title: [Specify the title of the task]
     - description: [Include a brief description of the task]
