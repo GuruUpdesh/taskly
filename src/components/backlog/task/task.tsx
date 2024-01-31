@@ -95,12 +95,15 @@ const Task = ({
 	}
 
 	return (
-    <Link href={`/project/${projectId}/task/${task.id}`}>
-      <TaskDropDownMenu deleteTaskMutation={deleteTaskMutation} task={task}>
-        <div className="flex items-center justify-between border-b py-2">
-          {renderProperties()}
-        </div>
-      </TaskDropDownMenu>
+		<Link href={`/project/${projectId}/task/${task.id}`}>
+			<TaskDropDownMenu
+				deleteTaskMutation={deleteTaskMutation}
+				task={task}
+			>
+				<div className="flex items-center justify-between border-b py-2">
+					{renderProperties()}
+				</div>
+			</TaskDropDownMenu>
 		</Link>
 	);
 };
