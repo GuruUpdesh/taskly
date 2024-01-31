@@ -45,7 +45,7 @@ export async function createProject(
 		// add user to project
 		await db
 			.insert(usersToProjects)
-			.values({ userId: userId, projectId: insertId });
+			.values({ userId: userId, projectId: insertId, userRole: "owner" });
 
 		revalidatePath("/");
 
@@ -170,5 +170,26 @@ export async function getAsigneesForProject(projectId: number) {
 	} catch (error) {
 		if (error instanceof Error) throwServerError(error.message);
 		return [];
+	}
+}
+
+export async function checkPermission(
+	projectId: number,
+	userId: string,
+	allowRoles: string[],
+) {
+	try {
+		const userToProject = await db.query.usersToProjects.findFirst({
+			where: (up) => eq(up.projectId, projectId) && eq(up.userId, userId),
+		});
+		if (!userToProject) {
+			return false;
+		}
+		if (allowRoles.includes(userToProject.userRole)) {
+			return true;
+		}
+		return false;
+	} catch (error) {
+		if (error instanceof Error) throwServerError(error.message);
 	}
 }

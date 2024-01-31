@@ -117,6 +117,7 @@ export const usersToProjects = mysqlTable(
 	{
 		userId: varchar("user_id", { length: 32 }).notNull(),
 		projectId: int("project_id").notNull(),
+		userRole: mysqlEnum("user_role", ["owner", "member"]).notNull(),
 	},
 	(t) => ({
 		pk: primaryKey(t.userId, t.projectId),
