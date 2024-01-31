@@ -7,13 +7,13 @@ import {
 	type NewTask,
 	type Task as TaskType,
 } from "~/server/db/schema";
-import Property from "./property/property";
+import Property from "~/components/backlog/task/property/property";
 import { taskSchema } from "~/entities/task-entity";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";
 import type { UpdateTask } from "~/components/backlog/tasks";
-import TaskDropDownMenu from "./task-dropdown-menu";
+import TaskDropDownMenu from "~/components/backlog/task/task-dropdown-menu";
 
 type Props = {
 	task: TaskType;
@@ -22,7 +22,7 @@ type Props = {
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 };
 
-const Task = ({
+const BoardTask = ({
 	task,
 	assignees,
 	addTaskMutation,
@@ -38,15 +38,12 @@ const Task = ({
 	}, [JSON.stringify(task)]);
 
 	const order = [
+		[{ key: "title", size: "default" }],
 		[
-			{ key: "priority", size: "icon" },
-			{ key: "status", size: "icon" },
-			{ key: "title", size: "default" },
-			{ key: "description", size: "icon" },
-		],
-		[
+			{ key: "status", size: "deafault" },
+			{ key: "priority", size: "deafault" },
 			{ key: "type", size: "default" },
-			{ key: "assignee", size: "icon" },
+			{ key: "assignee", size: "deafault" },
 		],
 	] as { key: keyof TaskType; size: "default" | "icon" }[][];
 
@@ -69,7 +66,7 @@ const Task = ({
 
 	function renderProperties() {
 		return order.map((group, groupIdx) => (
-			<div key={groupIdx} className="flex items-center gap-2">
+			<div key={groupIdx} className="flex flex-wrap items-center gap-2">
 				{group.map((item, idx) => {
 					if (item.key === "id" || item.key === "projectId")
 						return null;
@@ -90,11 +87,11 @@ const Task = ({
 
 	return (
 		<TaskDropDownMenu deleteTaskMutation={deleteTaskMutation} task={task}>
-			<div className="flex items-center justify-between border-b py-2">
+			<div className="my-2 flex flex-col gap-2 overflow-hidden rounded-lg border bg-background p-4 hover:bg-accent/25">
 				{renderProperties()}
 			</div>
 		</TaskDropDownMenu>
 	);
 };
 
-export default Task;
+export default BoardTask;
