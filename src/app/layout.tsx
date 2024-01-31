@@ -41,7 +41,7 @@ export default function RootLayout({
 						enableSystem
 					>
 						<Providers>
-							<main>{children}</main>/
+							<main>{children}</main>
 						</Providers>
 					</ThemeProvider>
 					<Toaster richColors />

@@ -6,7 +6,7 @@ import { z } from "zod";
 import Crumb from "./crumb";
 import { useProjectStore } from "~/store/project";
 
-const CRUMBTYPES = ["project", "notification"] as const;
+const CRUMBTYPES = ["project", "notification", "task"] as const;
 type CrumbType = (typeof CRUMBTYPES)[number];
 const crumbTypeEnum = z.enum(CRUMBTYPES);
 

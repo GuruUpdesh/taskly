@@ -14,12 +14,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";
 import type { UpdateTask } from "~/components/backlog/tasks";
 import TaskDropDownMenu from "./task-dropdown-menu";
+import Link from "next/link";
+import useDebounce from "~/hooks/useDebounce";
 
 type Props = {
 	task: TaskType;
 	assignees: User[];
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
+	projectId: string;
 };
 
 const Task = ({
@@ -27,6 +30,7 @@ const Task = ({
 	assignees,
 	addTaskMutation,
 	deleteTaskMutation,
+	projectId,
 }: Props) => {
 	const form = useForm<NewTask>({
 		resolver: zodResolver(taskSchema),
@@ -89,9 +93,11 @@ const Task = ({
 	}
 
 	return (
-		<TaskDropDownMenu deleteTaskMutation={deleteTaskMutation} task={task}>
-			{renderProperties()}
-		</TaskDropDownMenu>
+		<Link href={`/project/${projectId}/task/${task.id}`}>
+			<TaskDropDownMenu deleteTaskMutation={deleteTaskMutation} task={task}>
+				{renderProperties()}
+			</TaskDropDownMenu>
+		</Link>
 	);
 };
 

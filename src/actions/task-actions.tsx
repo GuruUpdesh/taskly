@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
@@ -50,6 +51,7 @@ export async function deleteTask(id: number) {
 
 export async function updateTask(id: number, data: NewTask) {
 	try {
+		console.log("update task", id, data)
 		const updatedTaskData: NewTask = insertTaskSchema__required.parse(data);
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
@@ -61,12 +63,36 @@ export async function updateTask(id: number, data: NewTask) {
 }
 
 export async function getTask(id: number) {
+	console.log("get task", id)
 	try {
-		const task: Task[] = await db
-			.select()
-			.from(tasks)
-			.where(eq(tasks.id, id));
-		return task[0];
+		const { userId }: { userId: string | null } = auth();
+		if (!userId) {
+			return { success: false, message: "UserId not found" };
+		}
+
+		const taskQuery = await db.query.tasks.findFirst({
+			where: (tasks) => eq(tasks.id, id),
+			with: {
+				project: {
+					with: {
+						usersToProjects: {
+							with: {
+								user: true
+							},
+							where: (user) => eq(user.userId, userId),
+						}
+					}
+				}
+			}
+		})
+		if (!taskQuery) {
+			return { success: false, message: "Task not found" };
+		}
+		if (!taskQuery.project.usersToProjects.length) {
+			return { success: false, message: "User not authorized" };
+		}
+
+		return { success: true, task: taskQuery };
 	} catch (error) {
 		if (error instanceof Error) throwServerError(error.message);
 	}
