@@ -6,7 +6,7 @@ import { z } from "zod";
 import Crumb from "./crumb";
 import { useProjectStore } from "~/store/project";
 
-const CRUMBTYPES = ["project", "notification"] as const;
+const CRUMBTYPES = ["project", "notification", "task"] as const;
 type CrumbType = (typeof CRUMBTYPES)[number];
 const crumbTypeEnum = z.enum(CRUMBTYPES);
 
@@ -70,7 +70,7 @@ const BreadCrumbs = () => {
 	}, [pathname, project]);
 
 	return (
-		<div className="flex items-end gap-1">
+		<div className="flex h-[40px] items-center gap-1">
 			{crumbs.map((crumb, index) => (
 				<Crumb
 					key={index}
