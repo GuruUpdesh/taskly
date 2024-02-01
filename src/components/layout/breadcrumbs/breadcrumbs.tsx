@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 import { z } from "zod";
 import Crumb from "./crumb";
-import { useProjectStore } from "~/store/project";
+import { useNavigationStore } from "~/store/navigation";
 
 const CRUMBTYPES = ["project", "notification", "task"] as const;
 type CrumbType = (typeof CRUMBTYPES)[number];
@@ -18,7 +18,7 @@ export type Crumb = {
 
 function getCrumbs(
 	pathname: string,
-	fetchNameFromAPI: (id: string, type?: CrumbType) => string,
+	getFromState: (id: string, type?: CrumbType) => string,
 ) {
 	const crumbs = pathname.split("/").filter((crumb) => crumb !== "");
 
@@ -38,12 +38,12 @@ function getCrumbs(
 				continue;
 			}
 			const crumbType: CrumbType = validCrumbType.data;
-			name = fetchNameFromAPI(nextCrumb, crumbType);
+			name = getFromState(nextCrumb, crumbType);
 			link = "/" + crumbs.slice(0, i + 2).join("/");
 			i++; // Skip the next crumb as it's already handled
 		} else {
 			// Static page or a numeric ID without a preceding name
-			name = /^\d+$/.test(crumb) ? fetchNameFromAPI(crumb) : crumb;
+			name = /^\d+$/.test(crumb) ? getFromState(crumb) : crumb;
 		}
 
 		breadcrumbList.push({ name, link });
@@ -55,18 +55,21 @@ function getCrumbs(
 const BreadCrumbs = () => {
 	const pathname = usePathname();
 	const [crumbs, setCrumbs] = React.useState<Crumb[]>([]);
-	const project = useProjectStore((state) => state.project);
+	const [project, task] = useNavigationStore((state) => [state.currentProject, state.currentTask]);
 
-	function fetchNameFromAPI(id: string, type?: CrumbType) {
+	function getFromState(id: string, type?: CrumbType) {
 		if (type === "project") {
 			return project?.name + ` (${id})` ?? "";
+		}
+		if (type === "task") {
+			return task?.title + ` (${id})` ?? "";
 		}
 
 		return "Placeholder";
 	}
 
 	useEffect(() => {
-		setCrumbs(getCrumbs(pathname, fetchNameFromAPI));
+		setCrumbs(getCrumbs(pathname, getFromState));
 	}, [pathname, project]);
 
 	return (

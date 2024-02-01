@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { useProjectStore } from "~/store/project";
+import { useNavigationStore } from "~/store/navigation";
 import SidebarButton from "../sidebar/sidebar-button";
 
 const ProjectSettings = () => {
-	const project = useProjectStore((state) => state.project);
+	const project = useNavigationStore((state) => state.currentProject);
 	if (!project) return null;
 
 	return (
