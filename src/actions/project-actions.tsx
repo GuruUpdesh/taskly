@@ -10,7 +10,12 @@ import {
 } from "~/server/db/schema";
 import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
-import { auth } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs";
+import { createInvite } from "./invite-actions";
+import { render } from "@react-email/render";
+import ProjectInviteEmail from "~/components/email/project-invite";
+import { Resend } from "resend";
+import { env } from "~/env.mjs";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -171,4 +176,90 @@ export async function getAsigneesForProject(projectId: number) {
 		if (error instanceof Error) throwServerError(error.message);
 		return [];
 	}
+}
+
+export async function getIsProjectNameAvailable(
+	projectName: string,
+): Promise<boolean> {
+	try {
+		const projectQuery = await db.query.projects.findFirst({
+			where: (project) => eq(project.name, projectName),
+		});
+		console.log(projectQuery, projectName);
+		return !projectQuery;
+	} catch (error) {
+		if (error instanceof Error) throwServerError(error.message);
+		return false;
+	}
+}
+
+export type CreateForm = {
+	name: NewProject["name"];
+	invitees: string[];
+	description?: string;
+};
+export async function createProjectAndInviteUsers(formData: CreateForm) {
+	console.log(formData);
+	
+	const { userId } = auth();
+	if (!userId) {
+		return {
+			newProjectId: -1,
+			status: false,
+			message: "UserId not found",
+		};
+	}
+
+	// get user from auth headers
+	const result = await createProject(formData);
+	if (!result.status) {
+		return result;
+	}
+
+	const insertId = result.newProjectId;
+
+	// invite users
+	const invitees = formData.invitees;
+	if (!invitees || invitees.length === 0) {
+		return {
+			newProjectId: insertId,
+			status: true,
+			message: "Project created successfully",
+		};
+	}
+	const inviteToken = await createInvite(userId, insertId.toString());
+	const user = await clerkClient.users.getUser(userId);
+
+	if (!inviteToken || !user?.username) {
+		return {
+			newProjectId: insertId,
+			status: true,
+			message: "Project created successfully but invites failed to send",
+		};
+	}
+
+	const email = {
+		from: "no-reply@tasklypm.com",
+		subject: `Invitation to join project ${formData.name} on Taskly`,
+		html: render(
+			<ProjectInviteEmail
+				projectName={formData.name}
+				token={inviteToken}
+				inviteUserName={user.username}
+			/>,
+		),
+	};
+	const resend = new Resend(env.RESEND_API_KEY);
+	// send emails
+	await Promise.all(
+		invitees.map((emailTo) =>
+			resend.emails.send({ ...email, to: emailTo }),
+		),
+	);
+
+	return {
+		newProjectId: insertId,
+		status: true,
+		message: "Project created successfully and invites sent",
+	};
 }
