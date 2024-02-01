@@ -15,7 +15,7 @@ export default function LandingLayout({
 				</div>
 			</header>
 			<div className="relative flex justify-center pt-24">
-				<div className="animate-fade-in opacity-0 -z-10">
+				<div className="-z-10 animate-fade-in opacity-0">
 					<Image
 						src="/static/auth.gif"
 						alt="auth"

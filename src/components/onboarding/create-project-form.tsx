@@ -6,12 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import {
-	CheckCircle,
-	ChevronLeft,
-	ChevronRight,
-	Loader2,
-} from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { cn } from "~/lib/utils";
@@ -310,6 +305,7 @@ const Chip = React.forwardRef<
 			onClick={onClick}
 			className={cn(
 				"relative flex items-center gap-2 rounded-full border bg-background px-2 pr-8 hover:bg-accent/50",
+				isFocused && "ring ring-accent/50",
 			)}
 			onKeyDown={keyDown}
 			onBlur={onBlur}

@@ -200,7 +200,7 @@ export type CreateForm = {
 };
 export async function createProjectAndInviteUsers(formData: CreateForm) {
 	console.log(formData);
-	
+
 	const { userId } = auth();
 	if (!userId) {
 		return {

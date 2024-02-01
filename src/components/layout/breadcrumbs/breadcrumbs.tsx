@@ -55,7 +55,10 @@ function getCrumbs(
 const BreadCrumbs = () => {
 	const pathname = usePathname();
 	const [crumbs, setCrumbs] = React.useState<Crumb[]>([]);
-	const [project, task] = useNavigationStore((state) => [state.currentProject, state.currentTask]);
+	const [project, task] = useNavigationStore((state) => [
+		state.currentProject,
+		state.currentTask,
+	]);
 
 	function getFromState(id: string, type?: CrumbType) {
 		if (type === "project") {

@@ -1,4 +1,4 @@
-import ProjectCreateForm from "~/components/onboarding/create-form";
+import ProjectCreateForm from "~/components/onboarding/create-project-form";
 import { getAllProjects, initAction } from "~/actions/project-actions";
 import { auth } from "@clerk/nextjs";
 import Link from "next/link";
@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export default async function createProjectPage() {
 	await initAction();
-	const user = auth()
+	const user = auth();
 
 	if (!user || !user.userId) {
 		return null;
@@ -20,10 +20,10 @@ export default async function createProjectPage() {
 
 	return (
 		<div className="flex justify-center">
-			<div className="flex flex-col gap-4 w-[600px]">
+			<div className="flex w-[600px] flex-col gap-4">
 				<ProjectCreateForm />
 				<div className="flex flex-col rounded-lg border bg-background/75 p-4 shadow-xl backdrop-blur-lg">
-					<h1 className="text-2xl tracking-tight mb-4 border-b pb-4">
+					<h1 className="mb-4 border-b pb-4 text-2xl tracking-tight">
 						Your Current Projects
 					</h1>
 					<div className="flex flex-col gap-2">

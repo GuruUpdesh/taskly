@@ -15,21 +15,23 @@ import {
 import * as React from "react";
 
 interface SampleEmailProps {
-    projectName: string;
+	projectName: string;
 	token: string;
-    inviteUserName: string;
+	inviteUserName: string;
 }
 
 const baseUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
 	: "http://localhost:3000";
 
-export const ProjectInviteEmail = ({ projectName, token, inviteUserName }: SampleEmailProps) => (
+export const ProjectInviteEmail = ({
+	projectName,
+	token,
+	inviteUserName,
+}: SampleEmailProps) => (
 	<Html>
 		<Head />
-		<Preview>
-            Invitation to join project {projectName} on Taskly
-		</Preview>
+		<Preview>Invitation to join project {projectName} on Taskly</Preview>
 		<Tailwind>
 			<Body className="mx-auto my-auto bg-white font-sans">
 				<Container className="mx-auto my-[40px] w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
@@ -46,8 +48,9 @@ export const ProjectInviteEmail = ({ projectName, token, inviteUserName }: Sampl
 						Hello,
 					</Text>
 					<Text className="text-[14px] leading-[24px] text-black">
-						Your have been invited by {inviteUserName} to {projectName} on Taskly.
-                        To accept the invitation, click the button below.
+						Your have been invited by {inviteUserName} to{" "}
+						{projectName} on Taskly. To accept the invitation, click
+						the button below.
 					</Text>
 					<Section className="mb-[32px] mt-[32px] text-center">
 						<Button
@@ -57,7 +60,7 @@ export const ProjectInviteEmail = ({ projectName, token, inviteUserName }: Sampl
 							Accept Invitation
 						</Button>
 					</Section>
-					
+
 					<Hr className="mx-0 my-[26px] w-full border border-solid border-[#eaeaea]" />
 					<Text className="text-[12px] leading-[24px] text-[#666666]">
 						<Link
