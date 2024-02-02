@@ -7,6 +7,7 @@ import {
 	projects,
 	insertProjectSchema,
 	usersToProjects,
+	type UserRole,
 } from "~/server/db/schema";
 import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
@@ -46,7 +47,7 @@ export async function createProject(
 		// add user to project
 		await db
 			.insert(usersToProjects)
-			.values({ userId: userId, projectId: insertId });
+			.values({ userId: userId, projectId: insertId, userRole: "owner"});
 
 		revalidatePath("/");
 
@@ -230,4 +231,25 @@ export async function createProjectAndInviteUsers(formData: CreateForm) {
 		status: true,
 		message: "Project created successfully and invites sent",
 	};
+}
+
+export async function checkPermission(
+	projectId: number,
+	userId: string,
+	allowRoles: UserRole[],
+) {
+	try {
+		const userToProject = await db.query.usersToProjects.findFirst({
+			where: (up) => eq(up.projectId, projectId) && eq(up.userId, userId),
+		});
+		if (!userToProject) {
+			return false;
+		}
+		if (allowRoles.includes(userToProject.userRole)) {
+			return true;
+		}
+		return false;
+	} catch (error) {
+		if (error instanceof Error) throwServerError(error.message);
+	}
 }

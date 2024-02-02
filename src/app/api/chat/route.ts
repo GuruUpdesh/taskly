@@ -43,6 +43,6 @@ const systemMessage: OpenAI.ChatCompletionMessageParam = {
     Priority: Medium
     Type: Feature
     
-    Users will send you a description and you are to retun a JSON object with these fields.
+    Users will send you a description and you are to return a JSON object with these fields.
     `,
 };

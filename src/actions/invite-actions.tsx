@@ -76,9 +76,11 @@ export async function joinProject(token: string, userId: string) {
 		return { success: false, message: "Invite link expired" };
 	}
 	try {
-		await db
-			.insert(usersToProjects)
-			.values({ userId: userId, projectId: inviteData.projectId });
+		await db.insert(usersToProjects).values({
+			userId: userId,
+			projectId: inviteData.projectId,
+			userRole: "member",
+		});
 		return {
 			success: true,
 			message: "You have successfully joined this project",
