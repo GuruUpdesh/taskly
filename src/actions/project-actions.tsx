@@ -10,12 +10,8 @@ import {
 } from "~/server/db/schema";
 import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
-import { auth, clerkClient } from "@clerk/nextjs";
-import { createInvite } from "./invite-actions";
-import { render } from "@react-email/render";
-import ProjectInviteEmail from "~/components/email/project-invite";
-import { Resend } from "resend";
-import { env } from "~/env.mjs";
+import { auth } from "@clerk/nextjs";
+import { sendEmailInvites } from "./invite-actions";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -219,43 +215,18 @@ export async function createProjectAndInviteUsers(formData: CreateForm) {
 	const insertId = result.newProjectId;
 
 	// invite users
-	const invitees = formData.invitees;
-	if (!invitees || invitees.length === 0) {
-		return {
-			newProjectId: insertId,
-			status: true,
-			message: "Project created successfully",
-		};
-	}
-	const inviteToken = await createInvite(userId, insertId.toString());
-	const user = await clerkClient.users.getUser(userId);
-
-	if (!inviteToken || !user?.username) {
-		return {
-			newProjectId: insertId,
-			status: true,
-			message: "Project created successfully but invites failed to send",
-		};
-	}
-
-	const email = {
-		from: "no-reply@tasklypm.com",
-		subject: `Invitation to join project ${formData.name} on Taskly`,
-		html: render(
-			<ProjectInviteEmail
-				projectName={formData.name}
-				token={inviteToken}
-				inviteUserName={user.username}
-			/>,
-		),
-	};
-	const resend = new Resend(env.RESEND_API_KEY);
-	// send emails
-	await Promise.all(
-		invitees.map((emailTo) =>
-			resend.emails.send({ ...email, to: emailTo }),
-		),
+	const inviteResult = await sendEmailInvites(
+		insertId,
+		formData.invitees,
+		formData.name,
 	);
+	if (!inviteResult.status) {
+		return {
+			newProjectId: insertId,
+			status: true,
+			message: "Project created successfully but " + inviteResult.message,
+		};
+	}
 
 	return {
 		newProjectId: insertId,

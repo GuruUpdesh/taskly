@@ -18,6 +18,7 @@ import {
 } from "~/actions/project-actions";
 import _debounce from "lodash/debounce";
 import { useRouter } from "next/navigation";
+import EmailInviteForm from "../invite/by-email/email-invite-form";
 
 const CreateProjectSchema = z.object({
 	name: z.string().min(3).max(255),
@@ -94,81 +95,16 @@ const CreateProjectForm = () => {
 		}
 	}, [isProjectNameAvailable]);
 
-	// invitees
-	const [currentInvitee, setCurrentInvitee] = useState("");
-	function handleInviteesChange(e: React.ChangeEvent<HTMLInputElement>) {
-		setCurrentInvitee(e.target.value);
-	}
-	const [focusedChip, setFocusedChip] = useState<number | null>(null);
-	useEffect(() => {
-		if (focusedChip !== null && chipRefs?.[focusedChip]?.current) {
-			chipRefs?.[focusedChip]?.current?.focus();
-		} else if (focusedChip === null && inviteesInputRef.current) {
-			inviteesInputRef.current.focus();
-		}
-	}, [focusedChip]);
-
-	const chipRefs = watch("invitees").map(() =>
-		React.createRef<HTMLDivElement>(),
-	);
-	const inviteesInputRef = React.useRef<HTMLInputElement>(null);
-
-	function handleNewInvitee() {
-		const result = z
-			.string()
-			.email()
-			.safeParse(currentInvitee.replace(",", "").trim());
-		if (!result.success) {
-			const errors = result.error.flatten();
-			console.log(errors);
-			const messages = errors.formErrors.join(", ");
-			toast.error(messages);
-			return;
-		}
-
-		const invitees = watch("invitees");
-		setValue("invitees", [...invitees, result.data]);
-		setCurrentInvitee("");
-	}
-
-	function handleInviteesKeyDown(e: React.KeyboardEvent) {
-		if (e.key === "Enter") {
-			handleNewInvitee();
-		}
-		if (e.key === "Backspace") {
-			if (currentInvitee === "") {
-				e.preventDefault();
-				if (focusedChip !== null) {
-					setValue(
-						"invitees",
-						watch("invitees").filter((_, i) => i !== focusedChip),
-					);
-					setFocusedChip(null);
-				} else if (watch("invitees").length > 0) {
-					setFocusedChip(watch("invitees").length - 1);
-				}
-			}
-		}
-	}
-
-	useEffect(() => {
-		if (currentInvitee.includes(",") || currentInvitee.includes(" ")) {
-			handleNewInvitee();
-		}
-	}, [currentInvitee]);
-
-	function handleChipClick(index: number) {
-		setValue(
-			"invitees",
-			watch("invitees").filter((_, i) => i !== index),
-		);
-	}
-
 	return (
 		<div className="flex flex-col rounded-lg border bg-background/75 p-4 shadow-xl backdrop-blur-lg">
 			<div className="text-center">
 				<h1 className="text-2xl tracking-tight">Create a Project</h1>
-				<span className="absolute right-2 top-2 text-sm text-muted-foreground">
+				<span
+					className={cn(
+						"absolute right-2 top-2 text-sm text-muted-foreground",
+						formStep === 3 && "hidden",
+					)}
+				>
 					Step <b>{formStep}/2</b>
 				</span>
 				<p className="mb-4 border-b pb-4 text-sm text-muted-foreground">
@@ -222,45 +158,29 @@ const CreateProjectForm = () => {
 					)}
 					hidden={formStep !== 1}
 				/>
-				{formStep === 2 && (
-					<div className="flex min-h-[42px] max-w-full flex-wrap items-center gap-1 py-2">
-						{watch("invitees").map((invitee, index) => (
-							<Chip
-								key={index}
-								ref={chipRefs[index]}
-								onClick={() => handleChipClick(index)}
-								keyDown={handleInviteesKeyDown}
-								onBlur={() => setFocusedChip(null)}
-								isFocused={index === focusedChip}
-							>
-								{invitee}
-							</Chip>
-						))}
-						{watch("invitees").length === 0 &&
-							"You can do this later."}
+				<div className="mb-4">
+					<EmailInviteForm
+						invitees={watch("invitees")}
+						setInvitees={(invitees) =>
+							setValue("invitees", invitees)
+						}
+						chipPlaceholder="You can do this later."
+						projectName={watch("name")}
+						visible={formStep === 2}
+					/>
+				</div>
+				{formStep === 3 ? (
+					<div className="flex w-full items-center justify-center gap-2">
+						<Loader2 className="ml-2 h-4 w-4 animate-spin" />
+						Creating project...
 					</div>
-				)}
-				<Input
-					ref={inviteesInputRef}
-					placeholder={`Invite your team to "${watch("name")}" by email`}
-					className={cn(
-						"mb-4 w-full rounded-md border px-4 py-2",
-						formStep !== 2 && "hidden",
-					)}
-					hidden={formStep !== 2}
-					onChange={handleInviteesChange}
-					value={currentInvitee}
-					autoFocus
-					autoComplete="off"
-					onKeyDown={handleInviteesKeyDown}
-					key={formStep}
-				/>
+				) : null}
 				<div className="flex justify-between gap-2">
 					{formStep > 1 ? (
 						<Button
 							type="button"
 							variant="outline"
-							disabled={!isValid}
+							disabled={!isValid || formStep === 3}
 							onClick={() => setFormStep((prev) => prev - 1)}
 						>
 							<ChevronLeft className="mr-2 h-4 w-4" />
@@ -273,7 +193,8 @@ const CreateProjectForm = () => {
 						type="button"
 						disabled={
 							!isValid ||
-							(formStep === 1 && !isProjectNameAvailable)
+							(formStep === 1 && !isProjectNameAvailable) ||
+							formStep === 3
 						}
 						onClick={() => setFormStep((prev) => prev + 1)}
 						key={formStep}
@@ -288,33 +209,5 @@ const CreateProjectForm = () => {
 		</div>
 	);
 };
-
-const Chip = React.forwardRef<
-	HTMLDivElement,
-	{
-		children: string;
-		onClick: () => void;
-		keyDown: (e: React.KeyboardEvent) => void;
-		onBlur: () => void;
-		isFocused: boolean;
-	}
->(function Chip({ children, onClick, keyDown, onBlur, isFocused }, ref) {
-	return (
-		<div
-			ref={ref}
-			onClick={onClick}
-			className={cn(
-				"relative flex items-center gap-2 rounded-full border bg-background px-2 pr-8 hover:bg-accent/50",
-				isFocused && "ring ring-accent/50",
-			)}
-			onKeyDown={keyDown}
-			onBlur={onBlur}
-			tabIndex={-1}
-		>
-			{children}
-			<CrossCircledIcon className="absolute right-2 top-0 aspect-square h-full" />
-		</div>
-	);
-});
 
 export default CreateProjectForm;

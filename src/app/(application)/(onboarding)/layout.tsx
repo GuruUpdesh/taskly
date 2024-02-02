@@ -15,13 +15,13 @@ export default function LandingLayout({
 				</div>
 			</header>
 			<div className="relative flex justify-center pt-24">
-				<div className="-z-10 animate-fade-in opacity-0">
+				<div className="-z-10 animate-fade-in opacity-0 mix-blend-screen">
 					<Image
 						src="/static/auth.gif"
 						alt="auth"
 						width="576"
 						height="371"
-						className="absolute top-48 rotate-90 mix-blend-screen blur-[500px]"
+						className="absolute top-48 rotate-90 blur-3xl"
 						unoptimized={true}
 					/>
 				</div>

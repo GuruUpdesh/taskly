@@ -1,9 +1,16 @@
+"use server";
+
 import { z } from "zod";
 import crypto from "crypto";
 import { db } from "~/server/db";
 import { invites, usersToProjects } from "~/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { differenceInDays } from "date-fns";
+import { auth, clerkClient } from "@clerk/nextjs";
+import { render } from "@react-email/render";
+import ProjectInviteEmail from "~/components/email/project-invite";
+import { Resend } from "resend";
+import { env } from "~/env.mjs";
 
 const getInviteSchema = z.object({
 	userId: z.string(),
@@ -23,6 +30,7 @@ export async function createInvite(userId: string, projectId: string) {
 		projectId: data.projectId,
 		date: date.toISOString(),
 	};
+
 	const currentInvites = await db
 		.select()
 		.from(invites)
@@ -83,4 +91,62 @@ export async function joinProject(token: string, userId: string) {
 			projectId: inviteData.projectId,
 		};
 	}
+}
+
+export async function sendEmailInvites(
+	projectId: number,
+	emails: string[],
+	projectName = "",
+) {
+	const { userId } = auth();
+	if (!userId) {
+		return {
+			newProjectId: -1,
+			status: false,
+			message: "UserId not found",
+		};
+	}
+
+	// invite users
+	const invitees = emails;
+	if (!invitees || invitees.length === 0) {
+		return {
+			status: false,
+			message: "No invites sent as no emails were provided",
+		};
+	}
+	const inviteToken = await createInvite(userId, projectId.toString());
+	const user = await clerkClient.users.getUser(userId);
+
+	if (!inviteToken || !user?.username) {
+		return {
+			status: false,
+			message: "Invites failed to send",
+		};
+	}
+
+	const email = {
+		from: "no-reply@tasklypm.com",
+		subject: `Invitation to join a project ${projectName} on Taskly`,
+		html: render(
+			<ProjectInviteEmail
+				projectName={projectName}
+				token={inviteToken}
+				inviteUserName={user.username}
+			/>,
+		),
+	};
+	const resend = new Resend(env.RESEND_API_KEY);
+
+	// send emails
+	await Promise.all(
+		invitees.map((emailTo) =>
+			resend.emails.send({ ...email, to: emailTo }),
+		),
+	);
+
+	return {
+		status: true,
+		message: "Invites sent",
+	};
 }
