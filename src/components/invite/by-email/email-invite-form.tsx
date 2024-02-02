@@ -45,7 +45,6 @@ const EmailInviteForm = ({
 		setCurrentInvitee("");
 	}
 
-	// form
 	const inviteesInputRef = useRef<HTMLInputElement>(null);
 	function handleInviteeChange(e: React.ChangeEvent<HTMLInputElement>) {
 		setCurrentInvitee(e.target.value);

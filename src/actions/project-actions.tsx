@@ -181,7 +181,6 @@ export async function getIsProjectNameAvailable(
 		const projectQuery = await db.query.projects.findFirst({
 			where: (project) => eq(project.name, projectName),
 		});
-		console.log(projectQuery, projectName);
 		return !projectQuery;
 	} catch (error) {
 		if (error instanceof Error) throwServerError(error.message);
@@ -195,8 +194,6 @@ export type CreateForm = {
 	description?: string;
 };
 export async function createProjectAndInviteUsers(formData: CreateForm) {
-	console.log(formData);
-
 	const { userId } = auth();
 	if (!userId) {
 		return {

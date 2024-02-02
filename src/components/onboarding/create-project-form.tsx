@@ -49,7 +49,6 @@ const CreateProjectForm = () => {
 
 	async function onSubmit(formData: CreateForm) {
 		const result = await createProjectAndInviteUsers(formData);
-		console.log(result);
 		if (result.status) {
 			toast.success(result.message);
 			router.push(`/project/${result.newProjectId}/backlog`);
