@@ -11,8 +11,8 @@ import {
 import { Input } from "~/components/ui/input";
 import SelectProject from "./select project/select-project";
 import SidebarButton from "./sidebar-button";
-import { UserButton } from "@clerk/nextjs";
 import { Separator } from "~/components/ui/separator";
+import UserButtonWrapper from "~/components/user-button/user-button-wrapper";
 
 interface SidebarProps {
 	projectId: string;
@@ -24,7 +24,8 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 			<div className="flex min-w-0 items-center justify-between gap-8 border-b px-4 py-2">
 				<SidebarButton label="Home" icon={<HomeIcon />} url="/" />
 				<Separator orientation="vertical" className="h-[40px]" />
-				<UserButton />
+				{/* <UserButton /> */}
+				<UserButtonWrapper />
 			</div>
 			<div className="flex h-screen flex-col gap-4 p-4">
 				<SelectProject projectId={projectId} />
