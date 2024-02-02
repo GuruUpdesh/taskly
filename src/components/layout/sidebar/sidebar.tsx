@@ -24,7 +24,6 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 			<div className="flex min-w-0 items-center justify-between gap-8 border-b px-4 py-2">
 				<SidebarButton label="Home" icon={<HomeIcon />} url="/" />
 				<Separator orientation="vertical" className="h-[40px]" />
-				{/* <UserButton /> */}
 				<UserButtonWrapper />
 			</div>
 			<div className="flex h-screen flex-col gap-4 p-4">
