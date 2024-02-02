@@ -32,6 +32,7 @@ import {
 	DialogFooter,
 } from "~/components/ui/dialog";
 import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
+import { aiAction } from "~/actions/ai-action";
 
 type FormProps = {
 	onSubmit: (newTask: NewTask) => Promise<void>;
@@ -44,6 +45,25 @@ const TaskCreateForm = ({ onSubmit, form, assignees }: FormProps) => {
 	const transition = {
 		opacity: { ease: [0.075, 0.82, 0.165, 1] },
 		layout: { duration: 0.1 },
+	};
+
+	const [isLoading, setIsLoading] = useState(false);
+
+	const aiAutoComplete = async (title: string, description: string) => {
+		setIsLoading(true);
+		const airesponse = await aiAction(title, description, assignees);
+		setIsLoading(false);
+		if (airesponse) {
+			const userName = assignees.find(
+				(user) => user.username === airesponse.assignee,
+			)?.username;
+			form.setValue("status", airesponse.status);
+			form.setValue("priority", airesponse.priority);
+			form.setValue("type", airesponse.type);
+			if (userName) {
+				form.setValue("assignee", userName);
+			}
+		}
 	};
 
 	return (
@@ -67,7 +87,11 @@ const TaskCreateForm = ({ onSubmit, form, assignees }: FormProps) => {
 				layout
 				layoutRoot
 				transition={transition}
-				className="flex gap-2"
+				className={cn(
+					"flex gap-2",
+					isLoading ? "pointer-events-none opacity-50" : "",
+				)}
+				aria-disabled={isLoading}
 			>
 				{form.watch("description") ? (
 					<motion.div
@@ -75,8 +99,23 @@ const TaskCreateForm = ({ onSubmit, form, assignees }: FormProps) => {
 						className="h-[30px]"
 						transition={transition}
 					>
-						<Button size="icon" className={cn("h-[30px]")}>
-							<SparkleIcon className="h-4 w-4" />
+						<Button
+							disabled={isLoading}
+							type="button"
+							size="icon"
+							className="h-[30px]"
+							onClick={() =>
+								aiAutoComplete(
+									form.watch("title"),
+									form.watch("description"),
+								)
+							}
+						>
+							{isLoading ? (
+								<Loader2 className="h-4 w-4 animate-spin" />
+							) : (
+								<SparkleIcon className="h-4 w-4" />
+							)}
 						</Button>
 					</motion.div>
 				) : null}
@@ -138,6 +177,7 @@ const CreateTask = ({ projectId, assignees }: Props) => {
 	const form = useForm<NewTask>({
 		resolver: zodResolver(insertTaskSchema__required),
 		defaultValues: defaultValuesWithProjectId,
+		mode: "onChange",
 	});
 
 	async function handleSubmit(newTask: NewTask) {
