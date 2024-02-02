@@ -47,7 +47,7 @@ export async function createProject(
 		// add user to project
 		await db
 			.insert(usersToProjects)
-			.values({ userId: userId, projectId: insertId, userRole: "owner"});
+			.values({ userId: userId, projectId: insertId, userRole: "owner" });
 
 		revalidatePath("/");
 
