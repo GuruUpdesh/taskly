@@ -60,7 +60,7 @@ export default async function projectSettingsGeneral({
 					</div>
 
 					<Header2>Users</Header2>
-					<div style={{ width: "95%"}}>
+					<div style={{ width: "95%" }}>
 						<UsersTable users={users} />
 					</div>
 					<Header2>Danger</Header2>
