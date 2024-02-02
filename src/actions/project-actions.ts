@@ -7,6 +7,7 @@ import {
 	projects,
 	insertProjectSchema,
 	usersToProjects,
+	type UserRole,
 } from "~/server/db/schema";
 import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
@@ -176,7 +177,7 @@ export async function getAsigneesForProject(projectId: number) {
 export async function checkPermission(
 	projectId: number,
 	userId: string,
-	allowRoles: string[],
+	allowRoles: UserRole[],
 ) {
 	try {
 		const userToProject = await db.query.usersToProjects.findFirst({

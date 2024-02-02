@@ -112,6 +112,8 @@ export const usersRelations = relations(users, ({ many }) => ({
  * Users to Projects
  */
 
+export type UserRole = "owner" | "member";
+
 export const usersToProjects = mysqlTable(
 	"users_to_projects",
 	{
