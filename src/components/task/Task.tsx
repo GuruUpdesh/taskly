@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Separator } from "../ui/separator";
 import BackButtonRelative from "../layout/navbar/back-button-relative";
+import TaskState from "./task-state";
 
 type Props = {
 	taskId: string;
@@ -47,61 +48,64 @@ const Task = ({ taskId, assignees }: Props) => {
 	}
 
 	return (
-		<ResizablePanelGroup direction="horizontal">
-			<ResizablePanel id="task" defaultSize={75} minSize={50}>
-				<div className="flex flex-col">
-					<header className="container flex items-center justify-between gap-2 border-b py-2">
-						<div className="flex items-center gap-2">
-							<BackButtonRelative />
-							<BreadCrumbs />
-						</div>
-					</header>
-					<PrimaryTaskForm
-						task={result.data.task}
-						editTaskMutation={editTaskMutation}
-					/>
-				</div>
-			</ResizablePanel>
-			<ResizableHandle className="" />
-			<ResizablePanel id="task-info" defaultSize={25} minSize={20}>
-				<div className="h-screen bg-accent/50">
-					<header className="container flex items-center justify-between gap-2 border-b py-2">
-						<div className="flex w-full items-center justify-between gap-2">
-							<Button size="icon" variant="outline">
-								<BellIcon />
-							</Button>
-							<Button
-								size="icon"
-								variant="outline"
-								className="flex-1"
-							>
-								<GitHubLogoIcon />
-							</Button>
-							<Button variant="outline">
-								<TrashIcon />
-							</Button>
-						</div>
-					</header>
-					<section className="container flex flex-col gap-2 pt-8">
-						<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-							Attributes
-						</h3>
-						<SecondaryTaskForm
+		<>
+			<TaskState task={result.data.task} />
+			<ResizablePanelGroup direction="horizontal">
+				<ResizablePanel id="task" defaultSize={75} minSize={50}>
+					<div className="flex flex-col">
+						<header className="container flex items-center justify-between gap-2 border-b py-2">
+							<div className="flex items-center gap-2">
+								<BackButtonRelative />
+								<BreadCrumbs />
+							</div>
+						</header>
+						<PrimaryTaskForm
 							task={result.data.task}
-							assignees={assignees}
 							editTaskMutation={editTaskMutation}
 						/>
-						<Separator className="my-8" />
-						<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-							Comments
-						</h3>
-						<div className="rounded-lg border bg-background p-4">
-							<div className=""></div>
-						</div>
-					</section>
-				</div>
-			</ResizablePanel>
-		</ResizablePanelGroup>
+					</div>
+				</ResizablePanel>
+				<ResizableHandle className="" />
+				<ResizablePanel id="task-info" defaultSize={25} minSize={20}>
+					<div className="h-screen bg-accent/50">
+						<header className="container flex items-center justify-between gap-2 border-b py-2">
+							<div className="flex w-full items-center justify-between gap-2">
+								<Button size="icon" variant="outline">
+									<BellIcon />
+								</Button>
+								<Button
+									size="icon"
+									variant="outline"
+									className="flex-1"
+								>
+									<GitHubLogoIcon />
+								</Button>
+								<Button variant="outline">
+									<TrashIcon />
+								</Button>
+							</div>
+						</header>
+						<section className="container flex flex-col gap-2 pt-8">
+							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+								Attributes
+							</h3>
+							<SecondaryTaskForm
+								task={result.data.task}
+								assignees={assignees}
+								editTaskMutation={editTaskMutation}
+							/>
+							<Separator className="my-8" />
+							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+								Comments
+							</h3>
+							<div className="rounded-lg border bg-background p-4">
+								<div className=""></div>
+							</div>
+						</section>
+					</div>
+				</ResizablePanel>
+			</ResizablePanelGroup>
+		</>
 	);
 };
 

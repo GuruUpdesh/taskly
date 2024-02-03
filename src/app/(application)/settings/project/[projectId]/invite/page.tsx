@@ -1,3 +1,4 @@
+import EmailInviteWrapper from "~/components/invite/by-email/email-invite-wrapper";
 import InviteLinkWrapper from "~/components/invite/invite-link-wrapper";
 
 type Params = {
@@ -9,5 +10,10 @@ type Params = {
 export default function ProjectSettingsInvite({
 	params: { projectId },
 }: Params) {
-	return <InviteLinkWrapper projectId={projectId} />;
+	return (
+		<>
+			<EmailInviteWrapper projectId={projectId} />
+			<InviteLinkWrapper projectId={projectId} />
+		</>
+	);
 }

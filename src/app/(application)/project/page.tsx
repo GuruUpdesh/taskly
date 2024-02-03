@@ -1,13 +1,13 @@
-import ProjectCreateForm from "~/components/projects/create-form";
+import ProjectCreateForm from "~/components/onboarding/create-project-form";
 import { initAction } from "~/actions/project-actions";
-import ProjectJoinForm from "~/components/projects/join-form";
+import ProjectJoinForm from "~/components/onboarding/join-form";
 
 export default async function SettingsOverviewPage() {
 	await initAction();
 
 	return (
-		<div className="flex justify-center pt-24">
-			<div>
+		<div className="z-10 flex justify-center pt-24">
+			<div className="bg-background">
 				<ProjectCreateForm />
 				<ProjectJoinForm />
 			</div>

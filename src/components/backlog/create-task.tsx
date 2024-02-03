@@ -6,7 +6,7 @@ import {
 	defaultValues,
 	getTaskConfig,
 } from "~/entities/task-entity";
-import { useProjectStore } from "~/store/project";
+import { useNavigationStore } from "~/store/navigation";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -165,7 +165,7 @@ const CreateTask = ({ projectId, assignees }: Props) => {
 	const [open, setOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const project = useProjectStore((state) => state.project);
+	const project = useNavigationStore((state) => state.currentProject);
 	const defaultValuesWithProjectId = useMemo(
 		() => ({
 			...defaultValues,
