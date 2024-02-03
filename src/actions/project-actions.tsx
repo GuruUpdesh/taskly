@@ -12,6 +12,7 @@ import {
 import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 import { auth } from "@clerk/nextjs";
+import { sendEmailInvites } from "./invite-actions";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -172,6 +173,64 @@ export async function getAsigneesForProject(projectId: number) {
 		if (error instanceof Error) throwServerError(error.message);
 		return [];
 	}
+}
+
+export async function getIsProjectNameAvailable(
+	projectName: string,
+): Promise<boolean> {
+	try {
+		const projectQuery = await db.query.projects.findFirst({
+			where: (project) => eq(project.name, projectName),
+		});
+		return !projectQuery;
+	} catch (error) {
+		if (error instanceof Error) throwServerError(error.message);
+		return false;
+	}
+}
+
+export type CreateForm = {
+	name: NewProject["name"];
+	invitees: string[];
+	description?: string;
+};
+export async function createProjectAndInviteUsers(formData: CreateForm) {
+	const { userId } = auth();
+	if (!userId) {
+		return {
+			newProjectId: -1,
+			status: false,
+			message: "UserId not found",
+		};
+	}
+
+	// get user from auth headers
+	const result = await createProject(formData);
+	if (!result.status) {
+		return result;
+	}
+
+	const insertId = result.newProjectId;
+
+	// invite users
+	const inviteResult = await sendEmailInvites(
+		insertId,
+		formData.invitees,
+		formData.name,
+	);
+	if (!inviteResult.status) {
+		return {
+			newProjectId: insertId,
+			status: true,
+			message: "Project created successfully but " + inviteResult.message,
+		};
+	}
+
+	return {
+		newProjectId: insertId,
+		status: true,
+		message: "Project created successfully and invites sent",
+	};
 }
 
 export async function checkPermission(

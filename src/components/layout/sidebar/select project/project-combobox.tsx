@@ -71,7 +71,7 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 							))}
 						</CommandGroup>
 						<CommandGroup className=" border-t">
-							<Link href="/project">
+							<Link href="/create-project">
 								<CommandItem className="flex justify-between">
 									New Project
 									<PlusIcon />
