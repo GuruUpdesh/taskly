@@ -16,7 +16,7 @@ const SettingsBackButton = () => {
 	return (
 		<Link
 			href={lastApplicationPathname}
-			className="flex items-center gap-4 text-2xl font-semibold tracking-tight"
+			className="flex items-center gap-4 text-2xl font-semibold tracking-tight transition-all hover:gap-5"
 		>
 			<ArrowLeft />
 			Settings
