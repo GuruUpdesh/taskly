@@ -34,6 +34,14 @@ export const tasks = mysqlTable("tasks", {
 	projectId: int("project_id").notNull(),
 });
 
+export const notifications = mysqlTable("notifications", {
+	id: serial("id").primaryKey(),
+	date: datetime("date", { mode: "date", fsp: 6 }).notNull(),
+	message: text("message").notNull(),
+	userId: varchar("user_id", { length: 32 }).notNull(),
+	projectId: int("project_id").notNull(),
+});
+
 // validators
 export const selectTaskSchema = createSelectSchema(tasks);
 export const insertTaskSchema = createInsertSchema(tasks);
