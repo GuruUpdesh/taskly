@@ -253,3 +253,23 @@ export async function checkPermission(
 		if (error instanceof Error) throwServerError(error.message);
 	}
 }
+
+export async function getAllUsersInProject(projectId: number) {
+	try {
+		console.log("projectId", projectId);
+		const usersQuery = await db.query.usersToProjects.findMany({
+			where: (usersToProjects) =>
+				eq(usersToProjects.projectId, projectId),
+			with: {
+				user: true,
+			},
+		});
+
+		const users = usersQuery.map((userToProject) => userToProject.user);
+
+		return users;
+	} catch (error) {
+		if (error instanceof Error) throwServerError(error.message);
+		return [];
+	}
+}
