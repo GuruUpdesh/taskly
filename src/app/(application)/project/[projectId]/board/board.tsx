@@ -18,7 +18,7 @@ import {
 	taskStatuses,
 } from "~/entities/task-entity";
 import { cn } from "~/lib/utils";
-import type { Task as TaskType, User } from "~/server/db/schema";
+import type { NewTask, Task as TaskType, User } from "~/server/db/schema";
 import {
 	DragDropContext,
 	Draggable,
@@ -39,7 +39,7 @@ type Props = {
 
 export default function TaskBoard({ projectId, assignees }: Props) {
 	const queryClient = useQueryClient();
-
+	const [tasks, setTasks] = React.useState<TaskType[]>([]);
 	const result = useQuery({
 		queryKey: ["tasks"],
 		queryFn: () => getTasksFromProject(parseInt(projectId)),
@@ -47,8 +47,26 @@ export default function TaskBoard({ projectId, assignees }: Props) {
 		refetchInterval: 6 * 1000,
 	});
 
+	useEffect(() => {
+		if (result.data) {
+			setTasks(result.data);
+		}
+	}, [result.data]);
+
+	function optimisticUpdateTasks(id: number, newTask: NewTask) {
+		const updatedTasks = tasks.map((task) => {
+			if (task.id === id) {
+				return { ...task, ...newTask };
+			}
+			return task;
+		});
+		setTasks(updatedTasks);
+	}
+
 	const addTaskMutation = useMutation({
 		mutationFn: ({ id, newTask }: UpdateTask) => updateTask(id, newTask),
+		onMutate: ({ id, newTask }: UpdateTask) =>
+			optimisticUpdateTasks(id, newTask),
 		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
 	});
 
@@ -73,7 +91,7 @@ export default function TaskBoard({ projectId, assignees }: Props) {
 		{},
 	);
 
-	const groupedTasks: GroupedTasks = result.data.reduce(
+	const groupedTasks: GroupedTasks = tasks.reduce(
 		(groups: GroupedTasks, task: TaskType) => {
 			(groups[task.status] = groups[task.status] ?? []).push(task);
 			return groups;
@@ -87,10 +105,6 @@ export default function TaskBoard({ projectId, assignees }: Props) {
 		const task = result.data.find(
 			(task) => task.id === parseInt(draggableId),
 		);
-		console.log(task);
-		console.log(dragResult);
-		console.log(source);
-		console.log(destination);
 		if (
 			!destination ||
 			!task ||
@@ -99,6 +113,8 @@ export default function TaskBoard({ projectId, assignees }: Props) {
 			return;
 		}
 		const newStatus = destination.droppableId as Status;
+
+		optimisticUpdateTasks(task.id, { ...task, status: newStatus });
 		addTaskMutation.mutate({
 			id: task.id,
 			newTask: { ...task, status: newStatus },
@@ -107,7 +123,7 @@ export default function TaskBoard({ projectId, assignees }: Props) {
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
-			<div className="grid grid-cols-3 gap-4">
+			<div className="grid h-full grid-cols-3 gap-4">
 				{Object.keys(groupedTasks).map((status) => {
 					const tasks = groupedTasks[status as Status];
 					if (!tasks) return null;
@@ -116,7 +132,7 @@ export default function TaskBoard({ projectId, assignees }: Props) {
 					return (
 						<div
 							key={status}
-							className="flex flex-col rounded-lg border bg-accent/25 p-2"
+							className="flex h-full flex-col rounded-lg border bg-accent/5 p-2"
 						>
 							<div
 								className={cn(
