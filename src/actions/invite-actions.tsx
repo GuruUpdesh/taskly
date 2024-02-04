@@ -52,7 +52,7 @@ export async function createInvite(userId: string, projectId: string) {
 	const hash = crypto.createHash("sha256");
 	const stringified = JSON.stringify(newInvite);
 	hash.update(stringified);
-	const token = hash.digest("base64").replace("/", "-");
+	const token = hash.digest("base64").replaceAll("/", "-");
 	await db.insert(invites).values({ ...newInvite, token, date: date });
 	return token;
 }
