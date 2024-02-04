@@ -9,8 +9,7 @@ import { Bot } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import CreateTask from "~/components/backlog/create-task";
 import { getAsigneesForProject } from "~/actions/project-actions";
-import dynamic from "next/dynamic";
-const TaskBoard = dynamic(() => import("./board"), { ssr: false });
+import TaskBoard from "./board";
 
 type Params = {
 	params: {
