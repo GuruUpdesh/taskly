@@ -1,10 +1,10 @@
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { cn } from "~/lib/utils";
-import type { NewTask } from "~/server/db/schema";
+import type { NewTask, Task } from "~/server/db/schema";
 
 type Props = {
-	form: UseFormReturn<NewTask>;
+	form: UseFormReturn<Task>;
 	property: keyof NewTask;
 };
 

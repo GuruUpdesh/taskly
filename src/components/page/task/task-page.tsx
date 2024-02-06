@@ -1,22 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
-} from "../ui/resizable";
-import BreadCrumbs from "../layout/breadcrumbs/breadcrumbs";
-import PrimaryTaskForm from "./PrimaryTaskForm";
+} from "../../ui/resizable";
+import BreadCrumbs from "../../layout/breadcrumbs/breadcrumbs";
+import PrimaryTaskForm from "./primary-task-form";
 import type { NewTask, User } from "~/server/db/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTask, updateTask } from "~/actions/task-actions";
-import SecondaryTaskForm from "./SecondaryTaskForm";
-import { Button } from "../ui/button";
+import SecondaryTaskForm from "./secondary-task-form";
+import { Button } from "../../ui/button";
 import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
-import { Separator } from "../ui/separator";
-import BackButtonRelative from "../layout/navbar/back-button-relative";
+import { Separator } from "../../ui/separator";
+import BackButtonRelative from "../../layout/navbar/back-button-relative";
 import TaskState from "./task-state";
+import { toast } from "sonner";
 
 type Props = {
 	taskId: string;
@@ -39,17 +40,36 @@ const Task = ({ taskId, assignees }: Props) => {
 			queryClient.invalidateQueries({ queryKey: ["task", taskId] }),
 	});
 
-	if (!result.data) {
-		return <div>Loading...</div>;
+	// error and loading states
+	useEffect(() => {
+		if (result.error && result.error instanceof Error) {
+			toast.error(result.error.message);
+		}
+
+		if (result.data && result.data.status === "error") {
+			toast.error(result.data.error.message, {
+				description: result.data.error.description,
+			});
+		}
+	}, [result.error, result.data?.status]);
+
+	if (!result.data || result.data.status === "error") {
+		return (
+			<div className="flex w-full items-center justify-center">
+				{result.isLoading && <div>Loading...</div>}
+				{result.error && <div>{result.error.message}</div>}
+				{result.data && result.data.status === "error" && (
+					<div>{result.data.error.message}</div>
+				)}
+			</div>
+		);
 	}
 
-	if (!result.data.success || !result.data.task) {
-		return <div>{result.data.message}</div>;
-	}
+	const task = result.data.data;
 
 	return (
 		<>
-			<TaskState task={result.data.task} />
+			<TaskState task={task} />
 			<ResizablePanelGroup direction="horizontal">
 				<ResizablePanel id="task" defaultSize={75} minSize={50}>
 					<div className="flex flex-col">
@@ -60,7 +80,7 @@ const Task = ({ taskId, assignees }: Props) => {
 							</div>
 						</header>
 						<PrimaryTaskForm
-							task={result.data.task}
+							task={task}
 							editTaskMutation={editTaskMutation}
 						/>
 					</div>
@@ -90,7 +110,7 @@ const Task = ({ taskId, assignees }: Props) => {
 								Attributes
 							</h3>
 							<SecondaryTaskForm
-								task={result.data.task}
+								task={task}
 								assignees={assignees}
 								editTaskMutation={editTaskMutation}
 							/>

@@ -1,28 +1,68 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 "use client";
 
+/**
+ *  Defines the task component for the backlog and board views
+ *  - Defines & renders the task properties
+ *  - Handles the form for updating the task
+ * 	- Styles the container for the task properties
+ *  - Renders the task dropdown menu
+ */
+
+// hooks
 import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+
+// types and schemas
 import {
 	type User,
 	type NewTask,
 	type Task as TaskType,
 } from "~/server/db/schema";
-import Property from "./property/property";
-import { taskSchema } from "~/entities/task-entity";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { type Action } from "~/utils/action";
 import type { UseMutationResult } from "@tanstack/react-query";
-import type { UpdateTask } from "~/components/backlog/tasks";
+import type { UpdateTask } from "~/components/page/backlog/tasks";
+import { taskSchema } from "~/entities/task-entity";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// components
 import TaskDropDownMenu from "./task-dropdown-menu";
+import Property from "./property/property";
 import Link from "next/link";
 
 type Props = {
 	task: TaskType;
 	assignees: User[];
-	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
-	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
+	addTaskMutation: UseMutationResult<
+		Action<TaskType>,
+		Error,
+		UpdateTask,
+		unknown
+	>;
+	deleteTaskMutation: UseMutationResult<
+		Action<number>,
+		Error,
+		number,
+		unknown
+	>;
 	projectId: string;
+	containerClassName?: string;
+	groupClassName?: string;
 };
+
+// configures the grouping and display type of each property
+const order = [
+	[
+		{ key: "priority", size: "icon" },
+		{ key: "status", size: "icon" },
+		{ key: "title", size: "default" },
+		{ key: "description", size: "icon" },
+	],
+	[
+		{ key: "type", size: "default" },
+		{ key: "assignee", size: "icon" },
+	],
+] as { key: keyof TaskType; size: "default" | "icon" }[][];
 
 const Task = ({
 	task,
@@ -30,28 +70,14 @@ const Task = ({
 	addTaskMutation,
 	deleteTaskMutation,
 	projectId,
+	containerClassName = "flex items-center justify-between border-b py-2",
+	groupClassName = "flex flex-shrink items-center gap-2 first:min-w-0 first:flex-grow first:pl-8 last:pr-8",
 }: Props) => {
-	const form = useForm<NewTask>({
+	// form definition and handling
+	const form = useForm<TaskType>({
 		resolver: zodResolver(taskSchema),
 		defaultValues: { ...task },
 	});
-
-	useEffect(() => {
-		form.reset({ ...task });
-	}, [JSON.stringify(task)]);
-
-	const order = [
-		[
-			{ key: "priority", size: "icon" },
-			{ key: "status", size: "icon" },
-			{ key: "title", size: "default" },
-			{ key: "description", size: "icon" },
-		],
-		[
-			{ key: "type", size: "default" },
-			{ key: "assignee", size: "icon" },
-		],
-	] as { key: keyof TaskType; size: "default" | "icon" }[][];
 
 	function onSubmit(newTask: NewTask) {
 		newTask.projectId = task.projectId;
@@ -70,12 +96,14 @@ const Task = ({
 		});
 	}
 
+	useEffect(() => {
+		// reset the form when task changes
+		form.reset({ ...task });
+	}, [JSON.stringify(task)]);
+
 	function renderProperties() {
 		return order.map((group, groupIdx) => (
-			<div
-				key={groupIdx}
-				className="flex flex-shrink items-center gap-2 first:min-w-0 first:flex-grow first:pl-8 last:pr-8"
-			>
+			<div key={groupIdx} className={groupClassName}>
 				{group.map((item, idx) => {
 					if (item.key === "id" || item.key === "projectId")
 						return null;
@@ -97,9 +125,7 @@ const Task = ({
 	return (
 		<TaskDropDownMenu deleteTaskMutation={deleteTaskMutation} task={task}>
 			<Link href={`/project/${projectId}/task/${task.id}`}>
-				<div className="flex items-center justify-between border-b py-2">
-					{renderProperties()}
-				</div>
+				<div className={containerClassName}>{renderProperties()}</div>
 			</Link>
 		</TaskDropDownMenu>
 	);

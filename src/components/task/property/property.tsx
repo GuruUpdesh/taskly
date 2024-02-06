@@ -7,7 +7,7 @@ import DataCellSelect from "./propery-select";
 
 type Props = {
 	property: keyof Task;
-	form: UseFormReturn<NewTask>;
+	form: UseFormReturn<Task>;
 	onSubmit: (newTask: NewTask) => void;
 	assignees: User[];
 	size: "default" | "icon";

@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 
 // ui
 import { Controller, type UseFormReturn } from "react-hook-form";
-import { type NewTask } from "~/server/db/schema";
+import { type NewTask, type Task } from "~/server/db/schema";
 import {
 	Select,
 	SelectContent,
@@ -45,8 +45,8 @@ export const optionVariants = cva(
 type DataCellProps = {
 	config: ReturnType<typeof buildDynamicOptions>;
 	col: keyof NewTask;
-	form: UseFormReturn<NewTask>;
-	onSubmit: (newTask: NewTask) => void;
+	form: UseFormReturn<Task>;
+	onSubmit: (newTask: Task) => void;
 	isNew: boolean;
 	size?: "default" | "icon";
 };

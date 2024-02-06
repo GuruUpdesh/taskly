@@ -1,15 +1,32 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+/**
+ *  Uses the client to poll the server for tasks
+ *  - Defines the query key for tasks
+ * 	- Defines the mutations for updating and deleting tasks
+ *  - Handle server errors and loading states
+ *  - Renders the tasks
+ */
+
+// hooks
 import React, { useEffect } from "react";
-import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+// actions
 import {
 	deleteTask,
 	getTasksFromProject,
 	updateTask,
 } from "~/actions/task-actions";
-import Task from "~/components/backlog/task/task";
+
+// types and schemas
 import type { NewTask, User } from "~/server/db/schema";
+
+// components
+import Task from "~/components/task/task";
+
+// utils
+import { toast } from "sonner";
 
 export type UpdateTask = {
 	id: number;
@@ -41,17 +58,45 @@ export default function Tasks({ projectId, assignees }: Props) {
 		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
 	});
 
+	// error and loading states
 	useEffect(() => {
 		if (result.error && result.error instanceof Error) {
 			toast.error(result.error.message);
 		}
-	}, [result.error]);
 
-	if (!result.data) return <div>Loading...</div>;
+		if (result.data && result.data.status === "error") {
+			toast.error(result.data.error.message, {
+				description: result.data.error.description,
+			});
+		}
+	}, [result.error, result.data?.status]);
+
+	if (!result.data || result.data.status === "error") {
+		return (
+			<div className="flex w-full items-center justify-center">
+				{result.isLoading && <div>Loading...</div>}
+				{result.error && <div>{result.error.message}</div>}
+				{result.data && result.data.status === "error" && (
+					<div>{result.data.error.message}</div>
+				)}
+			</div>
+		);
+	}
+
+	const tasks = result.data.data;
+
+	if (tasks.length === 0) {
+		return (
+			<div className="flex w-full items-center justify-center">
+				Nothing has been created yet, to get started simply create a
+				task.
+			</div>
+		);
+	}
 
 	return (
 		<div>
-			{result.data.map((task) => (
+			{tasks.map((task) => (
 				<Task
 					key={task.id}
 					task={task}

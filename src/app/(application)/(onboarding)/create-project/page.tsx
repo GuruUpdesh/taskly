@@ -1,4 +1,4 @@
-import ProjectCreateForm from "~/components/onboarding/create-project-form";
+import ProjectCreateForm from "~/components/page/onboarding/create-project-form";
 import { getAllProjects, initAction } from "~/actions/project-actions";
 import { auth } from "@clerk/nextjs";
 import Link from "next/link";

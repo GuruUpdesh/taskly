@@ -1,6 +1,6 @@
-import ProjectCreateForm from "~/components/onboarding/create-project-form";
+import ProjectCreateForm from "~/components/page/onboarding/create-project-form";
 import { initAction } from "~/actions/project-actions";
-import ProjectJoinForm from "~/components/onboarding/join-form";
+import ProjectJoinForm from "~/components/page/onboarding/join-form";
 
 export default async function SettingsOverviewPage() {
 	await initAction();

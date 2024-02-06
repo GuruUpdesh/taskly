@@ -1,21 +1,36 @@
 "use client";
 
+/**
+ *  Defines the title and description properties for the task page
+ *  - Defines & renders the form for updating the title and description properties
+ *  - Styles the container for the title and description properties
+ *  - Defines debounced form validation and auto submission
+ */
+
+// hooks
 import React, { useCallback, useEffect } from "react";
+import { useForm } from "react-hook-form";
+
+// types and schemas
 import type { NewTask, Task } from "~/server/db/schema";
+import type { UseMutationResult } from "@tanstack/react-query";
+import { type Action } from "~/utils/action";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+// components
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { UseMutationResult } from "@tanstack/react-query";
-import { z } from "zod";
-import _debounce from "lodash/debounce";
-import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
+import { Separator } from "../../ui/separator";
+import { Button } from "../../ui/button";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+
+// utils
+import _debounce from "lodash/debounce";
 
 type Props = {
 	task: Task;
-	editTaskMutation: UseMutationResult<void, Error, NewTask, unknown>;
+	editTaskMutation: UseMutationResult<Action<Task>, Error, NewTask, unknown>;
 };
 
 const insertTaskSchema__Primary = z.object({

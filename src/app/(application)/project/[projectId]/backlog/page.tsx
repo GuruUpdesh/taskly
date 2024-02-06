@@ -3,10 +3,10 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
-import Tasks from "../../../../../components/backlog/tasks";
+import Tasks from "../../../../../components/page/backlog/tasks";
 import { getTasksFromProject } from "~/actions/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import CreateTask from "~/components/backlog/create-task";
+import CreateTask from "~/components/task/create-task";
 import { getAsigneesForProject } from "~/actions/project-actions";
 import AiDialog from "~/app/(application)/tasks/ai-dialog";
 

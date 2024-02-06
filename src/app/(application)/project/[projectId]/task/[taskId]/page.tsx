@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { getAsigneesForProject } from "~/actions/project-actions";
 import { getTask } from "~/actions/task-actions";
-import Task from "~/components/task/Task";
+import Task from "~/components/page/task/task-page";
 
 type Params = {
 	params: {

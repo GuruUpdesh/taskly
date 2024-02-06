@@ -6,66 +6,93 @@ import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
 import { tasks, insertTaskSchema__required } from "~/server/db/schema";
 import { type Task, type NewTask } from "~/server/db/schema";
-import { throwServerError } from "~/utils/errors";
+import { type Action } from "~/utils/action";
+import { createError } from "~/utils/errors";
 
-export async function createTask(data: NewTask) {
+export async function createTask(data: NewTask): Promise<Action<Task>> {
 	try {
-		const newTask = insertTaskSchema__required.parse(data);
-		await db.insert(tasks).values(newTask);
+		const validationResults = insertTaskSchema__required.safeParse(data);
+		if (!validationResults.success) {
+			return createError("Invalid data", validationResults.error);
+		}
+
+		const newTask = validationResults.data;
+		const result = await db.insert(tasks).values(newTask);
 		revalidatePath("/");
+
+		return {
+			status: "success",
+			data: { id: parseInt(result.insertId), ...newTask },
+		};
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
+		return createError("An error occurred while creating the task", error);
 	}
 }
 
-export async function getAllTasks() {
-	try {
-		const allTasks: Task[] = await db.select().from(tasks);
-		return allTasks;
-	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
-	}
-}
-
-export async function getTasksFromProject(projectId: number) {
+export async function getTasksFromProject(
+	projectId: number,
+): Promise<Action<Task[]>> {
 	try {
 		const allTasks: Task[] = await db
 			.select()
 			.from(tasks)
 			.where(eq(tasks.projectId, projectId));
 
-		return allTasks;
+		return {
+			status: "success",
+			data: allTasks,
+		};
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
+		return createError("An error occurred while fetching tasks", error);
 	}
 }
 
-export async function deleteTask(id: number) {
+export async function deleteTask(id: number): Promise<Action<number>> {
 	try {
-		await db.delete(tasks).where(eq(tasks.id, id));
+		const result = await db.delete(tasks).where(eq(tasks.id, id));
+		console.log(result);
 		revalidatePath("/");
+
+		return {
+			status: "success",
+			data: id,
+		};
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
+		return createError("An error occurred while deleting the task", error);
 	}
 }
 
-export async function updateTask(id: number, data: NewTask) {
+export async function updateTask(
+	id: number,
+	data: NewTask,
+): Promise<Action<Task>> {
 	try {
-		const updatedTaskData: NewTask = insertTaskSchema__required.parse(data);
+		const validationResults = insertTaskSchema__required.safeParse(data);
+		if (!validationResults.success) {
+			return createError("Invalid data", validationResults.error);
+		}
+		const updatedTaskData = validationResults.data;
+
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
+
 		await db.update(tasks).set(updatedTaskData).where(eq(tasks.id, id));
 		revalidatePath("/");
+
+		return {
+			status: "success",
+			data: { id, ...updatedTaskData },
+		};
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
+		return createError("An error occurred while updating the task", error);
 	}
 }
 
-export async function getTask(id: number) {
+export async function getTask(id: number): Promise<Action<Task>> {
 	try {
 		const { userId }: { userId: string | null } = auth();
 		if (!userId) {
-			return { success: false, message: "UserId not found" };
+			return createError("User not found");
 		}
 
 		const taskQuery = await db.query.tasks.findFirst({
@@ -84,14 +111,17 @@ export async function getTask(id: number) {
 			},
 		});
 		if (!taskQuery) {
-			return { success: false, message: "Task not found" };
+			return createError("Task not found");
 		}
 		if (!taskQuery.project.usersToProjects.length) {
-			return { success: false, message: "User not authorized" };
+			return createError("User not authorized to view this task");
 		}
 
-		return { success: true, task: taskQuery };
+		return {
+			status: "success",
+			data: taskQuery,
+		};
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
+		return createError("An error occurred while fetching the task", error);
 	}
 }

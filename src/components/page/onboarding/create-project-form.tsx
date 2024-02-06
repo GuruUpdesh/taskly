@@ -4,10 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useCallback, useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { CheckCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "~/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "~/lib/utils";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
@@ -18,7 +18,7 @@ import {
 } from "~/actions/project-actions";
 import _debounce from "lodash/debounce";
 import { useRouter } from "next/navigation";
-import EmailInviteForm from "../invite/by-email/email-invite-form";
+import EmailInviteForm from "~/components/invite/by-email/email-invite-form";
 
 const CreateProjectSchema = z.object({
 	name: z.string().min(3).max(255),

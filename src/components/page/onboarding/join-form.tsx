@@ -2,10 +2,10 @@
 
 // hooks
 import React, { useState } from "react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
 import Link from "next/link";
-import { Label } from "../ui/label";
+import { Label } from "~/components/ui/label";
 import { ChevronRight } from "lucide-react";
 
 const ProjectJoinForm = () => {

@@ -11,21 +11,24 @@ import { Trash2Icon } from "lucide-react";
 import type { UseMutationResult } from "@tanstack/react-query";
 import type { Task } from "~/server/db/schema";
 import { toast } from "sonner";
+import type { Action } from "~/utils/action";
 
 type Props = {
 	task: Task;
 	children: React.ReactNode;
-	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
+	deleteTaskMutation: UseMutationResult<
+		Action<number>,
+		Error,
+		number,
+		unknown
+	>;
 };
 
 const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 	return (
-		<ContextMenu modal={true}>
+		<ContextMenu>
 			<ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
-			<ContextMenuContent
-				className="bg-accent/50 backdrop-blur-sm"
-				onInteractOutside={(e) => e.preventDefault()}
-			>
+			<ContextMenuContent className="bg-accent/50 backdrop-blur-sm">
 				<ContextMenuItem
 					onClick={() => {
 						deleteTaskMutation.mutate(task.id);

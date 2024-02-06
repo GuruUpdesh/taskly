@@ -7,7 +7,7 @@ import { getTasksFromProject } from "~/actions/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import { Bot } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import CreateTask from "~/components/backlog/create-task";
+import CreateTask from "~/components/task/create-task";
 import { getAsigneesForProject } from "~/actions/project-actions";
 import TaskBoard from "./board";
 

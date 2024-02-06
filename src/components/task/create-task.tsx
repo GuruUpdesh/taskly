@@ -13,13 +13,14 @@ import {
 	type NewTask,
 	type User,
 	insertTaskSchema__required,
+	type Task,
 } from "~/server/db/schema";
 import { createTask } from "~/actions/task-actions";
 import { throwClientError } from "~/utils/errors";
 import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import DataCellSelect from "./task/property/propery-select";
+import DataCellSelect from "./property/propery-select";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import { Button } from "~/components/ui/button";
@@ -35,8 +36,8 @@ import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
 import { aiAction } from "~/actions/ai-action";
 
 type FormProps = {
-	onSubmit: (newTask: NewTask) => Promise<void>;
-	form: UseFormReturn<NewTask, undefined>;
+	onSubmit: (newTask: Task) => Promise<void>;
+	form: UseFormReturn<Task, undefined>;
 	assignees: User[];
 };
 
@@ -174,7 +175,7 @@ const CreateTask = ({ projectId, assignees }: Props) => {
 		[projectId],
 	);
 
-	const form = useForm<NewTask>({
+	const form = useForm<Task>({
 		resolver: zodResolver(insertTaskSchema__required),
 		defaultValues: defaultValuesWithProjectId,
 		mode: "onChange",

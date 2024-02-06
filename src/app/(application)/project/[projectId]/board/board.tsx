@@ -8,8 +8,8 @@ import {
 	getTasksFromProject,
 	updateTask,
 } from "~/actions/task-actions";
-import { optionVariants } from "~/components/backlog/task/property/propery-select";
-import type { UpdateTask } from "~/components/backlog/tasks";
+import { optionVariants } from "~/components/task/property/propery-select";
+import type { UpdateTask } from "~/components/page/backlog/tasks";
 import BoardTask from "~/components/board/board-task";
 import {
 	type Status,
@@ -48,8 +48,8 @@ export default function TaskBoard({ projectId, assignees }: Props) {
 	});
 
 	useEffect(() => {
-		if (result.data) {
-			setTasks(result.data);
+		if (result.data && result.data.status === "success") {
+			setTasks(result.data.data);
 		}
 	}, [result.data]);
 
@@ -101,8 +101,8 @@ export default function TaskBoard({ projectId, assignees }: Props) {
 
 	function onDragEnd(dragResult: DropResult) {
 		const { source, destination, draggableId } = dragResult;
-		if (!result.data) return;
-		const task = result.data.find(
+		if (!result.data || result.data.status !== "success") return;
+		const task = result.data.data.find(
 			(task) => task.id === parseInt(draggableId),
 		);
 		if (

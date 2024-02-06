@@ -1,21 +1,35 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { UseMutationResult } from "@tanstack/react-query";
+/**
+ *  Defines the sidebar for the task page
+ *  - Defines & renders the task properties
+ *  - Styles the container for the task properties
+ */
+
+// hooks
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+
+// types and schemas;
+import type { NewTask, Task, User } from "~/server/db/schema";
+import { type Action } from "~/utils/action";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { UseMutationResult } from "@tanstack/react-query";
+
+// components
+import DataCellSelect from "../../task/property/propery-select";
+
+// utils
 import {
 	buildDynamicOptions,
 	getTaskConfig,
 	taskSchema,
 } from "~/entities/task-entity";
-import type { NewTask, Task, User } from "~/server/db/schema";
-import DataCellSelect from "../backlog/task/property/propery-select";
 
 type Props = {
 	task: Task;
 	assignees: User[];
-	editTaskMutation: UseMutationResult<void, Error, NewTask, unknown>;
+	editTaskMutation: UseMutationResult<Action<Task>, Error, NewTask, unknown>;
 };
 
 const insertTaskSchema__Secondary = taskSchema.omit({
@@ -26,7 +40,7 @@ const insertTaskSchema__Secondary = taskSchema.omit({
 type FormType = Omit<NewTask, "title" | "description">;
 
 const SecondaryTaskForm = ({ task, assignees, editTaskMutation }: Props) => {
-	const form = useForm<NewTask>({
+	const form = useForm<Task>({
 		resolver: zodResolver(insertTaskSchema__Secondary),
 		defaultValues: {
 			...task,
