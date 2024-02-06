@@ -9,6 +9,7 @@ import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import CreateTask from "~/components/task/create-task";
 import { getAsigneesForProject } from "~/actions/project-actions";
 import AiDialog from "~/app/(application)/tasks/ai-dialog";
+import Search from "~/components/page/backlog/search";
 
 type Params = {
 	params: {
@@ -30,6 +31,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 		<div className="max-h-screen overflow-y-scroll pt-2">
 			<header className="container flex items-center justify-between gap-2 border-b pb-2">
 				<BreadCrumbs />
+				<Search />
 				<div className="flex items-center gap-2">
 					<AiDialog projectId={projectId} />
 					<CreateTask projectId={projectId} assignees={assignees} />

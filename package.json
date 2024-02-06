@@ -50,6 +50,7 @@
 		"drizzle-orm": "^0.29.3",
 		"drizzle-zod": "^0.5.1",
 		"framer-motion": "^10.18.0",
+		"fuse.js": "^7.0.0",
 		"geist": "^1.1.0",
 		"lodash.debounce": "^4.0.8",
 		"lucide-react": "^0.292.0",

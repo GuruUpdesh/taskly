@@ -9,7 +9,7 @@
  */
 
 // hooks
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // actions
@@ -20,13 +20,15 @@ import {
 } from "~/actions/task-actions";
 
 // types and schemas
-import type { NewTask, User } from "~/server/db/schema";
+import type { NewTask, Task as TaskType, User } from "~/server/db/schema";
 
 // components
 import Task from "~/components/task/task";
 
 // utils
 import { toast } from "sonner";
+import { useSearchStore } from "~/store/search";
+import Fuse from "fuse.js";
 
 export type UpdateTask = {
 	id: number;
@@ -58,6 +60,26 @@ export default function Tasks({ projectId, assignees }: Props) {
 		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
 	});
 
+	const search = useSearchStore((state) => state.backlogSearch);
+	const tasks = useMemo<TaskType[]>(() => {
+		if (result.data && result.data.status === "success") {
+			if (search === "") {
+				return result.data.data;
+			}
+
+			const options = {
+				keys: ["title"],
+				threshold: 0.3,
+			};
+
+			const fuse = new Fuse(result.data.data, options);
+			const searchResult = fuse.search(search);
+
+			return searchResult.map((result) => result.item);
+		}
+		return [];
+	}, [result.data, search]);
+
 	// error and loading states
 	useEffect(() => {
 		if (result.error && result.error instanceof Error) {
@@ -82,8 +104,6 @@ export default function Tasks({ projectId, assignees }: Props) {
 			</div>
 		);
 	}
-
-	const tasks = result.data.data;
 
 	if (tasks.length === 0) {
 		return (
