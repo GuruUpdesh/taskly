@@ -2,53 +2,54 @@
 
 import { addWeeks } from "date-fns";
 import { asc, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
 import { projects, sprints } from "~/server/db/schema";
 
-export async function createSprintforProject(projectId: number) {
-	const currSprints = await db
+export async function createSprintForProject(projectId: number) {
+	const currentSprints = await db
 		.select()
 		.from(sprints)
 		.where(eq(sprints.projectId, projectId))
 		.orderBy(asc(sprints.endDate))
 		.limit(1);
-	const currprojects = await db
+	const currentProjects = await db
 		.select()
 		.from(projects)
 		.where(eq(projects.id, projectId));
 
-	const currproject = currprojects[0];
+	const currentProject = currentProjects[0];
 
-	if (!currproject) {
+	if (!currentProject) {
 		return;
 	}
 
-	if (!currSprints.length) {
+	if (!currentSprints.length) {
 		await db.insert(sprints).values([
 			{
 				projectId: projectId,
-				startDate: currproject.sprintStart,
+				startDate: currentProject.sprintStart,
 				endDate: addWeeks(
-					currproject.sprintStart,
-					currproject.sprintDuration,
+					currentProject.sprintStart,
+					currentProject.sprintDuration,
 				),
 			},
 			{
 				projectId: projectId,
 				startDate: addWeeks(
-					currproject.sprintStart,
-					currproject.sprintDuration,
+					currentProject.sprintStart,
+					currentProject.sprintDuration,
 				),
 				endDate: addWeeks(
-					currproject.sprintStart,
-					currproject.sprintDuration * 2,
+					currentProject.sprintStart,
+					currentProject.sprintDuration * 2,
 				),
 			},
 		]);
 		return;
 	}
 
-	const currSprint = currSprints[0];
+	const currSprint = currentSprints[0];
 	if (!currSprint) {
 		return;
 	}
@@ -56,8 +57,10 @@ export async function createSprintforProject(projectId: number) {
 	await db.insert(sprints).values({
 		projectId: projectId,
 		startDate: currSprint.endDate,
-		endDate: addWeeks(currSprint.endDate, currproject.sprintDuration),
+		endDate: addWeeks(currSprint.endDate, currentProject.sprintDuration),
 	});
+
+	revalidatePath(`/`);
 
 	return;
 }

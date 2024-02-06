@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import DeleteProjectButton from "~/components/delete/delete-project-button";
+import DeleteProjectButton from "~/components/projects/delete-project-button";
 import { db } from "~/server/db";
 import { projects } from "~/server/db/schema";
 import Permission from "~/components/auth/Permission";
@@ -12,6 +12,9 @@ import { cn } from "~/lib/utils";
 import { Label } from "~/components/ui/label";
 import SprintOptions from "~/components/projects/sprint-options";
 import { Textarea } from "~/components/ui/textarea";
+import { getSprintsForProject } from "~/actions/sprint-actions";
+import CreateSprintButton from "~/components/projects/create-sprint-button";
+import { isAfter, isBefore } from "date-fns";
 
 type Params = {
 	params: {
@@ -31,6 +34,8 @@ export default async function projectSettingsGeneral({
 	if (!currentProject) {
 		return null;
 	}
+
+	const sprints = await getSprintsForProject(Number(projectId));
 
 	const users = await getAllUsersInProject(Number(projectId));
 
@@ -98,9 +103,32 @@ export default async function projectSettingsGeneral({
 					</div>
 				</div>
 				<div className="rounded-lg border p-4">
-					<h3 className={cn(typography.headers.h3, "mb-4")}>
-						Sprints
-					</h3>
+					<div className="flex items-center justify-between">
+						<h3 className={cn(typography.headers.h3, "mb-4")}>
+							Sprints
+						</h3>
+						<CreateSprintButton projectId={projectId} />
+					</div>
+					<div className="mb-4 mt-2 grid grid-flow-col gap-2 rounded-xl border p-3">
+						{sprints.map((sprint) => {
+							const active =
+								isAfter(new Date(), sprint.startDate) &&
+								isBefore(new Date(), sprint.endDate);
+							return (
+								<div
+									key={sprint.id}
+									className={cn(
+										"flex justify-center gap-2 rounded-full border bg-accent/25 px-4 py-1 text-muted-foreground",
+										active
+											? "border-green-500 bg-green-800/25 text-green-500"
+											: "",
+									)}
+								>
+									<p>{sprint.name}</p>
+								</div>
+							);
+						})}
+					</div>
 					<SprintOptions project={currentProject} />
 				</div>
 				<div className="rounded-lg border border-red-500 p-4">
