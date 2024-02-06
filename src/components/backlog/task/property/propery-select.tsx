@@ -23,7 +23,7 @@ import { ChevronDown } from "lucide-react";
 
 export const optionVariants = cva(
 	[
-		"rounded-sm border pl-2 pr-3 py-1 flex items-center space-x-2 whitespace-nowrap flex",
+		"rounded-sm border pl-2 pr-3 py-1 flex items-center space-x-2 whitespace-nowrap",
 	],
 	{
 		variants: {

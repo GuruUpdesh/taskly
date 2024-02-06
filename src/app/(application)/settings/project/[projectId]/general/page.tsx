@@ -6,9 +6,12 @@ import Permission from "~/components/auth/Permission";
 import { getAllUsersInProject } from "~/actions/project-actions";
 import { throwClientError } from "~/utils/errors";
 import UsersTable from "~/components/projects/users-table";
-import { Header, Header2 } from "~/components/typography/Headers";
-import { Paragraph } from "~/components/typography/Paragraphs";
+import typography from "~/utils/typography";
 import { Input } from "~/components/ui/input";
+import { cn } from "~/lib/utils";
+import { Label } from "~/components/ui/label";
+import SprintOptions from "~/components/projects/sprint-options";
+import { Textarea } from "~/components/ui/textarea";
 
 type Params = {
 	params: {
@@ -25,6 +28,9 @@ export default async function projectSettingsGeneral({
 		.where(eq(projects.id, Number(projectId)));
 
 	const currentProject = getProjects[0];
+	if (!currentProject) {
+		return null;
+	}
 
 	const users = await getAllUsersInProject(Number(projectId));
 
@@ -34,44 +40,79 @@ export default async function projectSettingsGeneral({
 	}
 
 	return (
-		<>
-			<div style={{ marginLeft: "3em", marginTop: "2em" }}>
-				<Header>Project Settings</Header>
-				<Paragraph>
+		<div className="flex flex-col gap-8 p-6">
+			<header>
+				<h2 className={cn(typography.headers.h2, "pb-0")}>
+					General Project Settings
+				</h2>
+				<p className={cn(typography.paragraph.p, "!mt-2")}>
 					Here you manage the general settings for the project. This
 					includes user permissions, project details, and more.
-				</Paragraph>
-				<Permission
-					projectId={currentProject?.id ?? -1}
-					allowRoles={["owner"]}
-				>
-					<Header2>Project Information</Header2>
-					<div className="my-3 w-60">
-						<label className="mb-2" htmlFor="projectName">
-							Project Name:
-						</label>
+				</p>
+			</header>
+			<Permission
+				projectId={currentProject?.id ?? -1}
+				allowRoles={["owner"]}
+			>
+				<div className="rounded-lg border p-4">
+					<h3 className={cn(typography.headers.h3, "")}>
+						Project Information
+					</h3>
+					<p
+						className={cn(
+							typography.paragraph.p,
+							"!mt-2 mb-4 text-muted-foreground",
+						)}
+					>
+						General information about the project, make sure to save
+						any changes.
+					</p>
+					<div className="grid w-full max-w-sm items-center gap-1.5">
+						<Label htmlFor="projectName" className="font-bold">
+							Project Name
+						</Label>
 						<Input
 							type="text"
 							id="projectName"
-							style={{ marginTop: "0.5em" }}
+							className="mb-4"
 							value={currentProject?.name}
 							disabled
 						/>
+						<Label
+							htmlFor="projectDescription"
+							className="font-bold"
+						>
+							Project Description
+						</Label>
+						<Textarea
+							id="projectDescription"
+							placeholder="description"
+							disabled
+						/>
 					</div>
-
-					<Header2>Users</Header2>
+				</div>
+				<div className="rounded-lg border p-4">
+					<h3 className={cn(typography.headers.h3)}>Users</h3>
 					<div style={{ width: "95%" }}>
 						<UsersTable users={users} />
 					</div>
-					<Header2>Danger</Header2>
+				</div>
+				<div className="rounded-lg border p-4">
+					<h3 className={cn(typography.headers.h3, "mb-4")}>
+						Sprints
+					</h3>
+					<SprintOptions project={currentProject} />
+				</div>
+				<div className="rounded-lg border border-red-500 p-4">
+					<h3 className={cn(typography.headers.h3)}>Danger Zone</h3>
 					<DeleteProjectButton
 						projectName={
 							currentProject ? currentProject.name : "error"
 						}
 						projectId={projectId}
 					/>
-				</Permission>
-			</div>
-		</>
+				</div>
+			</Permission>
+		</div>
 	);
 }

@@ -17,10 +17,5 @@ export default async function ProjectSettingsLayout({
 		return <div>{result?.message}</div>;
 	}
 
-	return (
-		<>
-			<h1>Project Settings</h1>
-			{children}
-		</>
-	);
+	return <>{children}</>;
 }
