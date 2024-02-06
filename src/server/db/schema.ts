@@ -1,6 +1,7 @@
 import { relations, type InferSelectModel } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import {
+	date,
 	datetime,
 	int,
 	mysqlEnum,
@@ -11,6 +12,7 @@ import {
 	varchar,
 } from "drizzle-orm/mysql-core";
 import type { z } from "zod";
+import { startOfToday, addWeeks } from "date-fns";
 
 export const mysqlTable = mysqlTableCreator((name) => `taskly_${name}`);
 
@@ -32,6 +34,7 @@ export const tasks = mysqlTable("tasks", {
 		.notNull(),
 	assignee: varchar("assignee", { length: 255 }),
 	projectId: int("project_id").notNull(),
+	sprintId: int("sprint_id"),
 });
 
 export const notifications = mysqlTable("notifications", {
@@ -53,6 +56,7 @@ export const insertTaskSchema__required = insertTaskSchema.required({
 	type: true,
 	assignee: true,
 	projectId: true,
+	sprintId: true,
 });
 
 // types
@@ -69,6 +73,10 @@ export const taskRelations = relations(tasks, ({ one }) => ({
 		fields: [tasks.assignee],
 		references: [users.userId],
 	}),
+	sprint: one(sprints, {
+		fields: [tasks.sprintId],
+		references: [sprints.id],
+	}),
 }));
 
 /**
@@ -77,6 +85,8 @@ export const taskRelations = relations(tasks, ({ one }) => ({
 export const projects = mysqlTable("projects", {
 	id: serial("id").primaryKey(),
 	name: varchar("name", { length: 255 }).notNull().unique(),
+	sprintDuration: int("sprint_duration").default(2).notNull(),
+	sprintStart: date("sprint_start").default(startOfToday()).notNull(),
 });
 
 // validators
@@ -91,6 +101,7 @@ export type NewProject = z.infer<typeof insertProjectSchema>;
 export const projectsRelations = relations(projects, ({ many }) => ({
 	tasks: many(tasks),
 	usersToProjects: many(usersToProjects),
+	sprints: many(sprints),
 }));
 
 /**
@@ -177,4 +188,26 @@ export const inviteRelations = relations(invites, ({ one }) => ({
 		fields: [invites.userId],
 		references: [users.userId],
 	}),
+}));
+
+/**
+ * Sprints Schema
+ */
+export const sprints = mysqlTable("sprints", {
+	id: serial("id").primaryKey(),
+	startDate: date("start_date").default(startOfToday()).notNull(),
+	endDate: date("end_date").default(addWeeks(startOfToday(), 2)).notNull(),
+	projectId: int("project_id").notNull(),
+});
+
+// types
+export type Sprint = InferSelectModel<typeof sprints> & {name: string};
+
+// relations
+export const sprintRelations = relations(sprints, ({ one, many }) => ({
+	project: one(projects, {
+		fields: [sprints.projectId],
+		references: [projects.id],
+	}),
+	tasks: many(tasks), 
 }));

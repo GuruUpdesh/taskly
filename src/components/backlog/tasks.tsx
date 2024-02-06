@@ -9,7 +9,7 @@ import {
 	updateTask,
 } from "~/actions/task-actions";
 import Task from "~/components/backlog/task/task";
-import type { NewTask, User } from "~/server/db/schema";
+import type { NewTask, Sprint, User } from "~/server/db/schema";
 
 export type UpdateTask = {
 	id: number;
@@ -19,9 +19,10 @@ export type UpdateTask = {
 type Props = {
 	projectId: string;
 	assignees: User[];
+	sprints: Sprint[];
 };
 
-export default function Tasks({ projectId, assignees }: Props) {
+export default function Tasks({ projectId, assignees, sprints }: Props) {
 	const queryClient = useQueryClient();
 
 	const result = useQuery({
@@ -56,6 +57,7 @@ export default function Tasks({ projectId, assignees }: Props) {
 					key={task.id}
 					task={task}
 					assignees={assignees}
+					sprints={sprints}
 					addTaskMutation={addTaskMutation}
 					deleteTaskMutation={deleteTaskMutation}
 					projectId={projectId}

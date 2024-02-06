@@ -13,6 +13,7 @@ import {
 	type NewTask,
 	type User,
 	insertTaskSchema__required,
+	Sprint,
 } from "~/server/db/schema";
 import { createTask } from "~/actions/task-actions";
 import { throwClientError } from "~/utils/errors";
@@ -38,9 +39,10 @@ type FormProps = {
 	onSubmit: (newTask: NewTask) => Promise<void>;
 	form: UseFormReturn<NewTask, undefined>;
 	assignees: User[];
+	sprints: Sprint[];
 };
 
-const TaskCreateForm = ({ onSubmit, form, assignees }: FormProps) => {
+const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 	// Framer motion transition
 	const transition = {
 		opacity: { ease: [0.075, 0.82, 0.165, 1] },
@@ -132,6 +134,7 @@ const TaskCreateForm = ({ onSubmit, form, assignees }: FormProps) => {
 							getTaskConfig(col),
 							col,
 							assignees,
+							sprints,
 						);
 						if (config.type === "select")
 							return (
@@ -159,9 +162,10 @@ const TaskCreateForm = ({ onSubmit, form, assignees }: FormProps) => {
 type Props = {
 	projectId: string;
 	assignees: User[];
+	sprints: Sprint[];
 };
 
-const CreateTask = ({ projectId, assignees }: Props) => {
+const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 	const [open, setOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -219,6 +223,7 @@ const CreateTask = ({ projectId, assignees }: Props) => {
 					onSubmit={handleSubmit}
 					form={form}
 					assignees={assignees}
+					sprints={sprints}
 				/>
 				<DialogFooter className="border-t px-4 py-2">
 					<Button

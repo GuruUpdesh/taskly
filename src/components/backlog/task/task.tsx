@@ -6,6 +6,7 @@ import {
 	type User,
 	type NewTask,
 	type Task as TaskType,
+	Sprint,
 } from "~/server/db/schema";
 import Property from "./property/property";
 import { taskSchema } from "~/entities/task-entity";
@@ -19,6 +20,7 @@ import Link from "next/link";
 type Props = {
 	task: TaskType;
 	assignees: User[];
+	sprints: Sprint[];
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 	projectId: string;
@@ -27,6 +29,7 @@ type Props = {
 const Task = ({
 	task,
 	assignees,
+	sprints,
 	addTaskMutation,
 	deleteTaskMutation,
 	projectId,
@@ -86,6 +89,7 @@ const Task = ({
 							form={form}
 							onSubmit={onSubmit}
 							assignees={assignees}
+							sprints={sprints}
 							size={item.size}
 						/>
 					);

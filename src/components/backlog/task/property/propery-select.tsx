@@ -159,7 +159,7 @@ function DataCellSelect({
 										value={
 											option.value
 												? option.value.toString()
-												: ""
+												: "unassigned"
 										}
 									>
 										<div className="flex min-w-[8rem] items-center gap-2">

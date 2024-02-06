@@ -4,12 +4,13 @@ import {
 	ArrowUpIcon,
 	CheckCircledIcon,
 	CircleIcon,
+	Component1Icon,
 	PersonIcon,
 	StopwatchIcon,
 } from "@radix-ui/react-icons";
 import type GenericEntityConfig from "./entityTypes";
 import { z } from "zod";
-import type { NewTask, User, Task } from "~/server/db/schema";
+import type { NewTask, User, Task, Sprint } from "~/server/db/schema";
 import { BugIcon, Feather, LayoutList } from "lucide-react";
 import { throwClientError } from "~/utils/errors";
 import type { ColorOptions } from "./entityTypes";
@@ -142,6 +143,22 @@ export const taskConfig: GenericEntityConfig<TaskConfig> = {
 			],
 		},
 	},
+	sprintId: {
+		value: "sprintId",
+		displayName: "Sprint",
+		type: "select",
+		form: {
+			placeholder: "Sprint",
+			options: [
+				{
+					value: -1,
+					displayName: "None",
+					icon: <Component1Icon className="h-4 w-4" />,
+					color: "grey",
+				},
+			],
+		},
+	},
 };
 
 export const defaultValues: NewTask = {
@@ -152,6 +169,7 @@ export const defaultValues: NewTask = {
 	priority: "medium",
 	type: "task",
 	assignee: null,
+	sprintId: null,
 };
 
 export function getTaskConfig(key: string) {
@@ -183,6 +201,7 @@ export function buildDynamicOptions(
 	config: ReturnType<typeof getTaskConfig>,
 	key: string,
 	assignees: User[],
+	sprints: Sprint[],
 ): ReturnType<typeof getTaskConfig> {
 	switch (key) {
 		case "assignee":
@@ -203,6 +222,27 @@ export function buildDynamicOptions(
 				form: {
 					...config.form,
 					options,
+				},
+			};
+		case "sprintId":
+			if (config.type !== "select" || !config.form.options) return config;
+			const newSprintOptions = sprints.map((sprint) => ({
+				value: sprint.id,
+				displayName: sprint.name,
+				icon: <Component1Icon className="h-4 w-4" />,
+				color: "grey" as ColorOptions,
+			}));
+			const currentSprintOptions = config.form.options.map((option) => ({
+				...option,
+				value: option.value as number,
+			}));
+			const sprintOptions = [...currentSprintOptions, ...newSprintOptions];
+			console.log(sprintOptions);
+			return {
+				...config,
+				form: {
+					...config.form,
+					options: sprintOptions,
 				},
 			};
 		default:

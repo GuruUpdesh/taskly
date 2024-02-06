@@ -13,6 +13,7 @@ import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 import { auth } from "@clerk/nextjs";
 import { sendEmailInvites } from "./invite-actions";
+import { createSprintforProject } from "./sprint-actions";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -48,6 +49,8 @@ export async function createProject(
 		await db
 			.insert(usersToProjects)
 			.values({ userId: userId, projectId: insertId, userRole: "owner" });
+
+		await createSprintforProject(insertId);
 
 		revalidatePath("/");
 
