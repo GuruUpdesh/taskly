@@ -12,7 +12,7 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import { Label } from "../ui/label";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
@@ -46,9 +46,11 @@ const SprintOptions = ({ project }: Props) => {
 	});
 
 	return (
-		<form className="grid max-w-[600px] gap-4">
-			<div className="grid w-full max-w-sm items-center gap-1.5">
-				<Label>Sprint Duration</Label>
+		<form className="grid w-full gap-4">
+			<div className="flex w-full items-center justify-between gap-8">
+				<Label className="whitespace-nowrap font-bold">
+					Sprint Duration
+				</Label>
 				<Controller
 					control={control}
 					name="sprintDuration"
@@ -57,7 +59,7 @@ const SprintOptions = ({ project }: Props) => {
 							onValueChange={(val) => onChange(parseInt(val))}
 							value={value.toString()}
 						>
-							<SelectTrigger>
+							<SelectTrigger className="max-w-[400px]">
 								<SelectValue placeholder="Select Sprint Duration" />
 								<ChevronDown className="ml-2 h-4 w-4" />
 							</SelectTrigger>
@@ -91,14 +93,14 @@ const SprintOptions = ({ project }: Props) => {
 					)}
 				/>
 			</div>
-			<div className="grid w-full max-w-sm items-center gap-1.5">
-				<Label>Sprint Start</Label>
+			<div className="flex w-full items-center justify-between gap-8">
+				<Label className="font-bold">Sprint Start</Label>
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button
 							variant={"outline"}
 							className={cn(
-								"w-full justify-between text-left font-normal",
+								"w-full max-w-[400px] justify-between text-left font-normal",
 								!watch("sprintStart") &&
 									"text-muted-foreground",
 							)}
@@ -128,6 +130,13 @@ const SprintOptions = ({ project }: Props) => {
 						/>
 					</PopoverContent>
 				</Popover>
+			</div>
+			<div className="flex w-full items-center justify-between gap-8">
+				<Button variant="outline">Cancel</Button>
+				<Button>
+					Save
+					<ChevronRight className="ml-2 h-4 w-4" />
+				</Button>
 			</div>
 		</form>
 	);

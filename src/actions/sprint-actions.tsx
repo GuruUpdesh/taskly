@@ -1,7 +1,7 @@
 "use server";
 
 import { addWeeks } from "date-fns";
-import { asc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
 import { projects, sprints } from "~/server/db/schema";
@@ -11,7 +11,7 @@ export async function createSprintForProject(projectId: number) {
 		.select()
 		.from(sprints)
 		.where(eq(sprints.projectId, projectId))
-		.orderBy(asc(sprints.endDate))
+		.orderBy(desc(sprints.endDate))
 		.limit(1);
 	const currentProjects = await db
 		.select()

@@ -14,7 +14,10 @@ import SprintOptions from "~/components/projects/sprint-options";
 import { Textarea } from "~/components/ui/textarea";
 import { getSprintsForProject } from "~/actions/sprint-actions";
 import CreateSprintButton from "~/components/projects/create-sprint-button";
-import { isAfter, isBefore } from "date-fns";
+import { format, isAfter, isBefore } from "date-fns";
+import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 
 type Params = {
 	params: {
@@ -102,37 +105,82 @@ export default async function projectSettingsGeneral({
 						<UsersTable users={users} />
 					</div>
 				</div>
-				<div className="rounded-lg border p-4">
+				<div className="flex flex-col rounded-lg border p-4">
 					<div className="flex items-center justify-between">
 						<h3 className={cn(typography.headers.h3, "mb-4")}>
 							Sprints
 						</h3>
 						<CreateSprintButton projectId={projectId} />
 					</div>
-					<div className="mb-4 mt-2 grid grid-flow-col gap-2 rounded-xl border p-3">
-						{sprints.map((sprint) => {
+					<p
+						className={cn(
+							typography.paragraph.p,
+							"!mt-1 text-muted-foreground",
+						)}
+					>
+						Sprints will be created automatically when your current
+						sprint ends, or you can create one manually. Sprints are
+						used to manage your project&apos;s workload and are a
+						great way to keep your team on track.
+					</p>
+					<Separator className="my-8" />
+					<Label className="font-bold">
+						Current Sprints for Project
+					</Label>
+					<div className="mt-1.5 flex max-w-full flex-row flex-wrap items-center overflow-hidden rounded-xl border p-2">
+						{sprints.map((sprint, idx) => {
 							const active =
 								isAfter(new Date(), sprint.startDate) &&
 								isBefore(new Date(), sprint.endDate);
 							return (
 								<div
 									key={sprint.id}
+									style={{
+										zIndex: sprints.length - idx,
+									}}
 									className={cn(
-										"flex justify-center gap-2 rounded-full border bg-accent/25 px-4 py-1 text-muted-foreground",
+										"m-1 flex items-center justify-center gap-2 rounded-full border bg-background py-1 text-muted-foreground",
 										active
-											? "border-green-500 bg-green-800/25 text-green-500"
+											? "border-green-500 bg-background px-4 py-1.5 text-green-500 "
 											: "",
+										idx !== 0 ? "-ml-14 pl-16" : "pl-4",
 									)}
 								>
+									{idx === 0 && (
+										<p className="rounded-full bg-background/50 px-2 py-0.5 text-xs">
+											{format(
+												sprint.startDate,
+												"MMM, dd",
+											)}
+										</p>
+									)}
 									<p>{sprint.name}</p>
+									<p className="relative flex items-center px-2 py-0.5 text-xs">
+										{format(sprint.endDate, "MMM, dd")}
+										{active && (
+											<ArrowRightIcon className="absolute -right-5 z-50 h-4 w-4 bg-background text-green-500" />
+										)}
+									</p>
 								</div>
 							);
 						})}
 					</div>
+					<Separator className="my-8" />
+					<Label className="font-bold">Sprint Options</Label>
+					<p
+						className={cn(
+							typography.paragraph.p,
+							"!mt-1 mb-4 text-muted-foreground",
+						)}
+					>
+						Changes will automatically be applied when the next
+						sprint starts.
+					</p>
 					<SprintOptions project={currentProject} />
 				</div>
 				<div className="rounded-lg border border-red-500 p-4">
 					<h3 className={cn(typography.headers.h3)}>Danger Zone</h3>
+					<Button>Leave Project</Button>
 					<DeleteProjectButton
 						projectName={
 							currentProject ? currentProject.name : "error"

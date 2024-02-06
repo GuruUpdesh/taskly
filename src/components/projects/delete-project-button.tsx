@@ -28,14 +28,12 @@ function DeleteProjectButton({ projectName, projectId }: Props) {
 						}
 						style={{ width: "fit-content" }}
 					>
-						{" "}
-						Delete {projectName ? projectName : "error"}{" "}
+						Delete Project
 					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-md">
 					<DialogHeader>
 						<DialogTitle>
-							{" "}
 							Delete {projectName ? projectName : "error"}{" "}
 						</DialogTitle>
 						<DialogDescription>
