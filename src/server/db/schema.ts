@@ -201,7 +201,9 @@ export const sprints = mysqlTable("sprints", {
 });
 
 // types
-export type Sprint = InferSelectModel<typeof sprints> & {name: string};
+export interface Sprint extends InferSelectModel<typeof sprints> {
+	name: string;
+}
 
 // relations
 export const sprintRelations = relations(sprints, ({ one, many }) => ({
@@ -209,5 +211,5 @@ export const sprintRelations = relations(sprints, ({ one, many }) => ({
 		fields: [sprints.projectId],
 		references: [projects.id],
 	}),
-	tasks: many(tasks), 
+	tasks: many(tasks),
 }));

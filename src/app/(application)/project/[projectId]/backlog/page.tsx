@@ -9,7 +9,7 @@ import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import CreateTask from "~/components/backlog/create-task";
 import { getAsigneesForProject } from "~/actions/project-actions";
 import AiDialog from "~/app/(application)/tasks/ai-dialog";
-import { getSprintsforProject } from "~/actions/sprint-actions";
+import { getSprintsForProject } from "~/actions/sprint-actions";
 
 type Params = {
 	params: {
@@ -19,8 +19,7 @@ type Params = {
 
 export default async function BacklogPage({ params: { projectId } }: Params) {
 	const assignees = await getAsigneesForProject(parseInt(projectId));
-	const sprints = await getSprintsforProject(parseInt(projectId));
-	console.log(sprints);
+	const sprints = await getSprintsForProject(parseInt(projectId));
 	// Prefetch tasks using react-query
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
@@ -34,12 +33,20 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 				<BreadCrumbs />
 				<div className="flex items-center gap-2">
 					<AiDialog projectId={projectId} />
-					<CreateTask projectId={projectId} assignees={assignees} sprints={sprints}/>
+					<CreateTask
+						projectId={projectId}
+						assignees={assignees}
+						sprints={sprints}
+					/>
 				</div>
 			</header>
 			<section className="flex flex-col pt-4">
 				<HydrationBoundary state={dehydrate(queryClient)}>
-					<Tasks projectId={projectId} assignees={assignees} sprints={sprints}/>
+					<Tasks
+						projectId={projectId}
+						assignees={assignees}
+						sprints={sprints}
+					/>
 				</HydrationBoundary>
 			</section>
 		</div>

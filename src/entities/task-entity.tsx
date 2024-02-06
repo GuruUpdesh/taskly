@@ -15,6 +15,7 @@ import { BugIcon, Feather, LayoutList } from "lucide-react";
 import { throwClientError } from "~/utils/errors";
 import type { ColorOptions } from "./entityTypes";
 import UserProfilePicture from "~/components/user-profile-picture";
+import { isAfter, isBefore } from "date-fns";
 
 type TaskConfig = Omit<Task, "projectId">;
 
@@ -152,8 +153,8 @@ export const taskConfig: GenericEntityConfig<TaskConfig> = {
 			options: [
 				{
 					value: -1,
-					displayName: "None",
-					icon: <Component1Icon className="h-4 w-4" />,
+					displayName: "No Sprint",
+					icon: <Component1Icon className="h-4 w-4 opacity-50" />,
 					color: "grey",
 				},
 			],
@@ -169,7 +170,7 @@ export const defaultValues: NewTask = {
 	priority: "medium",
 	type: "task",
 	assignee: null,
-	sprintId: null,
+	sprintId: -1,
 };
 
 export function getTaskConfig(key: string) {
@@ -226,18 +227,25 @@ export function buildDynamicOptions(
 			};
 		case "sprintId":
 			if (config.type !== "select" || !config.form.options) return config;
-			const newSprintOptions = sprints.map((sprint) => ({
-				value: sprint.id,
-				displayName: sprint.name,
-				icon: <Component1Icon className="h-4 w-4" />,
-				color: "grey" as ColorOptions,
-			}));
+			const newSprintOptions = sprints.map((sprint: Sprint) => {
+				const active =
+					isAfter(new Date(), sprint.startDate) &&
+					isBefore(new Date(), sprint.endDate);
+				return {
+					value: sprint.id,
+					displayName: sprint.name,
+					icon: <Component1Icon className="h-4 w-4" />,
+					color: active ? "blue" : ("green" as ColorOptions),
+				};
+			});
 			const currentSprintOptions = config.form.options.map((option) => ({
 				...option,
 				value: option.value as number,
 			}));
-			const sprintOptions = [...currentSprintOptions, ...newSprintOptions];
-			console.log(sprintOptions);
+			const sprintOptions = [
+				...currentSprintOptions,
+				...newSprintOptions,
+			];
 			return {
 				...config,
 				form: {

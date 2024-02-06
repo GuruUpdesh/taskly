@@ -6,6 +6,7 @@ import {
 	type User,
 	type NewTask,
 	type Task as TaskType,
+	type Sprint,
 } from "~/server/db/schema";
 import Property from "~/components/backlog/task/property/property";
 import { taskSchema } from "~/entities/task-entity";
@@ -18,6 +19,7 @@ import TaskDropDownMenu from "~/components/backlog/task/task-dropdown-menu";
 type Props = {
 	task: TaskType;
 	assignees: User[];
+	sprints: Sprint[];
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 };
@@ -25,6 +27,7 @@ type Props = {
 const BoardTask = ({
 	task,
 	assignees,
+	sprints,
 	addTaskMutation,
 	deleteTaskMutation,
 }: Props) => {
@@ -40,10 +43,11 @@ const BoardTask = ({
 	const order = [
 		[{ key: "title", size: "default" }],
 		[
-			{ key: "status", size: "deafault" },
-			{ key: "priority", size: "deafault" },
-			{ key: "type", size: "default" },
-			{ key: "assignee", size: "deafault" },
+			{ key: "status", size: "icon" },
+			{ key: "priority", size: "icon" },
+			{ key: "type", size: "icon" },
+			{ key: "assignee", size: "icon" },
+			{ key: "sprintId", size: "icon" },
 		],
 	] as { key: keyof TaskType; size: "default" | "icon" }[][];
 
@@ -77,6 +81,7 @@ const BoardTask = ({
 							form={form}
 							onSubmit={onSubmit}
 							assignees={assignees}
+							sprints={sprints}
 							size={item.size}
 						/>
 					);

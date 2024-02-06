@@ -259,7 +259,6 @@ export async function checkPermission(
 
 export async function getAllUsersInProject(projectId: number) {
 	try {
-		console.log("projectId", projectId);
 		const usersQuery = await db.query.usersToProjects.findMany({
 			where: (usersToProjects) =>
 				eq(usersToProjects.projectId, projectId),

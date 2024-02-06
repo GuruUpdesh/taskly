@@ -6,7 +6,7 @@ import {
 	type User,
 	type NewTask,
 	type Task as TaskType,
-	Sprint,
+	type Sprint,
 } from "~/server/db/schema";
 import Property from "./property/property";
 import { taskSchema } from "~/entities/task-entity";
@@ -53,6 +53,7 @@ const Task = ({
 		[
 			{ key: "type", size: "default" },
 			{ key: "assignee", size: "icon" },
+			{ key: "sprintId", size: "icon" },
 		],
 	] as { key: keyof TaskType; size: "default" | "icon" }[][];
 

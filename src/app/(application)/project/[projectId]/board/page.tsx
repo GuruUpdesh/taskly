@@ -10,6 +10,7 @@ import { Button } from "~/components/ui/button";
 import CreateTask from "~/components/backlog/create-task";
 import { getAsigneesForProject } from "~/actions/project-actions";
 import TaskBoard from "./board";
+import { getSprintsForProject } from "~/actions/sprint-actions";
 
 type Params = {
 	params: {
@@ -19,6 +20,7 @@ type Params = {
 
 export default async function BacklogPage({ params: { projectId } }: Params) {
 	const assignees = await getAsigneesForProject(parseInt(projectId));
+	const sprints = await getSprintsForProject(parseInt(projectId));
 
 	// Prefetch tasks using react-query
 	const queryClient = new QueryClient();
@@ -35,12 +37,20 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<Button variant="outline" size="sm">
 						<Bot className="h-4 w-4" />
 					</Button>
-					<CreateTask projectId={projectId} assignees={assignees} />
+					<CreateTask
+						projectId={projectId}
+						assignees={assignees}
+						sprints={sprints}
+					/>
 				</div>
 			</header>
 			<section className="container flex flex-col pt-4">
 				<HydrationBoundary state={dehydrate(queryClient)}>
-					<TaskBoard projectId={projectId} assignees={assignees} />
+					<TaskBoard
+						projectId={projectId}
+						assignees={assignees}
+						sprints={sprints}
+					/>
 				</HydrationBoundary>
 			</section>
 		</div>

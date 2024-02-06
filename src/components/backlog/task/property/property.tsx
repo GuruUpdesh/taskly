@@ -3,7 +3,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { buildDynamicOptions, getTaskConfig } from "~/entities/task-entity";
 import type { User, NewTask, Task, Sprint } from "~/server/db/schema";
 import PropertyStatic from "./property-static";
-import DataCellSelect from "./propery-select";
+import PropertySelect from "./propery-select";
 
 type Props = {
 	property: keyof Task;
@@ -14,7 +14,14 @@ type Props = {
 	size: "default" | "icon";
 };
 
-function Property({ property, form, onSubmit, assignees, sprints, size }: Props) {
+function Property({
+	property,
+	form,
+	onSubmit,
+	assignees,
+	sprints,
+	size,
+}: Props) {
 	const config = buildDynamicOptions(
 		getTaskConfig(property),
 		property,
@@ -28,7 +35,7 @@ function Property({ property, form, onSubmit, assignees, sprints, size }: Props)
 
 	if (property !== "id" && config.type === "select") {
 		return (
-			<DataCellSelect
+			<PropertySelect
 				form={form}
 				col={property}
 				config={config}

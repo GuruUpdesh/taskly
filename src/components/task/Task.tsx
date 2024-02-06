@@ -8,7 +8,7 @@ import {
 } from "../ui/resizable";
 import BreadCrumbs from "../layout/breadcrumbs/breadcrumbs";
 import PrimaryTaskForm from "./PrimaryTaskForm";
-import type { NewTask, User } from "~/server/db/schema";
+import type { NewTask, Sprint, User } from "~/server/db/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTask, updateTask } from "~/actions/task-actions";
 import SecondaryTaskForm from "./SecondaryTaskForm";
@@ -21,9 +21,10 @@ import TaskState from "./task-state";
 type Props = {
 	taskId: string;
 	assignees: User[];
+	sprints: Sprint[];
 };
 
-const Task = ({ taskId, assignees }: Props) => {
+const Task = ({ taskId, assignees, sprints }: Props) => {
 	const queryClient = useQueryClient();
 
 	const result = useQuery({
@@ -92,6 +93,7 @@ const Task = ({ taskId, assignees }: Props) => {
 							<SecondaryTaskForm
 								task={result.data.task}
 								assignees={assignees}
+								sprints={sprints}
 								editTaskMutation={editTaskMutation}
 							/>
 							<Separator className="my-8" />

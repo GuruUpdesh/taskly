@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
 	buildDynamicOptions,
 	defaultValues,
@@ -13,14 +13,14 @@ import {
 	type NewTask,
 	type User,
 	insertTaskSchema__required,
-	Sprint,
+	type Sprint,
 } from "~/server/db/schema";
 import { createTask } from "~/actions/task-actions";
 import { throwClientError } from "~/utils/errors";
 import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import DataCellSelect from "./task/property/propery-select";
+import PropertySelect from "./task/property/propery-select";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import { Button } from "~/components/ui/button";
@@ -144,7 +144,7 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 									transition={transition}
 									className="flex-1"
 								>
-									<DataCellSelect
+									<PropertySelect
 										config={config}
 										col={col as keyof NewTask}
 										form={form}
@@ -184,6 +184,11 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 		mode: "onChange",
 	});
 
+	useEffect(() => {
+		if (!form.formState.isValid) {
+		}
+	}, [form.formState.isValid, form.formState.errors]);
+
 	async function handleSubmit(newTask: NewTask) {
 		setIsLoading(true);
 		try {
@@ -205,7 +210,7 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 					New
 				</Button>
 			</DialogTrigger>
-			<DialogContent className="min-w-[600px] p-0">
+			<DialogContent className="min-w-[600px] max-w-fit p-0">
 				<DialogHeader className="px-4 pt-4">
 					<DialogTitle className="flex items-center gap-[0.5ch]">
 						{project ? (
