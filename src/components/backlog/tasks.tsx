@@ -1,5 +1,13 @@
 "use client";
 
+import {
+	DragDropContext,
+	Draggable,
+	DraggableProvided,
+	DropResult,
+	Droppable,
+	DroppableProvided,
+} from "@hello-pangea/dnd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { toast } from "sonner";
@@ -49,18 +57,59 @@ export default function Tasks({ projectId, assignees }: Props) {
 
 	if (!result.data) return <div>Loading...</div>;
 
+	function onDragEnd(dragResult: DropResult) {
+		const { source, destination, draggableId } = dragResult;
+		console.log(dragResult);
+	}
+
 	return (
-		<div>
-			{result.data.map((task) => (
-				<Task
-					key={task.id}
-					task={task}
-					assignees={assignees}
-					addTaskMutation={addTaskMutation}
-					deleteTaskMutation={deleteTaskMutation}
-					projectId={projectId}
-				/>
-			))}
-		</div>
+		<DragDropContext onDragEnd={onDragEnd}>
+			<Droppable droppableId="tasks">
+				{(provided: DroppableProvided) => {
+					if (!result.data) return <div>Loading...</div>;
+					return (
+						<div
+							{...provided.droppableProps}
+							ref={provided.innerRef}
+						>
+							{result.data
+								.sort(
+									(t1, t2) =>
+										t1.backlogOrder - t2.backlogOrder,
+								)
+								.map((task, idx) => (
+									<Draggable
+										draggableId={String(task.id)}
+										index={idx}
+										key={task.id}
+									>
+										{(provided: DraggableProvided) => (
+											<div
+												{...provided.draggableProps}
+												{...provided.dragHandleProps}
+												ref={provided.innerRef}
+											>
+												<Task
+													key={task.id}
+													task={task}
+													assignees={assignees}
+													addTaskMutation={
+														addTaskMutation
+													}
+													deleteTaskMutation={
+														deleteTaskMutation
+													}
+													projectId={projectId}
+												/>
+											</div>
+										)}
+									</Draggable>
+								))}
+								{provided.placeholder}
+						</div>
+					);
+				}}
+			</Droppable>
+		</DragDropContext>
 	);
 }

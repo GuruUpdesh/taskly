@@ -30,6 +30,8 @@ export const tasks = mysqlTable("tasks", {
 	type: mysqlEnum("type", ["task", "bug", "feature"])
 		.default("task")
 		.notNull(),
+	boardOrder: int("board_order").notNull().default(0),
+	backlogOrder: int("task_order").notNull().default(0),
 	assignee: varchar("assignee", { length: 255 }),
 	projectId: int("project_id").notNull(),
 });
