@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs";
-import { and, eq, gt, max, ne, sql } from "drizzle-orm";
+import { and, eq, gt, gte, max, ne, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
 import { tasks, insertTaskSchema__required } from "~/server/db/schema";
@@ -18,7 +18,12 @@ export async function createTask(data: NewTask) {
 			.where(eq(tasks.projectId, newTask.projectId))
 			.limit(1);
 
-		if (maxBacklogOrder?.[0]?.backlogOrder) {
+		console.log(maxBacklogOrder);
+		if (
+			maxBacklogOrder?.[0]?.backlogOrder !== undefined &&
+			maxBacklogOrder[0].backlogOrder !== null
+		) {
+			console.log(maxBacklogOrder[0].backlogOrder);
 			newTask.backlogOrder = maxBacklogOrder[0].backlogOrder + 1;
 			newTask.boardOrder = maxBacklogOrder[0].backlogOrder + 1;
 		}
@@ -93,9 +98,29 @@ export async function deleteTask(id: number) {
 
 export async function updateTask(id: number, data: NewTask) {
 	try {
+		console.log(data);
 		const updatedTaskData = insertTaskSchema__required.parse(data);
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
+
+		if (updatedTaskData.backlogOrder !== undefined) {
+			console.log("updating order");
+			const updatingTask = await db.query.tasks.findFirst({
+				where: (tasks) => eq(tasks.id, id),
+			});
+			if (!updatingTask) return;
+
+			await db
+				.update(tasks)
+				.set({ backlogOrder: sql`${tasks.backlogOrder} + 1` })
+				.where(
+					and(
+						eq(tasks.projectId, updatingTask.projectId),
+						gte(tasks.backlogOrder, updatedTaskData.backlogOrder),
+						ne(tasks.id, id),
+					),
+				);
+		}
 		await db.update(tasks).set(updatedTaskData).where(eq(tasks.id, id));
 		revalidatePath("/");
 	} catch (error) {

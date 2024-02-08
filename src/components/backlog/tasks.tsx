@@ -3,11 +3,12 @@
 import {
 	DragDropContext,
 	Draggable,
-	DraggableProvided,
-	DropResult,
+	type DraggableProvided,
+	type DropResult,
 	Droppable,
-	DroppableProvided,
+	type DroppableProvided,
 } from "@hello-pangea/dnd";
+import { DragHandleDots2Icon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { toast } from "sonner";
@@ -17,7 +18,7 @@ import {
 	updateTask,
 } from "~/actions/task-actions";
 import Task from "~/components/backlog/task/task";
-import type { NewTask, User } from "~/server/db/schema";
+import type { NewTask, Task as TaskType, User } from "~/server/db/schema";
 
 export type UpdateTask = {
 	id: number;
@@ -31,6 +32,8 @@ type Props = {
 
 export default function Tasks({ projectId, assignees }: Props) {
 	const queryClient = useQueryClient();
+
+	const [tasks, setTasks] = React.useState<TaskType[]>([]);
 
 	const result = useQuery({
 		queryKey: ["tasks"],
@@ -50,6 +53,21 @@ export default function Tasks({ projectId, assignees }: Props) {
 	});
 
 	useEffect(() => {
+		if (result.data) {
+			setTasks(
+				result.data.sort((t1, t2) => t1.backlogOrder - t2.backlogOrder),
+			);
+		}
+
+		console.log(addTaskMutation.variables);
+	}, [
+		result.status,
+		result.data,
+		addTaskMutation.variables,
+		deleteTaskMutation.variables,
+	]);
+
+	useEffect(() => {
 		if (result.error && result.error instanceof Error) {
 			toast.error(result.error.message);
 		}
@@ -60,55 +78,58 @@ export default function Tasks({ projectId, assignees }: Props) {
 	function onDragEnd(dragResult: DropResult) {
 		const { source, destination, draggableId } = dragResult;
 		console.log(dragResult);
+		if (source && destination && source.index !== destination.index) {
+			const draggedTask = tasks.find(
+				(task) => task.id === parseInt(draggableId),
+			);
+			console.log(draggedTask);
+			if (!draggedTask) return;
+
+			addTaskMutation.mutate({
+				id: draggedTask.id,
+				newTask: { ...draggedTask, backlogOrder: destination.index },
+			});
+		} else {
+			console.log("no change");
+		}
 	}
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
 			<Droppable droppableId="tasks">
-				{(provided: DroppableProvided) => {
-					if (!result.data) return <div>Loading...</div>;
-					return (
-						<div
-							{...provided.droppableProps}
-							ref={provided.innerRef}
-						>
-							{result.data
-								.sort(
-									(t1, t2) =>
-										t1.backlogOrder - t2.backlogOrder,
-								)
-								.map((task, idx) => (
-									<Draggable
-										draggableId={String(task.id)}
-										index={idx}
-										key={task.id}
+				{(provided: DroppableProvided) => (
+					<div {...provided.droppableProps} ref={provided.innerRef}>
+						{tasks.map((task, idx) => (
+							<Draggable
+								draggableId={String(task.id)}
+								index={idx}
+								key={task.id}
+							>
+								{(provided: DraggableProvided) => (
+									<div
+										className="group relative backdrop-blur-lg"
+										{...provided.draggableProps}
+										{...provided.dragHandleProps}
+										ref={provided.innerRef}
 									>
-										{(provided: DraggableProvided) => (
-											<div
-												{...provided.draggableProps}
-												{...provided.dragHandleProps}
-												ref={provided.innerRef}
-											>
-												<Task
-													key={task.id}
-													task={task}
-													assignees={assignees}
-													addTaskMutation={
-														addTaskMutation
-													}
-													deleteTaskMutation={
-														deleteTaskMutation
-													}
-													projectId={projectId}
-												/>
-											</div>
-										)}
-									</Draggable>
-								))}
-								{provided.placeholder}
-						</div>
-					);
-				}}
+										<DragHandleDots2Icon className="absolute bottom-[50%] left-1 translate-y-[50%] opacity-0 group-hover:opacity-50" />
+										<Task
+											key={task.id}
+											task={task}
+											assignees={assignees}
+											addTaskMutation={addTaskMutation}
+											deleteTaskMutation={
+												deleteTaskMutation
+											}
+											projectId={projectId}
+										/>
+									</div>
+								)}
+							</Draggable>
+						))}
+						{provided.placeholder}
+					</div>
+				)}
 			</Droppable>
 		</DragDropContext>
 	);

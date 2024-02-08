@@ -29,6 +29,8 @@ export async function POST(req: Request, context: Context) {
 		priority: body.priority,
 		type: body.type,
 		assignee: body.assignee,
+		backlogOrder: body.backlogOrder,
+		boardOrder: body.boardOrder,
 	};
 
 	const task = await updateTask(parseInt(id), taskToUpdate);
