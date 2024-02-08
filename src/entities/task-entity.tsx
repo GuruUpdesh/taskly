@@ -235,7 +235,7 @@ export function buildDynamicOptions(
 					value: sprint.id,
 					displayName: sprint.name,
 					icon: <Component1Icon className="h-4 w-4" />,
-					color: active ? "blue" : ("green" as ColorOptions),
+					color: active ? "green" : ("grey" as ColorOptions),
 				};
 			});
 			const currentSprintOptions = config.form.options.map((option) => ({
