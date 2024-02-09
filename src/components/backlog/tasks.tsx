@@ -19,6 +19,7 @@ import {
 	updateTask,
 } from "~/actions/task-actions";
 import Task from "~/components/backlog/task/task";
+import { cn } from "~/lib/utils";
 import type { NewTask, Task as TaskType, User } from "~/server/db/schema";
 import { updateOrder } from "~/utils/order";
 
@@ -169,12 +170,22 @@ export default function Tasks({ projectId, assignees }: Props) {
 										snapshot: DraggableStateSnapshot,
 									) => (
 										<div
-											className="group relative bg-background/50 backdrop-blur-xl"
+											className={cn(
+												"group relative bg-background/50 backdrop-blur-xl transition-colors",
+												snapshot.isDragging &&
+													"bg-accent-foreground/5",
+											)}
 											{...provided.draggableProps}
 											{...provided.dragHandleProps}
 											ref={provided.innerRef}
 										>
-											<DragHandleDots2Icon className="absolute bottom-[50%] left-1 translate-y-[50%] opacity-0 group-hover:opacity-50" />
+											<DragHandleDots2Icon
+												className={cn(
+													"absolute bottom-[50%] left-1 translate-y-[50%] opacity-0 group-hover:opacity-50",
+													snapshot.isDragging &&
+														"opacity-100",
+												)}
+											/>
 											<Task
 												key={task.id}
 												task={task}

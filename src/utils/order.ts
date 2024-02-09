@@ -7,7 +7,6 @@ import { kv } from "@vercel/kv";
 import { z } from "zod";
 
 export async function updateOrder(taskOrder: Map<number, number>) {
-	console.time("updateOrder");
 	const task_ids: string[] = Array.from(taskOrder.keys()).map(String);
 	const lockedTaskIds = await kv.get("taskOrder");
 	if (lockedTaskIds) {
@@ -26,5 +25,4 @@ export async function updateOrder(taskOrder: Map<number, number>) {
 		}
 	});
 	await kv.del("taskOrder");
-	console.timeEnd("updateOrder");
 }
