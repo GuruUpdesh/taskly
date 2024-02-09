@@ -97,7 +97,7 @@ const Task = ({
 	return (
 		<TaskDropDownMenu deleteTaskMutation={deleteTaskMutation} task={task}>
 			<Link href={`/project/${projectId}/task/${task.id}`}>
-				<div className="flex items-center justify-between border-b py-2">
+				<div className="flex items-center justify-between border-b py-2 hover:bg-accent-foreground/5">
 					{renderProperties()}
 				</div>
 			</Link>
