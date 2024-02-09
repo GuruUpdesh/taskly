@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import type { Project } from "~/server/db/schema";
 import { ChevronsUpDown } from "lucide-react";
 
@@ -22,6 +22,7 @@ import {
 import Link from "next/link";
 import { PlusIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
+import { Skeleton } from "~/components/ui/skeleton";
 
 type Props = {
 	projects: Project[];
@@ -34,14 +35,18 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 	const project = projects.find(
 		(project) => String(project.id) === projectId,
 	);
+
+	const buttonRef = useRef<HTMLButtonElement>(null);
+
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
+					ref={buttonRef}
 					variant="outline"
 					role="combobox"
 					aria-expanded={open}
-					className="w-full justify-between whitespace-nowrap"
+					className="z-10 w-full justify-center gap-2 whitespace-nowrap bg-background/75 px-1 @sidebar:justify-between @sidebar:px-4"
 				>
 					{project?.image ? (
 						<Image
@@ -49,15 +54,26 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 							alt={project.name}
 							width={24}
 							height={24}
-							className="rounded-full"
+							className="min-w-[24px] rounded-full"
 						/>
-					) : null}
-					{project ? project.name : "Select project..."}
-					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+					) : (
+						<Skeleton className="h-6 w-6 rounded-full" />
+					)}
+					<span className="hidden @sidebar:inline-flex">
+						{project ? project.name : "Select project..."}
+					</span>
+					<ChevronsUpDown className="hidden h-4 w-4 shrink-0 opacity-50 @sidebar:inline-flex" />
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-full p-0">
-				<Command>
+			<PopoverContent
+				style={{
+					width: buttonRef.current
+						? buttonRef.current.offsetWidth
+						: "",
+				}}
+				className="w-full min-w-max bg-background/50 p-0"
+			>
+				<Command className="w-full bg-transparent backdrop-blur-xl">
 					<CommandInput placeholder="Search projects..." />
 					<CommandList>
 						<CommandEmpty>No project found.</CommandEmpty>
@@ -75,29 +91,34 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 												: "",
 										)}
 									>
-										<Image
-											src={
-												project.image ?? "/project.svg"
-											}
-											alt={project.name}
-											width={24}
-											height={24}
-											className="rounded-full"
-										/>
+										{project.image ? (
+											<Image
+												src={
+													project.image ??
+													"/project.svg"
+												}
+												alt={project.name}
+												width={24}
+												height={24}
+												className="rounded-full"
+											/>
+										) : (
+											<Skeleton className="h-6 w-6 rounded-full" />
+										)}
 										{project.name}
 									</CommandItem>
 								</Link>
 							))}
 						</CommandGroup>
-						<CommandGroup className=" border-t">
-							<Link href="/create-project">
-								<CommandItem className="flex justify-between">
-									New Project
-									<PlusIcon />
-								</CommandItem>
-							</Link>
-						</CommandGroup>
 					</CommandList>
+					<CommandGroup className=" border-t">
+						<Link href="/create-project">
+							<CommandItem className="flex justify-between">
+								New Project
+								<PlusIcon />
+							</CommandItem>
+						</Link>
+					</CommandGroup>
 				</Command>
 			</PopoverContent>
 		</Popover>

@@ -63,7 +63,10 @@ export async function aiAction(
 	return results.data;
 }
 
-export async function generateProjectImage(name: string, description: string | null | undefined) {
+export async function generateProjectImage(
+	name: string,
+	description: string | null | undefined,
+) {
 	const client = new OpenAI();
 
 	const response = await client.images.generate({

@@ -4,21 +4,41 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 "use client";
 
+/**
+ * This file is a bit janky because it uses a library that doesn't play well with
+ * next.js and doesn't have typescript support. But it works!
+ */
+
 import Image from "next/image";
 import ColorThief from "colorthief";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigationStore } from "~/store/navigation";
+import SidebarBackground from "./sidebar-background";
+import { storeProjectColor } from "~/actions/project-actions";
 
-const SidebarBackground = () => {
+const rgbToHex = (r: number, g: number, b: number) =>
+	"#" +
+	[r, g, b]
+		.map((x) => {
+			const hex = x.toString(16);
+			return hex.length === 1 ? "0" + hex : hex;
+		})
+		.join("");
+
+const SidebarDynamicBackground = () => {
 	const project = useNavigationStore((state) => state.currentProject);
 	const image = project?.image ?? "";
 
 	const imageRef = React.useRef<HTMLImageElement>(null);
 
 	const [color, setColor] = React.useState<string | null>(null);
+	useEffect(() => {
+		if (color && project) {
+			void storeProjectColor(project.id, color);
+		}
+	}, [color, project]);
 
 	if (!image) return null;
-
 	return (
 		<>
 			<div className="pointer-events-none absolute opacity-0" key={image}>
@@ -34,33 +54,19 @@ const SidebarBackground = () => {
 						if (img) {
 							const color = colorThief.getColor(img);
 							// convert [r, g, b] to #rrggbb
-							const colorString = `#${color.map((c: { toString: (c: number) => string }) => c.toString(16).padStart(2, "0")).join("")}`;
-							console.log("color", color, colorString);
+							const colorString = rgbToHex(
+								color[0] as number,
+								color[1] as number,
+								color[2] as number,
+							);
 							setColor(colorString);
 						}
 					}}
 				/>
 			</div>
-			<div className="pointer-events-none animate-fade-in">
-				<div
-					className="absolute top-[55px] -z-10 h-full w-full"
-					style={{
-						opacity: 0.25,
-						backgroundSize: "100% 200%",
-						background: `linear-gradient(transparent 35%, ${color ?? "transparent"})`,
-					}}
-				/>
-				<div
-					className="absolute top-[55px] -z-10 h-full w-full"
-					style={{
-						opacity: 0.15,
-						backgroundSize: "100% 200%",
-						background: `linear-gradient(${color ?? "transparent"}, transparent 25%)`,
-					}}
-				/>
-			</div>
+			<SidebarBackground color={color} />
 		</>
 	);
 };
 
-export default SidebarBackground;
+export default SidebarDynamicBackground;

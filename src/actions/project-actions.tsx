@@ -14,6 +14,7 @@ import { throwServerError } from "~/utils/errors";
 import { auth } from "@clerk/nextjs";
 import { sendEmailInvites } from "./invite-actions";
 import { generateProjectImage } from "./ai-action";
+import { kv } from "@vercel/kv";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -24,6 +25,27 @@ type ProjectResponse = {
 	status: boolean;
 	message: string;
 };
+
+// Helper for createProject
+async function generateAndUpdateProjectImage(
+	projectId: number,
+	projectName: string,
+	projectDescription: string | null | undefined,
+) {
+	try {
+		const image = await generateProjectImage(
+			projectName,
+			projectDescription,
+		);
+		await db
+			.update(projects)
+			.set({ image: image })
+			.where(eq(projects.id, projectId));
+		console.log("Project image generated and updated successfully.");
+	} catch (error) {
+		console.error("Error generating or updating project image:", error);
+	}
+}
 
 export async function createProject(
 	data: NewProject,
@@ -39,15 +61,8 @@ export async function createProject(
 			};
 		}
 
-		
 		// insert project
-		
 		const newProject: NewProject = insertProjectSchema.parse(data);
-		console.time("generateProjectImage");
-		const image = await generateProjectImage(newProject.name, newProject.description);
-		console.timeEnd("generateProjectImage");
-		newProject.image = image;
-		console.log("image", image);
 		const result = await db.insert(projects).values(newProject);
 		const insertId = parseInt(result.insertId);
 
@@ -57,6 +72,12 @@ export async function createProject(
 			.values({ userId: userId, projectId: insertId, userRole: "owner" });
 
 		revalidatePath("/");
+
+		void generateAndUpdateProjectImage(
+			insertId,
+			newProject.name,
+			newProject.description,
+		);
 
 		return {
 			newProjectId: insertId,
@@ -263,7 +284,6 @@ export async function checkPermission(
 
 export async function getAllUsersInProject(projectId: number) {
 	try {
-		console.log("projectId", projectId);
 		const usersQuery = await db.query.usersToProjects.findMany({
 			where: (usersToProjects) =>
 				eq(usersToProjects.projectId, projectId),
@@ -278,5 +298,13 @@ export async function getAllUsersInProject(projectId: number) {
 	} catch (error) {
 		if (error instanceof Error) throwServerError(error.message);
 		return [];
+	}
+}
+
+export async function storeProjectColor(projectId: number, color: string) {
+	try {
+		await kv.set("project-color-" + projectId, color);
+	} catch (error) {
+		if (error instanceof Error) throwServerError(error.message);
 	}
 }

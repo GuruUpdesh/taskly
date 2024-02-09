@@ -1,4 +1,5 @@
 const { fontFamily } = require("tailwindcss/defaultTheme")
+const containerQueriesPlugin = require('@tailwindcss/container-queries');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -102,7 +103,10 @@ module.exports = {
         "fade-down": 'fade-down 0.5s cubic-bezier(0.075, 0.82, 0.165, 1) forwards',
         "gradient": "gradient 15s ease infinite",
       },
+      containers: {
+        sidebar: '60px'
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), containerQueriesPlugin],
 }

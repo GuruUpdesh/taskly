@@ -9,6 +9,10 @@ interface SettingsNavigationState {
 	updateProject: (newProject: Project) => void;
 	currentTask: Task | null;
 	updateTask: (newTask: Task) => void;
+	isSideBarCollapsed: boolean;
+	setSideBarCollapsed: (value: boolean) => void;
+	expandSideBar: () => void;
+	setExpandSideBar: (callback: () => void) => void;
 }
 
 const useNavigationStore = create<SettingsNavigationState>()(
@@ -21,6 +25,14 @@ const useNavigationStore = create<SettingsNavigationState>()(
 			updateProject: (newProject) => set({ currentProject: newProject }),
 			currentTask: null,
 			updateTask: (newTask) => set({ currentTask: newTask }),
+			isSideBarCollapsed: false,
+			setSideBarCollapsed: (val) =>
+				set(() => ({ isSideBarCollapsed: val })),
+			expandSideBar: () => {
+				console.warn("expandSideBar is not implemented");
+			},
+			setExpandSideBar: (callback) =>
+				set(() => ({ expandSideBar: callback })),
 		}),
 		{
 			name: "settings-navigation-storage",
