@@ -90,6 +90,8 @@ const AiDialog = ({ projectId }: Props) => {
 			taskObject.projectId = parseInt(projectId);
 			taskObject.assignee = null;
 			taskObject.id = Math.random() * 1000;
+			taskObject.backlogOrder = 0;
+			taskObject.boardOrder = 0;
 			setTaskObject(taskObject);
 		}
 	}, [messages]);

@@ -14,9 +14,9 @@ import {
 	type User,
 	insertTaskSchema__required,
 	type Sprint,
+	type Task,
 } from "~/server/db/schema";
 import { createTask } from "~/actions/task-actions";
-import { throwClientError } from "~/utils/errors";
 import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -34,9 +34,10 @@ import {
 } from "~/components/ui/dialog";
 import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
 import { aiAction } from "~/actions/ai-action";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type FormProps = {
-	onSubmit: (newTask: NewTask) => Promise<void>;
+	onSubmit: (newTask: NewTask) => void;
 	form: UseFormReturn<NewTask, undefined>;
 	assignees: User[];
 	sprints: Sprint[];
@@ -127,6 +128,8 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 							col !== "id" &&
 							col !== "pending" &&
 							col !== "projectId" &&
+							col !== "backlogOrder" &&
+							col !== "boardOrder" &&
 							getTaskConfig(col).type === "select",
 					)
 					.map((col) => {
@@ -167,7 +170,7 @@ type Props = {
 
 const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 	const [open, setOpen] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
+	const queryClient = useQueryClient();
 
 	const project = useNavigationStore((state) => state.currentProject);
 	const defaultValuesWithProjectId = useMemo(
@@ -178,29 +181,46 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 		[projectId],
 	);
 
+	const addTaskMutation = useMutation({
+		mutationFn: ({ data }: { data: NewTask }) => createTask(data),
+		onMutate: async ({ data }) => {
+			await queryClient.cancelQueries({ queryKey: ["tasks"] });
+
+			const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);
+
+			queryClient.setQueryData<Task[]>(["tasks"], (old) => [
+				...(old ?? []),
+				{
+					...data,
+					backlogOrder: 1000000,
+					projectId: parseInt(projectId),
+					id: -1,
+				},
+			]);
+			setOpen(false);
+
+			return { previousTasks };
+		},
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+			toast.success("Task created successfully!");
+			setOpen(false);
+			form.reset();
+		},
+		onError: (err) => {
+			setOpen(true);
+			toast.error(`Failed to create task: ${err.message}`);
+		},
+	});
+
 	const form = useForm<NewTask>({
 		resolver: zodResolver(insertTaskSchema__required),
 		defaultValues: defaultValuesWithProjectId,
 		mode: "onChange",
 	});
 
-	useEffect(() => {
-		if (!form.formState.isValid) {
-		}
-	}, [form.formState.isValid, form.formState.errors]);
-
-	async function handleSubmit(newTask: NewTask) {
-		setIsLoading(true);
-		try {
-			await createTask(newTask);
-			form.reset();
-			setOpen(false);
-			toast.success("Task created!");
-		} catch (error) {
-			throwClientError("Failed to create task");
-		} finally {
-			setIsLoading(false);
-		}
+	function handleSubmit(newTask: NewTask) {
+		addTaskMutation.mutate({ data: newTask });
 	}
 
 	return (
@@ -234,12 +254,8 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 					<Button
 						size="sm"
 						onClick={() => form.handleSubmit(handleSubmit)()}
-						disabled={isLoading}
 					>
-						{isLoading ? "Creating Task" : "Create Task"}
-						{isLoading ? (
-							<Loader2 className="ml-2 h-4 w-4 animate-spin" />
-						) : null}
+						Create Task
 					</Button>
 				</DialogFooter>
 			</DialogContent>

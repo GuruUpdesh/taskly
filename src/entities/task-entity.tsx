@@ -17,7 +17,7 @@ import type { ColorOptions } from "./entityTypes";
 import UserProfilePicture from "~/components/user-profile-picture";
 import { isAfter, isBefore } from "date-fns";
 
-type TaskConfig = Omit<Task, "projectId">;
+type TaskConfig = Omit<Task, "projectId" | "boardOrder" | "backlogOrder">;
 
 export const taskConfig: GenericEntityConfig<TaskConfig> = {
 	id: {
@@ -171,6 +171,8 @@ export const defaultValues: NewTask = {
 	type: "task",
 	assignee: null,
 	sprintId: -1,
+	backlogOrder: 0,
+	boardOrder: 0,
 };
 
 export function getTaskConfig(key: string) {

@@ -32,6 +32,8 @@ export const tasks = mysqlTable("tasks", {
 	type: mysqlEnum("type", ["task", "bug", "feature"])
 		.default("task")
 		.notNull(),
+	boardOrder: int("board_order").notNull().default(0),
+	backlogOrder: int("backlog_order").notNull().default(0),
 	assignee: varchar("assignee", { length: 255 }),
 	projectId: int("project_id").notNull(),
 	sprintId: int("sprint_id"),
@@ -57,6 +59,8 @@ export const insertTaskSchema__required = insertTaskSchema.required({
 	assignee: true,
 	projectId: true,
 	sprintId: true,
+	backlogOrder: true,
+	boardOrder: true,
 });
 
 // types
