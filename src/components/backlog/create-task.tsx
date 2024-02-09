@@ -16,7 +16,6 @@ import {
 	type Task,
 } from "~/server/db/schema";
 import { createTask } from "~/actions/task-actions";
-// import { throwClientError } from "~/utils/errors";
 import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
