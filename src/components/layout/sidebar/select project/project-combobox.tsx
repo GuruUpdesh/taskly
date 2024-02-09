@@ -21,6 +21,7 @@ import {
 } from "~/components/ui/popover";
 import Link from "next/link";
 import { PlusIcon } from "@radix-ui/react-icons";
+import Image from "next/image";
 
 type Props = {
 	projects: Project[];
@@ -30,6 +31,9 @@ type Props = {
 const ProjectCombobox = ({ projects, projectId }: Props) => {
 	const [open, setOpen] = React.useState(false);
 
+	const project = projects.find(
+		(project) => String(project.id) === projectId,
+	);
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
@@ -37,13 +41,18 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 					variant="outline"
 					role="combobox"
 					aria-expanded={open}
-					className="w-full justify-between"
+					className="w-full justify-between whitespace-nowrap"
 				>
-					{projectId
-						? projects.find(
-								(project) => String(project.id) === projectId,
-							)?.name
-						: "Select project..."}
+					{project?.image ? (
+						<Image
+							src={project.image}
+							alt={project.name}
+							width={24}
+							height={24}
+							className="rounded-full"
+						/>
+					) : null}
+					{project ? project.name : "Select project..."}
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
@@ -60,11 +69,21 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 								>
 									<CommandItem
 										className={cn(
+											"flex items-center gap-2",
 											projectId === String(project.id)
 												? "bg-primary text-background hover:bg-primary/50"
 												: "",
 										)}
 									>
+										<Image
+											src={
+												project.image ?? "/project.svg"
+											}
+											alt={project.name}
+											width={24}
+											height={24}
+											className="rounded-full"
+										/>
 										{project.name}
 									</CommandItem>
 								</Link>

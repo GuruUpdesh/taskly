@@ -77,6 +77,8 @@ export const taskRelations = relations(tasks, ({ one }) => ({
 export const projects = mysqlTable("projects", {
 	id: serial("id").primaryKey(),
 	name: varchar("name", { length: 255 }).notNull().unique(),
+	description: text("description"),
+	image: varchar("image", { length: 1000 }),
 });
 
 // validators

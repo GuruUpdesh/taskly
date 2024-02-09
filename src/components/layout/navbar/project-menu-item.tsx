@@ -15,6 +15,7 @@ type ProjectMenuItemProps = {
 };
 
 const ProjectMenuItem = ({ projects }: ProjectMenuItemProps) => {
+	console.log("projects", projects);
 	return (
 		<NavigationMenuItem>
 			<NavigationMenuTrigger>Projects</NavigationMenuTrigger>

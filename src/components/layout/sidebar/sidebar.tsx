@@ -13,6 +13,7 @@ import SelectProject from "./select project/select-project";
 import SidebarButton from "./sidebar-button";
 import { Separator } from "~/components/ui/separator";
 import UserButtonWrapper from "~/components/user-button/user-button-wrapper";
+import SidebarBackground from "./sidebar-background";
 
 interface SidebarProps {
 	projectId: string;
@@ -20,7 +21,8 @@ interface SidebarProps {
 
 const Sidebar = ({ projectId }: SidebarProps) => {
 	return (
-		<div>
+		<div className="relative">
+			<SidebarBackground projectId={projectId}/>
 			<div className="flex min-w-0 items-center justify-between gap-8 border-b px-4 py-2">
 				<SidebarButton label="Home" icon={<HomeIcon />} url="/" />
 				<Separator orientation="vertical" className="h-[40px]" />

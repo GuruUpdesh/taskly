@@ -62,3 +62,27 @@ export async function aiAction(
 	}
 	return results.data;
 }
+
+export async function generateProjectImage(name: string, description: string | null | undefined) {
+	const client = new OpenAI();
+
+	const response = await client.images.generate({
+		model: "dall-e-3",
+		prompt: `
+		Create a project image for a project named "${name}" ${description ? `with the description "${description}".` : "."}.
+		It should be professional and visually appealing.
+		Simple with distinct colors and shapes.
+		Represent the project in a way that would make it stand out.
+		The color should be fairly consistent throughout the image, and it should be a vibrant color.
+		`,
+		n: 1,
+		size: "1024x1024",
+	});
+
+	const image_url = response?.data?.[0]?.url;
+	if (!image_url) {
+		return;
+	}
+
+	return image_url;
+}

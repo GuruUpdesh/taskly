@@ -13,6 +13,7 @@ import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 import { auth } from "@clerk/nextjs";
 import { sendEmailInvites } from "./invite-actions";
+import { generateProjectImage } from "./ai-action";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -38,9 +39,15 @@ export async function createProject(
 			};
 		}
 
+		
 		// insert project
-
+		
 		const newProject: NewProject = insertProjectSchema.parse(data);
+		console.time("generateProjectImage");
+		const image = await generateProjectImage(newProject.name, newProject.description);
+		console.timeEnd("generateProjectImage");
+		newProject.image = image;
+		console.log("image", image);
 		const result = await db.insert(projects).values(newProject);
 		const insertId = parseInt(result.insertId);
 
