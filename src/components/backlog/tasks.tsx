@@ -7,6 +7,7 @@ import {
 	type DropResult,
 	Droppable,
 	type DroppableProvided,
+	type DraggableStateSnapshot,
 } from "@hello-pangea/dnd";
 import { DragHandleDots2Icon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -40,6 +41,17 @@ export default function Tasks({ projectId, assignees }: Props) {
 		staleTime: 2 * 1000,
 		refetchInterval: 6 * 1000,
 	});
+
+	// to get seamless dnd to work, we need local state (outside of react-query)
+	const [taskOrder, setTaskOrder] = React.useState<number[]>([]);
+	useEffect(() => {
+		if (result.data) {
+			const orderedIds = result.data
+				.sort((a, b) => a.backlogOrder - b.backlogOrder)
+				.map((task) => task.id);
+			setTaskOrder(orderedIds);
+		}
+	}, [result.data]);
 
 	const addTaskMutation = useMutation({
 		mutationFn: ({ id, newTask }: UpdateTask) => updateTask(id, newTask),
@@ -87,7 +99,6 @@ export default function Tasks({ projectId, assignees }: Props) {
 	const orderTasksMutation = useMutation({
 		mutationFn: (taskOrder: Map<number, number>) => updateOrder(taskOrder),
 		onMutate: async (taskOrder: Map<number, number>) => {
-			console.time("onMutate");
 			await queryClient.cancelQueries({ queryKey: ["tasks"] });
 
 			const previousTasks = queryClient.getQueryData<TaskType[]>([
@@ -95,7 +106,6 @@ export default function Tasks({ projectId, assignees }: Props) {
 			]);
 
 			queryClient.setQueryData<TaskType[]>(["tasks"], (oldTasks) => {
-				console.time("queryClient.setQueryData");
 				const updatedTasks =
 					oldTasks?.map((task) => {
 						const newOrder = taskOrder.get(task.id);
@@ -104,11 +114,9 @@ export default function Tasks({ projectId, assignees }: Props) {
 							: task;
 					}) ?? [];
 
-				console.timeEnd("queryClient.setQueryData");
 				return updatedTasks;
 			});
 
-			console.timeEnd("onMutate");
 			return { previousTasks };
 		},
 		onError: (err, variables, context) => {
@@ -118,41 +126,25 @@ export default function Tasks({ projectId, assignees }: Props) {
 		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
 	});
 
-	useEffect(() => {
-		console.timeEnd("UE");
-	}, [result.data, result.status]);
-
 	if (!result.data) return <div>Loading...</div>;
 
 	function onDragEnd(dragResult: DropResult) {
-		console.time("UE");
-		console.time("onDragEnd");
 		const { source, destination } = dragResult;
 
 		if (!destination || source.index === destination.index) {
-			console.log("No change or invalid destination");
 			return;
 		}
 
-		const currentTasks = result.data;
+		const newTaskOrder = Array.from(taskOrder);
+		const [reorderedId] = newTaskOrder.splice(source.index, 1);
+		if (!reorderedId) return;
+		newTaskOrder.splice(destination.index, 0, reorderedId);
 
-		if (!currentTasks) {
-			console.log("No tasks available");
-			return;
-		}
-
-		const newTasksOrder = Array.from(currentTasks);
-		const [reorderedTask] = newTasksOrder.splice(source.index, 1);
-		if (!reorderedTask) {
-			console.log("No task found");
-			return;
-		}
-		newTasksOrder.splice(destination.index, 0, reorderedTask);
+		setTaskOrder(newTaskOrder);
 
 		const taskOrderMap = new Map(
-			newTasksOrder.map((task, index) => [task.id, index]),
+			newTaskOrder.map((id, index) => [id, index]),
 		);
-
 		orderTasksMutation.mutate(taskOrderMap);
 	}
 
@@ -161,15 +153,21 @@ export default function Tasks({ projectId, assignees }: Props) {
 			<Droppable droppableId="tasks">
 				{(provided: DroppableProvided) => (
 					<div {...provided.droppableProps} ref={provided.innerRef}>
-						{(result.data ? result.data : [])
-							.sort((a, b) => a.backlogOrder - b.backlogOrder)
-							.map((task, idx) => (
+						{taskOrder.map((taskId, idx) => {
+							const task = result.data?.find(
+								(task) => task.id === taskId,
+							);
+							return task ? (
 								<Draggable
 									draggableId={String(task.id)}
 									index={idx}
 									key={task.id}
 								>
-									{(provided: DraggableProvided) => (
+									{(
+										provided: DraggableProvided,
+										// eslint-disable-next-line @typescript-eslint/no-unused-vars
+										snapshot: DraggableStateSnapshot,
+									) => (
 										<div
 											className="group relative bg-background/50 backdrop-blur-xl"
 											{...provided.draggableProps}
@@ -192,7 +190,8 @@ export default function Tasks({ projectId, assignees }: Props) {
 										</div>
 									)}
 								</Draggable>
-							))}
+							) : null;
+						})}
 						{provided.placeholder}
 					</div>
 				)}
