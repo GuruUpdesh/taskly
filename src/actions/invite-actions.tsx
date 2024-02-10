@@ -72,19 +72,6 @@ export async function joinProject(token: string, userId: string) {
 		return { success: false, message: "Invalid invite link" };
 	}
 
-	// Check if the hash is the same
-	const hash = crypto.createHash("sha256");
-	const stringified = JSON.stringify({
-		userId: inviteData.userId,
-		projectId: inviteData.projectId,
-		data: inviteData.date,
-	});
-	hash.update(stringified);
-	const expectedToken = hash.digest("base64").replaceAll("/", "-");
-	if (expectedToken !== token) {
-		return { success: false, message: "Invalid invite link" };
-	}
-
 	const date = new Date();
 	const age = differenceInDays(date, inviteData.date);
 
