@@ -43,7 +43,7 @@ export async function generateAndUpdateProjectImage(
 			console.error("Error generating project image");
 			return;
 		}
-		await getAverageColor(image).then(async (color: { hex: string }) => {
+		await getAverageColor(image, {algorithm: "dominant"}).then(async (color: { hex: string }) => {
 			const hex = color.hex;
 			const vibrant = chroma(hex).darken(2).saturate(4).hex();
 			await storeProjectColor(projectId, vibrant);
