@@ -20,12 +20,9 @@ type Props = {
 
 const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 	return (
-		<ContextMenu modal={true}>
+		<ContextMenu>
 			<ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
-			<ContextMenuContent
-				className="bg-accent/50 backdrop-blur-sm"
-				onInteractOutside={(e) => e.preventDefault()}
-			>
+			<ContextMenuContent className="bg-accent/50 backdrop-blur-sm">
 				<ContextMenuItem
 					onClick={() => {
 						deleteTaskMutation.mutate(task.id);
