@@ -15,6 +15,8 @@ import { auth } from "@clerk/nextjs";
 import { sendEmailInvites } from "./invite-actions";
 import { generateProjectImage } from "./ai-action";
 import { kv } from "@vercel/kv";
+import { getAverageColor } from "fast-average-color-node";
+import chroma from "chroma-js";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -27,7 +29,7 @@ type ProjectResponse = {
 };
 
 // Helper for createProject
-async function generateAndUpdateProjectImage(
+export async function generateAndUpdateProjectImage(
 	projectId: number,
 	projectName: string,
 	projectDescription: string | null | undefined,
@@ -37,6 +39,15 @@ async function generateAndUpdateProjectImage(
 			projectName,
 			projectDescription,
 		);
+		if (!image) {
+			console.error("Error generating project image");
+			return;
+		}
+		await getAverageColor(image).then(async (color: { hex: string }) => {
+			const hex = color.hex;
+			const vibrant = chroma(hex).darken(2).saturate(4).hex();
+			await storeProjectColor(projectId, vibrant);
+		});
 		await db
 			.update(projects)
 			.set({ image: image })

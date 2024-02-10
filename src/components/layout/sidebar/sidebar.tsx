@@ -15,7 +15,7 @@ import SidebarButton from "./sidebar-button";
 import { Separator } from "~/components/ui/separator";
 import UserButtonWrapper from "~/components/user-button/user-button-wrapper";
 import { Button } from "~/components/ui/button";
-import SidebarBackgroundWrapper from "./background/sidebar-background-wrapper";
+import SidebarBackgroundWrapper from "./sidebar-background";
 
 interface SidebarProps {
 	projectId: string;

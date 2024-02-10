@@ -54,7 +54,7 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 							alt={project.name}
 							width={24}
 							height={24}
-							className="min-w-[24px] rounded-full"
+							className="min-w-[24px] rounded-full mix-blend-screen"
 						/>
 					) : (
 						<Skeleton className="h-6 w-6 rounded-full" />
@@ -103,7 +103,7 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 												className="rounded-full"
 											/>
 										) : (
-											<Skeleton className="h-6 w-6 rounded-full" />
+											<Skeleton className="h-6 w-6 rounded-full mix-blend-overlay" />
 										)}
 										{project.name}
 									</CommandItem>

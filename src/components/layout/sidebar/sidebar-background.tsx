@@ -1,8 +1,14 @@
+import { kv } from "@vercel/kv";
+
 type Props = {
-	color: string | null;
+	projectId: string;
 };
 
-const SidebarBackground = ({ color }: Props) => {
+const SidebarBackground = async ({ projectId }: Props) => {
+	const projectColor = await kv.get("project-color-" + projectId);
+	if (!projectColor) return null;
+
+	const color = (projectColor as string) ?? "transparent";
 	return (
 		<div className="pointer-events-none animate-fade-in">
 			<div
