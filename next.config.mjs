@@ -14,7 +14,7 @@ const config = {
                 protocol: "https",
                 hostname: "img.clerk.com",
                 port: "",
-                pathname: "/*"
+                pathname: "/*",
             }
         ]
     }

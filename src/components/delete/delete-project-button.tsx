@@ -18,11 +18,16 @@ type Props = {
 
 function DeleteProjectButton({ projectName, projectId }: Props) {
 	return (
-		<div className="container flex flex-col pt-4">
-			<h1>General</h1>
+		<div className="flex flex-col pt-4">
 			<Dialog>
 				<DialogTrigger asChild>
-					<Button variant="outline">
+					<Button
+						variant="outline"
+						className={
+							"flex h-min items-center justify-between space-x-2 whitespace-nowrap rounded-sm border border-red-700 bg-red-900 p-2 px-3 text-sm text-red-300 ring-offset-background placeholder:text-muted-foreground focus:bg-red-700 focus:text-red-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+						}
+						style={{ width: "fit-content" }}
+					>
 						{" "}
 						Delete {projectName ? projectName : "error"}{" "}
 					</Button>

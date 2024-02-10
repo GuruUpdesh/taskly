@@ -18,7 +18,15 @@ import {
 	taskStatuses,
 } from "~/entities/task-entity";
 import { cn } from "~/lib/utils";
-import type { Task as TaskType, User } from "~/server/db/schema";
+import type { NewTask, Task as TaskType, User } from "~/server/db/schema";
+import {
+	DragDropContext,
+	Draggable,
+	type DraggableProvided,
+	type DropResult,
+	Droppable,
+	type DroppableProvided,
+} from "@hello-pangea/dnd";
 
 type GroupedTasks = {
 	[key in Status]?: TaskType[];
@@ -31,7 +39,7 @@ type Props = {
 
 export default function TaskBoard({ projectId, assignees }: Props) {
 	const queryClient = useQueryClient();
-
+	const [tasks, setTasks] = React.useState<TaskType[]>([]);
 	const result = useQuery({
 		queryKey: ["tasks"],
 		queryFn: () => getTasksFromProject(parseInt(projectId)),
@@ -39,8 +47,26 @@ export default function TaskBoard({ projectId, assignees }: Props) {
 		refetchInterval: 6 * 1000,
 	});
 
+	useEffect(() => {
+		if (result.data) {
+			setTasks(result.data);
+		}
+	}, [result.data]);
+
+	function optimisticUpdateTasks(id: number, newTask: NewTask) {
+		const updatedTasks = tasks.map((task) => {
+			if (task.id === id) {
+				return { ...task, ...newTask };
+			}
+			return task;
+		});
+		setTasks(updatedTasks);
+	}
+
 	const addTaskMutation = useMutation({
 		mutationFn: ({ id, newTask }: UpdateTask) => updateTask(id, newTask),
+		onMutate: ({ id, newTask }: UpdateTask) =>
+			optimisticUpdateTasks(id, newTask),
 		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
 	});
 
@@ -65,7 +91,7 @@ export default function TaskBoard({ projectId, assignees }: Props) {
 		{},
 	);
 
-	const groupedTasks: GroupedTasks = result.data.reduce(
+	const groupedTasks: GroupedTasks = tasks.reduce(
 		(groups: GroupedTasks, task: TaskType) => {
 			(groups[task.status] = groups[task.status] ?? []).push(task);
 			return groups;
@@ -73,39 +99,102 @@ export default function TaskBoard({ projectId, assignees }: Props) {
 		initialGroups,
 	);
 
+	function onDragEnd(dragResult: DropResult) {
+		const { source, destination, draggableId } = dragResult;
+		if (!result.data) return;
+		const task = result.data.find(
+			(task) => task.id === parseInt(draggableId),
+		);
+		if (
+			!destination ||
+			!task ||
+			source.droppableId === destination.droppableId
+		) {
+			return;
+		}
+		const newStatus = destination.droppableId as Status;
+
+		optimisticUpdateTasks(task.id, { ...task, status: newStatus });
+		addTaskMutation.mutate({
+			id: task.id,
+			newTask: { ...task, status: newStatus },
+		});
+	}
+
 	return (
-		<div className="grid grid-cols-3 gap-4">
-			{Object.keys(groupedTasks).map((status) => {
-				const tasks = groupedTasks[status as Status];
-				if (!tasks) return null;
-				const option = getOptionForStatus(status as Status);
-				if (!option) return null;
-				return (
-					<div
-						key={status}
-						className="rounded-lg border bg-accent/25 p-2"
-					>
+		<DragDropContext onDragEnd={onDragEnd}>
+			<div className="grid h-full grid-cols-3 gap-4">
+				{Object.keys(groupedTasks).map((status) => {
+					const tasks = groupedTasks[status as Status];
+					if (!tasks) return null;
+					const option = getOptionForStatus(status as Status);
+					if (!option) return null;
+					return (
 						<div
-							className={cn(
-								optionVariants({ color: option.color }),
-								"justify-center border-none",
-							)}
+							key={status}
+							className="flex h-full flex-col rounded-lg border bg-accent/5 p-2"
 						>
-							{option.icon}
-							<h2>{getStatusDisplayName(status as Status)}</h2>
+							<div
+								className={cn(
+									optionVariants({ color: option.color }),
+									"justify-center border-none",
+								)}
+							>
+								{option.icon}
+								<h2>
+									{getStatusDisplayName(status as Status)}
+								</h2>
+							</div>
+							<Droppable droppableId={status}>
+								{(provided: DroppableProvided) => (
+									<div
+										{...provided.droppableProps}
+										ref={provided.innerRef}
+										className="flex-1"
+									>
+										{tasks.map((task, index) => (
+											<Draggable
+												draggableId={String(task.id)}
+												index={index}
+												key={task.id}
+											>
+												{(
+													provided: DraggableProvided,
+												) => (
+													<div
+														{...provided.draggableProps}
+														{...provided.dragHandleProps}
+													>
+														<div
+															ref={
+																provided.innerRef
+															}
+														>
+															<BoardTask
+																task={task}
+																assignees={
+																	assignees
+																}
+																addTaskMutation={
+																	addTaskMutation
+																}
+																deleteTaskMutation={
+																	deleteTaskMutation
+																}
+															/>
+														</div>
+													</div>
+												)}
+											</Draggable>
+										))}
+										{provided.placeholder}
+									</div>
+								)}
+							</Droppable>
 						</div>
-						{tasks.map((task) => (
-							<BoardTask
-								key={task.id}
-								task={task}
-								assignees={assignees}
-								addTaskMutation={addTaskMutation}
-								deleteTaskMutation={deleteTaskMutation}
-							/>
-						))}
-					</div>
-				);
-			})}
-		</div>
+					);
+				})}
+			</div>
+		</DragDropContext>
 	);
 }

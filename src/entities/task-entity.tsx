@@ -15,7 +15,7 @@ import { throwClientError } from "~/utils/errors";
 import type { ColorOptions } from "./entityTypes";
 import UserProfilePicture from "~/components/user-profile-picture";
 
-type TaskConfig = Omit<Task, "projectId">;
+type TaskConfig = Omit<Task, "projectId" | "boardOrder" | "backlogOrder">;
 
 export const taskConfig: GenericEntityConfig<TaskConfig> = {
 	id: {
@@ -152,6 +152,8 @@ export const defaultValues: NewTask = {
 	priority: "medium",
 	type: "task",
 	assignee: null,
+	backlogOrder: 0,
+	boardOrder: 0,
 };
 
 export function getTaskConfig(key: string) {
