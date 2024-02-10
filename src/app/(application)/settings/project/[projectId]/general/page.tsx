@@ -9,6 +9,7 @@ import UsersTable from "~/components/projects/users-table";
 import { Header, Header2 } from "~/components/typography/Headers";
 import { Paragraph } from "~/components/typography/Paragraphs";
 import { Input } from "~/components/ui/input";
+import Image from "next/image";
 
 type Params = {
 	params: {
@@ -36,6 +37,13 @@ export default async function projectSettingsGeneral({
 	return (
 		<>
 			<div style={{ marginLeft: "3em", marginTop: "2em" }}>
+				<Image
+					width={50}
+					height={50}
+					src={currentProject?.image ?? ""}
+					alt={"Project Image"}
+					className="rounded-full border"
+				/>
 				<Header>Project Settings</Header>
 				<Paragraph>
 					Here you manage the general settings for the project. This

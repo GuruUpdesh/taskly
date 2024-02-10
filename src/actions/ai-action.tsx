@@ -62,3 +62,24 @@ export async function aiAction(
 	}
 	return results.data;
 }
+
+export async function generateProjectImage(
+	name: string,
+	description: string | null | undefined,
+) {
+	const client = new OpenAI();
+
+	const response = await client.images.generate({
+		model: "dall-e-3",
+		prompt: `Devise an impactful square mobile app icon with rounded edges that represents the project "${name}" and its theme "${description}". Central to the icon's design should be a stylized 3D origami figure that encapsulates the essence of the project. Choose from a palette of bold primary colors—red, blue, or yellow—that best aligns with the project's identity, avoiding defaulting to blue unless it's the most fitting choice. The chosen color should serve as the primary backdrop, possibly featuring a gentle gradient to add dimensionality. This icon should mirror the refined simplicity of iOS app icons, achieving a balance between minimalistic elegance and striking visibility. Precision in the origami representation is key, symbolizing the project's core attributes in a visually compelling and immediately recognizable manner. The overall design must stand out for its clean lines and smart use of space, ensuring it remains distinct and readable in various scales and contexts.`,
+		n: 1,
+		size: "1024x1024",
+	});
+
+	const image_url = response?.data?.[0]?.url;
+	if (!image_url) {
+		return;
+	}
+
+	return image_url;
+}
