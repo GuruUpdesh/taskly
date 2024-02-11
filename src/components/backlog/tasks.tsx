@@ -20,7 +20,12 @@ import {
 } from "~/actions/task-actions";
 import Task from "~/components/backlog/task/task";
 import { cn } from "~/lib/utils";
-import type { NewTask, Task as TaskType, User, Sprint } from "~/server/db/schema";
+import type {
+	NewTask,
+	Task as TaskType,
+	User,
+	Sprint,
+} from "~/server/db/schema";
 import { updateOrder } from "~/utils/order";
 
 export type UpdateTask = {
