@@ -10,6 +10,7 @@ import CreateTask from "~/components/backlog/create-task";
 import { getAsigneesForProject } from "~/actions/project-actions";
 import AiDialog from "~/app/(application)/tasks/ai-dialog";
 import { getSprintsForProject } from "~/actions/sprint-actions";
+import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 
 type Params = {
 	params: {
@@ -29,8 +30,11 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 
 	return (
 		<div className="max-h-screen overflow-y-scroll pt-2">
-			<header className="container flex items-center justify-between gap-2 border-b pb-2">
-				<BreadCrumbs />
+			<header className="flex items-center justify-between gap-2 border-b px-4 pb-2">
+				<div className="flex items-center gap-2">
+					<ToggleSidebarButton />
+					<BreadCrumbs />
+				</div>
 				<div className="flex items-center gap-2">
 					<AiDialog projectId={projectId} />
 					<CreateTask

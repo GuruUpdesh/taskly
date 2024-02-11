@@ -3,6 +3,10 @@
       {
         "path": "/api/cron",
         "schedule": "*/5 * * * *"
+      },
+      {
+        "path": "/api/cron/project-image",
+        "schedule": "*/1 * * * *"
       }
     ],
     "github": {

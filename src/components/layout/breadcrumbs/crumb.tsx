@@ -3,6 +3,7 @@ import type { Crumb as TypeCrumb } from "./breadcrumbs";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { HomeIcon } from "@radix-ui/react-icons";
 
 interface CrumbProps extends TypeCrumb {
 	last: boolean;
@@ -24,6 +25,7 @@ const Crumb = ({ name, link, last }: CrumbProps) => {
 					href={link}
 					className={cn("flex items-center gap-1 text-sm capitalize")}
 				>
+					{name === "Home" ? <HomeIcon /> : null}
 					{name}
 				</Link>
 			</div>

@@ -18,6 +18,7 @@ import { format, isAfter, isBefore } from "date-fns";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import Image from "next/image";
 
 type Params = {
 	params: {
@@ -50,6 +51,13 @@ export default async function projectSettingsGeneral({
 	return (
 		<div className="flex flex-col gap-8 p-6">
 			<header>
+				<Image
+					width={50}
+					height={50}
+					src={currentProject?.image ?? ""}
+					alt={"Project Image"}
+					className="rounded-full border"
+				/>
 				<h2 className={cn(typography.headers.h2, "pb-0")}>
 					General Project Settings
 				</h2>

@@ -12,6 +12,7 @@ export type SidebarButtonProps = {
 	icon?: React.ReactNode;
 	openInNewTab?: boolean;
 	children?: React.ReactNode;
+	hidden?: boolean;
 };
 
 const SidebarButton = ({
@@ -20,6 +21,7 @@ const SidebarButton = ({
 	url,
 	openInNewTab = false,
 	children,
+	hidden = false,
 }: SidebarButtonProps) => {
 	const pathname = usePathname();
 	const active = useMemo(() => pathname === url, [pathname, url]);
@@ -27,18 +29,18 @@ const SidebarButton = ({
 		<Link
 			href={url}
 			target={openInNewTab ? "_blank" : ""}
-			className="flex-1"
+			className={cn("flex-1 @sidebar:block", hidden && "hidden")}
 		>
 			<Button
 				variant="ghost"
 				size="sm"
 				className={cn(
-					"w-full justify-start gap-2 px-4 font-semibold",
+					"w-full justify-center gap-2 p-0 font-semibold  @sidebar:justify-start @sidebar:px-4",
 					active && "bg-accent",
 				)}
 			>
 				{icon ? icon : null}
-				{label}
+				<span className="hidden @sidebar:inline-flex">{label}</span>
 				{children}
 			</Button>
 		</Link>

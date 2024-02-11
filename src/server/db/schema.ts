@@ -91,6 +91,8 @@ export const projects = mysqlTable("projects", {
 	name: varchar("name", { length: 255 }).notNull().unique(),
 	sprintDuration: int("sprint_duration").default(2).notNull(),
 	sprintStart: date("sprint_start").default(startOfToday()).notNull(),
+	description: text("description"),
+	image: varchar("image", { length: 1000 }),
 });
 
 // validators
