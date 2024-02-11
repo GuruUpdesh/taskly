@@ -19,15 +19,34 @@ import {
 import _debounce from "lodash/debounce";
 import { useRouter } from "next/navigation";
 import EmailInviteForm from "../invite/by-email/email-invite-form";
+import SprintOptions from "../projects/sprint-options/sprint-options";
+import { endOfYesterday, isMonday, nextMonday } from "date-fns";
 
 const CreateProjectSchema = z.object({
 	name: z.string().min(3).max(255),
 	description: z.string().optional(),
+	sprintDuration: z.number().min(1).max(4),
+	sprintStart: z.date().min(endOfYesterday()),
 	invitees: z.array(z.string().email()),
+	timezoneOffset: z.number(),
 });
 
 const CreateProjectForm = () => {
 	const router = useRouter();
+
+	const form = useForm<CreateForm>({
+		mode: "onChange",
+		resolver: zodResolver(CreateProjectSchema),
+		defaultValues: {
+			name: "",
+			sprintDuration: 2,
+			sprintStart: isMonday(new Date())
+				? new Date()
+				: nextMonday(new Date()),
+			invitees: [],
+			timezoneOffset: new Date().getTimezoneOffset(),
+		},
+	});
 
 	const {
 		formState: { isValid, errors },
@@ -38,14 +57,7 @@ const CreateProjectForm = () => {
 		handleSubmit,
 		reset,
 		setValue,
-	} = useForm<CreateForm>({
-		mode: "onChange",
-		resolver: zodResolver(CreateProjectSchema),
-		defaultValues: {
-			name: "",
-			invitees: [],
-		},
-	});
+	} = form;
 
 	async function onSubmit(formData: CreateForm) {
 		const result = await createProjectAndInviteUsers(formData);
@@ -64,7 +76,7 @@ const CreateProjectForm = () => {
 
 	const [formStep, setFormStep] = useState(1);
 	useEffect(() => {
-		if (formStep === 3) {
+		if (formStep === 4) {
 			void handleSubmit(onSubmit)();
 		}
 	}, [formStep]);
@@ -101,10 +113,10 @@ const CreateProjectForm = () => {
 				<span
 					className={cn(
 						"absolute right-2 top-2 text-sm text-muted-foreground",
-						formStep === 3 && "hidden",
+						formStep === 4 && "hidden",
 					)}
 				>
-					Step <b>{formStep}/2</b>
+					Step <b>{formStep}/3</b>
 				</span>
 				<p className="mb-4 border-b pb-4 text-sm text-muted-foreground">
 					Projects are a shared space for your team to collaborate on
@@ -157,6 +169,7 @@ const CreateProjectForm = () => {
 					)}
 					hidden={formStep !== 1}
 				/>
+				<SprintOptions form={form} hidden={formStep !== 2} />
 				<div className="mb-4">
 					<EmailInviteForm
 						invitees={watch("invitees")}
@@ -165,10 +178,10 @@ const CreateProjectForm = () => {
 						}
 						chipPlaceholder="You can do this later."
 						projectName={watch("name")}
-						visible={formStep === 2}
+						visible={formStep === 3}
 					/>
 				</div>
-				{formStep === 3 ? (
+				{formStep === 4 ? (
 					<div className="flex w-full items-center justify-center gap-2">
 						<Loader2 className="ml-2 h-4 w-4 animate-spin" />
 						Creating project...
@@ -179,7 +192,7 @@ const CreateProjectForm = () => {
 						<Button
 							type="button"
 							variant="outline"
-							disabled={!isValid || formStep === 3}
+							disabled={!isValid || formStep === 4}
 							onClick={() => setFormStep((prev) => prev - 1)}
 						>
 							<ChevronLeft className="mr-2 h-4 w-4" />
@@ -193,12 +206,12 @@ const CreateProjectForm = () => {
 						disabled={
 							!isValid ||
 							(formStep === 1 && !isProjectNameAvailable) ||
-							formStep === 3
+							formStep === 4
 						}
 						onClick={() => setFormStep((prev) => prev + 1)}
 						key={formStep}
 					>
-						{formStep === 2 && watch("invitees").length === 0
+						{formStep === 3 && watch("invitees").length === 0
 							? "Skip"
 							: "Next"}
 						<ChevronRight className="ml-2 h-4 w-4" />

@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, type UseFormReturn } from "react-hook-form";
 import { insertProjectSchema, type Project } from "~/server/db/schema";
 import {
 	Select,
@@ -11,9 +11,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import { Label } from "../ui/label";
+import { Label } from "../../ui/label";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { format } from "date-fns";
+import { endOfYesterday, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "~/lib/utils";
@@ -24,31 +24,22 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "~/components/ui/popover";
+import type { CreateForm } from "~/actions/project-actions";
+import type { ProjectSprintOptions } from "./sprint-options-form";
 
 type Props = {
-	project: Project;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	form: UseFormReturn<ProjectSprintOptions, any, undefined>;
+	hidden?: boolean;
 };
 
-type ProjectSprintOptions = Pick<Project, "sprintDuration" | "sprintStart">;
-const ProjectSprintOptionsSchema = insertProjectSchema.required({
-	sprintDuration: true,
-	sprintStart: true,
-});
-
-const SprintOptions = ({ project }: Props) => {
-	const { watch, setValue, control } = useForm<ProjectSprintOptions>({
-		mode: "onChange",
-		resolver: zodResolver(ProjectSprintOptionsSchema),
-		defaultValues: {
-			sprintDuration: project.sprintDuration,
-			sprintStart: project.sprintStart,
-		},
-	});
+const SprintOptions = ({ form, hidden = false }: Props) => {
+	const { watch, setValue, control } = form;
 
 	return (
-		<form className="grid w-full gap-4">
+		<div className={cn("grid w-full gap-4", hidden && "hidden")}>
 			<div className="flex w-full items-center justify-between gap-8">
-				<Label className="whitespace-nowrap font-bold">
+				<Label className={"whitespace-nowrap font-bold"}>
 					Sprint Duration
 				</Label>
 				<Controller
@@ -126,19 +117,16 @@ const SprintOptions = ({ project }: Props) => {
 									setValue("sprintStart", val);
 								}
 							}}
+							disabled={{
+								from: new Date("0001-01-01T00:00:00Z"),
+								to: endOfYesterday(),
+							}}
 							initialFocus
 						/>
 					</PopoverContent>
 				</Popover>
 			</div>
-			<div className="flex w-full items-center justify-between gap-8">
-				<Button variant="outline">Cancel</Button>
-				<Button>
-					Save
-					<ChevronRight className="ml-2 h-4 w-4" />
-				</Button>
-			</div>
-		</form>
+		</div>
 	);
 };
 

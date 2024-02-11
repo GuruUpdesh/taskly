@@ -28,6 +28,7 @@ export const optionVariants = cva(
 	{
 		variants: {
 			color: {
+				faint: "border-gray-500/50 bg-gray-800 text-gray-300/50 focus:bg-gray-700 focus:text-gray-100 hover:bg-gray-800 hover:text-gray-100",
 				grey: "border-gray-700 bg-gray-900 text-gray-300 focus:bg-gray-700 focus:text-gray-100 hover:bg-gray-800 hover:text-gray-100",
 				yellow: "border-yellow-700 bg-yellow-900 text-yellow-300 focus:bg-yellow-700 focus:text-yellow-100 hover:bg-yellow-800 hover:text-yellow-100",
 				red: "border-red-700 bg-red-900 text-red-300 focus:bg-red-700 focus:text-red-100 hover:bg-red-800 hover:text-red-100",

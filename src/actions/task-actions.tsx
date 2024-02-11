@@ -100,6 +100,12 @@ export async function updateTask(id: number, data: NewTask) {
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
 
+		if (
+			updatedTaskData.status === "backlog" &&
+			updatedTaskData.sprintId !== -1
+		) {
+			updatedTaskData.sprintId = -1;
+		}
 		await db.update(tasks).set(updatedTaskData).where(eq(tasks.id, id));
 		revalidatePath("/");
 	} catch (error) {

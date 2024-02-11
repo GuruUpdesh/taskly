@@ -10,7 +10,6 @@ import typography from "~/utils/typography";
 import { Input } from "~/components/ui/input";
 import { cn } from "~/lib/utils";
 import { Label } from "~/components/ui/label";
-import SprintOptions from "~/components/projects/sprint-options";
 import { Textarea } from "~/components/ui/textarea";
 import { getSprintsForProject } from "~/actions/sprint-actions";
 import CreateSprintButton from "~/components/projects/create-sprint-button";
@@ -19,6 +18,7 @@ import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
+import SprintOptionsForm from "~/components/projects/sprint-options/sprint-options-form";
 
 type Params = {
 	params: {
@@ -40,7 +40,6 @@ export default async function projectSettingsGeneral({
 	}
 
 	const sprints = await getSprintsForProject(Number(projectId));
-
 	const users = await getAllUsersInProject(Number(projectId));
 
 	if (!users) {
@@ -51,13 +50,6 @@ export default async function projectSettingsGeneral({
 	return (
 		<div className="flex flex-col gap-8 p-6">
 			<header>
-				<Image
-					width={50}
-					height={50}
-					src={currentProject?.image ?? ""}
-					alt={"Project Image"}
-					className="rounded-full border"
-				/>
 				<h2 className={cn(typography.headers.h2, "pb-0")}>
 					General Project Settings
 				</h2>
@@ -105,6 +97,36 @@ export default async function projectSettingsGeneral({
 							placeholder="description"
 							disabled
 						/>
+					</div>
+				</div>
+				<div className="rounded-lg border p-4">
+					<h3 className={cn(typography.headers.h3, "")}>Theme</h3>
+					<p
+						className={cn(
+							typography.paragraph.p,
+							"!mt-2 mb-4 text-muted-foreground",
+						)}
+					>
+						Update the way your project looks and feels.
+					</p>
+					<div className="grid w-full max-w-sm items-center gap-1.5">
+						{currentProject.image && (
+							<>
+								<Label
+									htmlFor="projectName"
+									className="font-bold"
+								>
+									Icon
+								</Label>
+								<Image
+									src={currentProject?.image}
+									alt="Project Icon"
+									width={50}
+									height={50}
+									className="rounded-full border"
+								/>
+							</>
+						)}
 					</div>
 				</div>
 				<div className="rounded-lg border p-4">
@@ -184,7 +206,7 @@ export default async function projectSettingsGeneral({
 						Changes will automatically be applied when the next
 						sprint starts.
 					</p>
-					<SprintOptions project={currentProject} />
+					<SprintOptionsForm project={currentProject} />
 				</div>
 				<div className="rounded-lg border border-red-500 p-4">
 					<h3 className={cn(typography.headers.h3)}>Danger Zone</h3>

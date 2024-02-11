@@ -18,6 +18,7 @@ import { generateProjectImage } from "./ai-action";
 import { kv } from "@vercel/kv";
 import { getAverageColor } from "fast-average-color-node";
 import chroma from "chroma-js";
+import { addHours, addMinutes } from "date-fns";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -235,9 +236,13 @@ export async function getIsProjectNameAvailable(
 
 export type CreateForm = {
 	name: NewProject["name"];
-	invitees: string[];
 	description?: string;
+	sprintDuration: number;
+	sprintStart: Date;
+	invitees: string[];
+	timezoneOffset: number;
 };
+
 export async function createProjectAndInviteUsers(formData: CreateForm) {
 	const { userId } = auth();
 	if (!userId) {
@@ -247,6 +252,11 @@ export async function createProjectAndInviteUsers(formData: CreateForm) {
 			message: "UserId not found",
 		};
 	}
+
+	formData.sprintStart = addMinutes(
+		formData.sprintStart,
+		formData.timezoneOffset,
+	);
 
 	// get user from auth headers
 	const result = await createProject(formData);

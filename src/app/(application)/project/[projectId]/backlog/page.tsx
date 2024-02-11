@@ -44,7 +44,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					/>
 				</div>
 			</header>
-			<section className="flex flex-col pt-4">
+			<section className="flex flex-col">
 				<HydrationBoundary state={dehydrate(queryClient)}>
 					<Tasks
 						projectId={projectId}

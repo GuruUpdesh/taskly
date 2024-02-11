@@ -23,7 +23,13 @@ export const tasks = mysqlTable("tasks", {
 	id: serial("id").primaryKey(),
 	title: varchar("title", { length: 255 }).notNull(),
 	description: text("description").default("").notNull(),
-	status: mysqlEnum("status", ["todo", "inprogress", "done"])
+	status: mysqlEnum("status", [
+		"backlog",
+		"todo",
+		"inprogress",
+		"inreview",
+		"done",
+	])
 		.default("todo")
 		.notNull(),
 	priority: mysqlEnum("priority", ["low", "medium", "high"])
@@ -90,7 +96,9 @@ export const projects = mysqlTable("projects", {
 	id: serial("id").primaryKey(),
 	name: varchar("name", { length: 255 }).notNull().unique(),
 	sprintDuration: int("sprint_duration").default(2).notNull(),
-	sprintStart: date("sprint_start").default(startOfToday()).notNull(),
+	sprintStart: datetime("sprint_start", { mode: "date", fsp: 6 })
+		.default(startOfToday())
+		.notNull(),
 	description: text("description"),
 	image: varchar("image", { length: 1000 }),
 });

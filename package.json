@@ -50,6 +50,7 @@
 		"cmdk": "^0.2.0",
 		"crypto": "^1.0.1",
 		"date-fns": "^2.30.0",
+		"date-fns-tz": "^2.0.0",
 		"drizzle-orm": "^0.29.3",
 		"drizzle-zod": "^0.5.1",
 		"fast-average-color-node": "^3.0.0",
