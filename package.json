@@ -6,7 +6,7 @@
 		"build": "next build",
 		"db:push": "dotenv drizzle-kit push:mysql",
 		"db:studio": "dotenv drizzle-kit studio",
-		"dev": "next dev",
+		"dev": "next dev --turbo",
 		"start": "next start",
 		"lint": "next lint",
 		"style:all": "run-p style:tsc style:lint style:prettier",
