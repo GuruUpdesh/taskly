@@ -17,7 +17,7 @@ const UserButton = async () => {
 
 	return (
 		<UserMenu>
-			<Button variant="ghost" size="icon">
+			<Button variant="ghost" size="icon" className="min-w-[30px]">
 				<UserProfilePicture src={user?.imageUrl} size={30} />
 			</Button>
 		</UserMenu>

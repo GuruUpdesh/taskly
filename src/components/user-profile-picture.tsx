@@ -12,7 +12,8 @@ const UserProfilePicture = ({ src, size = 20 }: Props) => {
 			src={src}
 			width={size}
 			height={size}
-			className="rounded-full"
+			style={{ minWidth: `${size}px`, minHeight: `${size}px` }}
+			className={`rounded-full`}
 			alt=""
 		/>
 	);

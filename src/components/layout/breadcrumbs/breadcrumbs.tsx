@@ -77,6 +77,7 @@ const BreadCrumbs = () => {
 
 	return (
 		<div className="flex h-[40px] items-center gap-1">
+			<Crumb name="Home" link="/" last={crumbs.length === 0} />
 			{crumbs.map((crumb, index) => (
 				<Crumb
 					key={index}

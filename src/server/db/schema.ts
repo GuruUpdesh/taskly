@@ -30,7 +30,17 @@ export const tasks = mysqlTable("tasks", {
 	type: mysqlEnum("type", ["task", "bug", "feature"])
 		.default("task")
 		.notNull(),
+	boardOrder: int("board_order").notNull().default(0),
+	backlogOrder: int("backlog_order").notNull().default(0),
 	assignee: varchar("assignee", { length: 255 }),
+	projectId: int("project_id").notNull(),
+});
+
+export const notifications = mysqlTable("notifications", {
+	id: serial("id").primaryKey(),
+	date: datetime("date", { mode: "date", fsp: 6 }).notNull(),
+	message: text("message").notNull(),
+	userId: varchar("user_id", { length: 32 }).notNull(),
 	projectId: int("project_id").notNull(),
 });
 
@@ -45,6 +55,8 @@ export const insertTaskSchema__required = insertTaskSchema.required({
 	type: true,
 	assignee: true,
 	projectId: true,
+	backlogOrder: true,
+	boardOrder: true,
 });
 
 // types
@@ -69,6 +81,8 @@ export const taskRelations = relations(tasks, ({ one }) => ({
 export const projects = mysqlTable("projects", {
 	id: serial("id").primaryKey(),
 	name: varchar("name", { length: 255 }).notNull().unique(),
+	description: text("description"),
+	image: varchar("image", { length: 1000 }),
 });
 
 // validators

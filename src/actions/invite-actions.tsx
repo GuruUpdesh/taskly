@@ -52,7 +52,7 @@ export async function createInvite(userId: string, projectId: string) {
 	const hash = crypto.createHash("sha256");
 	const stringified = JSON.stringify(newInvite);
 	hash.update(stringified);
-	const token = hash.digest("base64").replace("/", "-");
+	const token = hash.digest("base64").replaceAll("/", "-");
 	await db.insert(invites).values({ ...newInvite, token, date: date });
 	return token;
 }
@@ -62,13 +62,16 @@ export async function joinProject(token: string, userId: string) {
 		.selectDistinct()
 		.from(invites)
 		.where(eq(invites.token, token));
+
 	if (!requestInvite || requestInvite.length === 0) {
-		return { success: false, message: "Invalid invite link" };
+		return { success: false, message: "No invite link was provided" };
 	}
+
 	const inviteData = requestInvite[0];
 	if (!inviteData) {
 		return { success: false, message: "Invalid invite link" };
 	}
+
 	const date = new Date();
 	const age = differenceInDays(date, inviteData.date);
 
