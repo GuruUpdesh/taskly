@@ -1,13 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
-import { SignedIn, UserButton, SignedOut } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import UserButtonWrapper from "../user-button/user-button-wrapper";
 
 const UserNav = () => {
 	return (
 		<div>
 			<SignedIn>
-				<UserButton afterSignOutUrl="/" />
+				<UserButtonWrapper />
 			</SignedIn>
 			<SignedOut>
 				<Link href="/sign-in">
