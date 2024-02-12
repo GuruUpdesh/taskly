@@ -1,9 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { Controller, type UseFormReturn } from "react-hook-form";
-import { insertProjectSchema, type Project } from "~/server/db/schema";
 import {
 	Select,
 	SelectContent,
@@ -12,7 +10,7 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import { Label } from "../../ui/label";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { endOfYesterday, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
@@ -24,12 +22,12 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "~/components/ui/popover";
-import type { CreateForm } from "~/actions/project-actions";
 import type { ProjectSprintOptions } from "./sprint-options-form";
+import type { CreateForm } from "~/actions/project-actions";
 
 type Props = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	form: UseFormReturn<ProjectSprintOptions, any, undefined>;
+	form: UseFormReturn<ProjectSprintOptions | CreateForm>;
 	hidden?: boolean;
 };
 

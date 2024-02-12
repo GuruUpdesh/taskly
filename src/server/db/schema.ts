@@ -1,7 +1,6 @@
 import { relations, type InferSelectModel } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import {
-	date,
 	datetime,
 	int,
 	mysqlEnum,

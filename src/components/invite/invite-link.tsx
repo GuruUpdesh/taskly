@@ -3,7 +3,8 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { CopyIcon } from "lucide-react";
-import { throwClientError } from "~/utils/errors";
+import { toast } from "sonner";
+import { Input } from "../ui/input";
 
 type Props = {
 	token: string;
@@ -12,21 +13,27 @@ type Props = {
 function InviteLink({ token }: Props) {
 	const link = window.location.host + "/join/" + token;
 	const handleCopyToClipboard = async () => {
-		try {
-			await navigator.clipboard.writeText(link);
-			alert("Copied to clipboard!");
-		} catch (error) {
-			if (error instanceof Error) throwClientError(error.message);
-		}
+		await navigator.clipboard.writeText(link);
+		toast.info("Copied to clipboard!");
 	};
 	return (
-		<div className="flex items-start gap-2">
-			<p className="flex-1 rounded-sm border p-2">{link}</p>
-			<Button onClick={handleCopyToClipboard} className="gap-1">
+		<>
+			<Input
+				value={link}
+				onChange={(e) => {
+					e.preventDefault();
+				}}
+				className="flex-1 overflow-hidden whitespace-nowrap rounded-sm border p-2 text-muted-foreground"
+			/>
+			<Button
+				onClick={handleCopyToClipboard}
+				className="gap-1"
+				type="button"
+			>
 				<CopyIcon className="h-4 w-4" />
 				Copy
 			</Button>
-		</div>
+		</>
 	);
 }
 

@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs";
-import { addWeeks, isAfter } from "date-fns";
+import { addWeeks } from "date-fns";
 import { and, desc, eq, gte } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";

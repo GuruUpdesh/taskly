@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import SprintOptions from "./sprint-options";
 import { Button } from "~/components/ui/button";
 import { ChevronRight, Loader2Icon } from "lucide-react";
-import { type Project, insertProjectSchema } from "~/server/db/schema";
+import { type Project } from "~/server/db/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { endOfYesterday, isEqual } from "date-fns";
