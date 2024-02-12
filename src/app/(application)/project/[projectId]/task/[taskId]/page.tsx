@@ -3,7 +3,7 @@ import {
 	QueryClient,
 	dehydrate,
 } from "@tanstack/react-query";
-import { getAsigneesForProject } from "~/actions/project-actions";
+import { getAssigneesForProject } from "~/actions/project-actions";
 import { getSprintsForProject } from "~/actions/sprint-actions";
 import { getTask } from "~/actions/task-actions";
 import Task from "~/components/task/Task";
@@ -18,7 +18,7 @@ type Params = {
 export default async function TaskPage({
 	params: { taskId, projectId },
 }: Params) {
-	const assignees = await getAsigneesForProject(parseInt(projectId));
+	const assignees = await getAssigneesForProject(parseInt(projectId));
 	const sprints = await getSprintsForProject(parseInt(projectId));
 
 	// Prefetch task using react-query

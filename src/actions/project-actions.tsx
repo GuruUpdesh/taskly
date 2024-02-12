@@ -18,7 +18,7 @@ import { generateProjectImage } from "./ai-action";
 import { kv } from "@vercel/kv";
 import { getAverageColor } from "fast-average-color-node";
 import chroma from "chroma-js";
-import { addHours, addMinutes } from "date-fns";
+import { addMinutes, startOfDay } from "date-fns";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -45,10 +45,10 @@ export async function generateAndUpdateProjectImage(
 			console.error("Error generating project image");
 			return;
 		}
-		await getAverageColor(image, { algorithm: "dominant" }).then(
+		await getAverageColor(image).then(
 			async (color: { hex: string }) => {
 				const hex = color.hex;
-				const vibrant = chroma(hex).darken(2).saturate(4).hex();
+				const vibrant = chroma(hex).darken(1).saturate(2).hex();
 				await storeProjectColor(projectId, vibrant);
 			},
 		);
@@ -66,6 +66,7 @@ export async function createProject(
 	data: NewProject,
 ): Promise<ProjectResponse> {
 	try {
+		console.log("Creating project", data);
 		// get user from auth headers
 		const { userId } = auth();
 		if (!userId) {
@@ -90,6 +91,7 @@ export async function createProject(
 
 		revalidatePath("/");
 
+		// generate project image in background
 		void generateAndUpdateProjectImage(
 			insertId,
 			newProject.name,
@@ -197,9 +199,9 @@ export async function updateProject(id: number, data: NewProject) {
 	}
 }
 
-export async function getAsigneesForProject(projectId: number) {
+export async function getAssigneesForProject(projectId: number) {
 	try {
-		const asigneesQuery = await db.query.projects.findMany({
+		const assigneesQuery = await db.query.projects.findMany({
 			where: (project) => eq(project.id, projectId),
 			with: {
 				usersToProjects: {
@@ -209,7 +211,7 @@ export async function getAsigneesForProject(projectId: number) {
 				},
 			},
 		});
-		const assignees = asigneesQuery.flatMap((userToProject) =>
+		const assignees = assigneesQuery.flatMap((userToProject) =>
 			userToProject.usersToProjects.map((up) => up.user),
 		);
 
@@ -254,7 +256,7 @@ export async function createProjectAndInviteUsers(formData: CreateForm) {
 	}
 
 	formData.sprintStart = addMinutes(
-		formData.sprintStart,
+		startOfDay(formData.sprintStart),
 		formData.timezoneOffset,
 	);
 

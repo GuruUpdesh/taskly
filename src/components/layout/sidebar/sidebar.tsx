@@ -23,7 +23,7 @@ interface SidebarProps {
 
 const Sidebar = ({ projectId }: SidebarProps) => {
 	return (
-		<div className="relative @container">
+		<div className="relative h-full @container">
 			<SidebarBackgroundWrapper projectId={projectId} />
 			<div className="flex min-w-0 items-center justify-center  gap-1 border-b py-2 @sidebar:justify-between @sidebar:gap-8 @sidebar:px-4 ">
 				<SidebarButton
@@ -38,7 +38,7 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 				/>
 				<UserButtonWrapper />
 			</div>
-			<div className="flex h-screen flex-col gap-4 px-1 py-4 @sidebar:p-4">
+			<div className="flex h-full flex-col gap-4 px-1 py-4 @sidebar:p-4">
 				<SelectProject projectId={projectId} />
 				<div className="relative hidden @sidebar:block">
 					<MagnifyingGlassIcon className="absolute left-2 top-[50%] h-4 w-4 translate-y-[-50%] text-muted-foreground" />

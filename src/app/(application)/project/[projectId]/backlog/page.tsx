@@ -7,7 +7,7 @@ import Tasks from "../../../../../components/backlog/tasks";
 import { getTasksFromProject } from "~/actions/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import CreateTask from "~/components/backlog/create-task";
-import { getAsigneesForProject } from "~/actions/project-actions";
+import { getAssigneesForProject } from "~/actions/project-actions";
 import AiDialog from "~/app/(application)/tasks/ai-dialog";
 import { getSprintsForProject } from "~/actions/sprint-actions";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
@@ -19,7 +19,7 @@ type Params = {
 };
 
 export default async function BacklogPage({ params: { projectId } }: Params) {
-	const assignees = await getAsigneesForProject(parseInt(projectId));
+	const assignees = await getAssigneesForProject(parseInt(projectId));
 	const sprints = await getSprintsForProject(parseInt(projectId));
 	// Prefetch tasks using react-query
 	const queryClient = new QueryClient();

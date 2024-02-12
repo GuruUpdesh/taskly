@@ -57,25 +57,25 @@ const SprintOptions = ({ form, hidden = false }: Props) => {
 							<SelectContent>
 								<SelectItem
 									value="1"
-									className="flex items-center space-x-2 !pl-2"
+									className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
 								>
 									1 Week
 								</SelectItem>
 								<SelectItem
 									value="2"
-									className="flex items-center space-x-2 !pl-2"
+									className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
 								>
 									2 Weeks
 								</SelectItem>
 								<SelectItem
 									value="3"
-									className="flex items-center space-x-2 !pl-2"
+									className="flex items-center justify-between space-x-2 !pl-2  focus:bg-accent/50"
 								>
 									3 Weeks
 								</SelectItem>
 								<SelectItem
 									value="4"
-									className="flex items-center space-x-2 !pl-2"
+									className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
 								>
 									4 Weeks
 								</SelectItem>

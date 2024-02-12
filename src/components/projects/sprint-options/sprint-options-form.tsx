@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import SprintOptions from "./sprint-options";
 import { Button } from "~/components/ui/button";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Loader2Icon } from "lucide-react";
 import { type Project, insertProjectSchema } from "~/server/db/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,9 +35,15 @@ const SprintOptionsForm = ({ project }: Props) => {
 		},
 	});
 
+	useEffect(() => {
+		form.reset({
+			sprintDuration: project.sprintDuration,
+			sprintStart: project.sprintStart,
+		});
+	}, [project]);
+
 	const [loading, setLoading] = React.useState(false);
 	async function onSubmit(formData: ProjectSprintOptions) {
-		console.log("formData", formData);
 		setLoading(true);
 		const result = await updateSprintsForProject(
 			project.id,
@@ -60,15 +66,23 @@ const SprintOptionsForm = ({ project }: Props) => {
 				<div />
 				<Button
 					disabled={
-						!form.formState.isValid &&
-						form.watch("sprintDuration") ===
+						!form.formState.isValid ||
+						(form.watch("sprintDuration") ===
 							project.sprintDuration &&
-						isEqual(form.watch("sprintStart"), project.sprintStart)
+							isEqual(
+								form.watch("sprintStart"),
+								project.sprintStart,
+							)) ||
+						loading
 					}
 					type="submit"
 				>
 					{loading ? "Saving" : "Save"}
-					<ChevronRight className="ml-2 h-4 w-4" />
+					{loading ? (
+						<Loader2Icon className="ml-2 h-4 w-4 animate-spin" />
+					) : (
+						<ChevronRight className="ml-2 h-4 w-4" />
+					)}
 				</Button>
 			</div>
 		</form>

@@ -96,7 +96,7 @@ export const projects = mysqlTable("projects", {
 	id: serial("id").primaryKey(),
 	name: varchar("name", { length: 255 }).notNull().unique(),
 	sprintDuration: int("sprint_duration").default(2).notNull(),
-	sprintStart: datetime("sprint_start", { mode: "date", fsp: 6 })
+	sprintStart: datetime("sprint_start", { mode: "date", fsp: 0 })
 		.default(startOfToday())
 		.notNull(),
 	description: text("description"),
@@ -209,8 +209,12 @@ export const inviteRelations = relations(invites, ({ one }) => ({
  */
 export const sprints = mysqlTable("sprints", {
 	id: serial("id").primaryKey(),
-	startDate: date("start_date").default(startOfToday()).notNull(),
-	endDate: date("end_date").default(addWeeks(startOfToday(), 2)).notNull(),
+	startDate: datetime("start_date", { mode: "date", fsp: 0 })
+		.default(startOfToday())
+		.notNull(),
+	endDate: datetime("end_date", { mode: "date", fsp: 0 })
+		.default(addWeeks(startOfToday(), 2))
+		.notNull(),
 	projectId: int("project_id").notNull(),
 });
 
