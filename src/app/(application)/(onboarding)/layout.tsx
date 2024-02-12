@@ -1,6 +1,7 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import BackButton from "~/components/layout/navbar/back-button";
+import Grid from "~/components/landing/background-grid";
 
 export default function LandingLayout({
 	children,
@@ -8,25 +9,24 @@ export default function LandingLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<>
-			<header className="sticky top-0 z-40 border-b bg-background">
+		<div className="flex h-screen flex-col">
+			<header className="z-40 border-b bg-background">
 				<div className="container flex h-16 items-center justify-between py-4">
 					<BackButton />
 				</div>
 			</header>
-			<div className="relative flex justify-center pt-24">
-				<div className="-z-10 animate-fade-in opacity-0 mix-blend-screen">
-					<Image
+			<div className="relative flex flex-grow justify-center">
+				<div className="absolute z-[-1] h-full w-full fade-in-5">
+					<Grid />
+					<img
+						className="absolute h-full w-full opacity-75"
 						src="/static/auth.gif"
-						alt="auth"
-						width="576"
-						height="371"
-						className="absolute top-48 rotate-90 blur-3xl"
-						unoptimized={true}
+						alt="backdrop"
 					/>
+					<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent to-background" />
 				</div>
-				{children}
+				<div className="mt-24">{children}</div>
 			</div>
-		</>
+		</div>
 	);
 }
