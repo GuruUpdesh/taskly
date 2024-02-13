@@ -9,7 +9,7 @@ import EmailInviteForm from "./email-invite-form";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { sendEmailInvites } from "~/actions/invite-actions";
-import { Loader2 } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
 
 type Props = {
 	projectId: string;
@@ -58,26 +58,30 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 			<p className="text-muted-foreground">
 				Invite a user using their email below!
 			</p>
-		  <div className="flex items-center"> {/* Added flex class and items-center */}
-			<EmailInviteForm
-			  invitees={form.watch("invitees").join(", ")}
-			  setInvitees={(invitees) => form.setValue("invitees", invitees)}
-			/>
-			<Button
-			  disabled={form.watch("invitees").length === 0 || isLoading}
-			  onClick={() => startTransition(form.handleSubmit(onSubmit))}
-			  className="gap-2 ml-2" // Added ml-2 for left margin
-			>
-			  {isLoading ? "Sending invites..." : "Invite"}
-			  {isLoading ? (
-				<Loader2 className="ml-2 h-4 w-4 animate-spin" />
-			  ) : null}
-			</Button>
-		  </div>
+			<div className="flex items-center">
+				{" "}
+				{/* Added flex class and items-center */}
+				<EmailInviteForm
+					invitees={form.watch("invitees").join(", ")}
+					setInvitees={(invitees) =>
+						form.setValue("invitees", invitees)
+					}
+				/>
+				<Button
+					disabled={form.watch("invitees").length === 0 || isLoading}
+					onClick={() => startTransition(form.handleSubmit(onSubmit))}
+					className="ml-2 gap-2" // Added ml-2 for left margin
+				>
+					{isLoading ? "Sending invites..." : "Invite"}
+					{isLoading ? (
+						<Loader2 className="ml-2 h-4 w-4 animate-spin" />
+					) : (
+						<ChevronRight className="h-4 w-4" />
+					)}
+				</Button>
+			</div>
 		</form>
-	  );
-	  
-	  
+	);
 };
 
 export default EmailInviteWrapper;

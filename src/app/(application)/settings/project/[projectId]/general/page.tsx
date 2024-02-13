@@ -102,6 +102,13 @@ export default async function projectSettingsGeneral({
 					</div>
 				</div>
 				<div className="rounded-lg border p-4">
+					<h3 className={cn(typography.headers.h3)}>Invite</h3>
+					<div className="flex flex-col gap-4">
+						<EmailInviteWrapper projectId={projectId} />
+						<InviteLinkWrapper projectId={projectId} />
+					</div>
+				</div>
+				<div className="rounded-lg border p-4">
 					<h3 className={cn(typography.headers.h3, "")}>Theme</h3>
 					<p
 						className={cn(
@@ -136,11 +143,6 @@ export default async function projectSettingsGeneral({
 					<div style={{ width: "95%" }}>
 						<UsersTable users={users} />
 					</div>
-				</div>
-				<div className="rounded-lg border p-4">
-				<h3 className={cn(typography.headers.h3)}>Invite</h3>
-					<EmailInviteWrapper projectId={projectId} />
-					<InviteLinkWrapper projectId={projectId} />
 				</div>
 				<div className="flex flex-col rounded-lg border p-4">
 					<div className="flex items-center justify-between">

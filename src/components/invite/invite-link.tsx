@@ -18,25 +18,23 @@ function InviteLink({ token }: Props) {
 	};
 	return (
 		<div className="flex items-center">
-		  <Input
-			value={link}
-			onChange={(e) => {
-			  e.preventDefault();
-			}}
-			className="flex-1 overflow-hidden whitespace-nowrap rounded-sm border p-2 text-muted-foreground"
-		  />
-		  <Button
-			onClick={handleCopyToClipboard}
-			className="gap-1 ml-2" // Added ml-2 for left margin
-			type="button"
-		  >
-			<CopyIcon className="h-4 w-4" />
-			Copy
-		  </Button>
+			<Input
+				value={link}
+				onChange={(e) => {
+					e.preventDefault();
+				}}
+				className="flex-1 overflow-hidden whitespace-nowrap rounded-sm border p-2 text-muted-foreground"
+			/>
+			<Button
+				onClick={handleCopyToClipboard}
+				className="ml-2 gap-1" // Added ml-2 for left margin
+				type="button"
+			>
+				<CopyIcon className="h-4 w-4" />
+				Copy
+			</Button>
 		</div>
-	  );
-	  
-	  
+	);
 }
 
 export default InviteLink;
