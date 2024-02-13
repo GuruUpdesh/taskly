@@ -21,7 +21,7 @@ const AppNavMenu = ({ children }: Props) => {
 		<NavigationMenuItem>
 			<Link href="/app">
 				<NavigationMenuTrigger className="text-base">
-					App
+					Application
 				</NavigationMenuTrigger>
 			</Link>
 			<NavigationMenuContent className="flex gap-4 p-2">
@@ -41,14 +41,7 @@ const AppNavMenu = ({ children }: Props) => {
 						Manage your projects and tasks
 					</p>
 				</NavigationMenuLink>
-				<div className="min-w-[300px]">
-					<Label className="whitespace-nowrap font-bold">
-						Current Project
-					</Label>
-					<NavigationMenuList></NavigationMenuList>
-					<Label className="whitespace-nowrap font-bold">
-						Recent Tasks
-					</Label>
+				<div className="min-w-[350px] pr-2">
 					{children}
 				</div>
 			</NavigationMenuContent>

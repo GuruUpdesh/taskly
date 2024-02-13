@@ -6,7 +6,8 @@ import { ModeToggle } from "~/components/themes-switcher";
 import Link from "next/link";
 import UserNav from "~/components/layout/user-nav";
 import AppNavMenu from "~/components/layout/navbar/app-nav-menu";
-import RecentTasks from "~/components/page/project/recent-tasks";
+import { RecentTasksNavWrapper } from "~/components/page/project/recent-tasks";
+import { CurrentProjectNavWrapper } from "~/components/page/project/current-project";
 
 export default function LandingLayout({
 	children,
@@ -27,7 +28,8 @@ export default function LandingLayout({
 					</Link>
 					<Navbar>
 						<AppNavMenu>
-							<RecentTasks />
+							<CurrentProjectNavWrapper />
+							<RecentTasksNavWrapper />
 						</AppNavMenu>
 						<ProjectList />
 					</Navbar>

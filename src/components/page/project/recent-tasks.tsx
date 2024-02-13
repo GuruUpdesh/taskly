@@ -12,13 +12,25 @@ import {
 import { getStatusDisplayName } from "~/entities/task-entity";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
+import { Label } from "~/components/ui/label";
+
+
+export function RecentTasksNavWrapper() {
+	return (
+		<div>
+			<Label className="whitespace-nowrap font-bold">Recent Tasks</Label>
+			<RecentTasks />
+		</div>
+	);
+}
 
 const RecentTasks = async () => {
 	const { userId } = auth();
 	if (!userId) return null;
 
 	const mostRecentTasks = await getMostRecentTasks(userId, 5);
-	console.log(mostRecentTasks);
+	if (mostRecentTasks.length === 0) return null;
+
 	return (
 		<ul>
 			{mostRecentTasks.map((task) => (
@@ -32,7 +44,11 @@ const RecentTasks = async () => {
 							{task.title}
 						</div>
 						<p className="text-xs capitalize text-muted-foreground">
-							{task.category} {formatDistanceToNow(task.categoryTimestamp ?? new Date())} ago
+							{task.category}{" "}
+							{formatDistanceToNow(
+								task.categoryTimestamp ?? new Date(),
+							)}{" "}
+							ago
 						</p>
 					</li>
 				</Link>

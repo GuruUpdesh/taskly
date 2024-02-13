@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { updateProjectApplicationData } from "~/actions/redis-actions";
 import type { Project } from "~/server/db/schema";
 import { useNavigationStore } from "~/store/navigation";
 
@@ -13,6 +14,7 @@ const ProjectState = ({ project }: Props) => {
 
 	React.useEffect(() => {
 		updateProject(project);
+		void updateProjectApplicationData(project);
 	}, [project]);
 
 	return null;
