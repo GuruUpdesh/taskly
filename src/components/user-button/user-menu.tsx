@@ -4,11 +4,10 @@ import { useClerk } from "@clerk/nextjs";
 import {
 	GearIcon,
 	GitHubLogoIcon,
-	Link1Icon,
 	PaperPlaneIcon,
-	PersonIcon,
 	PinLeftIcon,
 	PlusIcon,
+	ReaderIcon,
 } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,15 +17,11 @@ import {
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuPortal,
 	DropdownMenuSeparator,
 	DropdownMenuShortcut,
-	DropdownMenuSub,
-	DropdownMenuSubContent,
-	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { useNavigationStore } from "~/store/navigation";
 
 type Props = {
 	children: React.ReactNode;
@@ -35,6 +30,7 @@ type Props = {
 const UserMenu = ({ children }: Props) => {
 	const { signOut } = useClerk();
 	const router = useRouter();
+	const project = useNavigationStore((state) => state.currentProject);
 
 	return (
 		<DropdownMenu>
@@ -44,13 +40,8 @@ const UserMenu = ({ children }: Props) => {
 				onCloseAutoFocus={(e) => e.preventDefault()}
 				align="start"
 			>
-				<DropdownMenuLabel className="flex items-center gap-1">
-					<PersonIcon />
-					My Account
-				</DropdownMenuLabel>
-				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<Link href="/settings">
+					<Link href="/settings" target="_blank">
 						<DropdownMenuItem>
 							Settings
 							<DropdownMenuShortcut>
@@ -61,42 +52,48 @@ const UserMenu = ({ children }: Props) => {
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuSub>
-						<DropdownMenuSubTrigger>
-							Invite users
-						</DropdownMenuSubTrigger>
-						<DropdownMenuPortal>
-							<DropdownMenuSubContent className="bg-accent/50 p-2 backdrop-blur-lg">
-								<DropdownMenuItem>
-									Email
-									<DropdownMenuShortcut>
-										<PaperPlaneIcon />
-									</DropdownMenuShortcut>
-								</DropdownMenuItem>
-								<DropdownMenuItem>
-									Link
-									<DropdownMenuShortcut>
-										<Link1Icon />
-									</DropdownMenuShortcut>
-								</DropdownMenuItem>
-							</DropdownMenuSubContent>
-						</DropdownMenuPortal>
-					</DropdownMenuSub>
-					<DropdownMenuItem>
-						New Project
-						<DropdownMenuShortcut>
-							<PlusIcon />
-						</DropdownMenuShortcut>
-					</DropdownMenuItem>
+					{project && (
+						<Link
+							href={`/settings/project/${project.id}/invite`}
+							target="_blank"
+						>
+							<DropdownMenuItem>
+								Invite to Project
+								<DropdownMenuShortcut>
+									<PaperPlaneIcon />
+								</DropdownMenuShortcut>
+							</DropdownMenuItem>
+						</Link>
+					)}
+					<Link href="/create-project">
+						<DropdownMenuItem>
+							New Project
+							<DropdownMenuShortcut>
+								<PlusIcon />
+							</DropdownMenuShortcut>
+						</DropdownMenuItem>
+					</Link>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem>
-					GitHub
-					<DropdownMenuShortcut>
-						<GitHubLogoIcon />
-					</DropdownMenuShortcut>
-				</DropdownMenuItem>
-				<DropdownMenuItem>Documentation</DropdownMenuItem>
+				<Link
+					href="https://github.com/GuruUpdesh/taskly"
+					target="_blank"
+				>
+					<DropdownMenuItem>
+						GitHub
+						<DropdownMenuShortcut>
+							<GitHubLogoIcon />
+						</DropdownMenuShortcut>
+					</DropdownMenuItem>
+				</Link>
+				<Link href="https://docs.tasklypm.com" target="_blank">
+					<DropdownMenuItem>
+						Documentation
+						<DropdownMenuShortcut>
+							<ReaderIcon />
+						</DropdownMenuShortcut>
+					</DropdownMenuItem>
+				</Link>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
 					onClick={() => signOut(() => router.push("/"))}

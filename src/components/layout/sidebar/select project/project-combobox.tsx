@@ -60,6 +60,9 @@ const ProjectCombobox = ({
 							width={24}
 							height={24}
 							className="min-w-[24px] rounded-full mix-blend-screen"
+							onError={(e) => {
+								e.currentTarget.src = "/project.svg";
+							}}
 						/>
 					) : (
 						<Skeleton className="h-6 w-6 rounded-full" />

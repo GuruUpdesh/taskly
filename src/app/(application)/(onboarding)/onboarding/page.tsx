@@ -1,5 +1,4 @@
 import { initAction } from "~/actions/project-actions";
-import ProjectJoinForm from "~/components/onboarding/join-form";
 import CreateProjectForm from "~/components/onboarding/create-project-form";
 
 export default async function onboardingPage() {
@@ -7,9 +6,8 @@ export default async function onboardingPage() {
 
 	return (
 		<div className="flex justify-center">
-			<div className="flex w-[600px] flex-col gap-4">
+			<div className="flex flex-col gap-4">
 				<CreateProjectForm />
-				<ProjectJoinForm />
 			</div>
 		</div>
 	);

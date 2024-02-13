@@ -40,7 +40,9 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 
 		if (result.status) {
 			toast.success(result.message);
-			form.reset();
+			form.reset({
+				invitees: [],
+			});
 		} else {
 			toast.error(result.message);
 		}
@@ -54,9 +56,8 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 	return (
 		<form className="flex flex-col gap-1">
 			<EmailInviteForm
-				invitees={form.watch("invitees")}
+				invitees={form.watch("invitees").join(", ")}
 				setInvitees={(invitees) => form.setValue("invitees", invitees)}
-				projectName={project.name}
 			/>
 			<Button
 				disabled={form.watch("invitees").length === 0 || isLoading}

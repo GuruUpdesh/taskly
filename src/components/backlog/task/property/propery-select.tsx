@@ -23,11 +23,12 @@ import { ChevronDown } from "lucide-react";
 
 export const optionVariants = cva(
 	[
-		"rounded-sm border pl-2 pr-3 py-1 flex items-center space-x-2 whitespace-nowrap flex",
+		"rounded-sm border pl-2 pr-3 py-1 flex items-center space-x-2 whitespace-nowrap",
 	],
 	{
 		variants: {
 			color: {
+				faint: "border-gray-500/50 bg-gray-800 text-gray-300/50 focus:bg-gray-700 focus:text-gray-100 hover:bg-gray-800 hover:text-gray-100",
 				grey: "border-gray-700 bg-gray-900 text-gray-300 focus:bg-gray-700 focus:text-gray-100 hover:bg-gray-800 hover:text-gray-100",
 				yellow: "border-yellow-700 bg-yellow-900 text-yellow-300 focus:bg-yellow-700 focus:text-yellow-100 hover:bg-yellow-800 hover:text-yellow-100",
 				red: "border-red-700 bg-red-900 text-red-300 focus:bg-red-700 focus:text-red-100 hover:bg-red-800 hover:text-red-100",
@@ -51,7 +52,7 @@ type DataCellProps = {
 	size?: "default" | "icon";
 };
 
-function DataCellSelect({
+function PropertySelect({
 	config,
 	col,
 	form,
@@ -64,27 +65,24 @@ function DataCellSelect({
 		void onSubmit(form.getValues());
 	}, [form.watch(col)]);
 
-	// get selected option
-	function getSelectedOption(value: string) {
-		if (config.type !== "select") return "grey";
+	// Ensures any value is returned as a string
+	const stringifyValue = (value: string | number | null): string => {
+		if (value === null || value === undefined) return "unassigned";
+		return value.toString();
+	};
 
-		const selectedOption = config.form?.options.find(
-			(option) => option.value === value,
-		);
-
-		if (!selectedOption) return "grey";
-		return selectedOption.color;
-	}
-
-	function getOption(value: string) {
+	const getOptionByStringValue = (value: string) => {
 		if (config.type !== "select") return null;
-
-		const option = config.form?.options.find(
-			(option) => option.value === value,
+		return config.form?.options.find(
+			(option) => stringifyValue(option.value) === value,
 		);
+	};
 
-		return option;
-	}
+	const convertToOriginalType = (stringValue: string) => {
+		const option = getOptionByStringValue(stringValue);
+		if (option) return option.value;
+		return stringValue === "unassigned" ? null : stringValue;
+	};
 
 	if (config.type !== "select") return null;
 
@@ -94,13 +92,17 @@ function DataCellSelect({
 				control={form.control}
 				name={col}
 				render={({ field: { onChange, value } }) => {
+					const currentValue = stringifyValue(value);
+					const option = getOptionByStringValue(currentValue);
+					const selectedOptionColor = option ? option.color : "grey";
+
 					return (
 						<Select
-							onValueChange={onChange}
-							value={value ? value.toString() : "unassigned"}
-							defaultValue={
-								value ? value.toString() : "unassigned"
+							onValueChange={(val) =>
+								onChange(convertToOriginalType(val))
 							}
+							value={currentValue}
+							defaultValue={currentValue}
 						>
 							<SelectTrigger
 								className={cn(
@@ -109,11 +111,7 @@ function DataCellSelect({
 										? "aspect-square !p-1.5"
 										: "",
 									optionVariants({
-										color: getSelectedOption(
-											value
-												? value.toString()
-												: "unassigned",
-										),
+										color: selectedOptionColor,
 									}),
 								)}
 							>
@@ -122,20 +120,10 @@ function DataCellSelect({
 									asChild
 								>
 									<span className="flex items-center gap-1">
-										{
-											getOption(
-												value
-													? value.toString()
-													: "unassigned",
-											)?.icon
-										}
+										{option?.icon}
 										{size === "icon"
 											? null
-											: getOption(
-													value
-														? value.toString()
-														: "unassigned",
-												)?.displayName}
+											: option?.displayName}
 									</span>
 								</SelectValue>
 								{size === "icon" ? null : (
@@ -149,18 +137,14 @@ function DataCellSelect({
 							>
 								{config.form?.options.map((option) => (
 									<SelectItem
-										key={option.value}
+										key={stringifyValue(option.value)}
 										className={cn(
 											optionVariants({
 												color: option.color,
 											}),
 											"border-none bg-transparent !pl-2",
 										)}
-										value={
-											option.value
-												? option.value.toString()
-												: ""
-										}
+										value={stringifyValue(option.value)}
 									>
 										<div className="flex min-w-[8rem] items-center gap-2">
 											<span>{option.icon}</span>
@@ -177,4 +161,4 @@ function DataCellSelect({
 	);
 }
 
-export default DataCellSelect;
+export default PropertySelect;

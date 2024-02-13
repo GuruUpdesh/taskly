@@ -3,17 +3,20 @@ import {
 	ArrowRightIcon,
 	ArrowUpIcon,
 	CheckCircledIcon,
-	CircleIcon,
+	Component1Icon,
+	EyeOpenIcon,
 	PersonIcon,
-	StopwatchIcon,
+	PieChartIcon,
+	RadiobuttonIcon,
 } from "@radix-ui/react-icons";
 import type GenericEntityConfig from "./entityTypes";
 import { z } from "zod";
-import type { NewTask, User, Task } from "~/server/db/schema";
-import { BugIcon, Feather, LayoutList } from "lucide-react";
+import type { NewTask, User, Task, Sprint } from "~/server/db/schema";
+import { BugIcon, CircleDashed, Feather, LayoutList } from "lucide-react";
 import { throwClientError } from "~/utils/errors";
 import type { ColorOptions } from "./entityTypes";
 import UserProfilePicture from "~/components/user-profile-picture";
+import { isAfter, isBefore } from "date-fns";
 
 type TaskConfig = Omit<Task, "projectId" | "boardOrder" | "backlogOrder">;
 
@@ -50,15 +53,27 @@ export const taskConfig: GenericEntityConfig<TaskConfig> = {
 			placeholder: "Status",
 			options: [
 				{
+					value: "backlog",
+					displayName: getStatusDisplayName("backlog"),
+					icon: <CircleDashed className="h-4 w-4" />,
+					color: "faint",
+				},
+				{
 					value: "todo",
 					displayName: getStatusDisplayName("todo"),
-					icon: <CircleIcon className="h-4 w-4" />,
+					icon: <RadiobuttonIcon className="h-4 w-4" />,
 					color: "grey",
 				},
 				{
 					value: "inprogress",
 					displayName: getStatusDisplayName("inprogress"),
-					icon: <StopwatchIcon className="h-4 w-4" />,
+					icon: <PieChartIcon className="h-4 w-4" />,
+					color: "yellow",
+				},
+				{
+					value: "inreview",
+					displayName: getStatusDisplayName("inreview"),
+					icon: <EyeOpenIcon className="h-4 w-4" />,
 					color: "blue",
 				},
 				{
@@ -137,7 +152,23 @@ export const taskConfig: GenericEntityConfig<TaskConfig> = {
 					value: "unassigned",
 					displayName: "Unassigned",
 					icon: <PersonIcon className="h-[20px] w-[20px]" />,
-					color: "grey",
+					color: "faint",
+				},
+			],
+		},
+	},
+	sprintId: {
+		value: "sprintId",
+		displayName: "Sprint",
+		type: "select",
+		form: {
+			placeholder: "Sprint",
+			options: [
+				{
+					value: -1,
+					displayName: "No Sprint",
+					icon: <Component1Icon className="h-4 w-4 opacity-50" />,
+					color: "faint",
 				},
 			],
 		},
@@ -148,10 +179,11 @@ export const defaultValues: NewTask = {
 	title: "",
 	description: "",
 	projectId: -1,
-	status: "todo",
+	status: "backlog",
 	priority: "medium",
 	type: "task",
 	assignee: null,
+	sprintId: -1,
 	backlogOrder: 0,
 	boardOrder: 0,
 };
@@ -185,6 +217,7 @@ export function buildDynamicOptions(
 	config: ReturnType<typeof getTaskConfig>,
 	key: string,
 	assignees: User[],
+	sprints: Sprint[],
 ): ReturnType<typeof getTaskConfig> {
 	switch (key) {
 		case "assignee":
@@ -207,6 +240,34 @@ export function buildDynamicOptions(
 					options,
 				},
 			};
+		case "sprintId":
+			if (config.type !== "select" || !config.form.options) return config;
+			const newSprintOptions = sprints.map((sprint: Sprint) => {
+				const active =
+					isAfter(new Date(), sprint.startDate) &&
+					isBefore(new Date(), sprint.endDate);
+				return {
+					value: sprint.id,
+					displayName: sprint.name,
+					icon: <Component1Icon className="h-4 w-4" />,
+					color: active ? "green" : ("grey" as ColorOptions),
+				};
+			});
+			const currentSprintOptions = config.form.options.map((option) => ({
+				...option,
+				value: option.value as number,
+			}));
+			const sprintOptions = [
+				...currentSprintOptions,
+				...newSprintOptions,
+			];
+			return {
+				...config,
+				form: {
+					...config.form,
+					options: sprintOptions,
+				},
+			};
 		default:
 			return config;
 	}
@@ -221,8 +282,10 @@ export function getStatusDisplayName(
 	const statusDisplayNames: {
 		[key in (typeof taskStatuses)[number]]?: string;
 	} = {
+		backlog: "Backlog",
 		todo: "To Do",
 		inprogress: "In Progress",
+		inreview: "In Review",
 		done: "Done",
 	};
 

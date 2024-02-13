@@ -9,12 +9,13 @@ import {
 	getTaskConfig,
 	taskSchema,
 } from "~/entities/task-entity";
-import type { NewTask, Task, User } from "~/server/db/schema";
-import DataCellSelect from "../backlog/task/property/propery-select";
+import type { NewTask, Sprint, Task, User } from "~/server/db/schema";
+import PropertySelect from "../backlog/task/property/propery-select";
 
 type Props = {
 	task: Task;
 	assignees: User[];
+	sprints: Sprint[];
 	editTaskMutation: UseMutationResult<void, Error, NewTask, unknown>;
 };
 
@@ -25,7 +26,12 @@ const insertTaskSchema__Secondary = taskSchema.omit({
 
 type FormType = Omit<NewTask, "title" | "description">;
 
-const SecondaryTaskForm = ({ task, assignees, editTaskMutation }: Props) => {
+const SecondaryTaskForm = ({
+	task,
+	assignees,
+	sprints,
+	editTaskMutation,
+}: Props) => {
 	const form = useForm<NewTask>({
 		resolver: zodResolver(insertTaskSchema__Secondary),
 		defaultValues: {
@@ -46,6 +52,7 @@ const SecondaryTaskForm = ({ task, assignees, editTaskMutation }: Props) => {
 		{ key: "status", size: "default" },
 		{ key: "type", size: "default" },
 		{ key: "assignee", size: "default" },
+		{ key: "sprintId", size: "default" },
 	] as { key: keyof FormType; size: "default" | "icon" }[];
 
 	function renderProperties() {
@@ -57,6 +64,7 @@ const SecondaryTaskForm = ({ task, assignees, editTaskMutation }: Props) => {
 						getTaskConfig(item.key),
 						item.key,
 						assignees,
+						sprints,
 					);
 					return (
 						<div key={idx} className="grid grid-cols-3">
@@ -64,7 +72,7 @@ const SecondaryTaskForm = ({ task, assignees, editTaskMutation }: Props) => {
 								{item.key}
 							</p>
 							<div className="col-span-2">
-								<DataCellSelect
+								<PropertySelect
 									form={form}
 									col={item.key}
 									config={config}

@@ -99,11 +99,25 @@ export async function deleteTask(id: number) {
 export async function updateTask(id: number, data: NewTask) {
 	try {
 		const updatedTaskData = insertTaskSchema__required.parse(data);
+		const currentTask = await db
+			.select()
+			.from(tasks)
+			.where(eq(tasks.id, id));
+		const currTask = currentTask[0];
+		if (!currTask) return;
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
 
 		updatedTaskData.lastEditedAt = new Date();
 
+		if (updatedTaskData.status === "backlog" && currTask.sprintId !== -1) {
+			updatedTaskData.sprintId = -1;
+		} else if (
+			updatedTaskData.sprintId !== -1 &&
+			updatedTaskData.status === "backlog"
+		) {
+			updatedTaskData.status = "todo";
+		}
 		await db.update(tasks).set(updatedTaskData).where(eq(tasks.id, id));
 		revalidatePath("/");
 	} catch (error) {
