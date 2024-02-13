@@ -7,6 +7,7 @@ import { db } from "~/server/db";
 import { tasks, insertTaskSchema__required } from "~/server/db/schema";
 import { type Task, type NewTask } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
+import { updateOrInsertTaskView } from "./task-views-actions";
 
 export async function createTask(data: NewTask) {
 	try {
@@ -29,6 +30,7 @@ export async function createTask(data: NewTask) {
 		await db.insert(tasks).values(newTask);
 		revalidatePath("/");
 	} catch (error) {
+		console.error(error);
 		if (error instanceof Error) throwServerError(error.message);
 	}
 }
@@ -100,6 +102,8 @@ export async function updateTask(id: number, data: NewTask) {
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
 
+		updatedTaskData.lastEditedAt = new Date();
+
 		await db.update(tasks).set(updatedTaskData).where(eq(tasks.id, id));
 		revalidatePath("/");
 	} catch (error) {
@@ -135,6 +139,8 @@ export async function getTask(id: number) {
 		if (!taskQuery.project.usersToProjects.length) {
 			return { success: false, message: "User not authorized" };
 		}
+
+		void updateOrInsertTaskView(id, userId);
 
 		return { success: true, task: taskQuery };
 	} catch (error) {

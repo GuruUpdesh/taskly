@@ -17,8 +17,10 @@ type ProjectMenuItemProps = {
 const ProjectMenuItem = ({ projects }: ProjectMenuItemProps) => {
 	return (
 		<NavigationMenuItem>
-			<NavigationMenuTrigger>Projects</NavigationMenuTrigger>
-			<NavigationMenuContent className="absolute left-0 top-0 w-full">
+			<NavigationMenuTrigger className="text-base">
+				Projects
+			</NavigationMenuTrigger>
+			<NavigationMenuContent className="">
 				<ul className="grid w-[200px] gap-3 p-4 md:grid-cols-1">
 					{projects.map((project) => (
 						<NavigationMenuLink

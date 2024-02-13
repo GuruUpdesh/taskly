@@ -26,7 +26,7 @@ export async function getUserApplicationData() {
 	if (!data) {
 		const projectsForUser = await getAllProjects(user.userId);
 		if (!projectsForUser || projectsForUser.length === 0) {
-			return { lastApplicationPath: "/project" };
+			return { lastApplicationPath: "/create-project" };
 		} else {
 			if (projectsForUser.length === 1 && projectsForUser[0]) {
 				return {

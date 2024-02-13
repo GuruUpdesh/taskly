@@ -25,14 +25,6 @@ const Navbar = ({ children }: NavbarProps) => {
 							Home
 						</NavigationMenuLink>
 					</NavigationMenuItem>
-					<NavigationMenuItem>
-						<NavigationMenuLink
-							className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-							href="/app"
-						>
-							App
-						</NavigationMenuLink>
-					</NavigationMenuItem>
 					{children}
 					<NavigationMenuItem className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
 						<NavigationMenuLink href="/email">
