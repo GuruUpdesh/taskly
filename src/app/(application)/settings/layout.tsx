@@ -23,8 +23,10 @@ export default function SettingsLayout({
 				<SettingsSidebar />
 			</ResizablePanel>
 			<ResizableHandle />
-			<ResizablePanel defaultSize={75}>
-				<main>{children}</main>
+			<ResizablePanel defaultSize={85}>
+				<main className="flex items-center justify-center">
+					<div className=" max-w-[1000px]">{children}</div>
+				</main>
 			</ResizablePanel>
 		</ResizablePanelGroup>
 	);

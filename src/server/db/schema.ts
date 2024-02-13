@@ -11,6 +11,7 @@ import {
 	varchar,
 } from "drizzle-orm/mysql-core";
 import type { z } from "zod";
+import { startOfToday, addWeeks } from "date-fns";
 
 export const mysqlTable = mysqlTableCreator((name) => `taskly_${name}`);
 
@@ -21,7 +22,13 @@ export const tasks = mysqlTable("tasks", {
 	id: serial("id").primaryKey(),
 	title: varchar("title", { length: 255 }).notNull(),
 	description: text("description").default("").notNull(),
-	status: mysqlEnum("status", ["todo", "inprogress", "done"])
+	status: mysqlEnum("status", [
+		"backlog",
+		"todo",
+		"inprogress",
+		"inreview",
+		"done",
+	])
 		.default("todo")
 		.notNull(),
 	priority: mysqlEnum("priority", ["low", "medium", "high"])
@@ -34,6 +41,7 @@ export const tasks = mysqlTable("tasks", {
 	backlogOrder: int("backlog_order").notNull().default(0),
 	assignee: varchar("assignee", { length: 255 }),
 	projectId: int("project_id").notNull(),
+	sprintId: int("sprint_id"),
 });
 
 export const notifications = mysqlTable("notifications", {
@@ -55,6 +63,7 @@ export const insertTaskSchema__required = insertTaskSchema.required({
 	type: true,
 	assignee: true,
 	projectId: true,
+	sprintId: true,
 	backlogOrder: true,
 	boardOrder: true,
 });
@@ -73,6 +82,10 @@ export const taskRelations = relations(tasks, ({ one }) => ({
 		fields: [tasks.assignee],
 		references: [users.userId],
 	}),
+	sprint: one(sprints, {
+		fields: [tasks.sprintId],
+		references: [sprints.id],
+	}),
 }));
 
 /**
@@ -81,6 +94,10 @@ export const taskRelations = relations(tasks, ({ one }) => ({
 export const projects = mysqlTable("projects", {
 	id: serial("id").primaryKey(),
 	name: varchar("name", { length: 255 }).notNull().unique(),
+	sprintDuration: int("sprint_duration").default(2).notNull(),
+	sprintStart: datetime("sprint_start", { mode: "date", fsp: 0 })
+		.default(startOfToday())
+		.notNull(),
 	description: text("description"),
 	image: varchar("image", { length: 1000 }),
 });
@@ -97,6 +114,7 @@ export type NewProject = z.infer<typeof insertProjectSchema>;
 export const projectsRelations = relations(projects, ({ many }) => ({
 	tasks: many(tasks),
 	usersToProjects: many(usersToProjects),
+	sprints: many(sprints),
 }));
 
 /**
@@ -183,4 +201,32 @@ export const inviteRelations = relations(invites, ({ one }) => ({
 		fields: [invites.userId],
 		references: [users.userId],
 	}),
+}));
+
+/**
+ * Sprints Schema
+ */
+export const sprints = mysqlTable("sprints", {
+	id: serial("id").primaryKey(),
+	startDate: datetime("start_date", { mode: "date", fsp: 0 })
+		.default(startOfToday())
+		.notNull(),
+	endDate: datetime("end_date", { mode: "date", fsp: 0 })
+		.default(addWeeks(startOfToday(), 2))
+		.notNull(),
+	projectId: int("project_id").notNull(),
+});
+
+// types
+export interface Sprint extends InferSelectModel<typeof sprints> {
+	name: string;
+}
+
+// relations
+export const sprintRelations = relations(sprints, ({ one, many }) => ({
+	project: one(projects, {
+		fields: [sprints.projectId],
+		references: [projects.id],
+	}),
+	tasks: many(tasks),
 }));

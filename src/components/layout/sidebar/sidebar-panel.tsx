@@ -65,7 +65,7 @@ const SidebarPanel = ({
 				defaultSize={defaultLayout?.[0]}
 				order={0}
 				onResize={handleResize}
-				className="min-w-[50px]"
+				className="h-screen min-w-[50px]"
 			>
 				<SettingsNavigationState />
 				{sidebarComponent}

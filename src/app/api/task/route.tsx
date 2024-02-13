@@ -17,6 +17,7 @@ export async function POST(req: Request) {
 		priority: body.priority,
 		type: body.type,
 		assignee: body.assignee,
+		sprintId: body.sprintId,
 		backlogOrder: body.backlogOrder,
 		boardOrder: body.boardOrder,
 	};

@@ -75,7 +75,6 @@ async function onUserDeleted(payload: UserWebhookEvent) {
 }
 
 async function onSessionCreated(payload: SessionWebhookEvent) {
-	console.log("Session created", payload);
 	const userId = payload.data.user_id;
 
 	// check if the user exists in our database

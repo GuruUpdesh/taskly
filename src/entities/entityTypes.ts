@@ -19,6 +19,7 @@ interface EntityConfigSelect<T extends Entity, K extends keyof T> {
 }
 
 export type ColorOptions =
+	| "faint"
 	| "grey"
 	| "yellow"
 	| "red"

@@ -18,7 +18,12 @@ import {
 	taskStatuses,
 } from "~/entities/task-entity";
 import { cn } from "~/lib/utils";
-import type { NewTask, Task as TaskType, User } from "~/server/db/schema";
+import type {
+	NewTask,
+	Sprint,
+	Task as TaskType,
+	User,
+} from "~/server/db/schema";
 import {
 	DragDropContext,
 	Draggable,
@@ -35,9 +40,10 @@ type GroupedTasks = {
 type Props = {
 	projectId: string;
 	assignees: User[];
+	sprints: Sprint[];
 };
 
-export default function TaskBoard({ projectId, assignees }: Props) {
+export default function TaskBoard({ projectId, assignees, sprints }: Props) {
 	const queryClient = useQueryClient();
 	const [tasks, setTasks] = React.useState<TaskType[]>([]);
 	const result = useQuery({
@@ -174,6 +180,9 @@ export default function TaskBoard({ projectId, assignees }: Props) {
 																task={task}
 																assignees={
 																	assignees
+																}
+																sprints={
+																	sprints
 																}
 																addTaskMutation={
 																	addTaskMutation
