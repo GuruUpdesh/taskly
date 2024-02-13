@@ -19,6 +19,8 @@ import { Separator } from "~/components/ui/separator";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import SprintOptionsForm from "~/components/projects/sprint-options/sprint-options-form";
+import EmailInviteWrapper from "~/components/invite/by-email/email-invite-wrapper";
+import InviteLinkWrapper from "~/components/invite/invite-link-wrapper";
 
 type Params = {
 	params: {
@@ -134,6 +136,11 @@ export default async function projectSettingsGeneral({
 					<div style={{ width: "95%" }}>
 						<UsersTable users={users} />
 					</div>
+				</div>
+				<div className="rounded-lg border p-4">
+				<h3 className={cn(typography.headers.h3)}>Invite</h3>
+					<EmailInviteWrapper projectId={projectId} />
+					<InviteLinkWrapper projectId={projectId} />
 				</div>
 				<div className="flex flex-col rounded-lg border p-4">
 					<div className="flex items-center justify-between">

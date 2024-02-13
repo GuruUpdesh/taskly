@@ -54,23 +54,30 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 	}
 
 	return (
-		<form className="flex flex-col gap-1">
+		<form className="flex flex-col pt-4">
+			<p className="text-muted-foreground">
+				Invite a user using their email below!
+			</p>
+		  <div className="flex items-center"> {/* Added flex class and items-center */}
 			<EmailInviteForm
-				invitees={form.watch("invitees").join(", ")}
-				setInvitees={(invitees) => form.setValue("invitees", invitees)}
+			  invitees={form.watch("invitees").join(", ")}
+			  setInvitees={(invitees) => form.setValue("invitees", invitees)}
 			/>
 			<Button
-				disabled={form.watch("invitees").length === 0 || isLoading}
-				onClick={() => startTransition(form.handleSubmit(onSubmit))}
-				className="gap-2"
+			  disabled={form.watch("invitees").length === 0 || isLoading}
+			  onClick={() => startTransition(form.handleSubmit(onSubmit))}
+			  className="gap-2 ml-2" // Added ml-2 for left margin
 			>
-				{isLoading ? "Sending invites..." : "Invite"}
-				{isLoading ? (
-					<Loader2 className="ml-2 h-4 w-4 animate-spin" />
-				) : null}
+			  {isLoading ? "Sending invites..." : "Invite"}
+			  {isLoading ? (
+				<Loader2 className="ml-2 h-4 w-4 animate-spin" />
+			  ) : null}
 			</Button>
+		  </div>
 		</form>
-	);
+	  );
+	  
+	  
 };
 
 export default EmailInviteWrapper;
