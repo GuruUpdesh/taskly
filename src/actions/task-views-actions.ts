@@ -2,7 +2,8 @@
 
 import { and, eq } from "drizzle-orm";
 import { db } from "~/server/db";
-import { Task, tasksToViews } from "~/server/db/schema";
+import { tasksToViews } from "~/server/db/schema";
+import { authenticate } from "./utils/action-utils";
 
 export async function updateOrInsertTaskView(taskId: number, userId: string) {
 	const taskView = await db.query.tasksToViews.findFirst({
@@ -30,7 +31,10 @@ export async function updateOrInsertTaskView(taskId: number, userId: string) {
 	}
 }
 
-export async function getMostRecentTasks(userId: string, number = 5) {
+export async function getMostRecentTasks(number = 5) {
+	const userId = authenticate();
+	if (!userId) return [];
+
 	const { recentlyViewed, recentlyEdited, recentlyCreated } =
 		await db.transaction(async (tx) => {
 			const recentlyViewed = await tx.query.tasksToViews.findMany({
@@ -118,4 +122,18 @@ export async function getMostRecentTasks(userId: string, number = 5) {
 
 	const sortedTasks = distributeTasksDynamically().slice(0, number);
 	return sortedTasks;
+}
+
+export async function deleteViewsForTask(taskId: number) {
+	const userId = authenticate();
+	if (!userId) return;
+
+	await db
+		.delete(tasksToViews)
+		.where(
+			and(
+				eq(tasksToViews.taskId, taskId),
+				eq(tasksToViews.userId, userId),
+			),
+		);
 }

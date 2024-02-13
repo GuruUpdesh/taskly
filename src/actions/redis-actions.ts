@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs";
 import { kv } from "@vercel/kv";
 import { z } from "zod";
 import { getAllProjects } from "./project-actions";
-import { Project, selectProjectSchema } from "~/server/db/schema";
+import { type Project, selectProjectSchema } from "~/server/db/schema";
 import { authenticate } from "./utils/action-utils";
 
 export async function updateUserApplicationData(pathname: string) {
@@ -64,7 +64,7 @@ export async function getProjectApplicationData() {
 		return;
 	}
 
-	const data = await kv.get(userId + "projectApplicationData") as Project;
+	const data = (await kv.get(userId + "projectApplicationData")) as Project;
 
 	if (!data) {
 		return;

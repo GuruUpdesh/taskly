@@ -1,7 +1,7 @@
 "use client";
 
 // hooks
-import React, { useEffect } from "react";
+import React from "react";
 
 // ui
 import { Controller, type UseFormReturn } from "react-hook-form";
@@ -60,10 +60,15 @@ function PropertySelect({
 	isNew,
 	size = "default",
 }: DataCellProps) {
-	useEffect(() => {
-		if (isNew) return;
-		void onSubmit(form.getValues());
-	}, [form.watch(col)]);
+	// const initialRender = useRef(true)
+	// useEffect(() => {
+	// 	console.log("watching", col);
+	// 	if (isNew || initialRender.current) {
+	//         initialRender.current = false;
+	//         return;
+	//     }
+	// 	void onSubmit(form.getValues());
+	// }, [form.watch(col), initialRender.current]);
 
 	// Ensures any value is returned as a string
 	const stringifyValue = (value: string | number | null): string => {
@@ -92,15 +97,19 @@ function PropertySelect({
 				control={form.control}
 				name={col}
 				render={({ field: { onChange, value } }) => {
-					const currentValue = stringifyValue(value);
+					const currentValue =
+						value instanceof Date
+							? value.toISOString()
+							: stringifyValue(value);
 					const option = getOptionByStringValue(currentValue);
 					const selectedOptionColor = option ? option.color : "grey";
 
 					return (
 						<Select
-							onValueChange={(val) =>
-								onChange(convertToOriginalType(val))
-							}
+							onValueChange={(val) => {
+								onChange(convertToOriginalType(val));
+								void onSubmit(form.getValues());
+							}}
 							value={currentValue}
 							defaultValue={currentValue}
 						>

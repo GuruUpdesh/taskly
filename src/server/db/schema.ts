@@ -242,7 +242,6 @@ export const taskToViewRelations = relations(tasksToViews, ({ one }) => ({
 	}),
 }));
 
-
 /**
  * Sprints
  */

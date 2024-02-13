@@ -18,7 +18,14 @@ import type { ColorOptions } from "./entityTypes";
 import UserProfilePicture from "~/components/user-profile-picture";
 import { isAfter, isBefore } from "date-fns";
 
-type TaskConfig = Omit<Task, "projectId" | "boardOrder" | "backlogOrder">;
+type TaskConfig = Omit<
+	Task,
+	| "projectId"
+	| "boardOrder"
+	| "backlogOrder"
+	| "lastEditedAt"
+	| "insertedDate"
+>;
 
 export const taskConfig: GenericEntityConfig<TaskConfig> = {
 	id: {
@@ -151,7 +158,7 @@ export const taskConfig: GenericEntityConfig<TaskConfig> = {
 				{
 					value: "unassigned",
 					displayName: "Unassigned",
-					icon: <PersonIcon className="h-[20px] w-[20px]" />,
+					icon: <PersonIcon className="h-4 w-4" />,
 					color: "faint",
 				},
 			],
@@ -186,6 +193,8 @@ export const defaultValues: NewTask = {
 	sprintId: -1,
 	backlogOrder: 0,
 	boardOrder: 0,
+	lastEditedAt: new Date(),
+	insertedDate: new Date(),
 };
 
 export function getTaskConfig(key: string) {
@@ -222,10 +231,15 @@ export function buildDynamicOptions(
 	switch (key) {
 		case "assignee":
 			if (config.type !== "select" || !config.form.options) return config;
-			const newOptions = assignees.map((asignee) => ({
-				value: asignee.username,
-				displayName: asignee.username,
-				icon: <UserProfilePicture src={asignee.profilePicture} />,
+			const newOptions = assignees.map((assignee) => ({
+				value: assignee.username,
+				displayName: assignee.username,
+				icon: (
+					<UserProfilePicture
+						size={16}
+						src={assignee.profilePicture}
+					/>
+				),
 				color: "grey" as ColorOptions,
 			}));
 			const currentOptions = config.form.options.map((option) => ({

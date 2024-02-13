@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs";
 import React from "react";
 import { getMostRecentTasks } from "~/actions/task-views-actions";
 import { cn } from "~/lib/utils";
-import { type Task } from "~/server/db/schema";
+import { type Task as TaskType } from "~/server/db/schema";
 import {
 	Tooltip,
 	TooltipContent,
@@ -13,7 +13,7 @@ import { getStatusDisplayName } from "~/entities/task-entity";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { Label } from "~/components/ui/label";
-
+import Task from "~/components/backlog/task/task";
 
 export function RecentTasksNavWrapper() {
 	return (
@@ -24,11 +24,12 @@ export function RecentTasksNavWrapper() {
 	);
 }
 
-const RecentTasks = async () => {
-	const { userId } = auth();
-	if (!userId) return null;
+type RecentTasksProps = {
+	number?: number;
+};
 
-	const mostRecentTasks = await getMostRecentTasks(userId, 5);
+const RecentTasks = async ({ number }: RecentTasksProps) => {
+	const mostRecentTasks = await getMostRecentTasks(number);
 	if (mostRecentTasks.length === 0) return null;
 
 	return (
@@ -58,7 +59,7 @@ const RecentTasks = async () => {
 };
 
 type Props = {
-	status: Task["status"];
+	status: TaskType["status"];
 };
 
 const TaskStatus = ({ status }: Props) => {

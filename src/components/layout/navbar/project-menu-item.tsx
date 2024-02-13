@@ -28,14 +28,14 @@ const ProjectMenuItem = ({ projects }: ProjectMenuItemProps) => {
 						<NavigationMenuLink
 							key={project.id}
 							href={`/project/${project.id}/backlog`}
-							className="min-w-max"
+							className="min-w-max "
 						>
 							<Button
 								variant="outline"
 								className="w-full items-center justify-between gap-1 whitespace-nowrap"
 							>
 								<ProjectImage project={project} />
-								{project.name}
+								<span className="mx-1">{project.name}</span>
 								<ChevronRight className="h-4 w-4" />
 							</Button>
 						</NavigationMenuLink>
@@ -43,9 +43,12 @@ const ProjectMenuItem = ({ projects }: ProjectMenuItemProps) => {
 				</ul>
 				<NavigationMenuLink
 					href="create-project"
-					className="flex min-w-max items-center gap-1 mb-2 mx-2"
+					className="mx-2 mb-2 flex min-w-max items-center gap-1"
 				>
-					<Button className="w-full items-center justify-between gap-1 whitespace-nowrap">
+					<Button
+						variant="outline"
+						className="w-full items-center justify-between gap-1 whitespace-nowrap"
+					>
 						Create Project
 						<Plus className="h-4 w-4" />
 					</Button>

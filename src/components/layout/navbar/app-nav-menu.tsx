@@ -1,17 +1,13 @@
 "use client";
 
 import React from "react";
-import { Label } from "~/components/ui/label";
 import {
 	NavigationMenuContent,
 	NavigationMenuItem,
 	NavigationMenuLink,
-	NavigationMenuList,
 	NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
 import Link from "next/link";
-import RecentTasks from "~/components/page/project/recent-tasks";
-
 type Props = {
 	children: React.ReactNode;
 };
@@ -41,9 +37,7 @@ const AppNavMenu = ({ children }: Props) => {
 						Manage your projects and tasks
 					</p>
 				</NavigationMenuLink>
-				<div className="min-w-[350px] pr-2">
-					{children}
-				</div>
+				<div className="min-w-[350px] pr-2">{children}</div>
 			</NavigationMenuContent>
 		</NavigationMenuItem>
 	);

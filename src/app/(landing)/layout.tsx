@@ -16,7 +16,7 @@ export default function LandingLayout({
 }) {
 	return (
 		<>
-			<header className="sticky top-0 z-40 border-b bg-background @container">
+			<header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-lg @container">
 				<div className="container flex h-16 items-center justify-between py-4">
 					<Link href="/" className="flex items-center gap-1">
 						<Image
