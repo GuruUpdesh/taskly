@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs";
 import React from "react";
 import { getMostRecentTasks } from "~/actions/task-views-actions";
 import { cn } from "~/lib/utils";
-import { Task } from "~/server/db/schema";
+import { type Task } from "~/server/db/schema";
 import {
 	Tooltip,
 	TooltipContent,
@@ -11,6 +11,7 @@ import {
 } from "~/components/ui/tooltip";
 import { getStatusDisplayName } from "~/entities/task-entity";
 import Link from "next/link";
+import { formatDistanceToNow } from "date-fns";
 
 const RecentTasks = async () => {
 	const { userId } = auth();
@@ -31,7 +32,7 @@ const RecentTasks = async () => {
 							{task.title}
 						</div>
 						<p className="text-xs capitalize text-muted-foreground">
-							{task.category} recently
+							{task.category} {formatDistanceToNow(task.categoryTimestamp ?? new Date())} ago
 						</p>
 					</li>
 				</Link>

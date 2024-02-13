@@ -38,56 +38,84 @@ export async function getMostRecentTasks(userId: string, number = 5) {
 				orderBy: (tasksToViews, { desc }) => [
 					desc(tasksToViews.viewedAt),
 				],
-				limit: number,
 				with: {
 					task: true,
 				},
 			});
 			const recentlyEdited = await tx.query.tasks.findMany({
 				orderBy: (tasks, { desc }) => [desc(tasks.lastEditedAt)],
-				limit: number,
 			});
 			const recentlyCreated = await tx.query.tasks.findMany({
 				orderBy: (tasks, { desc }) => [desc(tasks.insertedDate)],
-				limit: number,
 			});
 
 			return { recentlyViewed, recentlyEdited, recentlyCreated };
 		});
 
-	console.log("recentlyViewed:", recentlyViewed);
-	console.log("recentlyEdited:", recentlyEdited);
-	console.log("recentlyCreated:", recentlyCreated);
-
-	type TaskCategory = "created" | "edited" | "viewed";
-	type TaskWithCategory = Task & { category: TaskCategory };
-	const taskMap = new Map<number, TaskWithCategory>();
-	const addTasks = (tasks: Task[], category: TaskCategory) => {
-		tasks.forEach((task) => {
-			if (!taskMap.has(task.id)) {
-				taskMap.set(task.id, { ...task, category });
-			}
-		});
+	// Deduplicate and categorize tasks
+	const categorizedTasks = {
+		created: recentlyCreated.map((task) => ({
+			...task,
+			category: "created",
+			categoryTimestamp: task.insertedDate,
+		})),
+		edited: recentlyEdited.map((task) => ({
+			...task,
+			category: "edited",
+			categoryTimestamp: task.lastEditedAt,
+		})),
+		viewed: recentlyViewed.map((v) => ({
+			...v.task,
+			category: "viewed",
+			categoryTimestamp: v.viewedAt,
+		})),
 	};
 
-	addTasks(recentlyCreated, "created");
-	addTasks(recentlyEdited, "edited");
-	addTasks(
-		recentlyViewed.map((v) => v.task),
-		"viewed",
-	);
+	// Function to distribute tasks dynamically
+	const distributeTasksDynamically = () => {
+		const distribution = [];
+		const categories = ["viewed", "created", "edited"];
+		const limits = {
+			viewed: Math.ceil(number / 3),
+			created: Math.floor((number + 1) / 3),
+			edited: Math.floor((number + 2) / 3),
+		};
+		const seenTaskIds = new Set();
 
-	console.log(taskMap);
+		for (const category of categories) {
+			let added = 0;
+			for (const task of categorizedTasks[
+				category as keyof typeof categorizedTasks
+			]) {
+				if (
+					!seenTaskIds.has(task.id) &&
+					added < limits[category as keyof typeof limits]
+				) {
+					distribution.push(task);
+					seenTaskIds.add(task.id);
+					added++;
+				}
+			}
+		}
 
-	const sortedTasks = Array.from(taskMap.values())
-		.sort((a, b) => {
-			if (a.category === "created" && b.category !== "created") return -1;
-			if (b.category === "created" && a.category !== "created") return 1;
-			if (a.category === "edited" && b.category !== "edited") return -1;
-			if (b.category === "edited" && a.category !== "edited") return 1;
-			return 0;
-		})
-		.slice(0, number);
+		if (distribution.length < number) {
+			for (const category of categories) {
+				for (const task of categorizedTasks[
+					category as keyof typeof categorizedTasks
+				]) {
+					if (!seenTaskIds.has(task.id)) {
+						distribution.push(task);
+						seenTaskIds.add(task.id);
+						if (distribution.length === number) break;
+					}
+				}
+				if (distribution.length === number) break;
+			}
+		}
 
+		return distribution;
+	};
+
+	const sortedTasks = distributeTasksDynamically().slice(0, number);
 	return sortedTasks;
 }
