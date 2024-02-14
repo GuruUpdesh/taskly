@@ -34,9 +34,12 @@ import { db } from "~/server/db";
 
 
 
-function UsersTable({ users, projectId, userRoles }: { users: User[], projectId: number, userRoles: {projectId: number, userId: string, userRole: string}[] }) {
+function UsersTable({ users, projectId, userRoles }: { users: User[], projectId: number, userRoles: { projectId: number, userId: string, userRole: string }[] }) {
 
 	console.log(userRoles);
+	const capitalizeFirstLetter = (str: string) => {
+		return str.toLowerCase().replace(/^\w|\s\w/g, (letter) => letter.toUpperCase());
+	};
 
 
 	return (
@@ -56,7 +59,9 @@ function UsersTable({ users, projectId, userRoles }: { users: User[], projectId:
 								<TableRow key={user.userId}>
 									<TableCell>{user.username}</TableCell>
 									<TableCell>
-										{userRoles.find((role) => role.userId === user.userId)?.userRole || "Member"}
+										{userRoles.find((role) => role.userId === user.userId)?.userRole
+											? capitalizeFirstLetter(userRoles.find((role) => role.userId === user.userId)?.userRole || 'undefined')
+											: "Member"}
 									</TableCell>
 									<TableCell>
 										<div className="flex">
@@ -70,7 +75,7 @@ function UsersTable({ users, projectId, userRoles }: { users: User[], projectId:
 															}}
 															style={{ background: "none", border: "none" }}
 														>
-															<Pencil2Icon className="w-4 h-4" /> 
+															<Pencil2Icon className="w-4 h-4" />
 														</Button>
 													</PopoverTrigger>
 													<PopoverContent className="w-80">
@@ -78,16 +83,16 @@ function UsersTable({ users, projectId, userRoles }: { users: User[], projectId:
 															<h4 className="font-medium leading-none">Edit {user.username}'s Role</h4>
 															<div className="space-y-2">
 																<Button variant="outline" onClick={() => {
-																throwClientError("Cannot change your own role");
-															}}>
+																	throwClientError("Cannot change your own role");
+																}}>
 																	Owner
 																</Button>
 																<div className="space-y-2">
-																<Button variant="outline"
-																onClick={() => {editUserRoles(user.userId)}}
-																>
-																	Member
-																</Button>
+																	<Button variant="outline"
+																		onClick={() => { editUserRoles(user.userId) }}
+																	>
+																		Member
+																	</Button>
 																</div>
 															</div>
 														</div>
@@ -124,13 +129,13 @@ function UsersTable({ users, projectId, userRoles }: { users: User[], projectId:
 																</Button>
 															</DialogClose>
 															<DialogClose asChild>
-																	<Button 
-																		type="submit" 
-																		variant="default" 
-																		onClick={() => deleteUserFromProject(user.userId, projectId)}
-																		>
-																		Yes
-																	</Button>
+																<Button
+																	type="submit"
+																	variant="default"
+																	onClick={() => deleteUserFromProject(user.userId, projectId)}
+																>
+																	Yes
+																</Button>
 															</DialogClose>
 														</DialogFooter>
 													</DialogContent>
