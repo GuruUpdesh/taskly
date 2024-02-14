@@ -13,13 +13,27 @@ import {
 
 import { throwClientError } from "~/utils/errors";
 
+import { Button } from "~/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "~/components/ui/dialog"
+
 import { type User } from "~/server/db/schema";
 import { Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
-import { deleteUserFromProject } from "~/actions/user-actions";
+import { deleteUserFromProject, getProjectOwner } from "~/actions/user-actions";
 
 
 
-function UsersTable({ users, projectId }: { users: User[], projectId: number}) {
+
+function UsersTable({ users, projectId }: { users: User[], projectId: number }) {
 
 	return (
 		<>
@@ -44,22 +58,74 @@ function UsersTable({ users, projectId }: { users: User[], projectId: number}) {
 									</TableCell>
 									<TableCell>
 										<div className="flex">
-											<button
-												className="flex h-min items-center justify-between space-x-2 whitespace-nowrap rounded-sm border-0 p-2 px-3 text-sm text-blue-500 ring-offset-background placeholder:text-muted-foreground focus:text-blue-300 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-												onClick={() => {
-													throwClientError(
-														"Not implemented (manage user)",
-													);
-												}}
-											>
-												<Pencil2Icon />
-											</button>
-											<button
-												className="ml-2 flex h-min items-center justify-between space-x-2 whitespace-nowrap rounded-sm border-0 p-2 px-3 text-sm text-red-500 ring-offset-background placeholder:text-muted-foreground focus:text-red-400 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-												onClick={() => deleteUserFromProject(user.userId, projectId)}
-											>
-												<TrashIcon />
-											</button>
+											<div>
+												<Popover>
+													<PopoverTrigger asChild>
+														<Button
+															className="flex h-min items-center justify-between space-x-2 whitespace-nowrap rounded-sm border-0 p-2 px-3 text-sm text-blue-500 ring-offset-background placeholder:text-muted-foreground focus:text-blue-300 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+															onClick={() => {
+																throwClientError("Not implemented (manage user)");
+															}}
+															style={{ background: "none", border: "none" }}
+														>
+															<Pencil2Icon className="w-4 h-4" /> {/* Adjust the size of the icon */}
+														</Button>
+													</PopoverTrigger>
+													<PopoverContent className="w-80">
+														<div className="space-y-2">
+															<h4 className="font-medium leading-none">Edit {user.username}'s Role</h4>
+															<div className="space-y-2">
+																<Button>Owner</Button>
+																<div className="space-y-2">
+																	<Button>Member</Button>
+																</div>
+															</div>
+														</div>
+													</PopoverContent>
+												</Popover>
+											</div>
+											<div>
+												<Dialog>
+													<DialogTrigger asChild>
+														<Button
+															className="flex h-min items-center justify-between space-x-2 whitespace-nowrap rounded-sm border-0 p-2 px-3 text-sm text-red-500 ring-offset-background placeholder:text-muted-foreground focus:text-blue-300 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+															// onClick={() => deleteUserFromProject(user.userId, projectId)}
+															style={{ background: "none", border: "none" }}
+														>
+															<TrashIcon />
+														</Button>
+													</DialogTrigger>
+													<DialogContent className="sm:max-w-[425px]">
+														<DialogHeader>
+															<DialogTitle>Are you sure you want to remove {user.username} from the Project?</DialogTitle>
+															<DialogDescription>
+																Warning, once this action is completed, it cannot be
+																undone. Are you sure you want to remove {user.username} from the Project?
+															</DialogDescription>
+														</DialogHeader>
+														<div className="flex items-center space-x-2">
+															<div className="grid flex-1 gap-2"></div>
+														</div>
+
+														<DialogFooter>
+															<DialogClose asChild>
+																<Button type="button" variant="secondary">
+																	No
+																</Button>
+															</DialogClose>
+															<DialogClose asChild>
+																	<Button 
+																		type="submit" 
+																		variant="default" 
+																		onClick={() => deleteUserFromProject(user.userId, projectId)}
+																		>
+																		Yes
+																	</Button>
+															</DialogClose>
+														</DialogFooter>
+													</DialogContent>
+												</Dialog>
+											</div>
 										</div>
 									</TableCell>
 								</TableRow>

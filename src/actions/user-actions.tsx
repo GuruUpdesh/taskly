@@ -85,6 +85,8 @@ export async function removeUserFromProject(formData: FormData) {
 
 export async function deleteUserFromProject(userId: string, projectId: number) {
 
+	//console.log('reched delete function')
+
 	if (!userId || !projectId) {
 		return false;
 	}
@@ -102,4 +104,13 @@ export async function deleteUserFromProject(userId: string, projectId: number) {
 			),
 		);
 	return true;
+
 }
+
+export async function getProjectOwner(userId: string): Promise<string> {
+
+	console.log('username', userId)
+	
+	return 'sdajkh'
+}
+
