@@ -121,16 +121,16 @@ export default async function projectSettingsGeneral({
 					)}
 				</div>
 			</div>
-			<div className="rounded-lg border p-4">
-				<h3 className={cn(typography.headers.h3)}>Users</h3>
-				<div style={{ width: "95%" }}>
-					<UsersTable users={users} />
-				</div>
-			</div>
 			<Permission
 				projectId={currentProject?.id ?? -1}
 				allowRoles={["owner"]}
 			>
+				<div className="rounded-lg border p-4">
+					<h3 className={cn(typography.headers.h3)}>Users</h3>
+					<div style={{ width: "95%" }}>
+						<UsersTable users={users} />
+					</div>
+				</div>
 				<div className="rounded-lg border p-4">
 					<h3 className={cn(typography.headers.h3)}>Invite</h3>
 					<div className="flex flex-col gap-4">
