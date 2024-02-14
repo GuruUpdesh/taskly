@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import DeleteProjectButton from "~/components/projects/delete-project-button";
 import { db } from "~/server/db";
-import { projects } from "~/server/db/schema";
+import { projects, usersToProjects } from "~/server/db/schema";
 import Permission from "~/components/auth/Permission";
 import { getAllUsersInProject } from "~/actions/project-actions";
 import { throwClientError } from "~/utils/errors";
@@ -21,7 +21,6 @@ import SprintOptionsForm from "~/components/projects/sprint-options/sprint-optio
 import EmailInviteWrapper from "~/components/invite/by-email/email-invite-wrapper";
 import InviteLinkWrapper from "~/components/invite/invite-link-wrapper";
 import LeaveProjectButton from "~/components/projects/leave-project-button";
-
 type Params = {
 	params: {
 		projectId: string;
@@ -36,6 +35,13 @@ export default async function projectSettingsGeneral({
 		.from(projects)
 		.where(eq(projects.id, Number(projectId)));
 
+	const getUserRoles = await db
+		.select()
+		.from(usersToProjects)
+		.where(eq(usersToProjects.projectId, Number(projectId)));
+
+	//console.log(getUserRoles);
+
 	const currentProject = getProjects[0];
 	if (!currentProject) {
 		return null;
@@ -43,6 +49,8 @@ export default async function projectSettingsGeneral({
 
 	const sprints = await getSprintsForProject(Number(projectId));
 	const users = await getAllUsersInProject(Number(projectId));
+	
+
 
 	if (!users) {
 		throwClientError("Failed to get users in project");
@@ -128,7 +136,7 @@ export default async function projectSettingsGeneral({
 				<div className="rounded-lg border p-4">
 					<h3 className={cn(typography.headers.h3)}>Users</h3>
 					<div style={{ width: "95%" }}>
-						<UsersTable users={users} projectId={currentProject?.id ?? -1}/>
+						<UsersTable users={users} projectId={currentProject?.id ?? -1} userRoles={getUserRoles}/>
 					</div>
 				</div>
 				<div className="rounded-lg border p-4">

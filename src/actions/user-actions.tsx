@@ -107,10 +107,4 @@ export async function deleteUserFromProject(userId: string, projectId: number) {
 
 }
 
-export async function getProjectOwner(userId: string): Promise<string> {
-
-	console.log('username', userId)
-	
-	return 'sdajkh'
-}
 

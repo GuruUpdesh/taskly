@@ -28,12 +28,16 @@ import {
 
 import { type User } from "~/server/db/schema";
 import { Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
-import { deleteUserFromProject, getProjectOwner } from "~/actions/user-actions";
+import { deleteUserFromProject } from "~/actions/user-actions";
+import { db } from "~/server/db";
 
 
 
 
-function UsersTable({ users, projectId }: { users: User[], projectId: number }) {
+function UsersTable({ users, projectId, userRoles }: { users: User[], projectId: number, userRoles: {projectId: number, userId: string, userRole: string}[] }) {
+
+	console.log(userRoles);
+
 
 	return (
 		<>
@@ -52,9 +56,7 @@ function UsersTable({ users, projectId }: { users: User[], projectId: number }) 
 								<TableRow key={user.userId}>
 									<TableCell>{user.username}</TableCell>
 									<TableCell>
-										{user.username == "Cameron Hollis"
-											? "Owner"
-											: "Member"}
+										{userRoles.find((role) => role.userId === user.userId)?.userRole || "Member"}
 									</TableCell>
 									<TableCell>
 										<div className="flex">
@@ -68,7 +70,7 @@ function UsersTable({ users, projectId }: { users: User[], projectId: number }) 
 															}}
 															style={{ background: "none", border: "none" }}
 														>
-															<Pencil2Icon className="w-4 h-4" /> {/* Adjust the size of the icon */}
+															<Pencil2Icon className="w-4 h-4" /> 
 														</Button>
 													</PopoverTrigger>
 													<PopoverContent className="w-80">
