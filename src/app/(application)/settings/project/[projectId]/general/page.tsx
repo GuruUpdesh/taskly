@@ -132,83 +132,10 @@ export default async function projectSettingsGeneral({
 				allowRoles={["owner"]}
 			>
 				<div className="rounded-lg border p-4">
-					<h3 className={cn(typography.headers.h3, "")}>
-						Project Information
-					</h3>
-					<p
-						className={cn(
-							typography.paragraph.p,
-							"!mt-2 mb-4 text-muted-foreground",
-						)}
-					>
-						General information about the project, make sure to save
-						any changes.
-					</p>
-					<div className="grid w-full max-w-sm items-center gap-1.5">
-						<Label htmlFor="projectName" className="font-bold">
-							Project Name
-						</Label>
-						<Input
-							type="text"
-							id="projectName"
-							className="mb-4"
-							value={currentProject?.name}
-							disabled
-						/>
-						<Label
-							htmlFor="projectDescription"
-							className="font-bold"
-						>
-							Project Description
-						</Label>
-						<Textarea
-							id="projectDescription"
-							placeholder="description"
-							disabled
-						/>
-					</div>
-				</div>
-				<div className="rounded-lg border p-4">
 					<h3 className={cn(typography.headers.h3)}>Invite</h3>
 					<div className="flex flex-col gap-4">
 						<EmailInviteWrapper projectId={projectId} />
 						<InviteLinkWrapper projectId={projectId} />
-					</div>
-				</div>
-				<div className="rounded-lg border p-4">
-					<h3 className={cn(typography.headers.h3, "")}>Theme</h3>
-					<p
-						className={cn(
-							typography.paragraph.p,
-							"!mt-2 mb-4 text-muted-foreground",
-						)}
-					>
-						Update the way your project looks and feels.
-					</p>
-					<div className="grid w-full max-w-sm items-center gap-1.5">
-						{currentProject.image && (
-							<>
-								<Label
-									htmlFor="projectName"
-									className="font-bold"
-								>
-									Icon
-								</Label>
-								<Image
-									src={currentProject?.image}
-									alt="Project Icon"
-									width={50}
-									height={50}
-									className="rounded-full border"
-								/>
-							</>
-						)}
-					</div>
-				</div>
-				<div className="rounded-lg border p-4">
-					<h3 className={cn(typography.headers.h3)}>Users</h3>
-					<div style={{ width: "95%" }}>
-						<UsersTable users={users} />
 					</div>
 				</div>
 				<div className="flex flex-col rounded-lg border p-4">
