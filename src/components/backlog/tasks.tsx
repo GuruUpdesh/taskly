@@ -27,6 +27,7 @@ import type {
 	Sprint,
 } from "~/server/db/schema";
 import { updateOrder } from "~/utils/order";
+import Message from "~/components/general/message";
 
 export type UpdateTask = {
 	id: number;
@@ -154,6 +155,18 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		);
 		orderTasksMutation.mutate(taskOrderMap);
 	}
+
+	if (taskOrder.length === 0)
+		return (
+			<Message
+				type="faint"
+				description={
+					<p className="py-2">Please create a task to get started.</p>
+				}
+			>
+				This project doesn&apos;t have any tasks yet.
+			</Message>
+		);
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>

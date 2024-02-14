@@ -8,9 +8,9 @@ import {
 	buildDynamicOptions,
 	getTaskConfig,
 	taskSchema,
-} from "~/entities/task-entity";
+} from "~/config/task-entity";
 import type { NewTask, Sprint, Task, User } from "~/server/db/schema";
-import PropertySelect from "../backlog/task/property/propery-select";
+import PropertySelect from "~/components/backlog/task/property/propery-select";
 
 type Props = {
 	task: Task;

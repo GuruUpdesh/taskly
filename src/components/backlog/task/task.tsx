@@ -9,7 +9,7 @@ import {
 	type Sprint,
 } from "~/server/db/schema";
 import Property from "./property/property";
-import { taskSchema } from "~/entities/task-entity";
+import { taskSchema } from "~/config/task-entity";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";

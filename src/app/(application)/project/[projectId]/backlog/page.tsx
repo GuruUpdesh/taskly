@@ -3,12 +3,12 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
-import Tasks from "../../../../../components/backlog/tasks";
+import Tasks from "~/components/backlog/tasks";
 import { getTasksFromProject } from "~/actions/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import CreateTask from "~/components/backlog/create-task";
 import { getAssigneesForProject } from "~/actions/project-actions";
-import AiDialog from "~/app/(application)/tasks/ai-dialog";
+import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
 import { getSprintsForProject } from "~/actions/sprint-actions";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 
@@ -29,8 +29,8 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 	});
 
 	return (
-		<div className="max-h-screen overflow-y-scroll pt-2">
-			<header className="flex items-center justify-between gap-2 border-b px-4 pb-2">
+		<div className="max-h-screen overflow-y-scroll">
+			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b bg-background/75 px-4 pb-2 pt-2 backdrop-blur-xl">
 				<div className="flex items-center gap-2">
 					<ToggleSidebarButton />
 					<BreadCrumbs />

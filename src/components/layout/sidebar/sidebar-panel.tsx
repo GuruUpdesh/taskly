@@ -53,7 +53,6 @@ const SidebarPanel = ({
 			direction="horizontal"
 			onLayout={onLayout}
 			id="group"
-			autoSaveId="minMax"
 		>
 			<ResizablePanel
 				ref={sidebarRef}

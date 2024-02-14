@@ -5,7 +5,7 @@ import {
 	buildDynamicOptions,
 	defaultValues,
 	getTaskConfig,
-} from "~/entities/task-entity";
+} from "~/config/task-entity";
 import { useNavigationStore } from "~/store/navigation";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,8 +18,8 @@ import {
 } from "~/server/db/schema";
 import { createTask } from "~/actions/task-actions";
 import { toast } from "sonner";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import PropertySelect from "./task/property/propery-select";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
@@ -70,7 +70,7 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 	};
 
 	return (
-		<form className="px-4">
+		<form className="px-4" onSubmit={form.handleSubmit(onSubmit)}>
 			<input type="hidden" {...form.register("projectId")} />
 			<Input
 				type="text"

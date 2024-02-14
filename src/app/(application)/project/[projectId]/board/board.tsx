@@ -16,7 +16,7 @@ import {
 	getOptionForStatus,
 	getStatusDisplayName,
 	taskStatuses,
-} from "~/entities/task-entity";
+} from "~/config/task-entity";
 import { cn } from "~/lib/utils";
 import type {
 	NewTask,

@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { Button } from "../ui/button";
+import { Button } from "~/components/ui/button";
 import { CopyIcon } from "lucide-react";
 import { toast } from "sonner";
-import { Input } from "../ui/input";
+import { Input } from "~/components/ui/input";
 
 type Props = {
 	token: string;

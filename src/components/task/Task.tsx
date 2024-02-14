@@ -5,17 +5,17 @@ import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
-} from "../ui/resizable";
-import BreadCrumbs from "../layout/breadcrumbs/breadcrumbs";
+} from "~/components/ui/resizable";
+import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import PrimaryTaskForm from "./PrimaryTaskForm";
 import type { NewTask, Sprint, User } from "~/server/db/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTask, updateTask } from "~/actions/task-actions";
 import SecondaryTaskForm from "./SecondaryTaskForm";
-import { Button } from "../ui/button";
+import { Button } from "~/components/ui/button";
 import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
-import { Separator } from "../ui/separator";
-import BackButtonRelative from "../layout/navbar/back-button-relative";
+import { Separator } from "~/components/ui/separator";
+import BackButtonRelative from "~/components/layout/navbar/back-button-relative";
 import TaskState from "./task-state";
 
 type Props = {

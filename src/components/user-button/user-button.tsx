@@ -1,8 +1,8 @@
 import React from "react";
 import { auth, clerkClient } from "@clerk/nextjs";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
-import UserProfilePicture from "../user-profile-picture";
+import { Button } from "~/components/ui/button";
+import UserProfilePicture from "~/components/user-profile-picture";
 import UserMenu from "./user-menu";
 
 const UserButton = async () => {

@@ -1,11 +1,11 @@
 import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { ClerkProvider } from "@clerk/nextjs";
-import { ThemeProvider } from "~/components/ui/theme-provider";
 import { cn } from "~/lib/utils";
 import { Toaster } from "~/components/ui/sonner";
 import { dark } from "@clerk/themes";
-import Providers from "./providers";
+import ReactQueryProvider from "~/lib/react-query-provider";
+import GlobalToastHandler from "~/lib/global-toast/global-toast-handler";
 
 export const metadata = {
 	title: "Taskly",
@@ -28,25 +28,21 @@ export default function RootLayout({
 				},
 			}}
 		>
-			<html lang="en" suppressHydrationWarning>
-				<body
-					className={cn(
-						"min-h-screen bg-background bg-gradient-to-b from-[#02091a]  to-[#010714] font-sans antialiased",
-						GeistSans.className,
-					)}
-				>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="system"
-						enableSystem
+			<GlobalToastHandler>
+				<html lang="en" suppressHydrationWarning>
+					<body
+						className={cn(
+							"min-h-screen bg-background bg-gradient-to-b from-[#02091a]  to-[#010714] font-sans antialiased",
+							GeistSans.className,
+						)}
 					>
-						<Providers>
+						<ReactQueryProvider>
 							<main>{children}</main>
-						</Providers>
-					</ThemeProvider>
-					<Toaster richColors />
-				</body>
-			</html>
+						</ReactQueryProvider>
+						<Toaster richColors />
+					</body>
+				</html>
+			</GlobalToastHandler>
 		</ClerkProvider>
 	);
 }

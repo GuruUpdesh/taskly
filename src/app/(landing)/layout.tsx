@@ -2,7 +2,6 @@ import React from "react";
 import Navbar from "~/components/layout/navbar/navbar";
 import ProjectList from "~/components/layout/navbar/project-list";
 import Image from "next/image";
-import { ModeToggle } from "~/components/themes-switcher";
 import Link from "next/link";
 import UserNav from "~/components/layout/user-nav";
 
@@ -26,10 +25,7 @@ export default function LandingLayout({
 					<Navbar>
 						<ProjectList />
 					</Navbar>
-					<div className="flex items-center space-x-2">
-						<ModeToggle />
-						<UserNav />
-					</div>
+					<UserNav />
 				</div>
 			</header>
 			{children}
