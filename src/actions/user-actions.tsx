@@ -107,4 +107,10 @@ export async function deleteUserFromProject(userId: string, projectId: number) {
 
 }
 
+export async function editUserRoles(userId: string) {
+
+	console.log('reched edit user role function')
+
+}
+
 

@@ -28,7 +28,7 @@ import {
 
 import { type User } from "~/server/db/schema";
 import { Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
-import { deleteUserFromProject } from "~/actions/user-actions";
+import { deleteUserFromProject, editUserRoles } from "~/actions/user-actions";
 import { db } from "~/server/db";
 
 
@@ -77,9 +77,17 @@ function UsersTable({ users, projectId, userRoles }: { users: User[], projectId:
 														<div className="space-y-2">
 															<h4 className="font-medium leading-none">Edit {user.username}'s Role</h4>
 															<div className="space-y-2">
-																<Button>Owner</Button>
+																<Button variant="outline" onClick={() => {
+																throwClientError("Cannot change your own role");
+															}}>
+																	Owner
+																</Button>
 																<div className="space-y-2">
-																	<Button>Member</Button>
+																<Button variant="outline"
+																onClick={() => {editUserRoles(user.userId)}}
+																>
+																	Member
+																</Button>
 																</div>
 															</div>
 														</div>
