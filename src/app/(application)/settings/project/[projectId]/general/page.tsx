@@ -22,7 +22,6 @@ import EmailInviteWrapper from "~/components/invite/by-email/email-invite-wrappe
 import InviteLinkWrapper from "~/components/invite/invite-link-wrapper";
 import LeaveProjectButton from "~/components/projects/leave-project-button";
 
-
 type Params = {
 	params: {
 		projectId: string;
