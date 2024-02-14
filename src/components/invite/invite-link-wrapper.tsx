@@ -17,7 +17,7 @@ const InviteLinkWrapper = async ({ projectId }: Props) => {
 	if (token === false) return null;
 
 	return (
-		<div className="container flex flex-col pt-4">
+		<div className="flex flex-col">
 			<p className="text-muted-foreground">
 				Invite a user using the link below!
 			</p>

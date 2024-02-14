@@ -1,9 +1,11 @@
 "use server";
 
-import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
-import { type UserRole, usersToProjects, type User } from "~/server/db/schema";
+import { type UserRole, usersToProjects, type User, tasks } from "~/server/db/schema";
 import { authenticate } from "./utils/action-utils";
+import { and, eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
+
 
 export async function addUserToProject(
 	userId: string,
@@ -51,4 +53,28 @@ export async function getUser(): Promise<GetUserResponse> {
 	}
 
 	return { success: true, message: "User found", user };
+}
+
+export async function removeUserFromProject(formData: FormData) {
+	const currProjectId = formData.get("projectId");
+	const userId = authenticate();
+
+	if (!currProjectId || !userId) {
+		return false;
+	}
+	await db
+		.delete(usersToProjects)
+		.where(eq(usersToProjects.userId, String(userId)));
+
+	await db
+		.update(tasks)
+		.set({ assignee: null })
+		.where(
+			and(
+				eq(tasks.projectId, Number(currProjectId)),
+				eq(tasks.assignee, String(userId)),
+			),
+		);
+
+	redirect("/");
 }
