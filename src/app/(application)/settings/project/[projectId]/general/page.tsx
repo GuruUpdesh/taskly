@@ -14,13 +14,14 @@ import { Textarea } from "~/components/ui/textarea";
 import { getSprintsForProject } from "~/actions/sprint-actions";
 import CreateSprintButton from "~/components/projects/create-sprint-button";
 import { format, isAfter, isBefore } from "date-fns";
-import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import SprintOptionsForm from "~/components/projects/sprint-options/sprint-options-form";
 import EmailInviteWrapper from "~/components/invite/by-email/email-invite-wrapper";
 import InviteLinkWrapper from "~/components/invite/invite-link-wrapper";
+import LeaveProjectButton from "~/components/projects/leave-project-button";
+
 
 type Params = {
 	params: {
@@ -60,6 +61,73 @@ export default async function projectSettingsGeneral({
 					includes user permissions, project details, and more.
 				</p>
 			</header>
+			<div className="rounded-lg border p-4">
+				<h3 className={cn(typography.headers.h3, "")}>
+					Project Information
+				</h3>
+				<p
+					className={cn(
+						typography.paragraph.p,
+						"!mt-2 mb-4 text-muted-foreground",
+					)}
+				>
+					General information about the project, make sure to save any
+					changes.
+				</p>
+				<div className="grid w-full max-w-sm items-center gap-1.5">
+					<Label htmlFor="projectName" className="font-bold">
+						Project Name
+					</Label>
+					<Input
+						type="text"
+						id="projectName"
+						className="mb-4"
+						value={currentProject?.name}
+						disabled
+					/>
+					<Label htmlFor="projectDescription" className="font-bold">
+						Project Description
+					</Label>
+					<Textarea
+						id="projectDescription"
+						placeholder="description"
+						disabled
+					/>
+				</div>
+			</div>
+			<div className="rounded-lg border p-4">
+				<h3 className={cn(typography.headers.h3, "")}>Theme</h3>
+				<p
+					className={cn(
+						typography.paragraph.p,
+						"!mt-2 mb-4 text-muted-foreground",
+					)}
+				>
+					Update the way your project looks and feels.
+				</p>
+				<div className="grid w-full max-w-sm items-center gap-1.5">
+					{currentProject.image && (
+						<>
+							<Label htmlFor="projectName" className="font-bold">
+								Icon
+							</Label>
+							<Image
+								src={currentProject?.image}
+								alt="Project Icon"
+								width={50}
+								height={50}
+								className="rounded-full border"
+							/>
+						</>
+					)}
+				</div>
+			</div>
+			<div className="rounded-lg border p-4">
+				<h3 className={cn(typography.headers.h3)}>Users</h3>
+				<div style={{ width: "95%" }}>
+					<UsersTable users={users} />
+				</div>
+			</div>
 			<Permission
 				projectId={currentProject?.id ?? -1}
 				allowRoles={["owner"]}
@@ -217,17 +285,25 @@ export default async function projectSettingsGeneral({
 					</p>
 					<SprintOptionsForm project={currentProject} />
 				</div>
-				<div className="rounded-lg border border-red-500 p-4">
-					<h3 className={cn(typography.headers.h3)}>Danger Zone</h3>
-					<Button>Leave Project</Button>
+			</Permission>
+			<div className="rounded-lg border border-red-500 p-4">
+				<h3 className={cn(typography.headers.h3)}>Danger Zone</h3>
+				<LeaveProjectButton
+					projectName={currentProject ? currentProject.name : "error"}
+					projectId={projectId}
+				/>
+				<Permission
+					projectId={currentProject?.id ?? -1}
+					allowRoles={["owner"]}
+				>
 					<DeleteProjectButton
 						projectName={
 							currentProject ? currentProject.name : "error"
 						}
 						projectId={projectId}
 					/>
-				</div>
-			</Permission>
+				</Permission>
+			</div>
 		</div>
 	);
 }
