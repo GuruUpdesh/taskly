@@ -25,7 +25,7 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 	return (
 		<div className="relative h-full @container">
 			<SidebarBackgroundWrapper projectId={projectId} />
-			<div className="flex min-w-0 items-center justify-center  gap-1 border-b py-2 @sidebar:justify-between @sidebar:gap-8 @sidebar:px-4 ">
+			<div className="flex min-w-0 items-center justify-center gap-1 border-b py-2 @sidebar:justify-between @sidebar:gap-8 @sidebar:px-4 ">
 				<SidebarButton
 					label="Home"
 					icon={<HomeIcon />}
@@ -96,7 +96,7 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 					<SidebarButton
 						label="Settings"
 						icon={<GearIcon className="min-w-4" />}
-						url="/settings"
+						url={`/settings/project/${projectId}/general`}
 					/>
 				</div>
 			</div>

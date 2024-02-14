@@ -8,7 +8,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { getStatusDisplayName } from "~/entities/task-entity";
+import { getStatusDisplayName } from "~/config/task-entity";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { Label } from "~/components/ui/label";

@@ -2,13 +2,12 @@
 import { IBM_Plex_Sans } from "next/font/google";
 import { cn } from "~/lib/utils";
 import { BookIcon, Brain, LampDesk, Network, Rabbit } from "lucide-react";
-import MarketingBlock from "~/components/landing/marketing-block";
-import MarketingGrid from "~/components/landing/marketing-grid";
-import MarketingTaskChips from "~/components/landing/marketing-task-chips";
-import MarketingSubHeaderChips from "~/components/landing/marketing-subheader-chips";
-import ButtonOptions from "~/components/landing/button-options";
-import Grid from "~/components/landing/background-grid";
-import ErrorMessages from "~/components/error/ErrorMessages";
+import MarketingBlock from "~/components/page/landing/marketing/marketing-block";
+import MarketingGrid from "~/components/page/landing/marketing/marketing-grid";
+import MarketingTaskChips from "~/components/page/landing/marketing/marketing-task-chips";
+import MarketingSubHeaderChips from "~/components/page/landing/marketing/marketing-subheader-chips";
+import ButtonOptions from "~/components/page/landing/button-options";
+import Grid from "~/components/page/landing/background-grid";
 
 const plexSans = IBM_Plex_Sans({
 	weight: ["300", "500", "700"],
@@ -18,7 +17,6 @@ const plexSans = IBM_Plex_Sans({
 export default function HomePage() {
 	return (
 		<div>
-			<ErrorMessages />
 			<div className="absolute z-[-1] h-full w-full fade-in-5">
 				<Grid />
 				<img

@@ -9,8 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { z } from "zod";
 import _debounce from "lodash/debounce";
-import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
+import { Separator } from "~/components/ui/separator";
+import { Button } from "~/components/ui/button";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 
 type Props = {

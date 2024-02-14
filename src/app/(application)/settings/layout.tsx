@@ -1,5 +1,5 @@
 import React from "react";
-import SettingsSidebar from "~/components/layout/settings-sidebar/settings-sidebar";
+import SettingsSidebar from "~/components/page/settings/sidebar/settings-sidebar";
 import {
 	ResizableHandle,
 	ResizablePanel,

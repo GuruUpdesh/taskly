@@ -15,7 +15,7 @@ import {
 } from "~/components/ui/select";
 
 // utils
-import { type buildDynamicOptions } from "~/entities/task-entity";
+import { type buildDynamicOptions } from "~/config/task-entity";
 import { cva } from "class-variance-authority";
 import { cn } from "~/lib/utils";
 import * as SelectPrimitive from "@radix-ui/react-select";

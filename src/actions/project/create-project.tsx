@@ -1,7 +1,7 @@
 "use server";
 
 import { getAverageColor } from "fast-average-color-node";
-import { generateProjectImage } from "../ai-action";
+import { generateProjectImage } from "~/actions/ai-action";
 import chroma from "chroma-js";
 import { kv } from "@vercel/kv";
 import { db } from "~/server/db";
@@ -11,12 +11,12 @@ import {
 	insertProjectSchema,
 } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
-import { addUserToProject } from "../user-actions";
-import { type CreateForm } from "../project-actions";
+import { addUserToProject } from "~/actions/user-actions";
+import { type CreateForm } from "~/actions/project-actions";
 import { addMinutes, startOfDay } from "date-fns";
-import { createSprintForProject } from "../sprint-actions";
-import { authenticate } from "../utils/action-utils";
-import { createInvite } from "../invite-actions";
+import { createSprintForProject } from "~/actions/sprint-actions";
+import { authenticate } from "~/actions/utils/action-utils";
+import { createInvite } from "~/actions/invite-actions";
 
 type ProjectResponse = {
 	newProjectId: number;

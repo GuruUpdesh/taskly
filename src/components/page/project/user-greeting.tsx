@@ -2,7 +2,7 @@ import React from "react";
 import { toast } from "sonner";
 import { getUser } from "~/actions/user-actions";
 import { getTimeOfDay } from "~/utils/time";
-import typography from "~/utils/typography";
+import typography from "~/styles/typography";
 
 async function UserGreeting() {
 	const result = await getUser();

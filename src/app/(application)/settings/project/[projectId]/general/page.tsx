@@ -6,7 +6,7 @@ import Permission from "~/components/auth/Permission";
 import { getAllUsersInProject } from "~/actions/project-actions";
 import { throwClientError } from "~/utils/errors";
 import UsersTable from "~/components/projects/users-table";
-import typography from "~/utils/typography";
+import typography from "~/styles/typography";
 import { Input } from "~/components/ui/input";
 import { cn } from "~/lib/utils";
 import { Label } from "~/components/ui/label";

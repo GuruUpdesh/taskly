@@ -1,6 +1,6 @@
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
-import { buildDynamicOptions, getTaskConfig } from "~/entities/task-entity";
+import { buildDynamicOptions, getTaskConfig } from "~/config/task-entity";
 import type { User, NewTask, Task, Sprint } from "~/server/db/schema";
 import PropertyStatic from "./property-static";
 import PropertySelect from "./propery-select";
