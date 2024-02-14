@@ -18,6 +18,8 @@ import { Separator } from "~/components/ui/separator";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import SprintOptionsForm from "~/components/projects/sprint-options/sprint-options-form";
+import EmailInviteWrapper from "~/components/invite/by-email/email-invite-wrapper";
+import InviteLinkWrapper from "~/components/invite/invite-link-wrapper";
 import LeaveProjectButton from "~/components/projects/leave-project-button";
 
 type Params = {
@@ -129,6 +131,13 @@ export default async function projectSettingsGeneral({
 				projectId={currentProject?.id ?? -1}
 				allowRoles={["owner"]}
 			>
+				<div className="rounded-lg border p-4">
+					<h3 className={cn(typography.headers.h3)}>Invite</h3>
+					<div className="flex flex-col gap-4">
+						<EmailInviteWrapper projectId={projectId} />
+						<InviteLinkWrapper projectId={projectId} />
+					</div>
+				</div>
 				<div className="flex flex-col rounded-lg border p-4">
 					<div className="flex items-center justify-between">
 						<h3 className={cn(typography.headers.h3, "mb-4")}>
