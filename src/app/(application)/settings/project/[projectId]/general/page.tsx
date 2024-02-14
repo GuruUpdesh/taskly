@@ -212,23 +212,25 @@ export default async function projectSettingsGeneral({
 					<SprintOptionsForm project={currentProject} />
 				</div>
 			</Permission>
-			<div className="rounded-lg border border-red-500 p-4">
+			<div className="rounded-lg border p-4">
 				<h3 className={cn(typography.headers.h3)}>Danger Zone</h3>
-				<LeaveProjectButton
-					projectName={currentProject ? currentProject.name : "error"}
-					projectId={projectId}
-				/>
-				<Permission
-					projectId={currentProject?.id ?? -1}
-					allowRoles={["owner"]}
-				>
-					<DeleteProjectButton
-						projectName={
-							currentProject ? currentProject.name : "error"
-						}
+				<div className="flex items-center gap-3">
+					<LeaveProjectButton
+						projectName={currentProject ? currentProject.name : "error"}
 						projectId={projectId}
 					/>
-				</Permission>
+					<Permission
+						projectId={currentProject?.id ?? -1}
+						allowRoles={["owner"]}
+					>
+						<DeleteProjectButton
+							projectName={
+								currentProject ? currentProject.name : "error"
+							}
+							projectId={projectId}
+						/>
+					</Permission>
+				</div>
 			</div>
 		</div>
 	);
