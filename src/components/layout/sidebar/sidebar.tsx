@@ -57,6 +57,11 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 				<Separator />
 				<div className="border-b pb-4">
 					<SidebarButton
+						label="Dashboard"
+						icon={<DashboardIcon className="min-w-4" />}
+						url={`/project/${projectId}`}
+					/>
+					<SidebarButton
 						label="Inbox"
 						icon={
 							<div className="relative">
@@ -67,11 +72,6 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 							</div>
 						}
 						url={`/project/${projectId}/inbox`}
-					/>
-					<SidebarButton
-						label="Dashboard"
-						icon={<DashboardIcon className="min-w-4" />}
-						url={`/project/${projectId}/dashboard`}
 					/>
 					<SidebarButton
 						label="Docs"

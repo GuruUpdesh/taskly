@@ -41,6 +41,10 @@ export const tasks = mysqlTable("tasks", {
 	backlogOrder: int("backlog_order").notNull().default(0),
 	assignee: varchar("assignee", { length: 255 }),
 	projectId: int("project_id").notNull(),
+	lastEditedAt: datetime("last_edit", { mode: "date", fsp: 6 }),
+	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
+		.notNull()
+		.default(new Date()),
 	sprintId: int("sprint_id"),
 });
 
@@ -73,7 +77,7 @@ export type Task = InferSelectModel<typeof tasks>;
 export type NewTask = Omit<z.infer<typeof selectTaskSchema>, "id">;
 
 // relations
-export const taskRelations = relations(tasks, ({ one }) => ({
+export const taskRelations = relations(tasks, ({ one, many }) => ({
 	project: one(projects, {
 		fields: [tasks.projectId],
 		references: [projects.id],
@@ -82,6 +86,7 @@ export const taskRelations = relations(tasks, ({ one }) => ({
 		fields: [tasks.assignee],
 		references: [users.userId],
 	}),
+	views: many(tasksToViews),
 	sprint: one(sprints, {
 		fields: [tasks.sprintId],
 		references: [sprints.id],
@@ -138,6 +143,7 @@ export type NewUser = z.infer<typeof insertUserSchema>;
 export const usersRelations = relations(users, ({ many }) => ({
 	usersToProjects: many(usersToProjects),
 	tasks: many(tasks),
+	views: many(tasksToViews),
 }));
 
 /**
@@ -204,8 +210,42 @@ export const inviteRelations = relations(invites, ({ one }) => ({
 }));
 
 /**
- * Sprints Schema
+ * Task to Views
  */
+export const tasksToViews = mysqlTable(
+	"tasks_to_views",
+	{
+		taskId: int("task_id").notNull(),
+		userId: varchar("user_id", { length: 32 }).notNull(),
+		viewedAt: datetime("viewed_at", { mode: "date", fsp: 6 }).notNull(),
+	},
+	(t) => ({
+		pk: primaryKey(t.userId, t.taskId),
+	}),
+);
+
+// validators
+export const selectTaskToViewSchema = createSelectSchema(tasksToViews);
+
+// types
+export type TaskToView = InferSelectModel<typeof tasksToViews>;
+
+// relations
+export const taskToViewRelations = relations(tasksToViews, ({ one }) => ({
+	task: one(tasks, {
+		fields: [tasksToViews.taskId],
+		references: [tasks.id],
+	}),
+	user: one(users, {
+		fields: [tasksToViews.userId],
+		references: [users.userId],
+	}),
+}));
+
+/**
+ * Sprints
+ */
+
 export const sprints = mysqlTable("sprints", {
 	id: serial("id").primaryKey(),
 	startDate: datetime("start_date", { mode: "date", fsp: 0 })

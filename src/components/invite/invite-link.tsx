@@ -17,7 +17,7 @@ function InviteLink({ token }: Props) {
 		toast.info("Copied to clipboard!");
 	};
 	return (
-		<>
+		<div className="flex items-center">
 			<Input
 				value={link}
 				onChange={(e) => {
@@ -27,13 +27,13 @@ function InviteLink({ token }: Props) {
 			/>
 			<Button
 				onClick={handleCopyToClipboard}
-				className="gap-1"
+				className="ml-2 gap-1" // Added ml-2 for left margin
 				type="button"
 			>
 				<CopyIcon className="h-4 w-4" />
 				Copy
 			</Button>
-		</>
+		</div>
 	);
 }
 

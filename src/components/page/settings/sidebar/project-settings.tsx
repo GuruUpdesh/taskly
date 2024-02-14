@@ -21,10 +21,6 @@ const ProjectSettings = () => {
 					label="General"
 					url={`/settings/project/${project.id}/general`}
 				/>
-				<SidebarButton
-					label="Invite"
-					url={`/settings/project/${project.id}/invite`}
-				/>
 			</div>
 		</>
 	);

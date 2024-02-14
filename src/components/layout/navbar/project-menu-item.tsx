@@ -8,7 +8,9 @@ import {
 	NavigationMenuLink,
 	NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
-import { Plus } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import ProjectImage from "~/components/page/project/project-image";
 
 type ProjectMenuItemProps = {
 	projects: Project[];
@@ -17,25 +19,40 @@ type ProjectMenuItemProps = {
 const ProjectMenuItem = ({ projects }: ProjectMenuItemProps) => {
 	return (
 		<NavigationMenuItem>
-			<NavigationMenuTrigger>Projects</NavigationMenuTrigger>
-			<NavigationMenuContent className="absolute left-0 top-0 w-full">
-				<ul className="grid w-[200px] gap-3 p-4 md:grid-cols-1">
+			<NavigationMenuTrigger className="text-base">
+				Projects
+			</NavigationMenuTrigger>
+			<NavigationMenuContent>
+				<ul className="grid grid-cols-[1fr_1fr_1fr] gap-3 p-4">
 					{projects.map((project) => (
 						<NavigationMenuLink
 							key={project.id}
 							href={`/project/${project.id}/backlog`}
+							className="min-w-max "
 						>
-							{project.name}
+							<Button
+								variant="outline"
+								className="w-full items-center justify-between gap-1 whitespace-nowrap"
+							>
+								<ProjectImage project={project} />
+								<span className="mx-1">{project.name}</span>
+								<ChevronRight className="h-4 w-4" />
+							</Button>
 						</NavigationMenuLink>
 					))}
-					<NavigationMenuLink
-						href="create-project"
-						className="flex items-center gap-1"
-					>
-						<Plus className="h-4 w-4" />
-						Create Project
-					</NavigationMenuLink>
 				</ul>
+				<NavigationMenuLink
+					href="create-project"
+					className="mx-2 mb-2 flex min-w-max items-center gap-1"
+				>
+					<Button
+						variant="outline"
+						className="w-full items-center justify-between gap-1 whitespace-nowrap"
+					>
+						Create Project
+						<Plus className="h-4 w-4" />
+					</Button>
+				</NavigationMenuLink>
 			</NavigationMenuContent>
 		</NavigationMenuItem>
 	);

@@ -46,7 +46,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 	const result = useQuery({
 		queryKey: ["tasks"],
 		queryFn: () => getTasksFromProject(parseInt(projectId)),
-		staleTime: 2 * 1000,
+		staleTime: 6 * 1000,
 		refetchInterval: 6 * 1000,
 	});
 
@@ -64,6 +64,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 	const addTaskMutation = useMutation({
 		mutationFn: ({ id, newTask }: UpdateTask) => updateTask(id, newTask),
 		onMutate: async ({ id, newTask }) => {
+			console.log("onMutate > addTaskMutation");
 			await queryClient.cancelQueries({ queryKey: ["tasks"] });
 			const previousTasks = queryClient.getQueryData<TaskType[]>([
 				"tasks",
@@ -87,6 +88,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 	const deleteTaskMutation = useMutation({
 		mutationFn: (id: number) => deleteTask(id),
 		onMutate: async (id) => {
+			console.log("onMutate > deleteTaskMutation");
 			await queryClient.cancelQueries({ queryKey: ["tasks"] });
 			const previousTasks = queryClient.getQueryData<TaskType[]>([
 				"tasks",
@@ -107,6 +109,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 	const orderTasksMutation = useMutation({
 		mutationFn: (taskOrder: Map<number, number>) => updateOrder(taskOrder),
 		onMutate: async (taskOrder: Map<number, number>) => {
+			console.log("onMutate > orderTasksMutation");
 			await queryClient.cancelQueries({ queryKey: ["tasks"] });
 
 			const previousTasks = queryClient.getQueryData<TaskType[]>([

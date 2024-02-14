@@ -45,7 +45,7 @@ import { sendEmailInvites } from "~/actions/invite-actions";
 import { type ProjectSprintOptions } from "~/components/projects/sprint-options/sprint-options-form";
 
 const CreateProjectSchema = z.object({
-	name: z.string().min(3).max(255),
+	name: z.string().min(3).max(25),
 	description: z.string().optional(),
 	sprintDuration: z.number().min(1).max(4),
 	sprintStart: z.date().min(endOfYesterday()),
