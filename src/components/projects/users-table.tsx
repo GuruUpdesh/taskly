@@ -15,8 +15,12 @@ import { throwClientError } from "~/utils/errors";
 
 import { type User } from "~/server/db/schema";
 import { Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
+import { deleteUserFromProject } from "~/actions/user-actions";
 
-function UsersTable({ users }: { users: User[] }) {
+
+
+function UsersTable({ users, projectId }: { users: User[], projectId: number}) {
+
 	return (
 		<>
 			<Table>
@@ -52,11 +56,7 @@ function UsersTable({ users }: { users: User[] }) {
 											</button>
 											<button
 												className="ml-2 flex h-min items-center justify-between space-x-2 whitespace-nowrap rounded-sm border-0 p-2 px-3 text-sm text-red-500 ring-offset-background placeholder:text-muted-foreground focus:text-red-400 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-												onClick={() => {
-													throwClientError(
-														"Not implemented (delete user)",
-													);
-												}}
+												onClick={() => deleteUserFromProject(user.userId, projectId)}
 											>
 												<TrashIcon />
 											</button>

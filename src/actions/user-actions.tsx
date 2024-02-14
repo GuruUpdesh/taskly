@@ -82,3 +82,24 @@ export async function removeUserFromProject(formData: FormData) {
 
 	redirect("/");
 }
+
+export async function deleteUserFromProject(userId: string, projectId: number) {
+
+	if (!userId || !projectId) {
+		return false;
+	}
+	await db
+		.delete(usersToProjects)
+		.where(eq(usersToProjects.userId, userId))
+
+	await db
+		.update(tasks)
+		.set({ assignee: null })
+		.where(
+			and(
+				eq(tasks.projectId, projectId),
+				eq(tasks.assignee, userId),
+			),
+		);
+	return true;
+}

@@ -128,7 +128,7 @@ export default async function projectSettingsGeneral({
 				<div className="rounded-lg border p-4">
 					<h3 className={cn(typography.headers.h3)}>Users</h3>
 					<div style={{ width: "95%" }}>
-						<UsersTable users={users} />
+						<UsersTable users={users} projectId={currentProject?.id ?? -1}/>
 					</div>
 				</div>
 				<div className="rounded-lg border p-4">
