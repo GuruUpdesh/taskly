@@ -39,7 +39,6 @@ function Property({
 				form={form}
 				col={property}
 				config={config}
-				isNew={false}
 				onSubmit={onSubmit}
 				size={size}
 			/>

@@ -130,6 +130,8 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 							col !== "projectId" &&
 							col !== "backlogOrder" &&
 							col !== "boardOrder" &&
+							col !== "lastEditedAt" &&
+							col !== "insertedDate" &&
 							getTaskConfig(col).type === "select",
 					)
 					.map((col) => {
@@ -152,7 +154,6 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 										col={col as keyof NewTask}
 										form={form}
 										onSubmit={onSubmit}
-										isNew={true}
 									/>
 								</motion.div>
 							);

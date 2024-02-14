@@ -26,7 +26,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 
 type Props = {
 	projects: Project[];
-	projectId: string;
+	projectId: string | null;
 };
 
 const ProjectCombobox = ({ projects, projectId }: Props) => {

@@ -114,7 +114,7 @@ const DataCardFigure: React.FC = () => {
 	return (
 		<Card>
 			<CardHeader className="pb-2">
-				<CardDescription>Totoal Taks</CardDescription>
+				<CardDescription>Total Tasks</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<CardTitle>12</CardTitle>

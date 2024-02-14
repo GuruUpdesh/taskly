@@ -25,7 +25,7 @@ const PropertyStatic = ({ form, property }: Props) => {
 					},
 				)}
 			>
-				{form.watch(property)}
+				{String(form.watch(property))}
 			</p>
 		</>
 	);

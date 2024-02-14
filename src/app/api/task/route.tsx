@@ -20,6 +20,8 @@ export async function POST(req: Request) {
 		sprintId: body.sprintId,
 		backlogOrder: body.backlogOrder,
 		boardOrder: body.boardOrder,
+		lastEditedAt: new Date(),
+		insertedDate: new Date(),
 	};
 
 	const task = await createTask(taskToUpdate);

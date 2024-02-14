@@ -76,7 +76,6 @@ const SecondaryTaskForm = ({
 									form={form}
 									col={item.key}
 									config={config}
-									isNew={false}
 									onSubmit={onSubmit}
 									size={item.size}
 								/>
