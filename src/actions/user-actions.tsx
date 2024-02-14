@@ -1,11 +1,15 @@
 "use server";
 
 import { db } from "~/server/db";
-import { type UserRole, usersToProjects, type User, tasks } from "~/server/db/schema";
+import {
+	type UserRole,
+	usersToProjects,
+	type User,
+	tasks,
+} from "~/server/db/schema";
 import { authenticate } from "./utils/action-utils";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
-
 
 export async function addUserToProject(
 	userId: string,

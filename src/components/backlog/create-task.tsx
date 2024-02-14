@@ -154,7 +154,6 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 										col={col as keyof NewTask}
 										form={form}
 										onSubmit={onSubmit}
-										isNew={true}
 									/>
 								</motion.div>
 							);

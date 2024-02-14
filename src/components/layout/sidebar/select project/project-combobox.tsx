@@ -27,14 +27,9 @@ import { Skeleton } from "~/components/ui/skeleton";
 type Props = {
 	projects: Project[];
 	projectId: string | null;
-	onLandingPage?: boolean;
 };
 
-const ProjectCombobox = ({
-	projects,
-	projectId,
-	onLandingPage = false,
-}: Props) => {
+const ProjectCombobox = ({ projects, projectId }: Props) => {
 	const [open, setOpen] = React.useState(false);
 
 	const project = projects.find(

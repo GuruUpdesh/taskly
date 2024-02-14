@@ -1,4 +1,3 @@
-import { auth } from "@clerk/nextjs";
 import React from "react";
 import { getMostRecentTasks } from "~/actions/task-views-actions";
 import { cn } from "~/lib/utils";
@@ -13,7 +12,6 @@ import { getStatusDisplayName } from "~/entities/task-entity";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { Label } from "~/components/ui/label";
-import Task from "~/components/backlog/task/task";
 
 export function RecentTasksNavWrapper() {
 	return (

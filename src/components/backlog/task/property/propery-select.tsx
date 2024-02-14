@@ -48,7 +48,6 @@ type DataCellProps = {
 	col: keyof NewTask;
 	form: UseFormReturn<NewTask>;
 	onSubmit: (newTask: NewTask) => void;
-	isNew: boolean;
 	size?: "default" | "icon";
 };
 
@@ -57,7 +56,6 @@ function PropertySelect({
 	col,
 	form,
 	onSubmit,
-	isNew,
 	size = "default",
 }: DataCellProps) {
 	// const initialRender = useRef(true)
