@@ -130,6 +130,8 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 							col !== "projectId" &&
 							col !== "backlogOrder" &&
 							col !== "boardOrder" &&
+							col !== "lastEditedAt" &&
+							col !== "insertedDate" &&
 							getTaskConfig(col).type === "select",
 					)
 					.map((col) => {
