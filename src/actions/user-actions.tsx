@@ -113,4 +113,34 @@ export async function editUserRoles(userId: string) {
 
 }
 
+export async function makeUserOwner(userId: string, projectId: number) {
+	if (!userId || !projectId) {
+		return false;
+	}
+	await db
+		.update(usersToProjects)
+		.set({ userRole: "owner" })
+		.where(
+			and(
+				eq(usersToProjects.userId, userId),
+				eq(usersToProjects.projectId, projectId),
+			),
+		);
+}
+
+export async function makeUserMember(userId: string, projectId: number) {
+	if (!userId || !projectId) {
+		return false;
+	}
+	await db
+		.update(usersToProjects)
+		.set({ userRole: "member" })
+		.where(
+			and(
+				eq(usersToProjects.userId, userId),
+				eq(usersToProjects.projectId, projectId),
+			),
+		);
+}
+
 

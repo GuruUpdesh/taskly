@@ -223,10 +223,15 @@ export default async function projectSettingsGeneral({
 			<div className="rounded-lg border p-4">
 				<h3 className={cn(typography.headers.h3)}>Danger Zone</h3>
 				<div className="flex items-center gap-3">
+					<Permission
+						projectId={currentProject?.id ?? -1}
+						allowRoles={["member"]}
+					>
 					<LeaveProjectButton
 						projectName={currentProject ? currentProject.name : "error"}
 						projectId={projectId}
 					/>
+					</Permission>
 					<Permission
 						projectId={currentProject?.id ?? -1}
 						allowRoles={["owner"]}

@@ -28,8 +28,23 @@ import {
 
 import { type User } from "~/server/db/schema";
 import { Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
-import { deleteUserFromProject, editUserRoles } from "~/actions/user-actions";
+import { deleteUserFromProject, editUserRoles, makeUserMember, makeUserOwner } from "~/actions/user-actions";
 import { db } from "~/server/db";
+import Permission from "../auth/Permission";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuPortal,
+	DropdownMenuSeparator,
+	DropdownMenuShortcut,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
+	DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 
 
 
@@ -59,15 +74,39 @@ function UsersTable({ users, projectId, userRoles }: { users: User[], projectId:
 								<TableRow key={user.userId}>
 									<TableCell>{user.username}</TableCell>
 									<TableCell>
-										{userRoles.find((role) => role.userId === user.userId)?.userRole
-											? capitalizeFirstLetter(userRoles.find((role) => role.userId === user.userId)?.userRole || 'undefined')
-											: "Member"}
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
+												<Button variant="outline">
+												{userRoles.find((role) => role.userId === user.userId)?.userRole
+														? capitalizeFirstLetter(userRoles.find((role) => role.userId === user.userId)?.userRole || 'undefined')
+														: "Member"}
+												</Button>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent className="w-56">
+												<DropdownMenuLabel>Change {user.username}'s Role</DropdownMenuLabel>
+												<div className="flex items-center justify-between p-2">
+												<Button
+													onClick={() => {
+														makeUserOwner(user.userId, projectId);
+														//throwClientError("Cannot change your own role");
+													}}
+												>Owner</Button>
+												</div>
+												<div className="flex items-center justify-between p-2">
+												<Button
+												 	onClick={() => {
+														makeUserMember(user.userId, projectId);
+													}}
+												>Member</Button>
+												</div>
+											</DropdownMenuContent>
+										</DropdownMenu>
 									</TableCell>
 									<TableCell>
 										<div className="flex">
 											<div>
 												<Popover>
-													<PopoverTrigger asChild>
+													{/* <PopoverTrigger asChild>
 														<Button
 															className="flex h-min items-center justify-between space-x-2 whitespace-nowrap rounded-sm border-0 p-2 px-3 text-sm text-blue-500 ring-offset-background placeholder:text-muted-foreground focus:text-blue-300 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 															onClick={() => {
@@ -77,11 +116,12 @@ function UsersTable({ users, projectId, userRoles }: { users: User[], projectId:
 														>
 															<Pencil2Icon className="w-4 h-4" />
 														</Button>
-													</PopoverTrigger>
+													</PopoverTrigger> */}
 													<PopoverContent className="w-80">
 														<div className="space-y-2">
 															<h4 className="font-medium leading-none">Edit {user.username}'s Role</h4>
 															<div className="space-y-2">
+
 																<Button variant="outline" onClick={() => {
 																	throwClientError("Cannot change your own role");
 																}}>
