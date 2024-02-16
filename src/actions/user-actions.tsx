@@ -11,6 +11,7 @@ import { authenticate } from "./utils/action-utils";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { checkPermission } from "./project-actions";
 
 export async function addUserToProject(
 	userId: string,
@@ -67,6 +68,16 @@ export async function removeUserFromProject(formData: FormData) {
 	if (!currProjectId || !userId) {
 		return false;
 	}
+
+	const hasPermission = await checkPermission(
+		parseInt(currProjectId as string),
+		userId,
+		["owner", "admin", "member"],
+	);
+	if (!hasPermission) {
+		return false;
+	}
+
 	await db
 		.delete(usersToProjects)
 		.where(eq(usersToProjects.userId, String(userId)));
@@ -85,11 +96,15 @@ export async function removeUserFromProject(formData: FormData) {
 }
 
 export async function deleteUserFromProject(userId: string, projectId: number) {
-	//console.log('reched delete function')
-
-	if (!userId || !projectId) {
+	const hasPermission = await checkPermission(projectId, userId, [
+		"owner",
+		"admin",
+		"member",
+	]);
+	if (!hasPermission) {
 		return false;
 	}
+
 	await db.delete(usersToProjects).where(eq(usersToProjects.userId, userId));
 
 	await db
@@ -104,6 +119,13 @@ export async function editUserRole(
 	projectId: number,
 	role: string,
 ) {
+	const hasPermission = await checkPermission(projectId, userId, [
+		"owner",
+		"admin",
+	]);
+	if (!hasPermission) {
+		return false;
+	}
 	if (!userId || !projectId) {
 		return false;
 	}

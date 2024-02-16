@@ -63,7 +63,11 @@ export async function getProject(projectId: number) {
 
 		return { success: true, project: projectQuery };
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
+		console.error(error);
+		if (error instanceof Error) {
+			return { success: false, message: error.message };
+		}
+		return { success: false, message: "Unknown error" };
 	}
 }
 
@@ -152,6 +156,7 @@ export async function checkPermission(
 		return false;
 	} catch (error) {
 		if (error instanceof Error) throwServerError(error.message);
+		return false;
 	}
 }
 
