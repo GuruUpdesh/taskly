@@ -10,6 +10,7 @@ import {
 import { authenticate } from "./utils/action-utils";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export async function addUserToProject(
 	userId: string,
@@ -84,63 +85,41 @@ export async function removeUserFromProject(formData: FormData) {
 }
 
 export async function deleteUserFromProject(userId: string, projectId: number) {
-
 	//console.log('reched delete function')
 
 	if (!userId || !projectId) {
 		return false;
 	}
-	await db
-		.delete(usersToProjects)
-		.where(eq(usersToProjects.userId, userId))
+	await db.delete(usersToProjects).where(eq(usersToProjects.userId, userId));
 
 	await db
 		.update(tasks)
 		.set({ assignee: null })
-		.where(
-			and(
-				eq(tasks.projectId, projectId),
-				eq(tasks.assignee, userId),
-			),
-		);
+		.where(and(eq(tasks.projectId, projectId), eq(tasks.assignee, userId)));
 	return true;
-
 }
 
-export async function editUserRoles(userId: string) {
-
-	console.log('reched edit user role function')
-
-}
-
-export async function makeUserOwner(userId: string, projectId: number) {
+export async function editUserRole(
+	userId: string,
+	projectId: number,
+	role: string,
+) {
 	if (!userId || !projectId) {
 		return false;
 	}
+	if (role !== "owner" && role !== "member" && role !== "admin") {
+		return false;
+	}
+
 	await db
 		.update(usersToProjects)
-		.set({ userRole: "owner" })
+		.set({ userRole: role })
 		.where(
 			and(
 				eq(usersToProjects.userId, userId),
 				eq(usersToProjects.projectId, projectId),
 			),
 		);
+
+	revalidatePath("/");
 }
-
-export async function makeUserMember(userId: string, projectId: number) {
-	if (!userId || !projectId) {
-		return false;
-	}
-	await db
-		.update(usersToProjects)
-		.set({ userRole: "member" })
-		.where(
-			and(
-				eq(usersToProjects.userId, userId),
-				eq(usersToProjects.projectId, projectId),
-			),
-		);
-}
-
-

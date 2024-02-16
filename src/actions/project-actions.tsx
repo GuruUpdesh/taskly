@@ -165,7 +165,10 @@ export async function getAllUsersInProject(projectId: number) {
 			},
 		});
 
-		const users = usersQuery.map((userToProject) => userToProject.user);
+		const users = usersQuery.map((userToProject) => ({
+			...userToProject.user,
+			userRole: userToProject.userRole,
+		}));
 
 		return users;
 	} catch (error) {

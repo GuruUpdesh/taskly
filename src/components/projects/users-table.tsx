@@ -11,10 +11,7 @@ import {
 	TableCell,
 } from "~/components/ui/table";
 
-import { throwClientError } from "~/utils/errors";
-
 import { Button } from "~/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import {
 	Dialog,
 	DialogClose,
@@ -24,39 +21,35 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "~/components/ui/dialog"
+} from "~/components/ui/dialog";
 
-import { type User } from "~/server/db/schema";
-import { Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
-import { deleteUserFromProject, editUserRoles, makeUserMember, makeUserOwner } from "~/actions/user-actions";
-import { db } from "~/server/db";
-import Permission from "../auth/Permission";
+import { type UserRole, type User } from "~/server/db/schema";
+import { TrashIcon } from "@radix-ui/react-icons";
+import { deleteUserFromProject, editUserRole } from "~/actions/user-actions";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuGroup,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuPortal,
-	DropdownMenuSeparator,
-	DropdownMenuShortcut,
-	DropdownMenuSub,
-	DropdownMenuSubContent,
-	DropdownMenuSubTrigger,
-	DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "~/components/ui/select";
+import { cn } from "~/lib/utils";
+interface UserWithRole extends User {
+	userRole: UserRole;
+}
 
+const userRoles: UserRole[] = ["owner", "admin", "member"];
 
-
-
-function UsersTable({ users, projectId, userRoles }: { users: User[], projectId: number, userRoles: { projectId: number, userId: string, userRole: string }[] }) {
-
-	console.log(userRoles);
-	const capitalizeFirstLetter = (str: string) => {
-		return str.toLowerCase().replace(/^\w|\s\w/g, (letter) => letter.toUpperCase());
-	};
-
-
+function UsersTable({
+	users,
+	projectId,
+	userId,
+}: {
+	users: UserWithRole[];
+	projectId: number;
+	userId: string;
+}) {
 	return (
 		<>
 			<Table>
@@ -71,91 +64,83 @@ function UsersTable({ users, projectId, userRoles }: { users: User[], projectId:
 					{users.map(
 						(user) =>
 							user !== null && (
-								<TableRow key={user.userId}>
+								<TableRow
+									key={user.userId}
+									className={cn({
+										"pointer-events-none opacity-50":
+											user.userRole === "owner" ||
+											user.userId === userId,
+									})}
+								>
 									<TableCell>{user.username}</TableCell>
 									<TableCell>
-										<DropdownMenu>
-											<DropdownMenuTrigger asChild>
-												<Button variant="outline">
-												{userRoles.find((role) => role.userId === user.userId)?.userRole
-														? capitalizeFirstLetter(userRoles.find((role) => role.userId === user.userId)?.userRole || 'undefined')
-														: "Member"}
-												</Button>
-											</DropdownMenuTrigger>
-											<DropdownMenuContent className="w-56">
-												<DropdownMenuLabel>Change {user.username}'s Role</DropdownMenuLabel>
-												<div className="flex items-center justify-between p-2">
-												<Button
-													onClick={() => {
-														makeUserOwner(user.userId, projectId);
-														//throwClientError("Cannot change your own role");
-													}}
-												>Owner</Button>
-												</div>
-												<div className="flex items-center justify-between p-2">
-												<Button
-												 	onClick={() => {
-														makeUserMember(user.userId, projectId);
-													}}
-												>Member</Button>
-												</div>
-											</DropdownMenuContent>
-										</DropdownMenu>
+										<Select
+											value={user.userRole}
+											onValueChange={(val) =>
+												editUserRole(
+													user.userId,
+													projectId,
+													val,
+												)
+											}
+										>
+											<SelectTrigger className="w-[180px] capitalize">
+												<SelectValue className="capitalize" />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectGroup>
+													{userRoles.map((role) => {
+														return (
+															<SelectItem
+																key={role}
+																value={role}
+																className="flex capitalize"
+															>
+																{role}
+																<div className="flex-grow" />
+															</SelectItem>
+														);
+													})}
+												</SelectGroup>
+											</SelectContent>
+										</Select>
 									</TableCell>
 									<TableCell>
 										<div className="flex">
-											<div>
-												<Popover>
-													{/* <PopoverTrigger asChild>
-														<Button
-															className="flex h-min items-center justify-between space-x-2 whitespace-nowrap rounded-sm border-0 p-2 px-3 text-sm text-blue-500 ring-offset-background placeholder:text-muted-foreground focus:text-blue-300 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-															onClick={() => {
-																throwClientError("Not implemented (manage user)");
-															}}
-															style={{ background: "none", border: "none" }}
-														>
-															<Pencil2Icon className="w-4 h-4" />
-														</Button>
-													</PopoverTrigger> */}
-													<PopoverContent className="w-80">
-														<div className="space-y-2">
-															<h4 className="font-medium leading-none">Edit {user.username}'s Role</h4>
-															<div className="space-y-2">
-
-																<Button variant="outline" onClick={() => {
-																	throwClientError("Cannot change your own role");
-																}}>
-																	Owner
-																</Button>
-																<div className="space-y-2">
-																	<Button variant="outline"
-																		onClick={() => { editUserRoles(user.userId) }}
-																	>
-																		Member
-																	</Button>
-																</div>
-															</div>
-														</div>
-													</PopoverContent>
-												</Popover>
-											</div>
 											<div>
 												<Dialog>
 													<DialogTrigger asChild>
 														<Button
 															className="flex h-min items-center justify-between space-x-2 whitespace-nowrap rounded-sm border-0 p-2 px-3 text-sm text-red-500 ring-offset-background placeholder:text-muted-foreground focus:text-blue-300 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-															// onClick={() => deleteUserFromProject(user.userId, projectId)}
-															style={{ background: "none", border: "none" }}
+															style={{
+																background:
+																	"none",
+																border: "none",
+															}}
 														>
 															<TrashIcon />
 														</Button>
 													</DialogTrigger>
 													<DialogContent className="sm:max-w-[425px]">
 														<DialogHeader>
-															<DialogTitle>Are you sure you want to remove {user.username} from the Project?</DialogTitle>
+															<DialogTitle>
+																Are you sure you
+																want to remove{" "}
+																{user.username}{" "}
+																from the
+																Project?
+															</DialogTitle>
 															<DialogDescription>
-																Warning, once this action is completed, it cannot be
-																undone. Are you sure you want to remove {user.username} from the Project?
+																Warning, once
+																this action is
+																completed, it
+																cannot be
+																undone. Are you
+																sure you want to
+																remove{" "}
+																{user.username}{" "}
+																from the
+																Project?
 															</DialogDescription>
 														</DialogHeader>
 														<div className="flex items-center space-x-2">
@@ -163,16 +148,28 @@ function UsersTable({ users, projectId, userRoles }: { users: User[], projectId:
 														</div>
 
 														<DialogFooter>
-															<DialogClose asChild>
-																<Button type="button" variant="secondary">
+															<DialogClose
+																asChild
+															>
+																<Button
+																	type="button"
+																	variant="secondary"
+																>
 																	No
 																</Button>
 															</DialogClose>
-															<DialogClose asChild>
+															<DialogClose
+																asChild
+															>
 																<Button
 																	type="submit"
 																	variant="default"
-																	onClick={() => deleteUserFromProject(user.userId, projectId)}
+																	onClick={() =>
+																		deleteUserFromProject(
+																			user.userId,
+																			projectId,
+																		)
+																	}
 																>
 																	Yes
 																</Button>
