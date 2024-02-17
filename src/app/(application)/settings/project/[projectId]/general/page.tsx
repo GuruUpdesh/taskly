@@ -1,27 +1,26 @@
-import { eq } from "drizzle-orm";
-import DeleteProjectButton from "~/components/projects/delete-project-button";
-import { db } from "~/server/db";
-import { projects } from "~/server/db/schema";
-import Permission from "~/components/auth/Permission";
-import { getAllUsersInProject } from "~/actions/project-actions";
-import { throwClientError } from "~/utils/errors";
-import UsersTable from "~/components/projects/users-table";
-import typography from "~/styles/typography";
-import { Input } from "~/components/ui/input";
-import { cn } from "~/lib/utils";
-import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
-import { getSprintsForProject } from "~/actions/sprint-actions";
-import CreateSprintButton from "~/components/projects/create-sprint-button";
-import { format, isAfter, isBefore } from "date-fns";
-import { Separator } from "~/components/ui/separator";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { format, isAfter, isBefore } from "date-fns";
 import Image from "next/image";
-import SprintOptionsForm from "~/components/projects/sprint-options/sprint-options-form";
+import { redirect } from "next/navigation";
+import { getAllUsersInProject, getProject } from "~/actions/project-actions";
+import { getSprintsForProject } from "~/actions/sprint-actions";
+import { authenticate } from "~/actions/utils/action-utils";
+import Permission from "~/components/auth/Permission";
 import EmailInviteWrapper from "~/components/invite/by-email/email-invite-wrapper";
 import InviteLinkWrapper from "~/components/invite/invite-link-wrapper";
+import CreateSprintButton from "~/components/projects/create-sprint-button";
+import DeleteProjectButton from "~/components/projects/delete-project-button";
 import LeaveProjectButton from "~/components/projects/leave-project-button";
-
+import SprintOptionsForm from "~/components/projects/sprint-options/sprint-options-form";
+import UsersTable from "~/components/projects/users-table";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Separator } from "~/components/ui/separator";
+import { Textarea } from "~/components/ui/textarea";
+import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
+import { cn } from "~/lib/utils";
+import typography from "~/styles/typography";
+import { throwClientError } from "~/utils/errors";
 type Params = {
 	params: {
 		projectId: string;
@@ -31,15 +30,19 @@ type Params = {
 export default async function projectSettingsGeneral({
 	params: { projectId },
 }: Params) {
-	const getProjects = await db
-		.select()
-		.from(projects)
-		.where(eq(projects.id, Number(projectId)));
-
-	const currentProject = getProjects[0];
-	if (!currentProject) {
-		return null;
+	const userId = authenticate();
+	if (!userId) {
+		redirect(constructToastURL("You are not authenticated!", "error"));
 	}
+
+	const projectResults = await getProject(Number(projectId));
+	if (!projectResults?.success || !projectResults.project) {
+		if (projectResults?.message) {
+			redirect(constructToastURL(projectResults.message, "error"));
+		}
+		redirect(constructToastURL("Issue loading project", "error"));
+	}
+	const currentProject = projectResults.project;
 
 	const sprints = await getSprintsForProject(Number(projectId));
 	const users = await getAllUsersInProject(Number(projectId));
@@ -81,7 +84,7 @@ export default async function projectSettingsGeneral({
 						type="text"
 						id="projectName"
 						className="mb-4"
-						value={currentProject?.name}
+						value={currentProject.name}
 						disabled
 					/>
 					<Label htmlFor="projectDescription" className="font-bold">
@@ -121,16 +124,20 @@ export default async function projectSettingsGeneral({
 					)}
 				</div>
 			</div>
-			<div className="rounded-lg border p-4">
-				<h3 className={cn(typography.headers.h3)}>Users</h3>
-				<div style={{ width: "95%" }}>
-					<UsersTable users={users} />
-				</div>
-			</div>
 			<Permission
 				projectId={currentProject?.id ?? -1}
-				allowRoles={["owner"]}
+				allowRoles={["owner", "admin"]}
 			>
+				<div className="rounded-lg border p-4">
+					<h3 className={cn(typography.headers.h3)}>Users</h3>
+					<div style={{ width: "95%" }}>
+						<UsersTable
+							users={users}
+							projectId={currentProject?.id ?? -1}
+							userId={userId}
+						/>
+					</div>
+				</div>
 				<div className="rounded-lg border p-4">
 					<h3 className={cn(typography.headers.h3)}>Invite</h3>
 					<div className="flex flex-col gap-4">
@@ -212,23 +219,32 @@ export default async function projectSettingsGeneral({
 					<SprintOptionsForm project={currentProject} />
 				</div>
 			</Permission>
-			<div className="rounded-lg border border-red-500 p-4">
+			<div className="rounded-lg border p-4">
 				<h3 className={cn(typography.headers.h3)}>Danger Zone</h3>
-				<LeaveProjectButton
-					projectName={currentProject ? currentProject.name : "error"}
-					projectId={projectId}
-				/>
-				<Permission
-					projectId={currentProject?.id ?? -1}
-					allowRoles={["owner"]}
-				>
-					<DeleteProjectButton
-						projectName={
-							currentProject ? currentProject.name : "error"
-						}
-						projectId={projectId}
-					/>
-				</Permission>
+				<div className="flex items-center gap-3">
+					<Permission
+						projectId={currentProject?.id ?? -1}
+						allowRoles={["member", "admin"]}
+					>
+						<LeaveProjectButton
+							projectName={
+								currentProject ? currentProject.name : "error"
+							}
+							projectId={projectId}
+						/>
+					</Permission>
+					<Permission
+						projectId={currentProject?.id ?? -1}
+						allowRoles={["owner"]}
+					>
+						<DeleteProjectButton
+							projectName={
+								currentProject ? currentProject.name : "error"
+							}
+							projectId={projectId}
+						/>
+					</Permission>
+				</div>
 			</div>
 		</div>
 	);

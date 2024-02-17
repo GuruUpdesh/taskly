@@ -149,20 +149,25 @@ export const usersRelations = relations(users, ({ many }) => ({
 /**
  * Users to Projects
  */
-
-export type UserRole = "owner" | "member";
+export const userRoles = ["owner", "admin", "member"] as const;
 
 export const usersToProjects = mysqlTable(
 	"users_to_projects",
 	{
 		userId: varchar("user_id", { length: 32 }).notNull(),
 		projectId: int("project_id").notNull(),
-		userRole: mysqlEnum("user_role", ["owner", "member"]).notNull(),
+		userRole: mysqlEnum("user_role", userRoles).notNull(),
 	},
 	(t) => ({
 		pk: primaryKey(t.userId, t.projectId),
 	}),
 );
+
+// validators
+export const usersToProjectsSchema = createInsertSchema(usersToProjects);
+
+// types
+export type UserRole = InferSelectModel<typeof usersToProjects>["userRole"];
 
 export const usersToProjectsRelations = relations(
 	usersToProjects,
