@@ -1,4 +1,4 @@
-import { removeUserFromProject } from "~/actions/settings/settings-actions";
+import { removeUserFormProject_formData } from "~/actions/settings/settings-actions";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -52,7 +52,7 @@ function LeaveProjectButton({ projectName, projectId }: Props) {
 							</Button>
 						</DialogClose>
 						<DialogClose asChild>
-							<form action={removeUserFromProject}>
+							<form action={removeUserFormProject_formData}>
 								<input
 									hidden
 									name="projectId"
