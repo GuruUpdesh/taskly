@@ -7,7 +7,7 @@ import Tasks from "~/components/backlog/tasks";
 import { getTasksFromProject } from "~/actions/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import CreateTask from "~/components/backlog/create-task";
-import { getAssigneesForProject } from "~/actions/project-actions";
+import { getAssigneesForProject, getProject } from "~/actions/project-actions";
 import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
 import { getSprintsForProject } from "~/actions/sprint-actions";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
@@ -19,8 +19,13 @@ type Params = {
 };
 
 export default async function BacklogPage({ params: { projectId } }: Params) {
+	const projectResult = await getProject(parseInt(projectId));
+	if (!projectResult.success || !projectResult.project) {
+		return null;
+	}
 	const assignees = await getAssigneesForProject(parseInt(projectId));
 	const sprints = await getSprintsForProject(parseInt(projectId));
+
 	// Prefetch tasks using react-query
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
@@ -36,7 +41,9 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<BreadCrumbs />
 				</div>
 				<div className="flex items-center gap-2">
-					<AiDialog projectId={projectId} />
+					{projectResult.project.aiToggle ? (
+						<AiDialog projectId={projectId} />
+					) : null}
 					<CreateTask
 						projectId={projectId}
 						assignees={assignees}

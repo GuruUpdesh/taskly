@@ -8,6 +8,7 @@ import { authenticate } from "~/actions/utils/action-utils";
 import Permission from "~/components/auth/Permission";
 import EmailInviteWrapper from "~/components/invite/by-email/email-invite-wrapper";
 import InviteLinkWrapper from "~/components/invite/invite-link-wrapper";
+import AIToggle from "~/components/projects/ai-toggle";
 import CreateSprintButton from "~/components/projects/create-sprint-button";
 import DeleteProjectButton from "~/components/projects/delete-project-button";
 import LeaveProjectButton from "~/components/projects/leave-project-button";
@@ -94,6 +95,11 @@ export default async function projectSettingsGeneral({
 						id="projectDescription"
 						placeholder="description"
 						disabled
+					/>
+					<br />
+					<AIToggle
+						isChecked={currentProject.aiToggle}
+						projectId={parseInt(projectId)}
 					/>
 				</div>
 			</div>

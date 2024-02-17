@@ -1,6 +1,7 @@
 import { relations, type InferSelectModel } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import {
+	boolean,
 	datetime,
 	int,
 	mysqlEnum,
@@ -105,6 +106,7 @@ export const projects = mysqlTable("projects", {
 		.notNull(),
 	description: text("description"),
 	image: varchar("image", { length: 1000 }),
+	aiToggle: boolean("ai_toggle").default(false).notNull(),
 });
 
 // validators

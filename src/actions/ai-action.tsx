@@ -1,8 +1,15 @@
 "use server";
 
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import OpenAI from "openai";
 import { env } from "~/env.mjs";
-import { type User, insertTaskSchema__required } from "~/server/db/schema";
+import { db } from "~/server/db";
+import {
+	type User,
+	insertTaskSchema__required,
+	projects,
+} from "~/server/db/schema";
 
 const openai = new OpenAI({
 	apiKey: env.OPENAI_API_KEY,
@@ -82,4 +89,13 @@ export async function generateProjectImage(
 	}
 
 	return image_url;
+}
+
+export async function toggleAIFeature(isChecked: boolean, projectId: number) {
+	console.log("isChecked", isChecked);
+	await db
+		.update(projects)
+		.set({ aiToggle: !isChecked })
+		.where(eq(projects.id, projectId));
+	revalidatePath("/");
 }

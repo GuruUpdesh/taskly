@@ -41,9 +41,16 @@ type FormProps = {
 	form: UseFormReturn<NewTask, undefined>;
 	assignees: User[];
 	sprints: Sprint[];
+	isAIEnabled: boolean;
 };
 
-const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
+const TaskCreateForm = ({
+	onSubmit,
+	form,
+	assignees,
+	sprints,
+	isAIEnabled,
+}: FormProps) => {
 	// Framer motion transition
 	const transition = {
 		opacity: { ease: [0.075, 0.82, 0.165, 1] },
@@ -96,7 +103,7 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 				)}
 				aria-disabled={isLoading}
 			>
-				{form.watch("description") ? (
+				{form.watch("description") && isAIEnabled ? (
 					<motion.div
 						layout
 						className="h-[30px]"
@@ -250,6 +257,7 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 					form={form}
 					assignees={assignees}
 					sprints={sprints}
+					isAIEnabled={project?.aiToggle ?? false}
 				/>
 				<DialogFooter className="border-t px-4 py-2">
 					<Button
