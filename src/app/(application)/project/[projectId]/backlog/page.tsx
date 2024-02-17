@@ -4,12 +4,12 @@ import {
 	QueryClient,
 } from "@tanstack/react-query";
 import Tasks from "~/components/backlog/tasks";
-import { getTasksFromProject } from "~/actions/task-actions";
+import { getTasksFromProject } from "~/actions/application/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import CreateTask from "~/components/backlog/create-task";
-import { getAssigneesForProject } from "~/actions/project-actions";
+import { getAssigneesForProject } from "~/actions/application/project-actions";
 import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
-import { getSprintsForProject } from "~/actions/sprint-actions";
+import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 
 type Params = {

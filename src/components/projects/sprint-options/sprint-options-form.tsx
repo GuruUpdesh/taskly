@@ -8,7 +8,7 @@ import { type Project } from "~/server/db/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { endOfYesterday, isEqual } from "date-fns";
-import { updateSprintsForProject } from "~/actions/sprint-actions";
+import { updateSprintsForProject } from "~/actions/application/sprint-actions";
 import { toast } from "sonner";
 import { z } from "zod";
 

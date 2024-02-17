@@ -1,5 +1,5 @@
 import React from "react";
-import { getProjectApplicationData } from "~/actions/redis-actions";
+import { getProjectApplicationData } from "~/actions/application/redis-actions";
 import ProjectImage from "./project-image";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";

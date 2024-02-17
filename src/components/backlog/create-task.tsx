@@ -16,7 +16,7 @@ import {
 	type Sprint,
 	type Task,
 } from "~/server/db/schema";
-import { createTask } from "~/actions/task-actions";
+import { createTask } from "~/actions/application/task-actions";
 import { toast } from "sonner";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
@@ -33,7 +33,7 @@ import {
 	DialogFooter,
 } from "~/components/ui/dialog";
 import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
-import { aiAction } from "~/actions/ai-action";
+import { aiAction } from "~/actions/ai/ai-action";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type FormProps = {

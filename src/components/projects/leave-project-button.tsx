@@ -1,4 +1,4 @@
-import { removeUserFromProject } from "~/actions/user-actions";
+import { removeUserFromProject } from "~/actions/settings/settings-actions";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,

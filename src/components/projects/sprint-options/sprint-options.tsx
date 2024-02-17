@@ -23,7 +23,7 @@ import {
 	PopoverTrigger,
 } from "~/components/ui/popover";
 import type { ProjectSprintOptions } from "./sprint-options-form";
-import type { CreateForm } from "~/actions/project-actions";
+import type { CreateForm } from "~/actions/onboarding/create-project";
 
 type Props = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

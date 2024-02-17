@@ -5,7 +5,7 @@ import { kv } from "@vercel/kv";
 import { z } from "zod";
 import { getAllProjects } from "./project-actions";
 import { type Project, selectProjectSchema } from "~/server/db/schema";
-import { authenticate } from "./utils/action-utils";
+import { authenticate } from "../security/authenticate";
 
 export async function updateUserApplicationData(pathname: string) {
 	const user = auth();

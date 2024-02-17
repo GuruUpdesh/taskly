@@ -11,13 +11,18 @@ import { render } from "@react-email/render";
 import ProjectInviteEmail from "~/components/email/project-invite";
 import { Resend } from "resend";
 import { env } from "~/env.mjs";
+import { authenticate } from "../security/authenticate";
+import { checkPermissions } from "../security/permissions";
 
 const getInviteSchema = z.object({
 	userId: z.string(),
 	projectId: z.number(),
 });
 
-export async function createInvite(userId: string, projectId: string) {
+export async function createInvite(projectId: string) {
+	const userId = authenticate();
+	await checkPermissions(userId, parseInt(projectId));
+
 	const dataObject = { userId: userId, projectId: parseInt(projectId) };
 	const inviteValidation = getInviteSchema.safeParse(dataObject);
 	if (!inviteValidation.success) {
@@ -57,7 +62,9 @@ export async function createInvite(userId: string, projectId: string) {
 	return token;
 }
 
-export async function joinProject(token: string, userId: string) {
+export async function joinProject(token: string) {
+	const userId = authenticate();
+
 	const requestInvite = await db
 		.selectDistinct()
 		.from(invites)
@@ -120,7 +127,7 @@ export async function sendEmailInvites(
 			message: "No invites sent as no emails were provided",
 		};
 	}
-	const inviteToken = await createInvite(userId, projectId.toString());
+	const inviteToken = await createInvite(projectId.toString());
 	const user = await clerkClient.users.getUser(userId);
 
 	if (!inviteToken || !user?.username) {

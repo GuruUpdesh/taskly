@@ -1,5 +1,8 @@
 import ProjectCreateForm from "~/components/page/onboarding/create-project-form";
-import { getAllProjects, initAction } from "~/actions/project-actions";
+import {
+	getAllProjects,
+	initAction,
+} from "~/actions/application/project-actions";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 

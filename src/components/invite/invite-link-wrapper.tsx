@@ -2,7 +2,7 @@
 
 import React from "react";
 import { auth } from "@clerk/nextjs";
-import { createInvite } from "~/actions/invite-actions";
+import { createInvite } from "~/actions/onboarding/invite-actions";
 import dynamic from "next/dynamic";
 const InviteLink = dynamic(() => import("./invite-link"), { ssr: false });
 
@@ -13,7 +13,7 @@ type Props = {
 const InviteLinkWrapper = async ({ projectId }: Props) => {
 	const { userId }: { userId: string | null } = auth();
 	if (!userId) return null;
-	const token = await createInvite(userId, projectId);
+	const token = await createInvite(projectId);
 	if (token === false) return null;
 
 	return (

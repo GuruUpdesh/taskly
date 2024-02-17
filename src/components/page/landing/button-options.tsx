@@ -30,18 +30,29 @@ const ButtonOptions = () => {
 			}}
 		>
 			<motion.div variants={variants}>
-				<Button size="lg" variant="secondary">
-					Learn More
+				<Button
+					size="lg"
+					variant="outline"
+					className="rounded-full bg-transparent backdrop-blur-lg"
+				>
+					Watch a Demo
 				</Button>
 			</motion.div>
 			<motion.div variants={variants}>
-				<Button size="lg" variant="secondary">
+				<Button
+					size="lg"
+					variant="outline"
+					className="rounded-full bg-transparent backdrop-blur-lg"
+				>
 					Documentation
 				</Button>
 			</motion.div>
 			<motion.div variants={variants}>
 				<Link href="/app">
-					<Button size="lg" className="gap-2 font-bold">
+					<Button
+						size="lg"
+						className="gap-2 rounded-full font-bold hover:bg-green-500 hover:text-foreground"
+					>
 						Get Started <ChevronRight className="h-4 w-4" />
 					</Button>
 				</Link>
