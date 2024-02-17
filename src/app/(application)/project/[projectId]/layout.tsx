@@ -1,5 +1,5 @@
 import React from "react";
-import { getProject } from "~/actions/project-actions";
+import { getProject } from "~/actions/application/project-actions";
 import Sidebar from "~/components/layout/sidebar/sidebar";
 import ProjectState from "./project-state";
 import { redirect } from "next/navigation";

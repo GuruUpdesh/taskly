@@ -23,22 +23,22 @@ const MarketingTaskChips = () => {
 	return (
 		<div className="-z-10 flex h-[10px] w-full max-w-[1000px] gap-4">
 			<motion.div
-				className="h-[10px] flex-1 rounded-full border border-indigo-600 bg-indigo-800"
+				className="h-[10px] flex-1 rounded-full bg-indigo-800"
 				animate={controls1}
 				transition={{ duration: 2, ease: [0.075, 0.82, 0.165, 1] }}
 			/>
 			<motion.div
-				className="h-[10px] flex-1 rounded-full border border-red-600 bg-red-800"
+				className="h-[10px] flex-1 rounded-full bg-red-800"
 				animate={controls2}
 				transition={{ duration: 2, ease: [0.075, 0.82, 0.165, 1] }}
 			/>
 			<motion.div
-				className="h-[10px] flex-1 rounded-full border border-yellow-500 bg-yellow-600"
+				className="h-[10px] flex-1 rounded-full bg-yellow-600"
 				animate={controls3}
 				transition={{ duration: 2, ease: [0.075, 0.82, 0.165, 1] }}
 			/>
 			<motion.div
-				className="h-[10px] flex-1 rounded-full border border-green-500 bg-green-600"
+				className="h-[10px] flex-1 rounded-full bg-green-600"
 				animate={controls4}
 				transition={{ duration: 2, ease: [0.075, 0.82, 0.165, 1] }}
 			/>

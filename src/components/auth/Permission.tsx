@@ -1,6 +1,6 @@
 import React from "react";
 import { auth } from "@clerk/nextjs";
-import { checkPermission } from "~/actions/project-actions";
+import { checkPermissions } from "~/actions/security/permissions";
 import { type UserRole } from "~/server/db/schema";
 
 type PermissionProps = {
@@ -18,11 +18,12 @@ async function Permission({
 
 	if (!userId) return null;
 
-	const isAuthorized = await checkPermission(projectId, userId, allowRoles);
-
-	if (isAuthorized) {
+	try {
+		await checkPermissions(userId, projectId, allowRoles);
 		return <>{children}</>;
-	} else return null;
+	} catch (error) {
+		return null;
+	}
 }
 
 export default Permission;

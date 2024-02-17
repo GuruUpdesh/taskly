@@ -17,7 +17,7 @@ import {
 	deleteTask,
 	getTasksFromProject,
 	updateTask,
-} from "~/actions/task-actions";
+} from "~/actions/application/task-actions";
 import Task from "~/components/backlog/task/task";
 import { cn } from "~/lib/utils";
 import type {

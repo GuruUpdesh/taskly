@@ -1,4 +1,4 @@
-import { handleDeleteProject } from "~/actions/delete-actions";
+import { handleDeleteProject } from "~/actions/settings/settings-actions";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,

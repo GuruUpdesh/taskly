@@ -1,7 +1,7 @@
 "use server";
 
 import { getAverageColor } from "fast-average-color-node";
-import { generateProjectImage } from "~/actions/ai-action";
+import OpenAI from "openai";
 import chroma from "chroma-js";
 import { kv } from "@vercel/kv";
 import { db } from "~/server/db";
@@ -12,11 +12,10 @@ import {
 } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { addUserToProject } from "~/actions/user-actions";
-import { type CreateForm } from "~/actions/project-actions";
 import { addMinutes, startOfDay } from "date-fns";
-import { createSprintForProject } from "~/actions/sprint-actions";
-import { authenticate } from "~/actions/utils/action-utils";
-import { createInvite } from "~/actions/invite-actions";
+import { createSprintForProject } from "~/actions/application/sprint-actions";
+import { authenticate } from "~/actions/security/authenticate";
+import { createInvite } from "./invite-actions";
 
 type ProjectResponse = {
 	newProjectId: number;
@@ -25,19 +24,20 @@ type ProjectResponse = {
 	message: string;
 };
 
+export type CreateForm = {
+	name: NewProject["name"];
+	description?: string;
+	sprintDuration: number;
+	sprintStart: Date;
+	invitees: string[];
+	timezoneOffset: number;
+};
+
 export async function createProject(
 	data: CreateForm,
 ): Promise<ProjectResponse> {
 	try {
 		const userId = authenticate();
-		if (!userId) {
-			return {
-				newProjectId: -1,
-				inviteToken: null,
-				status: false,
-				message: "Authentication failed",
-			};
-		}
 
 		// modify project data to account for timezone
 		data.sprintStart = addMinutes(
@@ -51,21 +51,13 @@ export async function createProject(
 		const insertId = parseInt(result.insertId);
 
 		// add user to project
-		const addUser = await addUserToProject(userId, insertId, "owner");
-		if (!addUser) {
-			return {
-				newProjectId: -1,
-				inviteToken: null,
-				status: false,
-				message: "Error adding user to project",
-			};
-		}
+		await addUserToProject(userId, insertId, "owner");
 
 		// create sprint for project
 		await createSprintForProject(insertId);
 
 		// create invite token
-		const token = await createInvite(userId, String(insertId));
+		const token = await createInvite(String(insertId));
 		if (!token) {
 			return {
 				newProjectId: -1,
@@ -152,4 +144,34 @@ function handleCreateProjectError(error: unknown) {
 			message: "Unknown error",
 		};
 	}
+}
+
+export async function generateProjectImage(
+	name: string,
+	description: string | null | undefined,
+) {
+	const client = new OpenAI();
+
+	const response = await client.images.generate({
+		model: "dall-e-3",
+		prompt: `Generate a logo for "${name}", "${description}".`,
+		n: 1,
+		size: "1024x1024",
+	});
+
+	const image_url = response?.data?.[0]?.url;
+	if (!image_url) {
+		return;
+	}
+
+	return image_url;
+}
+
+export async function getIsProjectNameAvailable(
+	projectName: string,
+): Promise<boolean> {
+	const projectQuery = await db.query.projects.findFirst({
+		where: (project) => eq(project.name, projectName),
+	});
+	return !projectQuery;
 }

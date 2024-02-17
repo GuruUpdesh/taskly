@@ -1,6 +1,6 @@
 import React from "react";
 import { toast } from "sonner";
-import { getUser } from "~/actions/user-actions";
+import { getUser } from "~/actions/dashboard/dashboard-actions";
 import { getTimeOfDay } from "~/utils/time";
 import typography from "~/styles/typography";
 

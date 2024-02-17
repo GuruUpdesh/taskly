@@ -42,6 +42,7 @@
 		"@types/chroma-js": "^2.4.4",
 		"@types/color-thief-node": "^1.0.4",
 		"@types/lodash.debounce": "^4.0.9",
+		"@uploadthing/react": "^6.2.3",
 		"@vercel/kv": "^1.0.1",
 		"ai": "^2.2.27",
 		"chroma-js": "^2.4.2",
@@ -75,6 +76,7 @@
 		"svix": "^1.15.0",
 		"tailwind-merge": "^2.0.0",
 		"tailwindcss-animate": "^1.0.7",
+		"uploadthing": "^6.4.0",
 		"zod": "^3.22.4",
 		"zustand": "^4.4.7"
 	},

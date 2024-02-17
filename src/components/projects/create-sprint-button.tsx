@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "~/components/ui/button";
-import { createSprintForProject } from "~/actions/sprint-actions";
+import { createSprintForProject } from "~/actions/application/sprint-actions";
 import { PlusIcon } from "lucide-react";
 import {
 	Dialog,

@@ -1,8 +1,10 @@
+// @ts-check
 const { fontFamily } = require("tailwindcss/defaultTheme")
 const containerQueriesPlugin = require('@tailwindcss/container-queries');
+const { withUt } = require("uploadthing/tw");
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+module.exports = withUt({
   darkMode: ["class"],
   content: [
     './pages/**/*.{ts,tsx}',
@@ -109,4 +111,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate"), containerQueriesPlugin],
-}
+})

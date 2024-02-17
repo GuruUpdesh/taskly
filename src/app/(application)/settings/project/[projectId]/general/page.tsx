@@ -1,26 +1,29 @@
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import DeleteProjectButton from "~/components/projects/delete-project-button";
+import Permission from "~/components/auth/Permission";
+import {
+	getAllUsersInProject,
+	getProject,
+} from "~/actions/application/project-actions";
+import { throwClientError } from "~/utils/errors";
+import UsersTable from "~/components/projects/users-table";
+import typography from "~/styles/typography";
+import { Input } from "~/components/ui/input";
+import { cn } from "~/lib/utils";
+import { Label } from "~/components/ui/label";
+import { Textarea } from "~/components/ui/textarea";
+import { getSprintsForProject } from "~/actions/application/sprint-actions";
+import CreateSprintButton from "~/components/projects/create-sprint-button";
 import { format, isAfter, isBefore } from "date-fns";
+import { Separator } from "~/components/ui/separator";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { getAllUsersInProject, getProject } from "~/actions/project-actions";
-import { getSprintsForProject } from "~/actions/sprint-actions";
-import { authenticate } from "~/actions/utils/action-utils";
-import Permission from "~/components/auth/Permission";
+import { authenticate } from "~/actions/security/authenticate";
 import EmailInviteWrapper from "~/components/invite/by-email/email-invite-wrapper";
 import InviteLinkWrapper from "~/components/invite/invite-link-wrapper";
-import CreateSprintButton from "~/components/projects/create-sprint-button";
-import DeleteProjectButton from "~/components/projects/delete-project-button";
 import LeaveProjectButton from "~/components/projects/leave-project-button";
 import SprintOptionsForm from "~/components/projects/sprint-options/sprint-options-form";
-import UsersTable from "~/components/projects/users-table";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Separator } from "~/components/ui/separator";
-import { Textarea } from "~/components/ui/textarea";
 import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
-import { cn } from "~/lib/utils";
-import typography from "~/styles/typography";
-import { throwClientError } from "~/utils/errors";
 type Params = {
 	params: {
 		projectId: string;

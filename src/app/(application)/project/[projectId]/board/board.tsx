@@ -7,7 +7,7 @@ import {
 	deleteTask,
 	getTasksFromProject,
 	updateTask,
-} from "~/actions/task-actions";
+} from "~/actions/application/task-actions";
 import { optionVariants } from "~/components/backlog/task/property/propery-select";
 import type { UpdateTask } from "~/components/backlog/tasks";
 import BoardTask from "~/components/board/board-task";

@@ -30,7 +30,7 @@ const MarketingBlock = ({ className, children }: Props) => {
 			variants={variants}
 			transition={{ duration: 1, ease: [0.075, 0.82, 0.165, 1] }}
 		>
-			<div className="flex h-full w-full flex-col gap-4 rounded-md bg-gradient-to-t from-black/70 to-black/90 p-4">
+			<div className="flex h-full w-full flex-col gap-4 rounded-md p-4">
 				{children}
 			</div>
 		</motion.div>

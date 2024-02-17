@@ -19,14 +19,14 @@ const MarketingGrid = ({ children }: Props) => {
 	const variants = {
 		active: {
 			transform: "rotateX(0deg)",
-			backgroundColor: "#0e1227",
+			backgroundColor: "bg-transparent",
 			transition: {
 				staggerChildren: 0.1,
 			},
 		},
 		inactive: {
 			transform: "rotateX(25deg)",
-			backgroundColor: "#0e1227",
+			backgroundColor: "bg-transparent",
 			transition: {
 				staggerChildren: 0.1,
 			},
@@ -38,7 +38,7 @@ const MarketingGrid = ({ children }: Props) => {
 			<motion.div
 				ref={ref}
 				className={cn(
-					"container grid h-full grid-cols-4 grid-rows-2 gap-4 rounded-lg border p-4 shadow-xl",
+					"container grid h-full grid-cols-4 grid-rows-2 gap-4 rounded-lg border p-4 shadow-xl backdrop-blur-xl",
 				)}
 				variants={variants}
 				initial="inactive"

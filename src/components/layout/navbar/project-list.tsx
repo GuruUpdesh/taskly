@@ -2,7 +2,7 @@
 
 import { auth } from "@clerk/nextjs";
 import React from "react";
-import { getAllProjects } from "~/actions/project-actions";
+import { getAllProjects } from "~/actions/application/project-actions";
 
 import ProjectMenuItem from "~/components/layout/navbar/project-menu-item";
 

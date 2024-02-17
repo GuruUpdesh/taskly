@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import EmailInviteForm from "./email-invite-form";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
-import { sendEmailInvites } from "~/actions/invite-actions";
+import { sendEmailInvites } from "~/actions/onboarding/invite-actions";
 import { ChevronRight, Loader2 } from "lucide-react";
 
 type Props = {
