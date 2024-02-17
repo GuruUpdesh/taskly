@@ -115,10 +115,15 @@ export async function deleteUserFromProject(userId: string, projectId: number) {
 }
 
 export async function editUserRole(
-	userId: string,
+	userToEdit: string,
 	projectId: number,
 	role: string,
 ) {
+	const userId = authenticate();
+	if (!userId) {
+		return false;
+	}
+
 	const hasPermission = await checkPermission(projectId, userId, [
 		"owner",
 		"admin",
@@ -126,7 +131,7 @@ export async function editUserRole(
 	if (!hasPermission) {
 		return false;
 	}
-	if (!userId || !projectId) {
+	if (!userToEdit || !projectId) {
 		return false;
 	}
 	if (role !== "owner" && role !== "member" && role !== "admin") {
@@ -138,7 +143,7 @@ export async function editUserRole(
 		.set({ userRole: role })
 		.where(
 			and(
-				eq(usersToProjects.userId, userId),
+				eq(usersToProjects.userId, userToEdit),
 				eq(usersToProjects.projectId, projectId),
 			),
 		);
