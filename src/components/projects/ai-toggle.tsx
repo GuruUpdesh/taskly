@@ -1,6 +1,6 @@
 "use client";
 
-import { toggleAIFeature } from "~/actions/ai-action";
+import { toggleAIFeature } from "~/actions/ai/ai-action";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 

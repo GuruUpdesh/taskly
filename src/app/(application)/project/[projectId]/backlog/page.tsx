@@ -7,7 +7,10 @@ import Tasks from "~/components/backlog/tasks";
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import CreateTask from "~/components/backlog/create-task";
-import { getAssigneesForProject, getProject } from "~/actions/application/project-actions";
+import {
+	getAssigneesForProject,
+	getProject,
+} from "~/actions/application/project-actions";
 import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
