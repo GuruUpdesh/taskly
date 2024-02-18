@@ -23,7 +23,7 @@ import {
 	DialogTrigger,
 } from "~/components/ui/dialog";
 
-import { type UserRole, type User } from "~/server/db/schema";
+import { userRoles } from "~/server/db/schema";
 import { TrashIcon } from "@radix-ui/react-icons";
 import {
 	Select,
@@ -38,11 +38,7 @@ import {
 	editUserRole,
 	removeUserFromProject,
 } from "~/actions/settings/settings-actions";
-interface UserWithRole extends User {
-	userRole: UserRole;
-}
-
-const userRoles: UserRole[] = ["owner", "admin", "member"];
+import { type UserWithRole } from "~/actions/application/project-actions";
 
 function UsersTable({
 	users,

@@ -29,6 +29,7 @@ function InviteLink({ token }: Props) {
 				onClick={handleCopyToClipboard}
 				className="ml-2 gap-1" // Added ml-2 for left margin
 				type="button"
+				variant="outline"
 			>
 				<CopyIcon className="h-4 w-4" />
 				Copy

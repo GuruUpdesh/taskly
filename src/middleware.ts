@@ -13,6 +13,7 @@ export default authMiddleware({
 		"/api/project",
 		`/api/task/(.*)`,
 		"/api/task",
+		"/api/uploadthing",
 	],
 });
 

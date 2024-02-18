@@ -1,12 +1,39 @@
 "use server";
 
 import { db } from "~/server/db";
-import { projects, tasks, usersToProjects } from "~/server/db/schema";
+import {
+	type Project,
+	projects,
+	tasks,
+	usersToProjects,
+} from "~/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { authenticate } from "../security/authenticate";
 import { checkPermissions } from "../security/permissions";
 import { revalidatePath } from "next/cache";
+import { getIsProjectNameAvailable } from "../onboarding/create-project";
+
+export async function handleProjectInfo(
+	projectId: number,
+	updatedValues: Partial<Project>,
+) {
+	const userId = authenticate();
+	await checkPermissions(userId, projectId, ["owner", "admin"]);
+
+	if (updatedValues.name) {
+		const isAvailable = await getIsProjectNameAvailable(updatedValues.name);
+		if (!isAvailable) {
+			throw new Error("Project name is already taken");
+		}
+	}
+
+	await db
+		.update(projects)
+		.set({ ...updatedValues })
+		.where(eq(projects.id, projectId));
+	redirect("/");
+}
 
 export async function handleDeleteProject(formData: FormData) {
 	const userId = authenticate();

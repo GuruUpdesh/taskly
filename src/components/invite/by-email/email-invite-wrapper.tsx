@@ -12,7 +12,7 @@ import { sendEmailInvites } from "~/actions/onboarding/invite-actions";
 import { ChevronRight, Loader2 } from "lucide-react";
 
 type Props = {
-	projectId: string;
+	projectId: number;
 };
 
 const EmailInviteWrapper = ({ projectId }: Props) => {
@@ -33,7 +33,7 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 	const [isLoading, startTransition] = useTransition();
 	async function onSubmit(formData: z.infer<typeof EmailInviteFormSchema>) {
 		const result = await sendEmailInvites(
-			parseInt(projectId),
+			projectId,
 			formData.invitees,
 			project?.name,
 		);
@@ -68,6 +68,7 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 					}
 				/>
 				<Button
+					variant="outline"
 					disabled={form.watch("invitees").length === 0 || isLoading}
 					onClick={() => startTransition(form.handleSubmit(onSubmit))}
 					className="ml-2 gap-2" // Added ml-2 for left margin

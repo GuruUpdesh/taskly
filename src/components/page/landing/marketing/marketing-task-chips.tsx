@@ -25,22 +25,22 @@ const MarketingTaskChips = () => {
 			<motion.div
 				className="h-[10px] flex-1 rounded-full bg-indigo-800"
 				animate={controls1}
-				transition={{ duration: 2, ease: [0.075, 0.82, 0.165, 1] }}
+				transition={{ duration: 1.75, ease: [0.075, 0.82, 0.165, 1] }}
 			/>
 			<motion.div
 				className="h-[10px] flex-1 rounded-full bg-red-800"
 				animate={controls2}
-				transition={{ duration: 2, ease: [0.075, 0.82, 0.165, 1] }}
+				transition={{ duration: 1.75, ease: [0.075, 0.82, 0.165, 1] }}
 			/>
 			<motion.div
 				className="h-[10px] flex-1 rounded-full bg-yellow-600"
 				animate={controls3}
-				transition={{ duration: 2, ease: [0.075, 0.82, 0.165, 1] }}
+				transition={{ duration: 1.75, ease: [0.075, 0.82, 0.165, 1] }}
 			/>
 			<motion.div
 				className="h-[10px] flex-1 rounded-full bg-green-600"
 				animate={controls4}
-				transition={{ duration: 2, ease: [0.075, 0.82, 0.165, 1] }}
+				transition={{ duration: 1.75, ease: [0.075, 0.82, 0.165, 1] }}
 			/>
 		</div>
 	);

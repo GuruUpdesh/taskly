@@ -13,7 +13,7 @@ import {
 
 type Props = {
 	projectName: string;
-	projectId: string;
+	projectId: number;
 };
 
 function LeaveProjectButton({ projectName, projectId }: Props) {

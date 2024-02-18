@@ -3,7 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
-import { projects, insertProjectSchema } from "~/server/db/schema";
+import {
+	projects,
+	insertProjectSchema,
+	type User,
+	type UserRole,
+} from "~/server/db/schema";
 import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 import { auth } from "@clerk/nextjs";
@@ -100,6 +105,10 @@ export async function getAssigneesForProject(projectId: number) {
 		if (error instanceof Error) throwServerError(error.message);
 		return [];
 	}
+}
+
+export interface UserWithRole extends User {
+	userRole: UserRole;
 }
 export async function getAllUsersInProject(projectId: number) {
 	try {

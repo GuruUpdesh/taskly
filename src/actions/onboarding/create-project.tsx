@@ -1,9 +1,7 @@
 "use server";
 
-import { getAverageColor } from "fast-average-color-node";
+// import { getAverageColor } from "fast-average-color-node";
 import OpenAI from "openai";
-import chroma from "chroma-js";
-import { kv } from "@vercel/kv";
 import { db } from "~/server/db";
 import {
 	type NewProject,
@@ -57,7 +55,7 @@ export async function createProject(
 		await createSprintForProject(insertId);
 
 		// create invite token
-		const token = await createInvite(String(insertId));
+		const token = await createInvite(insertId);
 		if (!token) {
 			return {
 				newProjectId: -1,
@@ -101,13 +99,13 @@ export async function generateAndUpdateProjectImage(
 			return;
 		}
 
-		//  get average color
-		await getAverageColor(image).then(async (color: { hex: string }) => {
-			const hex = color.hex;
-			const vibrant = chroma(hex).darken(1).saturate(2).hex();
-			// store project color in Redis
-			await kv.set("project-color-" + projectId, vibrant);
-		});
+		// //  get average color
+		// await getAverageColor(image).then(async (color: { hex: string }) => {
+		// 	const hex = color.hex;
+		// 	const vibrant = chroma(hex).darken(1).saturate(2).hex();
+		// 	// store project color in Redis
+		// 	await kv.set("project-color-" + projectId, vibrant);
+		// });
 
 		// update project image
 		await db
