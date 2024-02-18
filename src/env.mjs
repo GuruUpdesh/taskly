@@ -22,6 +22,12 @@ export const env = createEnv({
 		CRON_SECRET: z.string(),
 		CLERK_SECRET_KEY: z.string(),
 		CLERK_WEBHOOK_SECRET: z.string(),
+		KV_URL: z.string(),
+		KV_REST_API_URL: z.string(),
+		KV_REST_API_TOKEN: z.string(),
+		KV_REST_API_READ_ONLY_TOKEN: z.string(),
+		UPLOADTHING_SECRET: z.string(),
+		UPLOADTHING_APP_ID: z.string(),
 	},
 
 	/**
@@ -51,6 +57,12 @@ export const env = createEnv({
 			process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
 		CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
 		NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
+		KV_URL: process.env.KV_URL,
+		KV_REST_API_URL: process.env.KV_REST_API_URL,
+		KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
+		KV_REST_API_READ_ONLY_TOKEN: process.env.KV_REST_API_READ_ONLY_TOKEN,
+		UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
+		UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

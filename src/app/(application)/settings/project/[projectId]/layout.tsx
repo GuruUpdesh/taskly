@@ -1,5 +1,5 @@
 import React from "react";
-import { getProject } from "~/actions/project-actions";
+import { getProject } from "~/actions/application/project-actions";
 
 type Params = {
 	children: React.ReactNode;

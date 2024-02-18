@@ -25,7 +25,6 @@ import {
 
 import { type UserRole, type User } from "~/server/db/schema";
 import { TrashIcon } from "@radix-ui/react-icons";
-import { deleteUserFromProject, editUserRole } from "~/actions/user-actions";
 import {
 	Select,
 	SelectContent,
@@ -35,6 +34,10 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import { cn } from "~/lib/utils";
+import {
+	editUserRole,
+	removeUserFromProject,
+} from "~/actions/settings/settings-actions";
 interface UserWithRole extends User {
 	userRole: UserRole;
 }
@@ -165,9 +168,9 @@ function UsersTable({
 																	type="submit"
 																	variant="default"
 																	onClick={() =>
-																		deleteUserFromProject(
-																			user.userId,
+																		removeUserFromProject(
 																			projectId,
+																			user.userId,
 																		)
 																	}
 																>

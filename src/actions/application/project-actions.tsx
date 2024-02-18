@@ -3,11 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
-import {
-	projects,
-	insertProjectSchema,
-	type UserRole,
-} from "~/server/db/schema";
+import { projects, insertProjectSchema } from "~/server/db/schema";
 import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 import { auth } from "@clerk/nextjs";
@@ -71,15 +67,6 @@ export async function getProject(projectId: number) {
 	}
 }
 
-export async function deleteProject(id: number) {
-	try {
-		await db.delete(projects).where(eq(projects.id, id));
-		revalidatePath("/");
-	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
-	}
-}
-
 export async function updateProject(id: number, data: NewProject) {
 	try {
 		const newProject: NewProject = insertProjectSchema.parse(data);
@@ -114,52 +101,6 @@ export async function getAssigneesForProject(projectId: number) {
 		return [];
 	}
 }
-
-export async function getIsProjectNameAvailable(
-	projectName: string,
-): Promise<boolean> {
-	try {
-		const projectQuery = await db.query.projects.findFirst({
-			where: (project) => eq(project.name, projectName),
-		});
-		return !projectQuery;
-	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
-		return false;
-	}
-}
-
-export type CreateForm = {
-	name: NewProject["name"];
-	description?: string;
-	sprintDuration: number;
-	sprintStart: Date;
-	invitees: string[];
-	timezoneOffset: number;
-};
-
-export async function checkPermission(
-	projectId: number,
-	userId: string,
-	allowRoles: UserRole[],
-) {
-	try {
-		const userToProject = await db.query.usersToProjects.findFirst({
-			where: (up) => eq(up.projectId, projectId) && eq(up.userId, userId),
-		});
-		if (!userToProject) {
-			return false;
-		}
-		if (allowRoles.includes(userToProject.userRole)) {
-			return true;
-		}
-		return false;
-	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
-		return false;
-	}
-}
-
 export async function getAllUsersInProject(projectId: number) {
 	try {
 		const usersQuery = await db.query.usersToProjects.findMany({

@@ -17,10 +17,6 @@ import {
 import { Button } from "~/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "~/lib/utils";
-import {
-	type CreateForm,
-	getIsProjectNameAvailable,
-} from "~/actions/project-actions";
 import { useRouter } from "next/navigation";
 import EmailInviteForm from "~/components/invite/by-email/email-invite-form";
 import SprintOptions from "~/components/projects/sprint-options/sprint-options";
@@ -39,9 +35,13 @@ import {
 	FormMessage,
 } from "~/components/ui/form";
 import { Separator } from "~/components/ui/separator";
-import { createProject } from "~/actions/project/create-project";
+import {
+	type CreateForm,
+	getIsProjectNameAvailable,
+	createProject,
+} from "~/actions/onboarding/create-project";
 import InviteLink from "~/components/invite/invite-link";
-import { sendEmailInvites } from "~/actions/invite-actions";
+import { sendEmailInvites } from "~/actions/onboarding/invite-actions";
 import { type ProjectSprintOptions } from "~/components/projects/sprint-options/sprint-options-form";
 
 const CreateProjectSchema = z.object({

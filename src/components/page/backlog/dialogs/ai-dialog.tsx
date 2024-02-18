@@ -16,7 +16,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { Bot, ChevronRight, Loader2, SparkleIcon } from "lucide-react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { type Task, selectTaskSchema } from "~/server/db/schema";
-import { createTask } from "~/actions/task-actions";
+import { createTask } from "~/actions/application/task-actions";
 import { throwClientError } from "~/utils/errors";
 
 type AiTask = Task;
