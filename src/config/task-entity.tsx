@@ -315,3 +315,12 @@ export function getOptionForStatus(status: Status) {
 	}
 	return undefined;
 }
+
+type TaskOptions = {
+	isPending?: boolean;
+	isNew?: boolean;
+}
+
+export interface StatefulTask extends Task {
+	options: TaskOptions;
+}

@@ -28,6 +28,7 @@ import type {
 } from "~/server/db/schema";
 import { updateOrder } from "~/utils/order";
 import Message from "~/components/general/message";
+import { find } from "lodash";
 
 export type UpdateTask = {
 	id: number;
@@ -43,9 +44,29 @@ type Props = {
 export default function Tasks({ projectId, assignees, sprints }: Props) {
 	const queryClient = useQueryClient();
 
+	async function refetch() {
+		const data = await getTasksFromProject(parseInt(projectId));
+
+		let newTasks = data;
+		if (newTasks) {
+			const previousTasks = queryClient.getQueryData<TaskType[]>([
+				"tasks",
+			]);
+
+			newTasks = newTasks.map((task) => {
+				const isExistingTask = find(previousTasks, { id: task.id });
+				return isExistingTask
+					? task
+					: { ...task, options: { ...task.options, isNew: true } };
+			});
+		}
+
+		return newTasks;
+	}
+
 	const result = useQuery({
 		queryKey: ["tasks"],
-		queryFn: () => getTasksFromProject(parseInt(projectId)),
+		queryFn: () => refetch(),
 		staleTime: 6 * 1000,
 		refetchInterval: 6 * 1000,
 	});
@@ -194,8 +215,15 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 										<div
 											className={cn(
 												"group relative bg-background/50 backdrop-blur-xl transition-colors",
-												snapshot.isDragging &&
-													"bg-accent-foreground/5",
+												{
+													"bg-accent-foreground/5":
+														snapshot.isDragging,
+													"pointer-events-none opacity-50":
+														task.options.isPending,
+													"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
+														task.options.isNew &&
+														!task.options.isPending,
+												},
 											)}
 											{...provided.draggableProps}
 											{...provided.dragHandleProps}

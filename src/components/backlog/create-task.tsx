@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import {
+	StatefulTask,
 	buildDynamicOptions,
 	defaultValues,
 	getTaskConfig,
@@ -192,13 +193,16 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 
 			const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);
 
-			queryClient.setQueryData<Task[]>(["tasks"], (old) => [
+			queryClient.setQueryData<StatefulTask[]>(["tasks"], (old) => [
 				...(old ?? []),
 				{
 					...data,
 					backlogOrder: 1000000,
 					projectId: parseInt(projectId),
 					id: -1,
+					options: {
+						isPending: true,
+					}
 				},
 			]);
 			setOpen(false);

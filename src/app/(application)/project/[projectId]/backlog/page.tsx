@@ -14,6 +14,7 @@ import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-butt
 import CreateTicket from "~/components/create-ticket/ticket";
 import ToggleFilters from "~/components/page/backlog/toggle-filters";
 import { Separator } from "~/components/ui/separator";
+import Filters from "~/components/page/backlog/filters";
 
 type Params = {
 	params: {
@@ -51,6 +52,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 				</div>
 			</header>
 			<section className="flex flex-col">
+				<Filters />
 				<HydrationBoundary state={dehydrate(queryClient)}>
 					<Tasks
 						projectId={projectId}

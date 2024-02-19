@@ -11,7 +11,7 @@ const ToggleFilters = () => {
 		state.toggleFilters,
 		state.isFiltersOpen,
 	]);
-	console.log("isFiltersOpen", isFiltersOpen);
+
 	return (
 		<>
 			<Button
