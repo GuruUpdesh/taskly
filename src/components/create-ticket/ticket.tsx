@@ -14,12 +14,9 @@ import {
 	DialogTrigger,
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { env } from "~/env.mjs";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -70,7 +67,7 @@ export function CreateTicket() {
 			onOpenChange={(open) => {
 				setOpen(open);
 				if (!open) {
-					resetForm(); 
+					resetForm();
 				}
 			}}
 		>
