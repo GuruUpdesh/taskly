@@ -48,7 +48,7 @@ function DeleteProjectButton({ projectName, projectId }: Props) {
 					<DialogFooter className="sm:justify-start">
 						<DialogClose asChild>
 							<Button type="button" variant="secondary">
-								No
+								Cancel
 							</Button>
 						</DialogClose>
 						<DialogClose asChild>
@@ -59,7 +59,7 @@ function DeleteProjectButton({ projectName, projectId }: Props) {
 									value={projectId}
 								></input>
 								<Button type="submit" variant="destructive">
-									Yes
+									Delete Permanently
 								</Button>
 							</form>
 						</DialogClose>

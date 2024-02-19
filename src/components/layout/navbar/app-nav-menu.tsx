@@ -8,11 +8,26 @@ import {
 	NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
 import Link from "next/link";
+import { useAuth } from "@clerk/nextjs";
 type Props = {
 	children: React.ReactNode;
 };
 
 const AppNavMenu = ({ children }: Props) => {
+	const { isLoaded, userId } = useAuth();
+
+	if (!isLoaded || !userId) {
+		return (
+			<NavigationMenuItem>
+				<NavigationMenuLink
+					className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+					href="/app"
+				>
+					Application
+				</NavigationMenuLink>
+			</NavigationMenuItem>
+		);
+	}
 	return (
 		<NavigationMenuItem>
 			<Link href="/app">
