@@ -6,6 +6,8 @@ import {
 	projects,
 	tasks,
 	usersToProjects,
+	sprints,
+	invites,
 } from "~/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
@@ -77,10 +79,15 @@ export async function handleDeleteProject(formData: FormData) {
 	if (!projectData) {
 		return { success: false, message: "Project not found" };
 	}
-	await db.delete(projects).where(eq(projects.id, projectData.id));
-	await db
-		.delete(usersToProjects)
-		.where(eq(usersToProjects.projectId, projectData.id));
+	await db.transaction(async (tx) => {
+		await tx.delete(projects).where(eq(projects.id, projectData.id));
+		await tx
+			.delete(usersToProjects)
+			.where(eq(usersToProjects.projectId, projectData.id));
+		await tx.delete(tasks).where(eq(tasks.projectId, projectData.id));
+		await tx.delete(sprints).where(eq(sprints.projectId, projectData.id));
+		await tx.delete(invites).where(eq(invites.projectId, projectData.id));
+	});
 	redirect("/");
 }
 
