@@ -94,6 +94,9 @@ const AiDialog = ({ projectId }: Props) => {
 			taskObject.id = Math.random() * 1000;
 			taskObject.backlogOrder = 0;
 			taskObject.boardOrder = 0;
+			taskObject.insertedDate = new Date();
+			taskObject.lastEditedAt = new Date();
+			taskObject.sprintId = 0;
 			setTaskObject(taskObject);
 		}
 	}, [messages]);

@@ -42,6 +42,7 @@ const systemMessage: OpenAI.ChatCompletionMessageParam = {
     Status: In Progress
     Priority: Medium
     Type: Feature
+	
     
     Users will send you a description and you are to return a JSON object with these fields.
     `,
