@@ -11,6 +11,7 @@ import { getAssigneesForProject } from "~/actions/application/project-actions";
 import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import CreateTicket from "~/components/create-ticket/ticket";
 
 type Params = {
 	params: {
@@ -53,6 +54,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					/>
 				</HydrationBoundary>
 			</section>
+			<CreateTicket />
 		</div>
 	);
 }
