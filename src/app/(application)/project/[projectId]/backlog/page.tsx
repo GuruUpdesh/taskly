@@ -11,6 +11,19 @@ import { getAssigneesForProject } from "~/actions/application/project-actions";
 import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import { Button } from "~/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "~/components/ui/dialog"
+import { Input } from "~/components/ui/input"
+import { Label } from "~/components/ui/label"
+import CreateTicket from "~/components/create-ticket/ticket";
 
 type Params = {
 	params: {
@@ -27,6 +40,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 		queryKey: ["tasks"],
 		queryFn: () => getTasksFromProject(parseInt(projectId)),
 	});
+
 
 	return (
 		<div className="max-h-screen overflow-y-scroll">
@@ -53,6 +67,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					/>
 				</HydrationBoundary>
 			</section>
+			<CreateTicket/>
 		</div>
 	);
 }
