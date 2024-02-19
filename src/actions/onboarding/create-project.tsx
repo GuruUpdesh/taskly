@@ -162,14 +162,19 @@ export async function generateProjectImage(
 		return;
 	}
 
-	return image_url;
-}
-
-export async function getIsProjectNameAvailable(
-	projectName: string,
-): Promise<boolean> {
-	const projectQuery = await db.query.projects.findFirst({
-		where: (project) => eq(project.name, projectName),
+	const result = await fetch("https://uploadthing.com/api/uploadFiles", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"X-Uploadthing-Api-Key": "",
+		},
+		body: JSON.stringify({
+			name: "",
+			size: 1,
+			type: "",
+			customId: "",
+		}),
 	});
-	return !projectQuery;
+
+	return image_url;
 }

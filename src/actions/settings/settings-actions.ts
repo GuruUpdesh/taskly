@@ -12,7 +12,8 @@ import { redirect } from "next/navigation";
 import { authenticate } from "../security/authenticate";
 import { checkPermissions } from "../security/permissions";
 import { revalidatePath } from "next/cache";
-import { getIsProjectNameAvailable } from "../onboarding/create-project";
+import { getAverageColor } from "fast-average-color-node";
+import chroma from "chroma-js";
 
 export async function handleProjectInfo(
 	projectId: number,
@@ -21,18 +22,35 @@ export async function handleProjectInfo(
 	const userId = authenticate();
 	await checkPermissions(userId, projectId, ["owner", "admin"]);
 
-	if (updatedValues.name) {
-		const isAvailable = await getIsProjectNameAvailable(updatedValues.name);
-		if (!isAvailable) {
-			throw new Error("Project name is already taken");
-		}
-	}
-
 	await db
 		.update(projects)
 		.set({ ...updatedValues })
 		.where(eq(projects.id, projectId));
-	redirect("/");
+
+	revalidatePath("/");
+}
+
+export async function handleProjectTheme(
+	projectId: number,
+	updatedValues: { color: string; image: string },
+) {
+	const userId = authenticate();
+	await checkPermissions(userId, projectId, ["owner", "admin", "member"]);
+
+	await db
+		.update(projects)
+		.set({ color: updatedValues.color, image: updatedValues.image })
+		.where(eq(projects.id, projectId));
+
+	revalidatePath("/");
+}
+
+export async function autoColor(image: string) {
+	return await getAverageColor(image).then((color: { hex: string }) => {
+		const hex = color.hex;
+		const vibrant = chroma(hex).saturate(1).hex();
+		return vibrant;
+	});
 }
 
 export async function handleDeleteProject(formData: FormData) {

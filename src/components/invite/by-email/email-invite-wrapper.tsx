@@ -54,13 +54,8 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 	}
 
 	return (
-		<form className="flex flex-col pt-4">
-			<p className="text-muted-foreground">
-				Invite a user using their email below!
-			</p>
+		<form className="flex flex-col">
 			<div className="flex items-center">
-				{" "}
-				{/* Added flex class and items-center */}
 				<EmailInviteForm
 					invitees={form.watch("invitees").join(", ")}
 					setInvitees={(invitees) =>

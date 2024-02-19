@@ -10,7 +10,6 @@ import typography from "~/styles/typography";
 type Props = {
 	anchor: string;
 	title: SettingsConfig["title"];
-	description: SettingsConfig["description"];
 	icon: JSX.Element;
 	children: React.ReactNode;
 	className?: string;
@@ -19,7 +18,6 @@ type Props = {
 const SettingsSection = ({
 	anchor,
 	title,
-	description,
 	icon,
 	children,
 	className,
@@ -60,25 +58,25 @@ const SettingsSection = ({
 
 	return (
 		<div
-			className={cn("rounded-lg border p-4", className)}
+			className={cn(
+				"w-[700px] rounded-lg border bg-accent/10",
+				className,
+			)}
 			ref={sectionRef}
 		>
-			<header>
-				<h2
+			<header className="border-b p-4">
+				<h3
 					id={anchor}
 					className={cn(
-						typography.headers.h2,
-						"mt-0 flex items-center gap-2",
+						typography.headers.h3,
+						"mt-0 flex items-center gap-2 text-lg",
 					)}
 				>
-					{React.cloneElement(icon, { className: "w-5 h-5" })}
+					{React.cloneElement(icon, { className: "w-4 h-4" })}
 					{title}
-				</h2>
-				<p className={cn(typography.paragraph.p, "!mt-2")}>
-					{description}
-				</p>
+				</h3>
 			</header>
-			<section className="mt-4">{children}</section>
+			<section className="mt-4 p-4 pt-0">{children}</section>
 		</div>
 	);
 };

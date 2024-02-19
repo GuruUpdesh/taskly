@@ -13,7 +13,9 @@ type Props = {
 function InviteLink({ token }: Props) {
 	const link = window.location.host + "/join/" + token;
 	const handleCopyToClipboard = async () => {
-		await navigator.clipboard.writeText(link);
+		// get protocol
+		const protocol = window.location.protocol;
+		await navigator.clipboard.writeText(protocol + "//" + link);
 		toast.info("Copied to clipboard!");
 	};
 	return (
@@ -23,7 +25,7 @@ function InviteLink({ token }: Props) {
 				onChange={(e) => {
 					e.preventDefault();
 				}}
-				className="flex-1 overflow-hidden whitespace-nowrap rounded-sm border p-2 text-muted-foreground"
+				className="flex-1 overflow-hidden whitespace-nowrap rounded-sm border bg-accent/25 p-2 text-muted-foreground"
 			/>
 			<Button
 				onClick={handleCopyToClipboard}

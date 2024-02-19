@@ -19,7 +19,7 @@ export default function SettingsLayout({
 				minSize={13}
 				defaultSize={15}
 				maxSize={25}
-				className="min-w-200px max-w-400px"
+				className="min-w-100px"
 			>
 				<SettingsSidebar />
 			</ResizablePanel>

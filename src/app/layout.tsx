@@ -32,7 +32,7 @@ export default function RootLayout({
 				<html lang="en" suppressHydrationWarning>
 					<body
 						className={cn(
-							"min-h-screen bg-background bg-gradient-to-b from-[#02091a]  to-[#010714] font-sans antialiased",
+							"min-h-screen overflow-hidden bg-background bg-gradient-to-b from-[#02091a]  to-[#010714] font-sans antialiased",
 							GeistSans.className,
 						)}
 					>

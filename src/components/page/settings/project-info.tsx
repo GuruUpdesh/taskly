@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	Form,
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -21,6 +22,9 @@ import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 import { handleProjectInfo } from "~/actions/settings/settings-actions";
 import safeAsync from "~/lib/safe-action";
+import { toast } from "sonner";
+import { Separator } from "~/components/ui/separator";
+import { Switch } from "~/components/ui/switch";
 
 type Props = {
 	project: Project;
@@ -29,6 +33,7 @@ type Props = {
 const formSchema = z.object({
 	name: z.string().min(3).max(100),
 	description: z.string().max(1000),
+	isAiEnabled: z.boolean(),
 });
 
 const ProjectInfo = ({ project }: Props) => {
@@ -37,23 +42,28 @@ const ProjectInfo = ({ project }: Props) => {
 		defaultValues: {
 			name: "",
 			description: "",
+			isAiEnabled: false,
 		},
 	});
 
+	function resetForm() {
+		form.reset({
+			name: project.name,
+			description: project.description ?? "",
+			isAiEnabled: project.isAiEnabled,
+		});
+	}
+
 	useEffect(() => {
-		form.reset(
-			{
-				name: project.name,
-				description: project.description ?? "",
-			},
-			{
-				keepIsSubmitted: false,
-			},
-		);
+		resetForm();
 	}, [project]);
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		await safeAsync(handleProjectInfo(project.id, values));
+		const result = await safeAsync(handleProjectInfo(project.id, values));
+		if (result[1]) {
+			return;
+		}
+		toast.success("Project updated");
 	}
 
 	return (
@@ -67,11 +77,17 @@ const ProjectInfo = ({ project }: Props) => {
 					name="name"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Name</FormLabel>
+							<FormLabel>Name & Description</FormLabel>
+							<FormDescription className="!mt-0">
+								Pick a name and describe your project so that
+								our system can provide more accurate
+								suggestions, to your workflow.
+							</FormDescription>
 							<FormControl>
 								<Input
 									type="text"
 									id="projectName"
+									className="text-md bg-accent/25"
 									{...field}
 								/>
 							</FormControl>
@@ -84,12 +100,11 @@ const ProjectInfo = ({ project }: Props) => {
 					name="description"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Description</FormLabel>
 							<FormControl>
 								<Textarea
-									className="max-h-[300px]"
+									className="max-h-[300px] bg-accent/25"
 									id="projectDescription"
-									placeholder="Describe your project so our system can better provide suggestions..."
+									placeholder="Describe your project..."
 									{...field}
 									value={field.value ?? ""}
 								/>
@@ -101,19 +116,70 @@ const ProjectInfo = ({ project }: Props) => {
 				<p className={cn(typography.paragraph.p_muted)}>
 					{(form.watch("description") ?? "").length}/1000
 				</p>
-				<Button
-					className="ml-auto"
-					disabled={
-						!form.formState.isDirty || form.formState.isSubmitting
-					}
-				>
-					{form.formState.isSubmitting ? "Saving" : "Save"}
-					{form.formState.isSubmitting ? (
-						<Loader2Icon className="ml-2 h-4 w-4 animate-spin" />
-					) : (
-						<ChevronRight className="ml-2 h-4 w-4" />
+				<Separator className="my-3" />
+				<FormField
+					control={form.control}
+					name="isAiEnabled"
+					render={({ field }) => (
+						<FormItem className="flex flex-row items-center justify-between">
+							<div className="mr-8 space-y-0.5">
+								<FormLabel>Artificial Intelligence</FormLabel>
+								<FormDescription>
+									If you enable this feature, you agree to
+									Open AI&apos;s{" "}
+									<a
+										href="https://openai.com/policies/terms-of-use"
+										target="_blank"
+										className="underline"
+									>
+										terms of service
+									</a>
+									.
+								</FormDescription>
+							</div>
+							<FormControl>
+								<Switch
+									checked={field.value}
+									onCheckedChange={field.onChange}
+								/>
+							</FormControl>
+						</FormItem>
 					)}
-				</Button>
+				/>
+				<Separator className="my-3" />
+				<div className="ml-auto flex items-center gap-4">
+					<Button
+						size="sm"
+						variant="outline"
+						type="button"
+						onClick={(e) => {
+							e.preventDefault();
+							resetForm();
+						}}
+						disabled={
+							!form.formState.isDirty ||
+							form.formState.isSubmitting
+						}
+					>
+						Cancel
+					</Button>
+					<Button
+						size="sm"
+						disabled={
+							!form.formState.isDirty ||
+							form.formState.isSubmitting
+						}
+					>
+						{form.formState.isSubmitting
+							? "Saving Changes"
+							: "Save Changes"}
+						{form.formState.isSubmitting ? (
+							<Loader2Icon className="ml-2 h-4 w-4 animate-spin" />
+						) : (
+							<ChevronRight className="ml-2 h-4 w-4" />
+						)}
+					</Button>
+				</div>
 			</form>
 		</Form>
 	);

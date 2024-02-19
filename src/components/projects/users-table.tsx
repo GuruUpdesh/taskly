@@ -39,6 +39,8 @@ import {
 	removeUserFromProject,
 } from "~/actions/settings/settings-actions";
 import { type UserWithRole } from "~/actions/application/project-actions";
+import { Icon } from "@radix-ui/react-select";
+import { ChevronDown } from "lucide-react";
 
 function UsersTable({
 	users,
@@ -56,7 +58,6 @@ function UsersTable({
 					<TableRow>
 						<TableHead>Username</TableHead>
 						<TableHead>Role</TableHead>
-						<TableHead>Actions</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
@@ -85,6 +86,9 @@ function UsersTable({
 										>
 											<SelectTrigger className="w-[180px] capitalize">
 												<SelectValue className="capitalize" />
+												<Icon asChild>
+													<ChevronDown className="h-4 w-4 opacity-50" />
+												</Icon>
 											</SelectTrigger>
 											<SelectContent>
 												<SelectGroup>
@@ -110,12 +114,9 @@ function UsersTable({
 												<Dialog>
 													<DialogTrigger asChild>
 														<Button
-															className="flex h-min items-center justify-between space-x-2 whitespace-nowrap rounded-sm border-0 p-2 px-3 text-sm text-red-500 ring-offset-background placeholder:text-muted-foreground focus:text-blue-300 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-															style={{
-																background:
-																	"none",
-																border: "none",
-															}}
+															variant="outline"
+															size="icon"
+															className="hover:bg-red-500"
 														>
 															<TrashIcon />
 														</Button>
@@ -124,22 +125,19 @@ function UsersTable({
 														<DialogHeader>
 															<DialogTitle>
 																Are you sure you
-																want to remove{" "}
-																{user.username}{" "}
-																from the
-																Project?
+																want to remove
+																this user?
 															</DialogTitle>
 															<DialogDescription>
-																Warning, once
-																this action is
-																completed, it
-																cannot be
-																undone. Are you
-																sure you want to
-																remove{" "}
 																{user.username}{" "}
-																from the
-																Project?
+																will no longer
+																have access to
+																this project and
+																all their tasks
+																will be
+																unassigned. This
+																cannot be
+																undone.
 															</DialogDescription>
 														</DialogHeader>
 														<div className="flex items-center space-x-2">
@@ -154,7 +152,7 @@ function UsersTable({
 																	type="button"
 																	variant="secondary"
 																>
-																	No
+																	Cancel
 																</Button>
 															</DialogClose>
 															<DialogClose
@@ -162,7 +160,7 @@ function UsersTable({
 															>
 																<Button
 																	type="submit"
-																	variant="default"
+																	variant="destructive"
 																	onClick={() =>
 																		removeUserFromProject(
 																			projectId,
@@ -170,7 +168,10 @@ function UsersTable({
 																		)
 																	}
 																>
-																	Yes
+																	Delete{" "}
+																	{
+																		user.username
+																	}
 																</Button>
 															</DialogClose>
 														</DialogFooter>

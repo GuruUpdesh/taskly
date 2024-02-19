@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useEffect, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "~/components/ui/input";
@@ -37,7 +37,6 @@ import {
 import { Separator } from "~/components/ui/separator";
 import {
 	type CreateForm,
-	getIsProjectNameAvailable,
 	createProject,
 } from "~/actions/onboarding/create-project";
 import InviteLink from "~/components/invite/invite-link";
@@ -74,8 +73,6 @@ const CreateProjectForm = () => {
 		formState: { isValid },
 		register,
 		watch,
-		setError,
-		clearErrors,
 		handleSubmit,
 		reset,
 		setValue,
@@ -129,29 +126,9 @@ const CreateProjectForm = () => {
 		}
 	}, [formStep]);
 
-	// project name availability check
-	const [isLookingUpProjectName, startTransition] = useTransition();
-	const [isProjectNameAvailable, setIsProjectNameAvailable] = useState(false);
-	function handleProjectNameChange() {
-		if (isValid) {
-			startTransition(async () => {
-				const result = await getIsProjectNameAvailable(watch("name"));
-				setIsProjectNameAvailable(result);
-				if (!result) {
-					setError("name", {
-						type: "custom",
-						message: "Project name is already taken",
-					});
-				} else {
-					clearErrors("name");
-				}
-			});
-		}
-	}
-
 	function isStepValid(step: number) {
 		if (step === 1) {
-			return isValid && isProjectNameAvailable && !isLookingUpProjectName;
+			return isValid;
 		} else if (step === 2) {
 			return isValid;
 		} else if (step === 3) {
@@ -241,12 +218,6 @@ const CreateProjectForm = () => {
 												autoFocus
 												autoComplete="off"
 												hidden={formStep !== 1}
-												onChange={(e) => {
-													void register(
-														"name",
-													).onChange(e);
-													void handleProjectNameChange();
-												}}
 											/>
 										</FormControl>
 										<FormMessage className="text-red-500" />
@@ -359,11 +330,7 @@ const CreateProjectForm = () => {
 									? "Skip & Finish"
 									: "Invite & Finish"
 								: "Next"}
-							{isLookingUpProjectName ? (
-								<Loader2 className="ml-2 h-4 w-4 animate-spin" />
-							) : (
-								<ChevronRight className="ml-2 h-4 w-4" />
-							)}
+							<ChevronRight className="ml-2 h-4 w-4" />
 						</Button>
 					</div>
 				</form>

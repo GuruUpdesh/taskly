@@ -15,7 +15,6 @@ import UsersTable from "~/components/projects/users-table";
 import ProjectInvite from "~/components/page/settings/project-invite";
 import ProjectSprints from "~/components/page/settings/project-sprints";
 import ProjectDangerZone from "~/components/page/settings/project-danger-zone";
-import { kv } from "@vercel/kv";
 import Permission from "~/components/auth/Permission";
 
 type Params = {
@@ -38,11 +37,10 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 	const project = projectResults.project;
 	const sprints = await getSprintsForProject(Number(projectId));
 	const users = await getAllUsersInProject(Number(projectId));
-	const color = await kv.get(`project-color-${project.id}`);
 
 	const componentMap = {
 		"project-info": <ProjectInfo project={project} />,
-		theme: <ProjectTheme project={project} color={String(color)} />,
+		appearance: <ProjectTheme project={project} />,
 		invite: <ProjectInvite project={project} />,
 		members: (
 			<UsersTable
@@ -57,8 +55,10 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 
 	return (
 		<div
-			id="scroll-container"
-			className="flex max-h-screen flex-col gap-8 overflow-y-scroll scroll-smooth p-6"
+			className="flex max-h-screen flex-col gap-8 overflow-hidden overflow-y-scroll p-6"
+			style={{
+				scrollBehavior: "smooth",
+			}}
 		>
 			{generalSettings.map((setting, index) => {
 				return (
@@ -73,7 +73,6 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 						<SettingsSection
 							anchor={setting.anchor}
 							title={setting.title}
-							description={setting.description}
 							icon={setting.icon}
 						>
 							{
@@ -85,7 +84,7 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 					</Permission>
 				);
 			})}
-			<div className="min-h-[300px]" />
+			<div className="min-h-[1000px]" />
 		</div>
 	);
 }
