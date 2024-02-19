@@ -14,6 +14,7 @@ import { addMinutes, startOfDay } from "date-fns";
 import { createSprintForProject } from "~/actions/application/sprint-actions";
 import { authenticate } from "~/actions/security/authenticate";
 import { createInvite } from "./invite-actions";
+import { env } from "~/env.mjs";
 
 type ProjectResponse = {
 	newProjectId: number;
@@ -149,10 +150,17 @@ export async function generateProjectImage(
 	description: string | null | undefined,
 ) {
 	const client = new OpenAI();
+	console.log("🤖 - Generating image for", name, description);
+	const object = await imageGenerationHelper(name, description);
+	if (!object) {
+		console.error("🤖 - Error generating image object");
+		return;
+	}
 
+	// in light blue metallic iridescent material
 	const response = await client.images.generate({
 		model: "dall-e-3",
-		prompt: `Generate a logo for "${name}", "${description}".`,
+		prompt: `an icon of a ${object} , 3D render isometric perspective on dark background`,
 		n: 1,
 		size: "1024x1024",
 	});
@@ -162,5 +170,45 @@ export async function generateProjectImage(
 		return;
 	}
 
+	console.log("🤖 - Finished generating image!");
 	return image_url;
+}
+
+async function imageGenerationHelper(
+	name: string,
+	description: string | null | undefined,
+) {
+	const openai = new OpenAI({
+		apiKey: env.OPENAI_API_KEY,
+	});
+
+	const gptResponse = await openai.chat.completions.create({
+		messages: [
+			{
+				role: "assistant",
+				content: `
+				RESPOND WITH A SINGLE OBJECT, OR SIMPLE DESCRIPTION OF THE OBJECT!
+
+				Given this project name "${name}" and description "${description}", what 
+				is an icon that represents this project?
+
+				Example:
+				- Project name = "Test" and description = "This is a test project"
+				- Icon = "A Test-tube"
+
+				- Project name = "Demo" and description = "This is a demo project"
+				- Icon = <You will need to be creative>
+
+				Please include the color and the material of the icon in your response.
+            `,
+			},
+		],
+		model: "gpt-3.5-turbo",
+	});
+
+	if (!gptResponse.choices[0]?.message.content) {
+		return;
+	}
+
+	return gptResponse.choices[0]?.message.content;
 }
