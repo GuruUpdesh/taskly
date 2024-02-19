@@ -107,7 +107,7 @@ export const projects = mysqlTable("projects", {
 	description: text("description"),
 	image: varchar("image", { length: 1000 }),
 	color: varchar("color", { length: 7 }).default("#000000").notNull(),
-	isAiEnabled: boolean("toggle_magic_actions").default(false).notNull(),
+	isAiEnabled: boolean("is_ai_enabled").default(false).notNull(),
 });
 
 // validators
