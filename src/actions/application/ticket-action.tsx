@@ -4,8 +4,6 @@ import { env } from "~/env.mjs";
 
 export async function createTicket(title: string, body: string) {
 
-        console.log(title, body)
-
 		const accessToken = env.ACCESS_TOKEN;
 		const owner = "GuruUpdesh";
 		const repo = "taskly";
@@ -28,7 +26,6 @@ export async function createTicket(title: string, body: string) {
 		if (response.ok) {
 			return true;
 		} else {
-			const errorMessage = await response.text();
 			return false;
 		}
 };
