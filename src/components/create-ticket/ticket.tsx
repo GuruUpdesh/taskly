@@ -70,7 +70,7 @@ export function CreateTicket() {
 			onOpenChange={(open) => {
 				setOpen(open);
 				if (!open) {
-					resetForm();
+					resetForm(); 
 				}
 			}}
 		>
