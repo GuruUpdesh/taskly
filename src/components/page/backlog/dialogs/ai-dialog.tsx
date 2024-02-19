@@ -18,6 +18,7 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import { type Task, selectTaskSchema } from "~/server/db/schema";
 import { createTask } from "~/actions/application/task-actions";
 import { throwClientError } from "~/utils/errors";
+import { useNavigationStore } from "~/store/navigation";
 
 type AiTask = Task;
 
@@ -76,6 +77,7 @@ const AiDialog = ({ projectId }: Props) => {
 		api: "/api/chat",
 	});
 
+	const project = useNavigationStore((state) => state.currentProject);
 	const formRef = useRef<HTMLFormElement | null>(null);
 	const [reviewResponse, setReviewResponse] = useState(false);
 	const [taskObject, setTaskObject] = useState<AiTask | null>(null);
@@ -117,6 +119,8 @@ const AiDialog = ({ projectId }: Props) => {
 			if (error instanceof Error) throwClientError(error.message);
 		}
 	}
+
+	if (project?.isAiEnabled === false) return null;
 
 	return (
 		<>

@@ -44,6 +44,8 @@ type FormProps = {
 };
 
 const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
+	const project = useNavigationStore((state) => state.currentProject);
+
 	// Framer motion transition
 	const transition = {
 		opacity: { ease: [0.075, 0.82, 0.165, 1] },
@@ -96,7 +98,7 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 				)}
 				aria-disabled={isLoading}
 			>
-				{form.watch("description") ? (
+				{form.watch("description") && project?.isAiEnabled ? (
 					<motion.div
 						layout
 						className="h-[30px]"
@@ -154,6 +156,7 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 										col={col as keyof NewTask}
 										form={form}
 										onSubmit={onSubmit}
+										autoSubmit={false}
 									/>
 								</motion.div>
 							);

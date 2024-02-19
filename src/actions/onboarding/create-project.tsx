@@ -162,19 +162,5 @@ export async function generateProjectImage(
 		return;
 	}
 
-	const result = await fetch("https://uploadthing.com/api/uploadFiles", {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			"X-Uploadthing-Api-Key": "",
-		},
-		body: JSON.stringify({
-			name: "",
-			size: 1,
-			type: "",
-			customId: "",
-		}),
-	});
-
 	return image_url;
 }
