@@ -20,9 +20,9 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "~/components/ui/dialog"
-import { Input } from "~/components/ui/input"
-import { Label } from "~/components/ui/label"
+} from "~/components/ui/dialog";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import CreateTicket from "~/components/create-ticket/ticket";
 
 type Params = {
@@ -40,7 +40,6 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 		queryKey: ["tasks"],
 		queryFn: () => getTasksFromProject(parseInt(projectId)),
 	});
-
 
 	return (
 		<div className="max-h-screen overflow-y-scroll">
@@ -67,7 +66,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					/>
 				</HydrationBoundary>
 			</section>
-			<CreateTicket/>
+			<CreateTicket />
 		</div>
 	);
 }
