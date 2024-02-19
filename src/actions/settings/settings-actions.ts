@@ -91,6 +91,11 @@ export async function removeUserFormProject_formData(formData: FormData) {
 }
 
 export async function removeUserFromProject(projectId: number, userId: string) {
+	const activeUserId = authenticate();
+	if (activeUserId !== userId) {
+		await checkPermissions(activeUserId, projectId, ["owner", "admin"]);
+	}
+
 	await db.delete(usersToProjects).where(eq(usersToProjects.userId, userId));
 
 	await db
@@ -103,7 +108,11 @@ export async function removeUserFromProject(projectId: number, userId: string) {
 			),
 		);
 
-	redirect("/");
+	if (activeUserId !== userId) {
+		revalidatePath("/");
+	} else {
+		redirect("/");
+	}
 }
 
 export async function editUserRole(
