@@ -1,24 +1,44 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import SidebarButton from "~/components/layout/sidebar/sidebar-button";
-const SettingsBackButton = dynamic(() => import("./settings-back-button"), {
-	ssr: false,
-});
+import { Separator } from "~/components/ui/separator";
+import { ArrowLeftIcon, PersonIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import { cn } from "~/lib/utils";
+import typography from "~/styles/typography";
+import { Button } from "~/components/ui/button";
 const ProjectSettings = dynamic(() => import("./project-settings"), {
 	ssr: false,
 });
 
 const SettingsSidebar = () => {
 	return (
-		<div className="flex h-screen flex-col gap-4 p-4 @container">
-			<SettingsBackButton />
-			<div className="flex items-center gap-2 text-sm font-medium leading-none text-muted-foreground">
-				<p className="whitespace-nowrap">User Settings</p>
+		<div className="flex h-screen flex-col gap-4 bg-accent/25 @container">
+			<Link href="/app" prefetch>
+				<Button
+					variant="ghost"
+					size="lg"
+					className={cn(
+						"flex w-full items-center justify-start gap-5 rounded-none border-b py-8 transition-all hover:gap-3",
+					)}
+				>
+					<ArrowLeftIcon className="h-5 min-w-5" />
+					<span className={cn(typography.headers.h3, "border-none")}>
+						Settings
+					</span>
+				</Button>
+			</Link>
+			<div className="px-4">
+				<SidebarButton
+					icon={<PersonIcon />}
+					label="User Settings"
+					url="/settings/profile"
+				/>
 			</div>
-			<div>
-				<SidebarButton label="Profile" url="/settings/profile" />
+			<div className="px-4">
+				<Separator className="mb-4" />
+				<ProjectSettings />
 			</div>
-			<ProjectSettings />
 		</div>
 	);
 };

@@ -13,6 +13,11 @@ interface SettingsNavigationState {
 	setSideBarCollapsed: (value: boolean) => void;
 	expandSideBar: () => void;
 	setExpandSideBar: (callback: () => void) => void;
+	settingsOptions: Record<string, boolean>;
+	updateSettingOption: (
+		key: keyof SettingsNavigationState["settingsOptions"],
+		value: boolean,
+	) => void;
 }
 
 const useNavigationStore = create<SettingsNavigationState>()(
@@ -33,6 +38,18 @@ const useNavigationStore = create<SettingsNavigationState>()(
 			},
 			setExpandSideBar: (callback) =>
 				set(() => ({ expandSideBar: callback })),
+			settingsOptions: {
+				"project-info": false,
+				theme: false,
+				invite: false,
+				members: false,
+				sprints: false,
+				"danger-zone": false,
+			},
+			updateSettingOption: (key, value) =>
+				set((state) => ({
+					settingsOptions: { ...state.settingsOptions, [key]: value },
+				})),
 		}),
 		{
 			name: "settings-navigation-storage",

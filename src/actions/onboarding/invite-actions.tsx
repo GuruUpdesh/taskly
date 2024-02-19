@@ -19,11 +19,11 @@ const getInviteSchema = z.object({
 	projectId: z.number(),
 });
 
-export async function createInvite(projectId: string) {
+export async function createInvite(projectId: number) {
 	const userId = authenticate();
-	await checkPermissions(userId, parseInt(projectId));
+	await checkPermissions(userId, projectId);
 
-	const dataObject = { userId: userId, projectId: parseInt(projectId) };
+	const dataObject = { userId: userId, projectId: projectId };
 	const inviteValidation = getInviteSchema.safeParse(dataObject);
 	if (!inviteValidation.success) {
 		return false;
@@ -127,7 +127,7 @@ export async function sendEmailInvites(
 			message: "No invites sent as no emails were provided",
 		};
 	}
-	const inviteToken = await createInvite(projectId.toString());
+	const inviteToken = await createInvite(projectId);
 	const user = await clerkClient.users.getUser(userId);
 
 	if (!inviteToken || !user?.username) {

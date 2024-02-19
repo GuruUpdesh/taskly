@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 const InviteLink = dynamic(() => import("./invite-link"), { ssr: false });
 
 type Props = {
-	projectId: string;
+	projectId: number;
 };
 
 const InviteLinkWrapper = async ({ projectId }: Props) => {
@@ -18,9 +18,6 @@ const InviteLinkWrapper = async ({ projectId }: Props) => {
 
 	return (
 		<div className="flex flex-col">
-			<p className="text-muted-foreground">
-				Invite a user using the link below!
-			</p>
 			<InviteLink token={token} />
 		</div>
 	);

@@ -15,10 +15,11 @@ export default function SettingsLayout({
 		<ResizablePanelGroup direction="horizontal">
 			<ResizablePanel
 				id="sidebar"
-				minSize={7}
-				collapsible={true}
-				maxSize={25}
+				collapsible={false}
+				minSize={13}
 				defaultSize={15}
+				maxSize={25}
+				className="min-w-100px"
 			>
 				<SettingsSidebar />
 			</ResizablePanel>

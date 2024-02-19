@@ -1,6 +1,7 @@
 import { relations, type InferSelectModel } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import {
+	boolean,
 	datetime,
 	int,
 	mysqlEnum,
@@ -98,13 +99,15 @@ export const taskRelations = relations(tasks, ({ one, many }) => ({
  */
 export const projects = mysqlTable("projects", {
 	id: serial("id").primaryKey(),
-	name: varchar("name", { length: 255 }).notNull().unique(),
+	name: varchar("name", { length: 255 }).notNull(),
 	sprintDuration: int("sprint_duration").default(2).notNull(),
 	sprintStart: datetime("sprint_start", { mode: "date", fsp: 0 })
 		.default(startOfToday())
 		.notNull(),
 	description: text("description"),
 	image: varchar("image", { length: 1000 }),
+	color: varchar("color", { length: 7 }).default("#000000").notNull(),
+	isAiEnabled: boolean("is_ai_enabled").default(false).notNull(),
 });
 
 // validators

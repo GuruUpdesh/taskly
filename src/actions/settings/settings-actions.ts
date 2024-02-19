@@ -1,12 +1,57 @@
 "use server";
 
 import { db } from "~/server/db";
-import { projects, tasks, usersToProjects } from "~/server/db/schema";
+import {
+	type Project,
+	projects,
+	tasks,
+	usersToProjects,
+} from "~/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { authenticate } from "../security/authenticate";
 import { checkPermissions } from "../security/permissions";
 import { revalidatePath } from "next/cache";
+import { getAverageColor } from "fast-average-color-node";
+import chroma from "chroma-js";
+
+export async function handleProjectInfo(
+	projectId: number,
+	updatedValues: Partial<Project>,
+) {
+	const userId = authenticate();
+	await checkPermissions(userId, projectId, ["owner", "admin"]);
+
+	await db
+		.update(projects)
+		.set({ ...updatedValues })
+		.where(eq(projects.id, projectId));
+
+	revalidatePath("/");
+}
+
+export async function handleProjectTheme(
+	projectId: number,
+	updatedValues: { color: string; image: string },
+) {
+	const userId = authenticate();
+	await checkPermissions(userId, projectId, ["owner", "admin", "member"]);
+
+	await db
+		.update(projects)
+		.set({ color: updatedValues.color, image: updatedValues.image })
+		.where(eq(projects.id, projectId));
+
+	revalidatePath("/");
+}
+
+export async function autoColor(image: string) {
+	return await getAverageColor(image).then((color: { hex: string }) => {
+		const hex = color.hex;
+		const vibrant = chroma(hex).saturate(1).hex();
+		return vibrant;
+	});
+}
 
 export async function handleDeleteProject(formData: FormData) {
 	const userId = authenticate();
@@ -46,6 +91,11 @@ export async function removeUserFormProject_formData(formData: FormData) {
 }
 
 export async function removeUserFromProject(projectId: number, userId: string) {
+	const activeUserId = authenticate();
+	if (activeUserId !== userId) {
+		await checkPermissions(activeUserId, projectId, ["owner", "admin"]);
+	}
+
 	await db.delete(usersToProjects).where(eq(usersToProjects.userId, userId));
 
 	await db
@@ -58,7 +108,11 @@ export async function removeUserFromProject(projectId: number, userId: string) {
 			),
 		);
 
-	redirect("/");
+	if (activeUserId !== userId) {
+		revalidatePath("/");
+	} else {
+		redirect("/");
+	}
 }
 
 export async function editUserRole(

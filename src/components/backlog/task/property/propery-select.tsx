@@ -49,6 +49,7 @@ type DataCellProps = {
 	form: UseFormReturn<NewTask>;
 	onSubmit: (newTask: NewTask) => void;
 	size?: "default" | "icon";
+	autoSubmit?: boolean;
 };
 
 function PropertySelect({
@@ -57,6 +58,7 @@ function PropertySelect({
 	form,
 	onSubmit,
 	size = "default",
+	autoSubmit = true,
 }: DataCellProps) {
 	// const initialRender = useRef(true)
 	// useEffect(() => {
@@ -106,7 +108,7 @@ function PropertySelect({
 						<Select
 							onValueChange={(val) => {
 								onChange(convertToOriginalType(val));
-								void onSubmit(form.getValues());
+								if (autoSubmit) void onSubmit(form.getValues());
 							}}
 							value={currentValue}
 							defaultValue={currentValue}

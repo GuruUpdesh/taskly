@@ -9,27 +9,22 @@ export async function checkPermissions(
 	projectId: number,
 	roles?: UserRole[],
 ) {
-	try {
-		const userToProject = await db.query.usersToProjects.findFirst({
-			where: (usersToProject) =>
-				and(
-					eq(usersToProject.projectId, projectId),
-					eq(usersToProject.userId, userId),
-				),
-		});
-		if (!userToProject) {
-			throw new Error("User does not have access to this project");
-		}
+	const userToProject = await db.query.usersToProjects.findFirst({
+		where: (usersToProject) =>
+			and(
+				eq(usersToProject.projectId, projectId),
+				eq(usersToProject.userId, userId),
+			),
+	});
+	if (!userToProject) {
+		throw new Error("User does not have access to this project");
+	}
 
-		if (!roles) return;
-		const hasPermission = roles.includes(userToProject.userRole);
-		if (!hasPermission) {
-			throw new Error(
-				`User role ${userToProject.userRole} does not have permission to access this resource`,
-			);
-		}
-	} catch (error) {
-		console.error(error);
-		throw new Error("Error checking permissions");
+	if (!roles) return;
+	const hasPermission = roles.includes(userToProject.userRole);
+	if (!hasPermission) {
+		throw new Error(
+			`User role ${userToProject.userRole} does not have permission to access this resource`,
+		);
 	}
 }
