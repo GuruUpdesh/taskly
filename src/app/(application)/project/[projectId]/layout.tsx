@@ -52,12 +52,10 @@ export default async function ApplicationLayout({
 				sidebarComponent={<Sidebar projectId={projectId} />}
 				defaultLayout={defaultLayout}
 			>
-				<main>
-					<HydrationBoundary state={dehydrate(queryClient)}>
-						<GlobalSearch projectId={parseInt(projectId)} />
-					</HydrationBoundary>
-					{children}
-				</main>
+				<HydrationBoundary state={dehydrate(queryClient)}>
+					<GlobalSearch projectId={parseInt(projectId)} />
+				</HydrationBoundary>
+				<main>{children}</main>
 			</SidebarPanel>
 		</>
 	);

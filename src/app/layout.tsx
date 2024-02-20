@@ -28,21 +28,21 @@ export default function RootLayout({
 				},
 			}}
 		>
-			<GlobalToastHandler>
-				<html lang="en" suppressHydrationWarning>
-					<body
-						className={cn(
-							"min-h-screen overflow-hidden bg-background bg-gradient-to-b from-[#02091a]  to-[#010714] font-sans antialiased",
-							GeistSans.className,
-						)}
-					>
-						<ReactQueryProvider>
-							<main>{children}</main>
-						</ReactQueryProvider>
-						<Toaster richColors />
-					</body>
-				</html>
-			</GlobalToastHandler>
+				<GlobalToastHandler>
+					<html lang="en" suppressHydrationWarning>
+						<body
+							className={cn(
+								"min-h-screen overflow-hidden bg-background bg-gradient-to-b from-[#02091a] to-[#010714] font-sans antialiased !m-0",
+								GeistSans.className,
+							)}
+						>
+							<ReactQueryProvider>
+								<main>{children}</main>
+							</ReactQueryProvider>
+							<Toaster richColors />
+						</body>
+					</html>
+				</GlobalToastHandler>
 		</ClerkProvider>
 	);
 }
