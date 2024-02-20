@@ -24,6 +24,10 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 	const sprints = await getSprintsForProject(parseInt(projectId));
 	// Prefetch tasks using react-query
 	const queryClient = new QueryClient();
+	await queryClient.prefetchQuery({
+		queryKey: ["tasks"],
+		queryFn: () => getTasksFromProject(parseInt(projectId)),
+	});
 
 	return (
 		<div className="max-h-screen overflow-y-scroll">

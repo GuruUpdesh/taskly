@@ -1,70 +1,50 @@
 "use client";
 
-import React, { forwardRef } from "react";
+import React from "react";
 import {
-	KBarProvider,
 	KBarPortal,
 	KBarPositioner,
 	KBarAnimator,
 	KBarSearch,
 	useMatches,
 	KBarResults,
-	ActionImpl,
-	ActionId,
+	type ActionImpl,
+	type ActionId,
 } from "kbar";
-import { Project, tasks } from "~/server/db/schema";
-import { type Task } from "~/server/db/schema";
-import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { TaskStatus } from "../page/project/recent-tasks";
 import { cn } from "~/lib/utils";
 
-type Props = {
-	projectId: number;
+const searchStyle = {
+	boxSizing: "border-box" as React.CSSProperties["boxSizing"],
 };
 
-function GlobalSearch({ projectId }: Props) {
-	const queryClient = useQueryClient();
-	const tasks = queryClient.getQueryData<Task[]>(["tasks"]) ?? [];
+const animatorStyle = {
+	maxWidth: "600px",
+	width: "100%",
+	overflow: "hidden",
+};
 
-	const router = useRouter();
-
-	const actions = tasks.map((task) => ({
-		id: String(task.id),
-		name: task.title,
-		perform: () => router.push(`/project/${projectId}/task/${task.id}`),
-	}));
-
+function KBar() {
 	return (
-		<KBarProvider
-			actions={actions}
-			options={{
-				enableHistory: true,
-			}}
-		>
-			<KBarPortal>
-				<KBarPositioner>
-					<KBarAnimator className="w-3/6 max-w-[600px] max-h-80 overflow-scroll rounded-lg border border-transparent bg-accent/25 p-2 shadow-xl backdrop-blur-xl relative">
-						<div className="sticky top-0 z-10 py-3 px-2 border-b bg-[#0A1121] w-full">
-							<KBarSearch className="w-full bg-transparent px-2 py-1 text-muted-foreground outline-none" />
-						</div>
-						<div className="overflow-y-auto max-h-80">
-							<RenderResults tasks={tasks} />
-						</div>
-					</KBarAnimator>
-				</KBarPositioner>
-			</KBarPortal>
-		</KBarProvider>
+		<KBarPortal>
+			<KBarPositioner>
+				<KBarAnimator
+					style={animatorStyle}
+					className="rounded-lg bg-background/75 ring-1 ring-border backdrop-blur-xl"
+				>
+					<KBarSearch
+						style={searchStyle}
+						className="w-full border-b bg-transparent p-4 text-muted-foreground outline-none"
+					/>
+					<div className="pt-2">
+						<RenderResults />
+					</div>
+				</KBarAnimator>
+			</KBarPositioner>
+		</KBarPortal>
 	);
-
 }
 
-
-type RenderResultsProps = {
-	tasks: Task[];
-};
-
-function RenderResults({ tasks }: RenderResultsProps) {
+function RenderResults() {
 	const { results, rootActionId } = useMatches();
 
 	return (
@@ -72,28 +52,20 @@ function RenderResults({ tasks }: RenderResultsProps) {
 			items={results}
 			onRender={({ item, active }) =>
 				typeof item === "string" ? (
-					<></>
+					<div className="px-2 py-4 text-sm uppercase opacity-50">
+						{item}
+					</div>
 				) : (
 					<ResultItem
 						action={item}
 						active={active}
-						currentRootActionId={rootActionId ?? ''}
+						currentRootActionId={rootActionId ?? ""}
 					/>
 				)
 			}
 		/>
 	);
 }
-// <div className="flex items-center gap-2 rounded p-2 hover:bg-accent">
-// 	<TaskStatus
-// 		status={
-// 			tasks.find(
-// 				(task) => String(task.id) === item.id,
-// 			)?.status ?? "backlog"
-// 		}
-// 	/>
-// 	{item.name}
-// </div>
 
 type ResultItemProps = {
 	action: ActionImpl;
@@ -115,9 +87,9 @@ const ResultItem = React.forwardRef<HTMLDivElement, ResultItemProps>(
 			<div
 				ref={ref}
 				className={cn(
-					"pointer flex items-center justify-between gap-2 rounded p-2 hover:bg-accent",
+					"pointer mx-2 flex items-center justify-between gap-2 rounded bg-transparent p-2",
 					{
-						"border-l-2 bg-accent": active,
+						"bg-accent": active,
 					},
 				)}
 			>
@@ -192,4 +164,4 @@ const ResultItem = React.forwardRef<HTMLDivElement, ResultItemProps>(
 
 ResultItem.displayName = "ResultItem";
 
-export default GlobalSearch;
+export default KBar;

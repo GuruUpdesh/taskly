@@ -6,6 +6,8 @@ import { Toaster } from "~/components/ui/sonner";
 import { dark } from "@clerk/themes";
 import ReactQueryProvider from "~/lib/react-query-provider";
 import GlobalToastHandler from "~/lib/global-toast/global-toast-handler";
+import KBarProvider from "~/lib/kbar-provider";
+import KBar from "~/components/general/kbar";
 
 export const metadata = {
 	title: "Taskly",
@@ -28,11 +30,13 @@ export default function RootLayout({
 				},
 			}}
 		>
+			<KBarProvider>
+				<KBar />
 				<GlobalToastHandler>
 					<html lang="en" suppressHydrationWarning>
 						<body
 							className={cn(
-								"min-h-screen overflow-hidden bg-background bg-gradient-to-b from-[#02091a] to-[#010714] font-sans antialiased !m-0",
+								"!m-0 min-h-screen overflow-hidden bg-background bg-gradient-to-b from-[#02091a] to-[#010714] font-sans antialiased",
 								GeistSans.className,
 							)}
 						>
@@ -43,6 +47,7 @@ export default function RootLayout({
 						</body>
 					</html>
 				</GlobalToastHandler>
+			</KBarProvider>
 		</ClerkProvider>
 	);
 }
