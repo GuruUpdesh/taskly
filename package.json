@@ -58,6 +58,7 @@
 		"fast-average-color-node": "^3.0.0",
 		"framer-motion": "^10.18.0",
 		"geist": "^1.1.0",
+		"kbar": "^0.1.0-beta.45",
 		"lodash.debounce": "^4.0.8",
 		"lucide-react": "^0.292.0",
 		"next": "^14.0.0",
