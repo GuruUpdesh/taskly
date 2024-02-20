@@ -8,8 +8,11 @@ import { cookies } from "next/headers";
 import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
 import GlobalSearch from "~/components/global-search/kbar";
 import { getTasksFromProject } from "~/actions/application/task-actions";
-import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
-
+import {
+	HydrationBoundary,
+	QueryClient,
+	dehydrate,
+} from "@tanstack/react-query";
 
 type Params = {
 	children: React.ReactNode;
@@ -41,7 +44,6 @@ export default async function ApplicationLayout({
 		queryKey: ["tasks"],
 		queryFn: () => getTasksFromProject(parseInt(projectId)),
 	});
- 
 
 	return (
 		<>
@@ -50,10 +52,12 @@ export default async function ApplicationLayout({
 				sidebarComponent={<Sidebar projectId={projectId} />}
 				defaultLayout={defaultLayout}
 			>
-				<HydrationBoundary state={dehydrate(queryClient)}>
-				<GlobalSearch projectId={parseInt(projectId)}/>
-				</HydrationBoundary>
-				<main>{children}</main>
+				<main>
+					<HydrationBoundary state={dehydrate(queryClient)}>
+						<GlobalSearch projectId={parseInt(projectId)} />
+					</HydrationBoundary>
+					{children}
+				</main>
 			</SidebarPanel>
 		</>
 	);
