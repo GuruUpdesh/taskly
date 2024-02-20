@@ -44,15 +44,21 @@ function GlobalSearch({ projectId }: Props) {
 		>
 			<KBarPortal>
 				<KBarPositioner>
-					<KBarAnimator className="w-3/6 max-w-[600px] overflow-hidden rounded-lg border bg-accent/25 p-2 shadow-xl backdrop-blur-xl">
-						<KBarSearch className="w-full border-b bg-transparent px-2 py-3 text-muted-foreground outline-none " />
-						<RenderResults tasks={tasks} />
+					<KBarAnimator className="w-3/6 max-w-[600px] max-h-80 overflow-scroll rounded-lg border border-transparent bg-accent/25 p-2 shadow-xl backdrop-blur-xl relative">
+						<div className="sticky top-0 z-10 py-3 px-2 border-b bg-[#0A1121] w-full">
+							<KBarSearch className="w-full bg-transparent px-2 py-1 text-muted-foreground outline-none" />
+						</div>
+						<div className="overflow-y-auto max-h-80">
+							<RenderResults tasks={tasks} />
+						</div>
 					</KBarAnimator>
 				</KBarPositioner>
 			</KBarPortal>
 		</KBarProvider>
 	);
+
 }
+
 
 type RenderResultsProps = {
 	tasks: Task[];
@@ -71,7 +77,7 @@ function RenderResults({ tasks }: RenderResultsProps) {
 					<ResultItem
 						action={item}
 						active={active}
-						currentRootActionId={rootActionId}
+						currentRootActionId={rootActionId ?? ''}
 					/>
 				)
 			}
