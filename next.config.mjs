@@ -26,8 +26,11 @@ const config = {
 				hostname: "utfs.io",
 				port: "",
 				pathname: "/**",
-			}
+			},
 		],
+	},
+	experimental: {
+		instrumentationHook: true,
 	},
 };
 

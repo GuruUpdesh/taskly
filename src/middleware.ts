@@ -9,10 +9,6 @@ export default authMiddleware({
 		"/api/cron",
 		"/api/clerk",
 		"/sign-in",
-		`/api/project/(.*)`,
-		"/api/project",
-		`/api/task/(.*)`,
-		"/api/task",
 		"/api/uploadthing",
 	],
 });
