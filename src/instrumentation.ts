@@ -27,7 +27,7 @@ export async function register() {
 		throw new Error("Failed to fetch users from Clerk");
 	}
 
-	const data = await result.json() as unknown;
+	const data = (await result.json()) as unknown;
 
 	const returnData = dataSchema.parse(data);
 
