@@ -14,7 +14,7 @@ import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-butt
 import CreateTicket from "~/components/create-ticket/ticket";
 import ToggleFilters from "~/components/page/backlog/toggle-filters";
 import { Separator } from "~/components/ui/separator";
-import Filters from "~/components/page/backlog/filters";
+import Filters from "~/components/filter/filters";
 
 type Params = {
 	params: {

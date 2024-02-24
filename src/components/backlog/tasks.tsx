@@ -29,6 +29,7 @@ import type {
 import { updateOrder } from "~/utils/order";
 import Message from "~/components/general/message";
 import { find } from "lodash";
+import { useAppStore } from "~/store/app";
 
 export type UpdateTask = {
 	id: number;
@@ -42,6 +43,20 @@ type Props = {
 };
 
 export default function Tasks({ projectId, assignees, sprints }: Props) {
+	// update app assignees and sprints
+	const [updateAssignees, updateSprints] = useAppStore((state) => [
+		state.updateAssignees,
+		state.updateSprints,
+	]);
+
+	useEffect(() => {
+		updateAssignees(assignees);
+	}, [assignees]);
+
+	useEffect(() => {
+		updateSprints(sprints);
+	}, [sprints]);
+
 	const queryClient = useQueryClient();
 
 	async function refetch() {
