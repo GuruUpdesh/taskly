@@ -60,7 +60,7 @@ type Props = {
 	status: TaskType["status"];
 };
 
-const TaskStatus = ({ status }: Props) => {
+export const TaskStatus = ({ status }: Props) => {
 	return (
 		<TooltipProvider>
 			<Tooltip>

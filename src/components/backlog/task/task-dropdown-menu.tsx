@@ -1,16 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
 	ContextMenu,
 	ContextMenuContent,
 	ContextMenuItem,
+	ContextMenuShortcut,
 	ContextMenuTrigger,
 } from "~/components/ui/context-menu";
 import { Trash2Icon } from "lucide-react";
 import type { UseMutationResult } from "@tanstack/react-query";
 import type { Task } from "~/server/db/schema";
 import { toast } from "sonner";
+import { Priority, useRegisterActions } from "kbar";
 
 type Props = {
 	task: Task;
@@ -19,19 +21,45 @@ type Props = {
 };
 
 const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
+	const actions = [
+		{
+			id: "delete",
+			name: "Delete",
+			icon: <Trash2Icon className="h-4 w-4" />,
+			shortcut: ["d"],
+			perform: () => {
+				deleteTaskMutation.mutate(task.id);
+				toast.warning("Task deleted");
+			},
+			priority: Priority.HIGH,
+			section: "Task Actions",
+		},
+	];
+
+	// todo move this to the backlog
+	const [isHovered, setIsHovered] = useState(false);
+
+	useRegisterActions(isHovered ? actions : [], [isHovered, actions]);
+
 	return (
 		<ContextMenu>
-			<ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
+			<ContextMenuTrigger asChild onMouseEnter={() => setIsHovered(true)}>
+				{children}
+			</ContextMenuTrigger>
 			<ContextMenuContent className="bg-accent/50 backdrop-blur-sm">
-				<ContextMenuItem
-					onClick={() => {
-						deleteTaskMutation.mutate(task.id);
-						toast.warning("Task deleted");
-					}}
-				>
-					<Trash2Icon className="mr-2 h-4 w-4" />
-					Delete
-				</ContextMenuItem>
+				{actions.map((action) => (
+					<ContextMenuItem
+						key={action.id}
+						onClick={action.perform}
+						className="gap-2"
+					>
+						{action.icon}
+						{action.name}
+						<ContextMenuShortcut>
+							{action.shortcut?.join(" + ")}
+						</ContextMenuShortcut>
+					</ContextMenuItem>
+				))}
 			</ContextMenuContent>
 		</ContextMenu>
 	);
