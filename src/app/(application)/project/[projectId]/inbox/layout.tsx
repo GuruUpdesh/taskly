@@ -15,6 +15,7 @@ type Params = {
 };
 
 export default function InboxLayout({ children }: Params) {
+	
 	return (
 		<ResizablePanelGroup direction="horizontal">
 			<ResizablePanel

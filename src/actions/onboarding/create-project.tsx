@@ -8,7 +8,6 @@ import {
 	projects,
 	insertProjectSchema,
 } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
 import { addUserToProject } from "~/actions/user-actions";
 import { addMinutes, startOfDay } from "date-fns";
 import { createSprintForProject } from "~/actions/application/sprint-actions";
@@ -67,11 +66,11 @@ export async function createProject(
 		}
 
 		// generate project image in background
-		void generateAndUpdateProjectImage(
-			insertId,
-			newProject.name,
-			newProject.description,
-		);
+		// void generateAndUpdateProjectImage(
+		// 	insertId,
+		// 	newProject.name,
+		// 	newProject.description,
+		// );
 
 		return {
 			newProjectId: insertId,
@@ -84,40 +83,40 @@ export async function createProject(
 	}
 }
 
-export async function generateAndUpdateProjectImage(
-	projectId: number,
-	projectName: string,
-	projectDescription: string | null | undefined,
-) {
-	try {
-		// generate image
-		const image = await generateProjectImage(
-			projectName,
-			projectDescription,
-		);
-		if (!image) {
-			console.error("Error generating project image");
-			return;
-		}
+// export async function generateAndUpdateProjectImage(
+// 	projectId: number,
+// 	projectName: string,
+// 	projectDescription: string | null | undefined,
+// ) {
+// 	try {
+// 		// generate image
+// 		const image = await generateProjectImage(
+// 			projectName,
+// 			projectDescription,
+// 		);
+// 		if (!image) {
+// 			console.error("Error generating project image");
+// 			return;
+// 		}
 
-		// //  get average color
-		// await getAverageColor(image).then(async (color: { hex: string }) => {
-		// 	const hex = color.hex;
-		// 	const vibrant = chroma(hex).darken(1).saturate(2).hex();
-		// 	// store project color in Redis
-		// 	await kv.set("project-color-" + projectId, vibrant);
-		// });
+// 		//  get average color
+// 		await getAverageColor(image).then(async (color: { hex: string }) => {
+// 			const hex = color.hex;
+// 			const vibrant = chroma(hex).darken(1).saturate(2).hex();
+// 			// store project color in Redis
+// 			await kv.set("project-color-" + projectId, vibrant);
+// 		});
 
-		// update project image
-		await db
-			.update(projects)
-			.set({ image: image })
-			.where(eq(projects.id, projectId));
-		console.log("Project image generated and updated successfully.");
-	} catch (error) {
-		console.error("Error generating or updating project image:", error);
-	}
-}
+// 		// update project image
+// 		await db
+// 			.update(projects)
+// 			.set({ image: image })
+// 			.where(eq(projects.id, projectId));
+// 		console.log("Project image generated and updated successfully.");
+// 	} catch (error) {
+// 		console.error("Error generating or updating project image:", error);
+// 	}
+// }
 
 function handleCreateProjectError(error: unknown) {
 	if (error instanceof Error) {

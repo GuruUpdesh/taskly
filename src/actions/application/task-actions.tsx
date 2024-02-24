@@ -11,6 +11,7 @@ import {
 	deleteViewsForTask,
 	updateOrInsertTaskView,
 } from "./task-views-actions";
+import { createNotification } from "../notification-actions";
 
 export async function createTask(data: NewTask) {
 	try {
@@ -30,7 +31,19 @@ export async function createTask(data: NewTask) {
 			newTask.boardOrder = maxBacklogOrder[0].backlogOrder + 1;
 		}
 
-		await db.insert(tasks).values(newTask);
+		const task = await db.insert(tasks).values(newTask);
+
+		// create notification
+		if (newTask.assignee) {
+			await createNotification({
+				date: new Date(),
+				message: `Task "${newTask.title}" created`,
+				userId: newTask.assignee,
+				taskId: parseInt(task.insertId),
+				projectId: newTask.projectId,
+			});
+		}
+
 		revalidatePath("/");
 	} catch (error) {
 		console.error(error);

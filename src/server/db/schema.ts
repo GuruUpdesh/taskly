@@ -49,14 +49,6 @@ export const tasks = mysqlTable("tasks", {
 	sprintId: int("sprint_id"),
 });
 
-export const notifications = mysqlTable("notifications", {
-	id: serial("id").primaryKey(),
-	date: datetime("date", { mode: "date", fsp: 6 }).notNull(),
-	message: text("message").notNull(),
-	userId: varchar("user_id", { length: 32 }).notNull(),
-	projectId: int("project_id").notNull(),
-});
-
 // validators
 export const selectTaskSchema = createSelectSchema(tasks);
 export const insertTaskSchema = createInsertSchema(tasks);
@@ -277,4 +269,38 @@ export const sprintRelations = relations(sprints, ({ one, many }) => ({
 		references: [projects.id],
 	}),
 	tasks: many(tasks),
+}));
+
+/**
+ * Notifications
+ */
+
+export const notifications = mysqlTable("notifications", {
+	id: serial("id").primaryKey(),
+	date: datetime("date", { mode: "date", fsp: 6 }).notNull(),
+	message: text("message").notNull(),
+	userId: varchar("user_id", { length: 32 }).notNull(),
+	taskId: int("task_id").notNull(),
+	projectId: int("project_id").notNull(),
+	readAt: datetime("read_at", { mode: "date", fsp: 6 }),
+});
+
+// validators
+export const selectNotificationSchema = createSelectSchema(notifications);
+export const insertNotificationSchema = createInsertSchema(notifications);
+
+// types
+export type Notification = InferSelectModel<typeof notifications>;
+export type NewNotification = z.infer<typeof insertNotificationSchema>;
+
+// relations
+export const notificationRelations = relations(notifications, ({ one }) => ({
+	user: one(users, {
+		fields: [notifications.userId],
+		references: [users.userId],
+	}),
+	project: one(projects, {
+		fields: [notifications.projectId],
+		references: [projects.id],
+	}),
 }));
