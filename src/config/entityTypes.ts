@@ -42,6 +42,7 @@ export type TaskConfig = {
 	id: EntityConfigText;
 	title: EntityConfigText;
 	description: EntityConfigText;
+	points: EntityConfigSelect;
 	status: EntityConfigSelect;
 	priority: EntityConfigSelect;
 	type: EntityConfigSelect;
