@@ -85,7 +85,7 @@ const SelectItem = React.forwardRef<
 	>
 		<SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
 		<SelectPrimitive.ItemIndicator>
-			<Check className="h-4 w-4" />
+			<Check className="h-4 w-4 text-muted-foreground" />
 		</SelectPrimitive.ItemIndicator>
 	</SelectPrimitive.Item>
 ));

@@ -1,45 +1,50 @@
-interface EntityConfigText {
+export type ColorOptions =
+	| "null"
+	| "grey"
+	| "orange"
+	| "yellow"
+	| "red"
+	| "blue"
+	| "purple"
+	| "green"
+	| "teal"
+	| "fuchsia";
+
+export interface EntityConfigText {
 	value: string;
 	displayName: string;
 	type: "text";
+	icon: JSX.Element;
 	form: {
 		placeholder: string;
 	};
 }
 
-type Entity = Record<string, string | number | null>;
-interface EntityConfigSelect<T extends Entity, K extends keyof T> {
-	value: string;
+export interface EntityConfigSelectOption {
+	value: string | number;
 	displayName: string;
-	type: "select";
-	form: {
-		placeholder: string;
-		options: Array<EntityConfigFormSelectOption<T[K]>>;
-	};
-}
-
-export type ColorOptions =
-	| "faint"
-	| "grey"
-	| "yellow"
-	| "red"
-	| "purple"
-	| "blue"
-	| "green";
-
-export interface EntityConfigFormSelectOption<T> {
-	value: T;
-	displayName: string;
-	icon?: React.ReactNode;
+	icon?: JSX.Element;
 	color: ColorOptions;
 }
 
-type GenericEntityConfig<T extends Entity> = {
-	[K in keyof T]: EntityConfigSelect<T, K> | EntityConfigText;
+export interface EntityConfigSelect {
+	value: string;
+	displayName: string;
+	type: "select";
+	icon: JSX.Element;
+	form: {
+		placeholder: string;
+		options: EntityConfigSelectOption[];
+	};
+}
+
+export type TaskConfig = {
+	id: EntityConfigText;
+	title: EntityConfigText;
+	description: EntityConfigText;
+	status: EntityConfigSelect;
+	priority: EntityConfigSelect;
+	type: EntityConfigSelect;
+	assignee: EntityConfigSelect;
+	sprintId: EntityConfigSelect;
 };
-
-export type EntityFieldConfig =
-	| EntityConfigSelect<Entity, keyof Entity>
-	| EntityConfigText;
-
-export default GenericEntityConfig;
