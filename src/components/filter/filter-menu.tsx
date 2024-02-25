@@ -44,6 +44,7 @@ const properties = [
 	"assignee",
 	"sprintId",
 ] as const;
+
 const formSchema = z.object({
 	property: z.enum(properties),
 	is: z.boolean(),

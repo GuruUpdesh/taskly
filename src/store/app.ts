@@ -21,6 +21,8 @@ interface AppState {
 	addFilter: (filter: Filter) => void;
 	deleteFilter: (filter: Filter) => void;
 	updateFilter: (oldFilter: Filter, filter: Filter) => void;
+	groupBy: string | null;
+	setGroupBy: (groupBy: string | null) => void;
 }
 
 const useAppStore = create<AppState>()(
@@ -51,6 +53,8 @@ const useAppStore = create<AppState>()(
 
 					return { filters };
 				}),
+			groupBy: null,
+			setGroupBy: (groupBy: string | null) => set({ groupBy }),
 		}),
 		{
 			name: "settings-navigation-storage",

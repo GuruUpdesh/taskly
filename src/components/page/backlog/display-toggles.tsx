@@ -2,6 +2,7 @@
 
 import { ArrowDownNarrowWide, Filter, Group } from "lucide-react";
 import React from "react";
+import GroupButton from "~/components/group/group-button";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
@@ -32,22 +33,13 @@ const ToggleFilters = () => {
 				variant="outline"
 				size="sm"
 				className={cn(
-					"flex items-center gap-1 rounded-none border-b-0 border-l-0 border-r border-t-0 px-4 text-muted-foreground",
+					"flex items-center gap-1 rounded-none border-b-0 border-l-0 border-r border-t-0 px-4 z-10 text-muted-foreground",
 				)}
 			>
 				<ArrowDownNarrowWide className="h-4 w-4" />
 				Sort
 			</Button>
-			<Button
-				variant="outline"
-				size="sm"
-				className={cn(
-					"flex items-center gap-1 rounded-none border-none px-4 text-muted-foreground",
-				)}
-			>
-				<Group className="h-4 w-4" />
-				Group
-			</Button>
+			<GroupButton />
 		</div>
 	);
 };

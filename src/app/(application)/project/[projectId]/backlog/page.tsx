@@ -12,7 +12,7 @@ import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import CreateTicket from "~/components/create-ticket/ticket";
-import ToggleFilters from "~/components/page/backlog/toggle-filters";
+import ToggleFilters from "~/components/page/backlog/display-toggles";
 import Filters from "~/components/filter/filters";
 
 type Params = {

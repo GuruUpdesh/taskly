@@ -34,6 +34,13 @@ import { useRegisterActions } from "kbar";
 import { useRouter } from "next/navigation";
 import { TaskStatus } from "../page/project/recent-tasks";
 import { filterTasks } from "~/utils/filter";
+import {
+	StatefulTask,
+	getTaskConfig,
+	optionVariants,
+} from "~/config/task-entity";
+import { EntityConfigSelect, TaskConfig } from "~/config/entityTypes";
+import { group } from "console";
 
 export type UpdateTask = {
 	id: number;
@@ -48,11 +55,14 @@ type Props = {
 
 export default function Tasks({ projectId, assignees, sprints }: Props) {
 	// update app assignees and sprints
-	const [updateAssignees, updateSprints, filters] = useAppStore((state) => [
-		state.updateAssignees,
-		state.updateSprints,
-		state.filters,
-	]);
+	const [updateAssignees, updateSprints, filters, groupBy] = useAppStore(
+		(state) => [
+			state.updateAssignees,
+			state.updateSprints,
+			state.filters,
+			state.groupBy,
+		],
+	);
 
 	useEffect(() => {
 		updateAssignees(assignees);
@@ -101,6 +111,44 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 			setTaskOrder(orderedIds);
 		}
 	}, [result.data]);
+
+	const config = React.useMemo(() => {
+		if (!groupBy) return null;
+		return getTaskConfig(groupBy as keyof TaskConfig);
+	}, [groupBy]);
+
+	const { groupedTasks, sortedGroupKeys } = React.useMemo(() => {
+		if (!config || !result.data)
+			return { groupedTasks: {}, sortedGroupKeys: [] };
+
+		const groups = result.data.reduce<Record<string, StatefulTask[]>>(
+			(acc, task) => {
+				const groupKey = task[groupBy as keyof StatefulTask] as string;
+				if (!acc[groupKey]) acc[groupKey] = [];
+				acc[groupKey]?.push(task);
+				return acc;
+			},
+			{},
+		);
+
+		const sortedGroupKeys = Object.keys(groups).sort((a, b) => {
+			if (config.type !== "select") {
+				return 0;
+			}
+			const indexA = config.form.options.findIndex(
+				(option) => option.value === a,
+			);
+			const indexB = config.form.options.findIndex(
+				(option) => option.value === b,
+			);
+			return (
+				(indexA !== -1 ? indexA : Infinity) -
+				(indexB !== -1 ? indexB : Infinity)
+			);
+		});
+
+		return { groupedTasks: groups, sortedGroupKeys };
+	}, [result.data, groupBy, config]);
 
 	const router = useRouter();
 	useRegisterActions(
@@ -227,75 +275,103 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
-			<Droppable droppableId="tasks">
-				{(provided: DroppableProvided) => (
-					<div {...provided.droppableProps} ref={provided.innerRef}>
-						{taskOrder.map((taskId, idx) => {
-							const task = result.data?.find(
-								(task) => task.id === taskId,
-							);
+			{(groupBy ? sortedGroupKeys : ["tasks"]).map((group) => {
+				const tasks = groupBy ? groupedTasks[group] : result.data;
+				if (!tasks || config?.type === "text") return null;
+				const option = config?.form.options.find(
+					(open) => open.value === group,
+				);
+				if (!option && groupBy) return null;
 
-							if (!task || !filterTasks(task, filters)) {
-								return null;
-							}
+				return (
+					<Droppable droppableId={group} key={group}>
+						{(provided: DroppableProvided) => (
+							<div
+								{...provided.droppableProps}
+								ref={provided.innerRef}
+							>
+								{groupBy && option && (
+									<div
+										className={cn(
+											"flex items-center gap-1 p-1 px-4 pointer-events-none",
+											optionVariants({color: option.color}),
+										)}
+									>
+										{option.icon}
+										{option.displayName}
+									</div>
+								)}
+								{taskOrder.map((taskId, idx) => {
+									const task = tasks.find(
+										(task) => task.id === taskId,
+									);
 
-							return task ? (
-								<Draggable
-									draggableId={String(task.id)}
-									index={idx}
-									key={task.id}
-								>
-									{(
-										provided: DraggableProvided,
-										// eslint-disable-next-line @typescript-eslint/no-unused-vars
-										snapshot: DraggableStateSnapshot,
-									) => (
-										<div
-											className={cn(
-												"group relative bg-background/50 backdrop-blur-xl transition-colors",
-												{
-													"bg-accent-foreground/5":
-														snapshot.isDragging,
-													"pointer-events-none opacity-50":
-														task.options.isPending,
-													"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
-														task.options.isNew &&
-														!task.options.isPending,
-												},
-											)}
-											{...provided.draggableProps}
-											{...provided.dragHandleProps}
-											ref={provided.innerRef}
+									if (!task || !filterTasks(task, filters)) {
+										return null;
+									}
+
+									return task ? (
+										<Draggable
+											draggableId={String(task.id)}
+											index={idx}
+											key={task.id}
 										>
-											<DragHandleDots2Icon
-												className={cn(
-													"absolute bottom-[50%] left-1 translate-y-[50%] opacity-0 group-hover:opacity-50",
-													snapshot.isDragging &&
-														"opacity-100",
-												)}
-											/>
-											<Task
-												key={task.id}
-												task={task}
-												assignees={assignees}
-												sprints={sprints}
-												addTaskMutation={
-													addTaskMutation
-												}
-												deleteTaskMutation={
-													deleteTaskMutation
-												}
-												projectId={projectId}
-											/>
-										</div>
-									)}
-								</Draggable>
-							) : null;
-						})}
-						{provided.placeholder}
-					</div>
-				)}
-			</Droppable>
+											{(
+												provided: DraggableProvided,
+												// eslint-disable-next-line @typescript-eslint/no-unused-vars
+												snapshot: DraggableStateSnapshot,
+											) => (
+												<div
+													className={cn(
+														"group relative bg-background/50 backdrop-blur-xl transition-colors",
+														{
+															"bg-accent-foreground/5":
+																snapshot.isDragging,
+															"pointer-events-none opacity-50":
+																task.options
+																	.isPending,
+															"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
+																task.options
+																	.isNew &&
+																!task.options
+																	.isPending,
+														},
+													)}
+													{...provided.draggableProps}
+													{...provided.dragHandleProps}
+													ref={provided.innerRef}
+												>
+													<DragHandleDots2Icon
+														className={cn(
+															"absolute bottom-[50%] left-1 translate-y-[50%] opacity-0 group-hover:opacity-50",
+															snapshot.isDragging &&
+																"opacity-100",
+														)}
+													/>
+													<Task
+														key={task.id}
+														task={task}
+														assignees={assignees}
+														sprints={sprints}
+														addTaskMutation={
+															addTaskMutation
+														}
+														deleteTaskMutation={
+															deleteTaskMutation
+														}
+														projectId={projectId}
+													/>
+												</div>
+											)}
+										</Draggable>
+									) : null;
+								})}
+								{provided.placeholder}
+							</div>
+						)}
+					</Droppable>
+				);
+			})}
 		</DragDropContext>
 	);
 }
