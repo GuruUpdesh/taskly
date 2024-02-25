@@ -30,6 +30,9 @@ import { updateOrder } from "~/utils/order";
 import Message from "~/components/general/message";
 import { find } from "lodash";
 import { useAppStore } from "~/store/app";
+import { useRegisterActions } from "kbar";
+import { useRouter } from "next/navigation";
+import { TaskStatus } from "../page/project/recent-tasks";
 
 export type UpdateTask = {
 	id: number;
@@ -96,6 +99,19 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 			setTaskOrder(orderedIds);
 		}
 	}, [result.data]);
+
+	const router = useRouter();
+	useRegisterActions(
+		result?.data?.map((task, idx) => ({
+			id: String(task.id),
+			name: task.title,
+			icon: <TaskStatus status={task.status} />,
+			shortcut: idx + 1 < 10 ? ["t", String(idx + 1)] : [],
+			perform: () => router.push(`/project/${projectId}/task/${task.id}`),
+			section: "Tasks",
+		})) ?? [],
+		[result.data],
+	);
 
 	const addTaskMutation = useMutation({
 		mutationFn: ({ id, newTask }: UpdateTask) => updateTask(id, newTask),
