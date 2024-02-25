@@ -24,11 +24,6 @@ import {
 	LayoutList,
 	Minus,
 	Search,
-	Signal,
-	SignalHigh,
-	SignalLow,
-	SignalMedium,
-	SignalZero,
 	Text,
 } from "lucide-react";
 import { throwClientError } from "~/utils/errors";
@@ -36,6 +31,14 @@ import type { ColorOptions, TaskConfig } from "./entityTypes";
 import UserProfilePicture from "~/components/user-profile-picture";
 import { isAfter, isBefore } from "date-fns";
 import { cva } from "class-variance-authority";
+import {
+	TbHexagon1Filled,
+	TbHexagon2Filled,
+	TbHexagon3Filled,
+	TbHexagon4Filled,
+	TbHexagon5Filled,
+	TbHexagonFilled,
+} from "react-icons/tb";
 
 export const optionVariants = cva([], {
 	variants: {
@@ -129,45 +132,45 @@ export const taskConfig: TaskConfig = {
 		value: "pointsEstimate",
 		displayName: "Points",
 		type: "select",
-		icon: <SignalHigh className="h-4 w-4" />,
+		icon: <TbHexagonFilled className="h-4 w-4" />,
 		form: {
 			placeholder: "Points",
 			options: [
 				{
 					value: "0",
 					displayName: "No Estimate",
-					icon: <div className="h-4 w-4" />,
+					icon: <TbHexagonFilled className="h-4 w-4" />,
 					color: "null",
 				},
 				{
 					value: "1",
 					displayName: "1",
-					icon: <SignalZero className="h-4 w-4" />,
-					color: "blue",
+					icon: <TbHexagon1Filled className="h-4 w-4" />,
+					color: "null",
 				},
 				{
 					value: "2",
 					displayName: "2",
-					icon: <SignalLow className="h-4 w-4" />,
-					color: "yellow",
+					icon: <TbHexagon2Filled className="h-4 w-4" />,
+					color: "null",
 				},
 				{
 					value: "3",
 					displayName: "3",
-					icon: <SignalMedium className="h-4 w-4" />,
-					color: "orange",
+					icon: <TbHexagon3Filled className="h-4 w-4" />,
+					color: "null",
 				},
 				{
 					value: "4",
 					displayName: "4",
-					icon: <SignalHigh className="h-4 w-4" />,
-					color: "red",
+					icon: <TbHexagon4Filled className="h-4 w-4" />,
+					color: "null",
 				},
 				{
 					value: "5",
 					displayName: "5",
-					icon: <Signal className="h-4 w-4" />,
-					color: "red",
+					icon: <TbHexagon5Filled className="h-4 w-4" />,
+					color: "null",
 				},
 			],
 		},
