@@ -53,14 +53,19 @@ const formSchema = z.object({
 const FilterMenu = ({ children, defaultValues }: Props) => {
 	const [open, setOpen] = React.useState(false);
 
-	const [assignees, sprints, addFilter, updateFilter] = useAppStore(
+	const [assignees, sprints, addFilter, updateFilter, filters] = useAppStore(
 		(state) => [
 			state.assignees,
 			state.sprints,
 			state.addFilter,
 			state.updateFilter,
+			state.filters,
 		],
 	);
+
+	const usedProperties = useMemo(() => {
+		return filters.map((filter) => filter.property);
+	}, [filters]);
 
 	const form = useForm<Filter>({
 		resolver: zodResolver(formSchema),
@@ -68,18 +73,25 @@ const FilterMenu = ({ children, defaultValues }: Props) => {
 		defaultValues: defaultValues
 			? defaultValues
 			: {
-					property: "status",
+					property: "",
 					is: true,
 					values: [],
 				},
 	});
 
 	useEffect(() => {
+		form.setValue("values", [], {
+			shouldValidate: true,
+			shouldDirty: true,
+		});
+	}, [form.watch("property")]);
+
+	useEffect(() => {
 		form.setValue("values", defaultValues ? defaultValues.values : [], {
 			shouldValidate: true,
 			shouldDirty: true,
 		});
-	}, [form.watch("property"), defaultValues]);
+	}, [defaultValues]);
 
 	function toggleCheck(val: string) {
 		const values = form.getValues("values");
@@ -152,32 +164,48 @@ const FilterMenu = ({ children, defaultValues }: Props) => {
 											<ChevronDown className="ml-2 h-4 w-4" />
 										</SelectTrigger>
 										<SelectContent>
-											{properties.map((property) => {
-												const config =
-													getTaskConfig(property);
+											{properties
+												.filter((p) => {
+													if (
+														defaultValues?.property ===
+														p
+													) {
+														return true;
+													}
+													return !usedProperties.includes(
+														p,
+													);
+												})
+												.map((property) => {
+													const config =
+														getTaskConfig(property);
 
-												if (config.type !== "select")
-													return null;
+													if (
+														config.type !== "select"
+													)
+														return null;
 
-												return (
-													<SelectItem
-														key={config.value}
-														value={config.value}
-														className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
-													>
-														<div className="flex min-w-[8rem] items-center gap-2">
-															<span className="text-muted-foreground">
-																{config.icon}
-															</span>
-															<p>
-																{
-																	config.displayName
-																}
-															</p>
-														</div>
-													</SelectItem>
-												);
-											})}
+													return (
+														<SelectItem
+															key={config.value}
+															value={config.value}
+															className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
+														>
+															<div className="flex min-w-[8rem] items-center gap-2">
+																<span className="text-muted-foreground">
+																	{
+																		config.icon
+																	}
+																</span>
+																<p>
+																	{
+																		config.displayName
+																	}
+																</p>
+															</div>
+														</SelectItem>
+													);
+												})}
 										</SelectContent>
 									</Select>
 								</FormItem>
