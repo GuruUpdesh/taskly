@@ -11,7 +11,7 @@ type Props = {
 };
 
 function InviteLink({ token }: Props) {
-	const link = window.location.host + "/join/" + token;
+	const link = window.location.host + "/join/" + encodeURIComponent(token);
 	const handleCopyToClipboard = async () => {
 		// get protocol
 		const protocol = window.location.protocol;
