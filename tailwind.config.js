@@ -122,5 +122,5 @@ module.exports = withUt({
 			},
 		},
 	},
-	plugins: [containerQueriesPlugin],
+	plugins: [require("tailwindcss-animate"), containerQueriesPlugin],
 });
