@@ -63,6 +63,8 @@ export async function createInvite(projectId: number) {
 }
 
 export async function joinProject(token: string) {
+	console.log("Joining project with token", token);
+
 	const userId = authenticate();
 
 	const requestInvite = await db
@@ -70,6 +72,7 @@ export async function joinProject(token: string) {
 		.from(invites)
 		.where(eq(invites.token, token));
 
+	console.log("Request invite", requestInvite);
 	if (!requestInvite || requestInvite.length === 0) {
 		return { success: false, message: "No invite link was provided" };
 	}

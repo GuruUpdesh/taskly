@@ -31,6 +31,14 @@ import type { ColorOptions, TaskConfig } from "./entityTypes";
 import UserProfilePicture from "~/components/user-profile-picture";
 import { isAfter, isBefore } from "date-fns";
 import { cva } from "class-variance-authority";
+import {
+	TbHexagon1Filled,
+	TbHexagon2Filled,
+	TbHexagon3Filled,
+	TbHexagon4Filled,
+	TbHexagon5Filled,
+	TbHexagonFilled,
+} from "react-icons/tb";
 
 export const optionVariants = cva([], {
 	variants: {
@@ -116,6 +124,53 @@ export const taskConfig: TaskConfig = {
 					displayName: getStatusDisplayName("done"),
 					icon: <CheckCircledIcon className="h-4 w-4" />,
 					color: "green",
+				},
+			],
+		},
+	},
+	points: {
+		value: "points",
+		displayName: "Points",
+		type: "select",
+		icon: <TbHexagonFilled className="h-4 w-4" />,
+		form: {
+			placeholder: "Points",
+			options: [
+				{
+					value: "0",
+					displayName: "No Estimate",
+					icon: <TbHexagonFilled className="h-4 w-4" />,
+					color: "null",
+				},
+				{
+					value: "1",
+					displayName: "1",
+					icon: <TbHexagon1Filled className="h-4 w-4" />,
+					color: "null",
+				},
+				{
+					value: "2",
+					displayName: "2",
+					icon: <TbHexagon2Filled className="h-4 w-4" />,
+					color: "null",
+				},
+				{
+					value: "3",
+					displayName: "3",
+					icon: <TbHexagon3Filled className="h-4 w-4" />,
+					color: "null",
+				},
+				{
+					value: "4",
+					displayName: "4",
+					icon: <TbHexagon4Filled className="h-4 w-4" />,
+					color: "null",
+				},
+				{
+					value: "5",
+					displayName: "5",
+					icon: <TbHexagon5Filled className="h-4 w-4" />,
+					color: "null",
 				},
 			],
 		},
@@ -249,6 +304,7 @@ export const defaultValues: NewTask = {
 	description: "",
 	projectId: -1,
 	status: "backlog",
+	points: "0",
 	priority: "medium",
 	type: "task",
 	assignee: null,
