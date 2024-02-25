@@ -44,6 +44,7 @@ const BoardTask = ({
 		[{ key: "title", size: "default" }],
 		[
 			{ key: "status", size: "icon" },
+			{ key: "pointsEstimate", size: "icon" },
 			{ key: "priority", size: "icon" },
 			{ key: "type", size: "icon" },
 			{ key: "assignee", size: "icon" },

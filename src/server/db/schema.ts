@@ -32,6 +32,16 @@ export const tasks = mysqlTable("tasks", {
 	])
 		.default("todo")
 		.notNull(),
+	pointsEstimate: mysqlEnum("points", [
+		"0",
+		"1",
+		"2",
+		"3",
+		"4",
+		"5",
+	])
+		.default("0")
+		.notNull(),
 	priority: mysqlEnum("priority", [
 		"none",
 		"low",

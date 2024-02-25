@@ -24,6 +24,11 @@ import {
 	LayoutList,
 	Minus,
 	Search,
+	Signal,
+	SignalHigh,
+	SignalLow,
+	SignalMedium,
+	SignalZero,
 	Text,
 } from "lucide-react";
 import { throwClientError } from "~/utils/errors";
@@ -116,6 +121,53 @@ export const taskConfig: TaskConfig = {
 					displayName: getStatusDisplayName("done"),
 					icon: <CheckCircledIcon className="h-4 w-4" />,
 					color: "green",
+				},
+			],
+		},
+	},
+	pointsEstimate: {
+		value: "pointsEstimate",
+		displayName: "Points",
+		type: "select",
+		icon: <SignalHigh className="h-4 w-4" />,
+		form: {
+			placeholder: "Points",
+			options: [
+				{
+					value: "0",
+					displayName: "No Estimate",
+					icon: <div className="h-4 w-4" />,
+					color: "null",
+				},
+				{
+					value: "1",
+					displayName: "1",
+					icon: <SignalZero className="h-4 w-4" />,
+					color: "blue",
+				},
+				{
+					value: "2",
+					displayName: "2",
+					icon: <SignalLow className="h-4 w-4" />,
+					color: "yellow",
+				},
+				{
+					value: "3",
+					displayName: "3",
+					icon: <SignalMedium className="h-4 w-4" />,
+					color: "orange",
+				},
+				{
+					value: "4",
+					displayName: "4",
+					icon: <SignalHigh className="h-4 w-4" />,
+					color: "red",
+				},
+				{
+					value: "5",
+					displayName: "5",
+					icon: <Signal className="h-4 w-4" />,
+					color: "red",
 				},
 			],
 		},
@@ -249,6 +301,7 @@ export const defaultValues: NewTask = {
 	description: "",
 	projectId: -1,
 	status: "backlog",
+	pointsEstimate: "0",
 	priority: "medium",
 	type: "task",
 	assignee: null,

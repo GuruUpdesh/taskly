@@ -50,6 +50,7 @@ const SecondaryTaskForm = ({
 
 	const order = [
 		{ key: "priority", size: "default" },
+		{ key: "pointsEstimate", size: "default" },
 		{ key: "status", size: "default" },
 		{ key: "type", size: "default" },
 		{ key: "assignee", size: "default" },
