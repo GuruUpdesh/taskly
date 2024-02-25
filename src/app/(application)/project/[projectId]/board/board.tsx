@@ -8,7 +8,7 @@ import {
 	getTasksFromProject,
 	updateTask,
 } from "~/actions/application/task-actions";
-import { optionVariants } from "~/components/backlog/task/property/propery-select";
+import { optionVariants } from "~/config/task-entity";
 import type { UpdateTask } from "~/components/backlog/tasks";
 import BoardTask from "~/components/board/board-task";
 import {

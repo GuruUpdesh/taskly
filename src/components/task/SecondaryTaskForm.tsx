@@ -11,6 +11,7 @@ import {
 } from "~/config/task-entity";
 import type { NewTask, Sprint, Task, User } from "~/server/db/schema";
 import PropertySelect from "~/components/backlog/task/property/propery-select";
+import { type TaskConfig } from "~/config/entityTypes";
 
 type Props = {
 	task: Task;
@@ -49,6 +50,7 @@ const SecondaryTaskForm = ({
 
 	const order = [
 		{ key: "priority", size: "default" },
+		{ key: "points", size: "default" },
 		{ key: "status", size: "default" },
 		{ key: "type", size: "default" },
 		{ key: "assignee", size: "default" },
@@ -61,7 +63,7 @@ const SecondaryTaskForm = ({
 				{order.map((item, idx) => {
 					if (item.key === "projectId") return null;
 					const config = buildDynamicOptions(
-						getTaskConfig(item.key),
+						getTaskConfig(item.key as keyof TaskConfig),
 						item.key,
 						assignees,
 						sprints,

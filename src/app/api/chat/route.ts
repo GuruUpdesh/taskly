@@ -32,9 +32,10 @@ const systemMessage: OpenAI.ChatCompletionMessageParam = {
     Create a new task for project management. Provide the following details:
     - title: [Specify the title of the task]
     - description: [Include a brief description of the task]
-    - status: [Specify the status, "todo", "inprogress", or "done"]
-    - priority: [Specify the priority "low", "medium", or "high"]
-    - type: [Specity the type of task "task", "bug", or "feature]
+    - status: [Specify the status, "backlog", "todo", "inprogress", "inreview", or "done"]
+	- points: [Specify the points "0", "1", "2", "3", "4", or "5"]
+	- priority: [Specify the priority "none", "low", "medium", "high", or "critical"]
+	- type: [Specity the type of task "task", "bug", "feature", "improvement", "research", or "testing"]
     
     Example:
     Title: Develop Feature XYZ

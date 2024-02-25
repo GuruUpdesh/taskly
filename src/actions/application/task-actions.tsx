@@ -12,6 +12,7 @@ import {
 	updateOrInsertTaskView,
 } from "./task-views-actions";
 import { createNotification } from "../notification-actions";
+import { type StatefulTask } from "~/config/task-entity";
 
 export async function createTask(data: NewTask) {
 	try {
@@ -67,7 +68,12 @@ export async function getTasksFromProject(projectId: number) {
 			.from(tasks)
 			.where(eq(tasks.projectId, projectId));
 
-		return allTasks;
+		const statefulTasks: StatefulTask[] = allTasks.map((task) => ({
+			...task,
+			options: {},
+		}));
+
+		return statefulTasks;
 	} catch (error) {
 		if (error instanceof Error) throwServerError(error.message);
 	}

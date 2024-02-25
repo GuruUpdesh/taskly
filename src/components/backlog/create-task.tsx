@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import {
+	type StatefulTask,
 	buildDynamicOptions,
 	defaultValues,
 	getTaskConfig,
@@ -35,6 +36,7 @@ import {
 import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
 import { aiAction } from "~/actions/ai/ai-action";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { type TaskConfig } from "~/config/entityTypes";
 
 type FormProps = {
 	onSubmit: (newTask: NewTask) => void;
@@ -134,11 +136,12 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 							col !== "boardOrder" &&
 							col !== "lastEditedAt" &&
 							col !== "insertedDate" &&
-							getTaskConfig(col).type === "select",
+							getTaskConfig(col as keyof TaskConfig).type ===
+								"select",
 					)
 					.map((col) => {
 						const config = buildDynamicOptions(
-							getTaskConfig(col),
+							getTaskConfig(col as keyof TaskConfig),
 							col,
 							assignees,
 							sprints,
@@ -192,13 +195,16 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 
 			const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);
 
-			queryClient.setQueryData<Task[]>(["tasks"], (old) => [
+			queryClient.setQueryData<StatefulTask[]>(["tasks"], (old) => [
 				...(old ?? []),
 				{
 					...data,
 					backlogOrder: 1000000,
 					projectId: parseInt(projectId),
 					id: -1,
+					options: {
+						isPending: true,
+					},
 				},
 			]);
 			setOpen(false);

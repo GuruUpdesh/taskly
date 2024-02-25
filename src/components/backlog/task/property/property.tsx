@@ -4,6 +4,7 @@ import { buildDynamicOptions, getTaskConfig } from "~/config/task-entity";
 import type { User, NewTask, Task, Sprint } from "~/server/db/schema";
 import PropertyStatic from "./property-static";
 import PropertySelect from "./propery-select";
+import { type TaskConfig } from "~/config/entityTypes";
 
 type Props = {
 	property: keyof Task;
@@ -23,7 +24,7 @@ function Property({
 	size,
 }: Props) {
 	const config = buildDynamicOptions(
-		getTaskConfig(property),
+		getTaskConfig(property as keyof TaskConfig),
 		property,
 		assignees,
 		sprints,

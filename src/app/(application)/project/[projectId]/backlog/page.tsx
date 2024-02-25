@@ -12,6 +12,8 @@ import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import CreateTicket from "~/components/create-ticket/ticket";
+import ToggleFilters from "~/components/page/backlog/toggle-filters";
+import Filters from "~/components/filter/filters";
 
 type Params = {
 	params: {
@@ -37,6 +39,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<BreadCrumbs />
 				</div>
 				<div className="flex items-center gap-2">
+					<ToggleFilters />
 					<AiDialog projectId={projectId} />
 					<CreateTask
 						projectId={projectId}
@@ -46,6 +49,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 				</div>
 			</header>
 			<section className="flex flex-col">
+				<Filters />
 				<HydrationBoundary state={dehydrate(queryClient)}>
 					<Tasks
 						projectId={projectId}
