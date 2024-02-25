@@ -16,33 +16,10 @@ import {
 
 // utils
 import { type buildDynamicOptions } from "~/config/task-entity";
-import { cva } from "class-variance-authority";
 import { cn } from "~/lib/utils";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { ChevronDown } from "lucide-react";
 import { optionVariants } from "~/config/task-entity";
-
-// export const optionVariants = cva(
-// 	[
-		
-// 	],
-// 	{
-// 		variants: {
-// 			color: {
-// 				faint: "border-gray-500/50 bg-gray-800 text-gray-300/50 focus:bg-gray-700 focus:text-gray-100 hover:bg-gray-800 hover:text-gray-100",
-// 				grey: "border-gray-700 bg-gray-900 text-gray-300 focus:bg-gray-700 focus:text-gray-100 hover:bg-gray-800 hover:text-gray-100",
-// 				yellow: "border-yellow-700 bg-yellow-900 text-yellow-300 focus:bg-yellow-700 focus:text-yellow-100 hover:bg-yellow-800 hover:text-yellow-100",
-// 				red: "border-red-700 bg-red-900 text-red-300 focus:bg-red-700 focus:text-red-100 hover:bg-red-800 hover:text-red-100",
-// 				purple: "border-violet-700 bg-violet-900 text-violet-300 focus:bg-violet-700 focus:text-violet-100 hover:bg-violet-800 hover:text-violet-100",
-// 				blue: "border-sky-700 bg-sky-900 text-sky-300 focus:bg-sky-700 focus:text-sky-100 hover:bg-sky-800 hover:text-sky-100",
-// 				green: "border-green-700 bg-green-900 text-green-300 focus:bg-green-700 focus:text-green-100 hover:bg-green-800 hover:text-green-100",
-// 			},
-// 		},
-// 		defaultVariants: {
-// 			color: "grey",
-// 		},
-// 	},
-// );
 
 type DataCellProps = {
 	config: ReturnType<typeof buildDynamicOptions>;
@@ -123,7 +100,7 @@ function PropertySelect({
 									optionVariants({
 										color: selectedOptionColor,
 									}),
-									"rounded-sm border pl-2 pr-3 py-1 flex items-center space-x-2 whitespace-nowrap",
+									"flex items-center space-x-2 whitespace-nowrap rounded-sm border py-1 pl-2 pr-3",
 								)}
 							>
 								<SelectValue
@@ -153,7 +130,7 @@ function PropertySelect({
 											optionVariants({
 												color: option.color,
 											}),
-											"rounded-sm border pl-2 pr-3 py-1 flex items-center space-x-2 whitespace-nowrap",
+											"flex items-center space-x-2 whitespace-nowrap rounded-sm border py-1 pl-2 pr-3",
 											"border-none bg-transparent !pl-2",
 										)}
 										value={stringifyValue(option.value)}

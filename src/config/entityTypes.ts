@@ -1,34 +1,44 @@
-export type ColorOptions = "null" | "grey" | "orange" | "yellow" | "red" | "blue" | "purple" | "green" | "teal" | "fuchsia";
+export type ColorOptions =
+	| "null"
+	| "grey"
+	| "orange"
+	| "yellow"
+	| "red"
+	| "blue"
+	| "purple"
+	| "green"
+	| "teal"
+	| "fuchsia";
 
-interface EntityConfigText {
+export interface EntityConfigText {
 	value: string;
 	displayName: string;
 	type: "text";
 	icon: JSX.Element;
 	form: {
-	  placeholder: string;
+		placeholder: string;
 	};
-  }
-  
-  interface EntityConfigSelectOption {
+}
+
+export interface EntityConfigSelectOption {
 	value: string | number;
 	displayName: string;
 	icon?: JSX.Element;
 	color: ColorOptions;
-  }
-  
-  interface EntityConfigSelect {
+}
+
+export interface EntityConfigSelect {
 	value: string;
 	displayName: string;
 	type: "select";
 	icon: JSX.Element;
 	form: {
-	  placeholder: string;
-	  options: EntityConfigSelectOption[];
+		placeholder: string;
+		options: EntityConfigSelectOption[];
 	};
-  }
-  
-  export type TaskConfig = {
+}
+
+export type TaskConfig = {
 	id: EntityConfigText;
 	title: EntityConfigText;
 	description: EntityConfigText;
@@ -37,4 +47,4 @@ interface EntityConfigText {
 	type: EntityConfigSelect;
 	assignee: EntityConfigSelect;
 	sprintId: EntityConfigSelect;
-  };
+};

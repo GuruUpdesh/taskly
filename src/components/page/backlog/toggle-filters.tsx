@@ -13,15 +13,15 @@ const ToggleFilters = () => {
 	]);
 
 	return (
-		<>
+		<div className="flex overflow-hidden rounded-lg border">
 			<Button
 				variant="outline"
 				onClick={toggleFilters}
 				size="sm"
 				className={cn(
-					"flex items-center gap-1 rounded-l-full  px-4",
+					"flex items-center gap-1 rounded-none border-b-0 border-l-0 border-r border-t-0 px-4",
 					isFiltersOpen
-						? "border-white/25 text-white"
+						? "bg-accent hover:bg-accent/75"
 						: "text-muted-foreground",
 				)}
 			>
@@ -30,13 +30,9 @@ const ToggleFilters = () => {
 			</Button>
 			<Button
 				variant="outline"
-				onClick={toggleFilters}
 				size="sm"
 				className={cn(
-					"flex items-center rounded-none gap-1 px-4",
-					isFiltersOpen
-						? "border-white/25 text-white"
-						: "text-muted-foreground",
+					"flex items-center gap-1 rounded-none border-b-0 border-l-0 border-r border-t-0 px-4 text-muted-foreground",
 				)}
 			>
 				<ArrowDownNarrowWide className="h-4 w-4" />
@@ -44,19 +40,15 @@ const ToggleFilters = () => {
 			</Button>
 			<Button
 				variant="outline"
-				onClick={toggleFilters}
 				size="sm"
 				className={cn(
-					"flex items-center gap-1 rounded-l-sm rounded-r-full px-4",
-					isFiltersOpen
-						? "border-white/25 text-white"
-						: "text-muted-foreground",
+					"flex items-center gap-1 rounded-none border-none px-4 text-muted-foreground",
 				)}
 			>
 				<Group className="h-4 w-4" />
 				Group
 			</Button>
-		</>
+		</div>
 	);
 };
 

@@ -13,7 +13,6 @@ import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import CreateTicket from "~/components/create-ticket/ticket";
 import ToggleFilters from "~/components/page/backlog/toggle-filters";
-import { Separator } from "~/components/ui/separator";
 import Filters from "~/components/filter/filters";
 
 type Params = {
@@ -40,9 +39,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<BreadCrumbs />
 				</div>
 				<div className="flex items-center gap-2">
-					<div className="border-r px-4 mx-4 flex items-center gap-1">
 					<ToggleFilters />
-					</div>
 					<AiDialog projectId={projectId} />
 					<CreateTask
 						projectId={projectId}

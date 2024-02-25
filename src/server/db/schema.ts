@@ -32,10 +32,23 @@ export const tasks = mysqlTable("tasks", {
 	])
 		.default("todo")
 		.notNull(),
-	priority: mysqlEnum("priority", ["none", "low", "medium", "high", "critical"])
+	priority: mysqlEnum("priority", [
+		"none",
+		"low",
+		"medium",
+		"high",
+		"critical",
+	])
 		.default("low")
 		.notNull(),
-	type: mysqlEnum("type", ["task", "bug", "feature", "improvement", "research", "testing"])
+	type: mysqlEnum("type", [
+		"task",
+		"bug",
+		"feature",
+		"improvement",
+		"research",
+		"testing",
+	])
 		.default("task")
 		.notNull(),
 	boardOrder: int("board_order").notNull().default(0),

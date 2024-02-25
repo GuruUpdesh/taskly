@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { Check, CheckSquare2, ChevronRight, Circle, Square } from "lucide-react";
+import { CheckSquare2, ChevronRight, Circle, Square } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 
@@ -107,9 +107,9 @@ const DropdownMenuCheckboxItem = React.forwardRef<
 	>
 		<span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
 			<DropdownMenuPrimitive.ItemIndicator>
-				<CheckSquare2 className="h-4 w-4 text-muted-foreground" />
+				<CheckSquare2 className="h-4 w-4 text-muted-foreground transition-colors hover:text-white" />
 			</DropdownMenuPrimitive.ItemIndicator>
-			<Square className="h-4 w-4 text-muted-foreground" />
+			<Square className="h-4 w-4 text-muted-foreground transition-colors hover:text-white" />
 		</span>
 		{children}
 	</DropdownMenuPrimitive.CheckboxItem>

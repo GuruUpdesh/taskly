@@ -44,7 +44,8 @@ export const optionVariants = cva([], {
 			green: "text-green-400 bg-green-400/10 border-green-400/15 hover:text-green-200 focus:text-green-200 hover:bg-green-300/25 focus:bg-green-300/25",
 			purple: "text-violet-400 bg-violet-400/10 border-violet-400/15 hover:text-purple-200 focus:text-purple-200 hover:bg-violet-300/25 focus:bg-violet-300/25",
 			teal: "text-teal-400 bg-teal-400/10 border-teal-400/15 hover:text-teal-200 focus:text-teal-200 hover:bg-teal-300/25 focus:bg-teal-300/25",
-			fuchsia: "text-fuchsia-400 bg-fuchsia-400/10 border-fuchsia-400/15 hover:text-fuchsia-200 focus:text-fuchsia-200 hover:bg-fuchsia-300/25 focus:bg-fuchsia-300/25",
+			fuchsia:
+				"text-fuchsia-400 bg-fuchsia-400/10 border-fuchsia-400/15 hover:text-fuchsia-200 focus:text-fuchsia-200 hover:bg-fuchsia-300/25 focus:bg-fuchsia-300/25",
 		},
 	},
 	defaultVariants: {},

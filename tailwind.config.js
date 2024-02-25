@@ -1,3 +1,4 @@
+/* eslint-disable */
 // @ts-check
 const { fontFamily } = require("tailwindcss/defaultTheme");
 const containerQueriesPlugin = require("@tailwindcss/container-queries");
@@ -66,7 +67,7 @@ module.exports = withUt({
 			},
 			keyframes: {
 				"accordion-down": {
-					from: { height: 0 },
+					from: { height: "0" },
 					to: { height: "var(--radix-accordion-content-height)" },
 				},
 				"accordion-up": {
@@ -121,5 +122,5 @@ module.exports = withUt({
 			},
 		},
 	},
-	plugins: [require("tailwindcss-animate"), containerQueriesPlugin],
+	plugins: [containerQueriesPlugin],
 });

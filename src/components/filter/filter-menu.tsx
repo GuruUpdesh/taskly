@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown, Plus } from "lucide-react";
-import pluralize from "pluralize";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { ChevronDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -27,44 +26,60 @@ import {
 	buildDynamicOptions,
 	getTaskConfig,
 	optionVariants,
-	taskConfig,
 } from "~/config/task-entity";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
 import { Form, FormField, FormItem } from "../ui/form";
+import { renderFilterValues } from "~/utils/filter-values";
 
 type Props = {
-	containerClass: string;
+	children: (menuOpen: boolean) => React.ReactNode;
+	defaultValues?: Filter;
 };
 
-const AddFilter = ({ containerClass }: Props) => {
-	const [open, setOpen] = React.useState(false);
-	const properties = Object.keys(taskConfig) as (keyof typeof taskConfig)[];
-	const [assignees, sprints, addFilter] = useAppStore((state) => [
-		state.assignees,
-		state.sprints,
-		state.addFilter,
-	]);
+const properties = [
+	"status",
+	"priority",
+	"type",
+	"assignee",
+	"sprintId",
+] as const;
+const formSchema = z.object({
+	property: z.enum(properties),
+	is: z.boolean(),
+	values: z.array(z.any()).min(1),
+});
 
-	const formSchema = z.object({
-		property: z.string(),
-		is: z.boolean(),
-		values: z.array(z.string()).min(1),
-	});
+const FilterMenu = ({ children, defaultValues }: Props) => {
+	const [open, setOpen] = React.useState(false);
+
+	const [assignees, sprints, addFilter, updateFilter] = useAppStore(
+		(state) => [
+			state.assignees,
+			state.sprints,
+			state.addFilter,
+			state.updateFilter,
+		],
+	);
 
 	const form = useForm<Filter>({
 		resolver: zodResolver(formSchema),
 		mode: "onChange",
-		defaultValues: {
-			property: "",
-			is: true,
-			values: [],
-		},
+		defaultValues: defaultValues
+			? defaultValues
+			: {
+					property: "status",
+					is: true,
+					values: [],
+				},
 	});
 
 	useEffect(() => {
-		form.setValue("values", []);
-	}, [form.watch("property")]);
+		form.setValue("values", defaultValues ? defaultValues.values : [], {
+			shouldValidate: true,
+			shouldDirty: true,
+		});
+	}, [form.watch("property"), defaultValues]);
 
 	function toggleCheck(val: string) {
 		const values = form.getValues("values");
@@ -72,13 +87,18 @@ const AddFilter = ({ containerClass }: Props) => {
 			form.setValue(
 				"values",
 				values.filter((v) => v !== val),
+				{
+					shouldValidate: true,
+					shouldDirty: true,
+				},
 			);
 		} else {
-			form.setValue("values", [...values, val]);
+			form.setValue("values", [...values, val], {
+				shouldValidate: true,
+				shouldDirty: true,
+			});
 		}
 	}
-
-	const selectValueRef = useRef<HTMLButtonElement>(null);
 
 	const currentConfig = useMemo(() => {
 		const property = form.watch("property");
@@ -93,64 +113,26 @@ const AddFilter = ({ containerClass }: Props) => {
 	}, [form.watch("property")]);
 
 	function onSubmit(values: Filter) {
-		addFilter(values);
+		if (defaultValues) {
+			updateFilter(defaultValues, values);
+		} else {
+			addFilter(values);
+		}
+		form.reset();
 		setOpen(false);
 	}
 
 	const renderValues = useCallback(() => {
-		if (!currentConfig || currentConfig.type !== "select") return null;
-
-		const values = form.watch("values");
-		const options = currentConfig.form.options;
-		const pluralProperty = pluralize(currentConfig.displayName);
-
-		return (
-			<div className="flex items-center gap-2 mix-blend-screen">
-				{values.map((value) => {
-					const option = options.find(
-						(option) => option.value === value,
-					);
-					if (!option) return null;
-
-					return (
-						<div
-							key={option.value}
-							className={cn(
-								optionVariants({ color: option.color }),
-								values.length === 1
-									? "flex gap-1 !bg-transparent"
-									: "pointer-events-none -m-1.5 flex gap-1 rounded-full bg-background p-1",
-							)}
-						>
-							{option.icon}
-							{values.length === 1 ? (
-								<p className="ml-1">{option.displayName}</p>
-							) : null}
-						</div>
-					);
-				})}
-				{values.length > 1 ? (
-					<div className="flex items-center gap-1">
-						<p>{values.length}</p>
-						<p>{pluralProperty}</p>
-					</div>
-				) : null}
-			</div>
-		);
-	}, [form.watch("values"), currentConfig]);
+		return renderFilterValues(form.watch("values"), currentConfig);
+	}, [form.watch("values"), currentConfig, defaultValues]);
 
 	return (
 		<Popover open={open} onOpenChange={(open) => setOpen(open)}>
-			<PopoverTrigger asChild>
-				<button
-					className={cn(containerClass, {
-						"bg-accent text-white": open,
-					})}
-				>
-					<Plus className="h-4 w-4" />
-				</button>
-			</PopoverTrigger>
-			<PopoverContent className="overflow-hidden rounded-lg bg-background/75 p-0 backdrop-blur-xl">
+			<PopoverTrigger asChild>{children(open)}</PopoverTrigger>
+			<PopoverContent
+				className="overflow-hidden rounded-lg bg-background/75 p-0 backdrop-blur-xl"
+				align="start"
+			>
 				<Form {...form}>
 					<form
 						className="flex flex-col"
@@ -184,7 +166,7 @@ const AddFilter = ({ containerClass }: Props) => {
 														className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
 													>
 														<div className="flex min-w-[8rem] items-center gap-2">
-															<span>
+															<span className="text-muted-foreground">
 																{config.icon}
 															</span>
 															<p>
@@ -205,26 +187,38 @@ const AddFilter = ({ containerClass }: Props) => {
 							<Button
 								type="button"
 								variant="outline"
+								size="sm"
 								className={cn(
 									"rounded-none border-none bg-accent/25 !ring-0 focus:ring-0",
 									{
 										"bg-accent": form.watch("is"),
 									},
 								)}
-								onClick={() => form.setValue("is", true)}
+								onClick={() =>
+									form.setValue("is", true, {
+										shouldValidate: true,
+										shouldDirty: true,
+									})
+								}
 							>
 								Is
 							</Button>
 							<Button
 								type="button"
 								variant="outline"
+								size="sm"
 								className={cn(
 									"rounded-none border-none bg-accent/25 !ring-0 focus:ring-0",
 									{
 										"bg-accent": !form.watch("is"),
 									},
 								)}
-								onClick={() => form.setValue("is", false)}
+								onClick={() =>
+									form.setValue("is", false, {
+										shouldValidate: true,
+										shouldDirty: true,
+									})
+								}
 							>
 								Is not
 							</Button>
@@ -234,24 +228,14 @@ const AddFilter = ({ containerClass }: Props) => {
 								asChild
 								disabled={form.watch("property") === ""}
 							>
-								<button
-									ref={selectValueRef}
-									className="flex  h-10 w-full max-w-[400px] items-center justify-between whitespace-nowrap rounded-none border-b-0 border-l-0 border-r-0 border-t bg-accent/25 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground hover:bg-accent/50 focus:bg-accent/50 focus:outline-none focus:ring-0 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-								>
+								<button className="flex h-10 w-full max-w-[400px] items-center justify-between whitespace-nowrap rounded-none border-b-0 border-l-0 border-r-0 border-t bg-accent/25 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground hover:bg-accent/50 focus:bg-accent/50 focus:outline-none focus:ring-0 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
 									{form.watch("values").length === 0
 										? "Select value..."
 										: renderValues()}
 									<ChevronDown className="ml-2 h-4 w-4" />
 								</button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent
-								className="bg-popover/50 shadow-md backdrop-blur-lg"
-								style={{
-									width: selectValueRef.current
-										? selectValueRef.current.offsetWidth
-										: "",
-								}}
-							>
+							<DropdownMenuContent className="w-[286px] bg-popover/50 shadow-md backdrop-blur-lg">
 								{currentConfig?.type === "select" &&
 									currentConfig?.form.options.map(
 										(option) => (
@@ -287,7 +271,6 @@ const AddFilter = ({ containerClass }: Props) => {
 							</DropdownMenuContent>
 						</DropdownMenu>
 						<Button
-							type="button"
 							variant="outline"
 							className="rounded-none border-b-0 border-l-0 border-r-0 border-t bg-accent/25 !ring-0 focus:bg-accent/50"
 							disabled={
@@ -304,4 +287,4 @@ const AddFilter = ({ containerClass }: Props) => {
 	);
 };
 
-export default AddFilter;
+export default FilterMenu;

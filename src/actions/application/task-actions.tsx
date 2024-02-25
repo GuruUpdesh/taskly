@@ -11,7 +11,7 @@ import {
 	deleteViewsForTask,
 	updateOrInsertTaskView,
 } from "./task-views-actions";
-import { StatefulTask } from "~/config/task-entity";
+import { type StatefulTask } from "~/config/task-entity";
 
 export async function createTask(data: NewTask) {
 	try {
@@ -57,8 +57,8 @@ export async function getTasksFromProject(projectId: number) {
 
 		const statefulTasks: StatefulTask[] = allTasks.map((task) => ({
 			...task,
-			options: {}
-		}))
+			options: {},
+		}));
 
 		return statefulTasks;
 	} catch (error) {
