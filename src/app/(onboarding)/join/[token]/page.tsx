@@ -12,6 +12,7 @@ export default async function ProjectSettingsInvite({
 	params: { token },
 }: Params) {
 	const decodedToken = decodeURIComponent(token);
+	console.log(decodedToken, token);
 	const result = await joinProject(decodedToken);
 
 	if (result.success && result.projectId) {
