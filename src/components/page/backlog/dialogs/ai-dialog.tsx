@@ -97,6 +97,7 @@ const AiDialog = ({ projectId }: Props) => {
 			taskObject.insertedDate = new Date();
 			taskObject.lastEditedAt = new Date();
 			taskObject.sprintId = 0;
+			taskObject.points = "0";
 			setTaskObject(taskObject);
 		}
 	}, [messages]);

@@ -26,13 +26,15 @@ export async function aiAction(
             Create a new task for the user with the title "${title}" and the description "${description}" that they provided.
 
             Provide the following details:
-            - status: [Specify the status, "todo", "inprogress", or "done"]
-            - priority: [Specify the priority "low", "medium", or "high"]
-            - type: [Specity the type of task "task", "bug", or "feature]
+            - status: [Specify the status, "backlog", "todo", "inprogress", "inreview", or "done"]
+			- points: [Specify the points "0", "1", "2", "3", "4", or "5"]
+            - priority: [Specify the priority "none", "low", "medium", "high", or "critical"]
+            - type: [Specity the type of task "task", "bug", "feature", "improvement", "research", or "testing"]
             - assignee: ${users}
 
             Example:
             Status: In Progress
+			Points: 3
             Priority: Medium
             Type: Feature
             Assignee: user1
@@ -52,6 +54,7 @@ export async function aiAction(
 	) as unknown;
 	const validationSchema = insertTaskSchema__required.pick({
 		status: true,
+		points: true,
 		priority: true,
 		type: true,
 		assignee: true,

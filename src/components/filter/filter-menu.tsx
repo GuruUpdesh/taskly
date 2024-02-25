@@ -39,7 +39,7 @@ type Props = {
 
 const properties = [
 	"status",
-	"pointsEstimate",
+	"points",
 	"priority",
 	"type",
 	"assignee",

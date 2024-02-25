@@ -128,8 +128,8 @@ export const taskConfig: TaskConfig = {
 			],
 		},
 	},
-	pointsEstimate: {
-		value: "pointsEstimate",
+	points: {
+		value: "points",
 		displayName: "Points",
 		type: "select",
 		icon: <TbHexagonFilled className="h-4 w-4" />,
@@ -304,7 +304,7 @@ export const defaultValues: NewTask = {
 	description: "",
 	projectId: -1,
 	status: "backlog",
-	pointsEstimate: "0",
+	points: "0",
 	priority: "medium",
 	type: "task",
 	assignee: null,

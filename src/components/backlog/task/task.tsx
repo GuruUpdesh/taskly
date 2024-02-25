@@ -46,7 +46,7 @@ const Task = ({
 	const order = [
 		[
 			{ key: "priority", size: "icon" },
-			{ key: "pointsEstimate", size: "icon" },
+			{ key: "points", size: "icon" },
 			{ key: "status", size: "icon" },
 			{ key: "title", size: "default" },
 			{ key: "description", size: "icon" },
