@@ -33,6 +33,7 @@ import { useAppStore } from "~/store/app";
 import { useRegisterActions } from "kbar";
 import { useRouter } from "next/navigation";
 import { TaskStatus } from "../page/project/recent-tasks";
+import { filterTasks } from "~/utils/filter";
 
 export type UpdateTask = {
 	id: number;
@@ -47,9 +48,10 @@ type Props = {
 
 export default function Tasks({ projectId, assignees, sprints }: Props) {
 	// update app assignees and sprints
-	const [updateAssignees, updateSprints] = useAppStore((state) => [
+	const [updateAssignees, updateSprints, filters] = useAppStore((state) => [
 		state.updateAssignees,
 		state.updateSprints,
+		state.filters,
 	]);
 
 	useEffect(() => {
@@ -232,6 +234,11 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 							const task = result.data?.find(
 								(task) => task.id === taskId,
 							);
+
+							if (!task || !filterTasks(task, filters)) {
+								return null;
+							}
+
 							return task ? (
 								<Draggable
 									draggableId={String(task.id)}
