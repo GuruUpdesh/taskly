@@ -35,12 +35,11 @@ import { useRouter } from "next/navigation";
 import { TaskStatus } from "../page/project/recent-tasks";
 import { filterTasks } from "~/utils/filter";
 import {
-	StatefulTask,
+	type StatefulTask,
 	getTaskConfig,
 	optionVariants,
 } from "~/config/task-entity";
-import { EntityConfigSelect, TaskConfig } from "~/config/entityTypes";
-import { group } from "console";
+import { type TaskConfig } from "~/config/entityTypes";
 
 export type UpdateTask = {
 	id: number;
@@ -54,7 +53,9 @@ type Props = {
 };
 
 export default function Tasks({ projectId, assignees, sprints }: Props) {
-	// update app assignees and sprints
+	/**
+	 * Update the assignees and sprints in the store when they change
+	 */
 	const [updateAssignees, updateSprints, filters, groupBy] = useAppStore(
 		(state) => [
 			state.updateAssignees,
@@ -63,15 +64,17 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 			state.groupBy,
 		],
 	);
-
 	useEffect(() => {
 		updateAssignees(assignees);
 	}, [assignees]);
-
 	useEffect(() => {
 		updateSprints(sprints);
 	}, [sprints]);
 
+	
+	/**
+	 * Fetch the tasks from the server and handle optimistic updates
+	 */
 	const queryClient = useQueryClient();
 
 	async function refetch() {
@@ -100,68 +103,6 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		staleTime: 6 * 1000,
 		refetchInterval: 6 * 1000,
 	});
-
-	// to get seamless dnd to work, we need local state (outside of react-query)
-	const [taskOrder, setTaskOrder] = React.useState<number[]>([]);
-	useEffect(() => {
-		if (result.data) {
-			const orderedIds = result.data
-				.sort((a, b) => a.backlogOrder - b.backlogOrder)
-				.map((task) => task.id);
-			setTaskOrder(orderedIds);
-		}
-	}, [result.data]);
-
-	const config = React.useMemo(() => {
-		if (!groupBy) return null;
-		return getTaskConfig(groupBy as keyof TaskConfig);
-	}, [groupBy]);
-
-	const { groupedTasks, sortedGroupKeys } = React.useMemo(() => {
-		if (!config || !result.data)
-			return { groupedTasks: {}, sortedGroupKeys: [] };
-
-		const groups = result.data.reduce<Record<string, StatefulTask[]>>(
-			(acc, task) => {
-				const groupKey = task[groupBy as keyof StatefulTask] as string;
-				if (!acc[groupKey]) acc[groupKey] = [];
-				acc[groupKey]?.push(task);
-				return acc;
-			},
-			{},
-		);
-
-		const sortedGroupKeys = Object.keys(groups).sort((a, b) => {
-			if (config.type !== "select") {
-				return 0;
-			}
-			const indexA = config.form.options.findIndex(
-				(option) => option.value === a,
-			);
-			const indexB = config.form.options.findIndex(
-				(option) => option.value === b,
-			);
-			return (
-				(indexA !== -1 ? indexA : Infinity) -
-				(indexB !== -1 ? indexB : Infinity)
-			);
-		});
-
-		return { groupedTasks: groups, sortedGroupKeys };
-	}, [result.data, groupBy, config]);
-
-	const router = useRouter();
-	useRegisterActions(
-		result?.data?.map((task, idx) => ({
-			id: String(task.id),
-			name: task.title,
-			icon: <TaskStatus status={task.status} />,
-			shortcut: idx + 1 < 10 ? ["t", String(idx + 1)] : [],
-			perform: () => router.push(`/project/${projectId}/task/${task.id}`),
-			section: "Tasks",
-		})) ?? [],
-		[result.data],
-	);
 
 	const addTaskMutation = useMutation({
 		mutationFn: ({ id, newTask }: UpdateTask) => updateTask(id, newTask),
@@ -239,7 +180,18 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
 	});
 
-	if (!result.data) return <div>Loading...</div>;
+	/**
+	 * Handle Task Ordering and drag and drop
+	 */
+	const [taskOrder, setTaskOrder] = React.useState<number[]>([]);
+	useEffect(() => {
+		if (result.data) {
+			const orderedIds = result.data
+				.sort((a, b) => a.backlogOrder - b.backlogOrder)
+				.map((task) => task.id);
+			setTaskOrder(orderedIds);
+		}
+	}, [result.data]);
 
 	function onDragEnd(dragResult: DropResult) {
 		const { source, destination } = dragResult;
@@ -260,6 +212,63 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		);
 		orderTasksMutation.mutate(taskOrderMap);
 	}
+
+
+	/**
+	 * Grouping tasks
+	 */
+	const config = React.useMemo(() => {
+		if (!groupBy) return null;
+		return getTaskConfig(groupBy as keyof TaskConfig);
+	}, [groupBy]);
+
+	const { groupedTasks, sortedGroupKeys } = React.useMemo(() => {
+		if (!config || !result.data)
+			return { groupedTasks: {}, sortedGroupKeys: [] };
+
+		const groups = result.data.reduce<Record<string, StatefulTask[]>>(
+			(acc, task) => {
+				const groupKey = task[groupBy as keyof StatefulTask] as string;
+				if (!acc[groupKey]) acc[groupKey] = [];
+				acc[groupKey]?.push(task);
+				return acc;
+			},
+			{},
+		);
+
+		const sortedGroupKeys = Object.keys(groups).sort((a, b) => {
+			if (config.type !== "select") {
+				return 0;
+			}
+			const indexA = config.form.options.findIndex(
+				(option) => option.value === a,
+			);
+			const indexB = config.form.options.findIndex(
+				(option) => option.value === b,
+			);
+			return (
+				(indexA !== -1 ? indexA : Infinity) -
+				(indexB !== -1 ? indexB : Infinity)
+			);
+		});
+
+		return { groupedTasks: groups, sortedGroupKeys };
+	}, [result.data, groupBy, config]);
+
+	const router = useRouter();
+	useRegisterActions(
+		result?.data?.map((task, idx) => ({
+			id: String(task.id),
+			name: task.title,
+			icon: <TaskStatus status={task.status} />,
+			shortcut: idx + 1 < 10 ? ["t", String(idx + 1)] : [],
+			perform: () => router.push(`/project/${projectId}/task/${task.id}`),
+			section: "Tasks",
+		})) ?? [],
+		[result.data],
+	);
+
+	if (!result.data) return <div>Loading...</div>;
 
 	if (taskOrder.length === 0)
 		return (

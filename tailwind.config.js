@@ -60,6 +60,13 @@ module.exports = withUt({
 					sans: ["var(--font-sans)", ...fontFamily.sans],
 				},
 			},
+			brightness: {
+				75: "0.75",
+				80: "0.8",
+				85: "0.85",
+				90: "0.9",
+				95: "0.95",
+			},
 			borderRadius: {
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",

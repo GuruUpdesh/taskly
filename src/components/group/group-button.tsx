@@ -42,7 +42,7 @@ const GroupButton = () => {
     }
 
 	return (
-		<Select open={open} onOpenChange={(open) => setOpen(open)} defaultValue="none" onValueChange={(val) => handleGroupChange(val)}>
+		<Select open={open} onOpenChange={(open) => setOpen(open)} defaultValue="none" value={groupBy ? groupBy : "none"} onValueChange={(val) => handleGroupChange(val)}>
 			<SelectTrigger asChild className="!ring-0 h-min border-b-0 border-l border-r-0 border-t-0 ">
 				<Button
 					variant="outline"

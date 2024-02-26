@@ -12,6 +12,8 @@ import { getStatusDisplayName } from "~/config/task-entity";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { Label } from "~/components/ui/label";
+import { getEnumOptionByKey } from "~/config/TaskConfigType";
+import TaskProperty from "~/components/task/TaskProperty";
 
 export function RecentTasksNavWrapper() {
 	return (
@@ -37,7 +39,7 @@ const RecentTasks = async ({ number }: RecentTasksProps) => {
 					key={task.id}
 					href={`/project/${task.projectId}/task/${task.id}`}
 				>
-					<li className="flex items-center justify-between gap-1 rounded-full p-1 px-4 hover:bg-muted">
+					<li className="group flex items-center justify-between gap-1 rounded-full p-1 px-4 hover:bg-muted">
 						<div className="flex items-center gap-1">
 							<TaskStatus status={task.status} />
 							{task.title}
@@ -61,22 +63,18 @@ type Props = {
 };
 
 export const TaskStatus = ({ status }: Props) => {
+	const option = getEnumOptionByKey(status);
+	if (!option) return null;
+
 	return (
-		<TooltipProvider>
-			<Tooltip>
-				<TooltipTrigger asChild>
-					<div
-						className={cn("h-1 rounded-full border p-1", {
-							"border-grey-600 bg-muted": status === "todo",
-							"border-blue-500 bg-blue-600":
-								status === "inprogress",
-							"border-green-500 bg-green-600": status === "done",
-						})}
-					/>
-				</TooltipTrigger>
-				<TooltipContent>{getStatusDisplayName(status)}</TooltipContent>
-			</Tooltip>
-		</TooltipProvider>
+		<TaskProperty
+			option={option}
+			size="iconSm"
+			className={cn("group-hover:shadow-lg", {
+				"group-hover:border-background": status === "backlog",
+			})}
+			hover="group"
+		/>
 	);
 };
 
