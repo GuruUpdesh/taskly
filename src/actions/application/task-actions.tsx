@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs";
 import { and, eq, gt, max, ne, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
-import { tasks, insertTaskSchema__required } from "~/server/db/schema";
+import { tasks, insertTaskSchema__required, users } from "~/server/db/schema";
 import { type Task, type NewTask } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 import {
@@ -34,12 +34,17 @@ export async function createTask(data: NewTask) {
 
 		const task = await db.insert(tasks).values(newTask);
 
-		// create notification
 		if (newTask.assignee) {
+			const assignee = await db
+				.select()
+				.from(users)
+				.where(eq(users.username, newTask.assignee ?? ""))
+				.limit(1);
+
 			await createNotification({
 				date: new Date(),
-				message: `Task "${newTask.title}" created`,
-				userId: newTask.assignee,
+				message: `Task "${newTask.title}" was created and assigned to you.`,
+				userId: assignee[0]?.userId ?? "unknown user",
 				taskId: parseInt(task.insertId),
 				projectId: newTask.projectId,
 			});

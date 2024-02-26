@@ -5,12 +5,18 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "~/lib/utils";
 
 import { Separator } from "~/components/ui/separator";
+import { readNotification } from "~/actions/notification-actions";
+import { type Task } from "~/server/db/schema";
 
 type Props = {
 	id: string;
+	date: string;
+	message: string;
+	read: boolean;
+	task: Task;
 };
 
-const NotificationItem = ({ id }: Props) => {
+const NotificationItem = ({ id, date, message, read, task }: Props) => {
 	const router = useRouter();
 	const pathname = usePathname();
 
@@ -20,8 +26,10 @@ const NotificationItem = ({ id }: Props) => {
 		return path[path.length - 1] === id;
 	}, [id, pathname]);
 
-	function handleClick() {
+	async function handleClick() {
 		if (active) return;
+
+		await readNotification(parseInt(id));
 
 		// get path before inbox
 		const path = pathname.split("inbox")[0];
@@ -38,13 +46,17 @@ const NotificationItem = ({ id }: Props) => {
 				)}
 			>
 				<div className="flex items-center justify-between">
-					<p className="font-semibold">
-						Implement User Authentication
+					<p
+						className={
+							read ? "text-muted-foreground" : "font-semibold"
+						}
+					>
+						{message}
 					</p>
 				</div>
 				<div className="flex justify-between">
-					<p className="text-muted-foreground">Asigned by Yash</p>
-					<p className="text-muted-foreground">1 day ago</p>
+					<p className="text-muted-foreground">{task.title}</p>
+					<p className="text-muted-foreground">{date}</p>
 				</div>
 			</div>
 			<Separator />

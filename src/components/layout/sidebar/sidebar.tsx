@@ -1,7 +1,6 @@
 import React from "react";
 import {
 	HomeIcon,
-	EnvelopeClosedIcon,
 	GearIcon,
 	ReaderIcon,
 	DashboardIcon,
@@ -16,6 +15,7 @@ import { Separator } from "~/components/ui/separator";
 import UserButtonWrapper from "~/components/user-button/user-button-wrapper";
 import { Button } from "~/components/ui/button";
 import SidebarBackgroundWrapper from "./sidebar-background";
+import InboxSidebarButton from "~/components/inbox/InboxSidebarButton";
 
 interface SidebarProps {
 	projectId: string;
@@ -61,18 +61,7 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 						icon={<DashboardIcon className="min-w-4" />}
 						url={`/project/${projectId}`}
 					/>
-					<SidebarButton
-						label="Inbox"
-						icon={
-							<div className="relative">
-								<div className="absolute -right-2 -top-2 rounded-full bg-accent px-1 text-xs">
-									1
-								</div>
-								<EnvelopeClosedIcon className="min-w-4" />
-							</div>
-						}
-						url={`/project/${projectId}/inbox`}
-					/>
+					<InboxSidebarButton projectId={projectId} />
 					<SidebarButton
 						label="Docs"
 						icon={<ReaderIcon className="min-w-4" />}

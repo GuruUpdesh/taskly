@@ -319,4 +319,8 @@ export const notificationRelations = relations(notifications, ({ one }) => ({
 		fields: [notifications.projectId],
 		references: [projects.id],
 	}),
+	task: one(tasks, {
+		fields: [notifications.taskId],
+		references: [tasks.id],
+	}),
 }));

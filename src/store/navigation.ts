@@ -18,6 +18,8 @@ interface SettingsNavigationState {
 		key: keyof SettingsNavigationState["settingsOptions"],
 		value: boolean,
 	) => void;
+	notificationCount: number;
+	updateNotificationCount: (newCount: number) => void;
 }
 
 const useNavigationStore = create<SettingsNavigationState>()(
@@ -50,6 +52,9 @@ const useNavigationStore = create<SettingsNavigationState>()(
 				set((state) => ({
 					settingsOptions: { ...state.settingsOptions, [key]: value },
 				})),
+			notificationCount: 0,
+			updateNotificationCount: (newCount) =>
+				set({ notificationCount: newCount }),
 		}),
 		{
 			name: "settings-navigation-storage",
