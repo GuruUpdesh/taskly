@@ -136,6 +136,21 @@ export async function updateTask(id: number, data: NewTask) {
 		if (!currTask) return;
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
+		else {
+			const assignee = await db
+				.select()
+				.from(users)
+				.where(eq(users.username, updatedTaskData.assignee ?? ""))
+				.limit(1);
+
+			await createNotification({
+				date: new Date(),
+				message: `Task "${updatedTaskData.title}" was assigned to you.`,
+				userId: assignee[0]?.userId ?? "unknown user",
+				taskId: id,
+				projectId: updatedTaskData.projectId,
+			});
+		}
 
 		updatedTaskData.lastEditedAt = new Date();
 
