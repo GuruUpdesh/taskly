@@ -1,4 +1,8 @@
 import React from "react";
+import { getNotification } from "~/actions/notification-actions";
+import { TaskWrapper } from "~/components/task/TaskWrapper";
+import { redirect } from "next/navigation";
+import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
 
 type Params = {
 	params: {
@@ -7,12 +11,30 @@ type Params = {
 	};
 };
 
-export default function InboxPage({ params: { notificationId } }: Params) {
+export default async function InboxPage({
+	params: { projectId, notificationId },
+}: Params) {
+	const notification = await getNotification(parseInt(notificationId));
+
+	if (notification === undefined || notification.length === 0) {
+		redirect(
+			constructToastURL(
+				"Issue loading notification",
+				"error",
+				`/project/${projectId}/inbox`,
+			),
+		);
+		return;
+	}
+
+	if (notification.length === 0 || notification[0] === undefined) {
+		return null;
+	}
+
 	return (
-		<main className="flex h-full items-center justify-center pt-4">
-			<div>
-				<h1>Notifcation ID: {notificationId}</h1>
-			</div>
-		</main>
+		<TaskWrapper
+			taskId={notification[0].taskId.toString()}
+			projectId={notification[0].projectId.toString()}
+		/>
 	);
 }
