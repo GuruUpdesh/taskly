@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs";
 import { and, eq, gt, max, ne, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
@@ -126,6 +126,9 @@ export async function deleteTask(id: number) {
 }
 
 export async function updateTask(id: number, data: NewTask) {
+
+	const user = await currentUser();
+
 	try {
 		const updatedTaskData = insertTaskSchema__required.parse(data);
 		const currentTask = await db
@@ -136,7 +139,7 @@ export async function updateTask(id: number, data: NewTask) {
 		if (!currTask) return;
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
-		else {
+		else if(user?.username !== updatedTaskData.assignee) {
 			const assignee = await db
 				.select()
 				.from(users)
