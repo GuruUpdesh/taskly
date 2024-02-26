@@ -31,7 +31,6 @@ const NotificationItem = ({ id, date, message, read, task }: Props) => {
 
 		await readNotification(parseInt(id));
 
-		// get path before inbox
 		const path = pathname.split("inbox")[0];
 		router.push(`${path}/inbox/notification/${id}`);
 	}
