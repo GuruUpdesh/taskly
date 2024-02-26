@@ -1,10 +1,10 @@
 import React from "react";
+
 import { getAssigneesForProject } from "~/actions/application/project-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import TaskProperty from "~/components/task/TaskProperty";
-import { TaskProperty as TaskPropertyType, getPropertyConfig, taskProperties, taskVariants } from "~/config/TaskConfigType";
-import { StatefulTask } from "~/config/task-entity";
+import { getPropertyConfig, taskProperties } from "~/config/TaskConfigType";
 
 type Params = {
 	params: {
@@ -28,7 +28,6 @@ async function TaskPage({ params: { projectId } }: Params) {
 
 							const config = getPropertyConfig(key, assignees, sprints);
 							if (config.type !== "enum" && config.type !== "dynamic") return null;
-							const value = task[key as keyof StatefulTask];
 
 							const options = config.options
 							

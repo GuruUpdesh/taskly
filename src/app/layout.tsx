@@ -1,13 +1,14 @@
 import "~/styles/globals.css";
-import { GeistSans } from "geist/font/sans";
 import { ClerkProvider } from "@clerk/nextjs";
-import { cn } from "~/lib/utils";
-import { Toaster } from "~/components/ui/sonner";
 import { dark } from "@clerk/themes";
-import ReactQueryProvider from "~/lib/react-query-provider";
+import { GeistSans } from "geist/font/sans";
+
+import KBar from "~/components/general/kbar";
+import { Toaster } from "~/components/ui/sonner";
 import GlobalToastHandler from "~/lib/global-toast/global-toast-handler";
 import KBarProvider from "~/lib/kbar-provider";
-import KBar from "~/components/general/kbar";
+import ReactQueryProvider from "~/lib/react-query-provider";
+import { cn } from "~/lib/utils";
 
 export const metadata = {
 	title: "Taskly",

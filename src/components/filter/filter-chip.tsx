@@ -1,12 +1,16 @@
 "use client";
 
 import React, { useCallback, useMemo } from "react";
+
+import { CrossCircledIcon } from "@radix-ui/react-icons";
+
+import { buildDynamicOptions, getTaskConfig } from "~/config/task-entity";
+import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
 import { renderFilterValues } from "~/utils/filter-values";
-import { buildDynamicOptions, getTaskConfig } from "~/config/task-entity";
-import { CrossCircledIcon } from "@radix-ui/react-icons";
+
 import FilterMenu from "./filter-menu";
-import { cn } from "~/lib/utils";
+
 
 type Props = {
 	filter: Filter;

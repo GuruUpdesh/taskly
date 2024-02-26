@@ -1,15 +1,21 @@
 "use client";
 
 import React, { useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigationStore } from "~/store/navigation";
-import { z } from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import EmailInviteForm from "./email-invite-form";
-import { toast } from "sonner";
-import { Button } from "~/components/ui/button";
-import { sendEmailInvites } from "~/actions/onboarding/invite-actions";
 import { ChevronRight, Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { sendEmailInvites } from "~/actions/onboarding/invite-actions";
+import { Button } from "~/components/ui/button";
+import { useNavigationStore } from "~/store/navigation";
+
+import EmailInviteForm from "./email-invite-form";
+
+
+
 
 type Props = {
 	projectId: number;

@@ -1,12 +1,17 @@
 "use client";
 
 import React from "react";
-import { useAppStore } from "~/store/app";
+
 import { motion } from "framer-motion";
+import { Plus } from "lucide-react";
+
+import { cn } from "~/lib/utils";
+import { useAppStore } from "~/store/app";
+
 import FilterChip from "./filter-chip";
 import FilterMenu from "./filter-menu";
-import { cn } from "~/lib/utils";
-import { Plus } from "lucide-react";
+
+
 
 const filterContainer =
 	"rounded-full border bg-accent/25 p-1 transition-all hover:bg-accent";

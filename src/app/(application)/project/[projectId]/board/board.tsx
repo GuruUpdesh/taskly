@@ -1,16 +1,26 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect } from "react";
+
+import {
+	DragDropContext,
+	Draggable,
+	type DraggableProvided,
+	type DropResult,
+	Droppable,
+	type DroppableProvided,
+} from "@hello-pangea/dnd";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
 import {
 	deleteTask,
 	getTasksFromProject,
 	updateTask,
 } from "~/actions/application/task-actions";
-import { optionVariants } from "~/config/task-entity";
 import type { UpdateTask } from "~/components/backlog/tasks";
 import BoardTask from "~/components/board/board-task";
+import { optionVariants } from "~/config/task-entity";
 import {
 	type Status,
 	getOptionForStatus,
@@ -24,14 +34,7 @@ import type {
 	Task as TaskType,
 	User,
 } from "~/server/db/schema";
-import {
-	DragDropContext,
-	Draggable,
-	type DraggableProvided,
-	type DropResult,
-	Droppable,
-	type DroppableProvided,
-} from "@hello-pangea/dnd";
+
 
 type GroupedTasks = {
 	[key in Status]?: TaskType[];

@@ -2,19 +2,21 @@
 "use client";
 
 import React, { useEffect } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { UseMutationResult } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+
+import Property from "~/components/backlog/task/property/property";
+import TaskDropDownMenu from "~/components/backlog/task/task-dropdown-menu";
+import type { UpdateTask } from "~/components/backlog/tasks";
+import { taskSchema } from "~/config/task-entity";
 import {
 	type User,
 	type NewTask,
 	type Task as TaskType,
 	type Sprint,
 } from "~/server/db/schema";
-import Property from "~/components/backlog/task/property/property";
-import { taskSchema } from "~/config/task-entity";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { UseMutationResult } from "@tanstack/react-query";
-import type { UpdateTask } from "~/components/backlog/tasks";
-import TaskDropDownMenu from "~/components/backlog/task/task-dropdown-menu";
 
 type Props = {
 	task: TaskType;

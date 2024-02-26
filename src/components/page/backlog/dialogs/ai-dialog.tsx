@@ -1,8 +1,13 @@
 "use client";
 
 import React, { useEffect, useTransition, useState, useRef } from "react";
-import { useChat } from "ai/react";
 
+import { DialogClose } from "@radix-ui/react-dialog";
+import { useChat } from "ai/react";
+import { Bot, ChevronRight, Loader2, SparkleIcon } from "lucide-react";
+
+import { createTask } from "~/actions/application/task-actions";
+import { Button } from "~/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -11,14 +16,10 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "~/components/ui/dialog";
-import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
-import { Bot, ChevronRight, Loader2, SparkleIcon } from "lucide-react";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { type Task, selectTaskSchema } from "~/server/db/schema";
-import { createTask } from "~/actions/application/task-actions";
-import { throwClientError } from "~/utils/errors";
 import { useNavigationStore } from "~/store/navigation";
+import { throwClientError } from "~/utils/errors";
 
 type AiTask = Task;
 

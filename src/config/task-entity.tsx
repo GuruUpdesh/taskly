@@ -9,8 +9,8 @@ import {
 	PieChartIcon,
 	RadiobuttonIcon,
 } from "@radix-ui/react-icons";
-import { z } from "zod";
-import type { NewTask, User, Task, Sprint } from "~/server/db/schema";
+import { cva } from "class-variance-authority";
+import { isAfter, isBefore } from "date-fns";
 import {
 	Activity,
 	AlertOctagon,
@@ -26,11 +26,6 @@ import {
 	Search,
 	Text,
 } from "lucide-react";
-import { throwClientError } from "~/utils/errors";
-import type { ColorOptions, TaskConfig } from "./entityTypes";
-import UserProfilePicture from "~/components/user-profile-picture";
-import { isAfter, isBefore } from "date-fns";
-import { cva } from "class-variance-authority";
 import {
 	TbHexagon1Filled,
 	TbHexagon2Filled,
@@ -39,6 +34,15 @@ import {
 	TbHexagon5Filled,
 	TbHexagonFilled,
 } from "react-icons/tb";
+import { z } from "zod";
+
+import UserProfilePicture from "~/components/user-profile-picture";
+import type { NewTask, User, Task, Sprint } from "~/server/db/schema";
+import { throwClientError } from "~/utils/errors";
+
+import type { ColorOptions, TaskConfig } from "./entityTypes";
+
+
 
 export const optionVariants = cva([], {
 	variants: {

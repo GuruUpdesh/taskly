@@ -1,7 +1,9 @@
 "use client";
 
-import { ArrowDownNarrowWide, Filter, Group } from "lucide-react";
 import React from "react";
+
+import { ArrowDownNarrowWide, Filter } from "lucide-react";
+
 import GroupButton from "~/components/group/group-button";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";

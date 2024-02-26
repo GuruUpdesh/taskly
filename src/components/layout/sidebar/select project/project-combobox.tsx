@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useRef } from "react";
-import type { Project } from "~/server/db/schema";
-import { ChevronsUpDown } from "lucide-react";
 
-import { cn } from "~/lib/utils";
+
+import { PlusIcon } from "@radix-ui/react-icons";
+import { ChevronsUpDown } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
 import { Button } from "~/components/ui/button";
 import {
 	Command,
@@ -19,10 +22,9 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "~/components/ui/popover";
-import Link from "next/link";
-import { PlusIcon } from "@radix-ui/react-icons";
-import Image from "next/image";
 import { Skeleton } from "~/components/ui/skeleton";
+import { cn } from "~/lib/utils";
+import type { Project } from "~/server/db/schema";
 
 type Props = {
 	projects: Project[];

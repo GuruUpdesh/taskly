@@ -1,7 +1,10 @@
-import { type VariantProps, cva } from "class-variance-authority";
 import React from "react";
+
+import { type VariantProps, cva } from "class-variance-authority";
+
 import { type Option, taskVariants, type VariantPropsType as TaskVariantsProps } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
+
 import PropertyTooltip from "./PropertyTooltip";
 
 const propertyVariants = cva(["flex items-center gap-2"], {

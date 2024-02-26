@@ -1,19 +1,14 @@
 import React from "react";
-import { getMostRecentTasks } from "~/actions/application/task-views-actions";
-import { cn } from "~/lib/utils";
-import { type Task as TaskType } from "~/server/db/schema";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "~/components/ui/tooltip";
-import { getStatusDisplayName } from "~/config/task-entity";
-import Link from "next/link";
+
 import { formatDistanceToNow } from "date-fns";
+import Link from "next/link";
+
+import { getMostRecentTasks } from "~/actions/application/task-views-actions";
+import TaskProperty from "~/components/task/TaskProperty";
 import { Label } from "~/components/ui/label";
 import { getEnumOptionByKey } from "~/config/TaskConfigType";
-import TaskProperty from "~/components/task/TaskProperty";
+import { cn } from "~/lib/utils";
+import { type Task as TaskType } from "~/server/db/schema";
 
 export function RecentTasksNavWrapper() {
 	return (

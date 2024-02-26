@@ -1,21 +1,24 @@
 "use client";
 
 import React from "react";
+
+import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { getTask, updateTask } from "~/actions/application/task-actions";
+import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import BackButtonRelative from "~/components/layout/navbar/back-button-relative";
+import { Button } from "~/components/ui/button";
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import PrimaryTaskForm from "./PrimaryTaskForm";
-import type { NewTask, Sprint, User } from "~/server/db/schema";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getTask, updateTask } from "~/actions/application/task-actions";
-import SecondaryTaskForm from "./SecondaryTaskForm";
-import { Button } from "~/components/ui/button";
-import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Separator } from "~/components/ui/separator";
-import BackButtonRelative from "~/components/layout/navbar/back-button-relative";
+import type { NewTask, Sprint, User } from "~/server/db/schema";
+
+import PrimaryTaskForm from "./PrimaryTaskForm";
+import SecondaryTaskForm from "./SecondaryTaskForm";
 import TaskState from "./task-state";
 
 type Props = {

@@ -1,17 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Label } from "~/components/ui/label";
-import { type Project } from "~/server/db/schema";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronRight, Loader2Icon, SparkleIcon } from "lucide-react";
 import Image from "next/image";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "~/components/ui/popover";
-import { Button } from "~/components/ui/button";
-import { UploadDropzone } from "~/lib/uploadthing";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+import {
+	autoColor,
+	handleProjectTheme,
+} from "~/actions/settings/settings-actions";
+import { Button } from "~/components/ui/button";
 import {
 	Form,
 	FormControl,
@@ -21,18 +23,18 @@ import {
 	FormLabel,
 	FormMessage,
 } from "~/components/ui/form";
-import typography from "~/styles/typography";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
-import { ChevronRight, Loader2Icon, SparkleIcon } from "lucide-react";
-import safeAsync from "~/lib/safe-action";
+import { Label } from "~/components/ui/label";
 import {
-	autoColor,
-	handleProjectTheme,
-} from "~/actions/settings/settings-actions";
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "~/components/ui/popover";
+import { Separator } from "~/components/ui/separator";
+import safeAsync from "~/lib/safe-action";
+import { UploadDropzone } from "~/lib/uploadthing";
+import { type Project } from "~/server/db/schema";
+import typography from "~/styles/typography";
 
 type Props = {
 	project: Project;

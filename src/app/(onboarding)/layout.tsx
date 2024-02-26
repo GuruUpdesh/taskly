@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
+
 import BackButton from "~/components/layout/navbar/back-button";
 import Grid from "~/components/page/landing/background-grid";
 

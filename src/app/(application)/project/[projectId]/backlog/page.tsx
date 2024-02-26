@@ -3,17 +3,18 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
-import Tasks from "~/components/backlog/tasks";
-import { getTasksFromProject } from "~/actions/application/task-actions";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import CreateTask from "~/components/backlog/create-task";
+
 import { getAssigneesForProject } from "~/actions/application/project-actions";
-import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
-import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import { getTasksFromProject } from "~/actions/application/task-actions";
+import CreateTask from "~/components/backlog/create-task";
+import Tasks from "~/components/backlog/tasks";
 import CreateTicket from "~/components/create-ticket/ticket";
-import ToggleFilters from "~/components/page/backlog/display-toggles";
 import Filters from "~/components/filter/filters";
+import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
+import ToggleFilters from "~/components/page/backlog/display-toggles";
 
 type Params = {
 	params: {

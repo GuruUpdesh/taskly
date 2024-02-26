@@ -1,49 +1,77 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import {
-	type StatefulTask,
-	buildDynamicOptions,
-	defaultValues,
-	getTaskConfig,
-} from "~/config/task-entity";
-import { useNavigationStore } from "~/store/navigation";
-import { type UseFormReturn, useForm } from "react-hook-form";
+import React from "react";
+import { useEffect, useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	type NewTask,
-	type User,
-	insertTaskSchema__required,
-	type Sprint,
-	type Task,
-} from "~/server/db/schema";
-import { createTask } from "~/actions/application/task-actions";
-import { toast } from "sonner";
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
-import PropertySelect from "./task/property/propery-select";
-import { cn } from "~/lib/utils";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
+import { useForm, type UseFormReturn } from "react-hook-form";
+import { toast } from "sonner";
+
+import { aiAction } from "~/actions/ai/ai-action";
+import { createTask } from "~/actions/application/task-actions";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
-	DialogHeader,
-	DialogTrigger,
 	DialogContent,
-	DialogTitle,
 	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from "~/components/ui/dialog";
-import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
-import { aiAction } from "~/actions/ai/ai-action";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { type TaskConfig } from "~/config/entityTypes";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { type StatefulTask } from "~/config/task-entity";
+import {
+	buildValidator,
+	defaultValues,
+	getPropertyConfig,
+	taskProperties,
+} from "~/config/TaskConfigType";
+import useValidationErrors from "~/hooks/useValidationErrors";
+import { cn } from "~/lib/utils";
+import {
+	type NewTask,
+	type Sprint,
+	type Task,
+	type User,
+} from "~/server/db/schema";
+import { useNavigationStore } from "~/store/navigation";
+import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
+
+
+
+import PropertySelect from "./task/property/propery-select";
 
 type FormProps = {
-	onSubmit: (newTask: NewTask) => void;
-	form: UseFormReturn<NewTask, undefined>;
+	onSubmit: (newTask: FormType) => void;
+	form: UseFormReturn<FormType, undefined>;
 	assignees: User[];
 	sprints: Sprint[];
 };
+
+const formSchema = buildValidator([
+	"projectId",
+	"title",
+	"description",
+	"points",
+	"status",
+	"priority",
+	"type",
+	"assignee",
+	"sprintId",
+	"backlogOrder",
+	"boardOrder",
+]).refine((data) => !(data.status === "backlog" && data.sprintId !== "-1"), {
+	message: "If the status is backlog, there cannot be a sprint.",
+})
+.refine((data) => !(data.sprintId !== "-1" && data.status === "backlog"), {
+	message: "If a sprint is selected, the status cannot be backlog.",
+});
+
+export type FormType = Omit<NewTask, "sprintId"> & { sprintId: string };
 
 const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 	const project = useNavigationStore((state) => state.currentProject);
@@ -126,44 +154,35 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 						</Button>
 					</motion.div>
 				) : null}
-				{Object.keys(defaultValues)
-					.filter(
-						(col) =>
-							col !== "id" &&
-							col !== "pending" &&
-							col !== "projectId" &&
-							col !== "backlogOrder" &&
-							col !== "boardOrder" &&
-							col !== "lastEditedAt" &&
-							col !== "insertedDate" &&
-							getTaskConfig(col as keyof TaskConfig).type ===
-								"select",
-					)
-					.map((col) => {
-						const config = buildDynamicOptions(
-							getTaskConfig(col as keyof TaskConfig),
-							col,
-							assignees,
-							sprints,
+				{taskProperties.map((property) => {
+					const config = getPropertyConfig(
+						property,
+						assignees,
+						sprints,
+					);
+					if (config.type === "enum" || config.type === "dynamic")
+						return (
+							<motion.div
+								key={config.key}
+								layout
+								transition={transition}
+								className="flex-1"
+							>
+								<PropertySelect
+									config={config}
+									form={form}
+									onSubmit={onSubmit}
+									autoSubmit={false}
+									
+									size={
+										["sprintId", "assignee", "priority", "points"].includes(config.key)
+											? "icon"
+											: "default"
+									}
+								/>
+							</motion.div>
 						);
-						if (config.type === "select")
-							return (
-								<motion.div
-									key={col}
-									layout
-									transition={transition}
-									className="flex-1"
-								>
-									<PropertySelect
-										config={config}
-										col={col as keyof NewTask}
-										form={form}
-										onSubmit={onSubmit}
-										autoSubmit={false}
-									/>
-								</motion.div>
-							);
-					})}
+				})}
 			</motion.div>
 		</form>
 	);
@@ -178,18 +197,10 @@ type Props = {
 const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 	const [open, setOpen] = useState(false);
 	const queryClient = useQueryClient();
-
 	const project = useNavigationStore((state) => state.currentProject);
-	const defaultValuesWithProjectId = useMemo(
-		() => ({
-			...defaultValues,
-			projectId: parseInt(projectId),
-		}),
-		[projectId],
-	);
 
 	const addTaskMutation = useMutation({
-		mutationFn: ({ data }: { data: NewTask }) => createTask(data),
+		mutationFn: ({ data }: { data: FormType }) => createTask(data),
 		onMutate: async ({ data }) => {
 			await queryClient.cancelQueries({ queryKey: ["tasks"] });
 
@@ -199,6 +210,7 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 				...(old ?? []),
 				{
 					...data,
+					sprintId: parseInt(data.sprintId),
 					backlogOrder: 1000000,
 					projectId: parseInt(projectId),
 					id: -1,
@@ -223,13 +235,38 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 		},
 	});
 
-	const form = useForm<NewTask>({
-		resolver: zodResolver(insertTaskSchema__required),
-		defaultValues: defaultValuesWithProjectId,
+	const form = useForm<FormType>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			title: defaultValues.title,
+			description: defaultValues.description,
+			status: defaultValues.status,
+			priority: defaultValues.priority,
+			type: defaultValues.type,
+			assignee: defaultValues.assignee,
+			points: defaultValues.points,
+			sprintId: defaultValues.sprintId,
+			projectId: parseInt(projectId),
+			backlogOrder: 1000000,
+			boardOrder: 1000000,
+		},
 		mode: "onChange",
 	});
 
-	function handleSubmit(newTask: NewTask) {
+	useEffect(() => {
+		const sprintId = form.watch("sprintId");
+		const status = form.watch("status");
+		if (status === "backlog" && sprintId !== "-1") {
+			form.setValue("sprintId", "-1");
+		} else if (status !== "backlog" && sprintId === "-1") {
+			form.setValue("sprintId", `${getCurrentSprintId(sprints)}`);
+		}
+	}, [form.watch("sprintId"), form.watch("status")]);
+
+	useValidationErrors(form.formState.errors);
+
+	function handleSubmit(newTask: FormType) {
+		console.log(`🌱 Create Task >`, newTask)
 		addTaskMutation.mutate({ data: newTask });
 	}
 
@@ -264,6 +301,7 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 					<Button
 						size="sm"
 						onClick={() => form.handleSubmit(handleSubmit)()}
+						disabled={!form.formState.isValid}
 					>
 						Create Task
 					</Button>

@@ -1,5 +1,6 @@
-import Image from "next/image";
 import React from "react";
+
+import Image from "next/image";
 
 type Props = {
 	src: string;
@@ -13,7 +14,7 @@ const UserProfilePicture = ({ src, size = 20 }: Props) => {
 			width={size}
 			height={size}
 			style={{ minWidth: `${size}px`, minHeight: `${size}px` }}
-			className={`rounded-full`}
+			className={`rounded-full ring-1`}
 			alt=""
 		/>
 	);

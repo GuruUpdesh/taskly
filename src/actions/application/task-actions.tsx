@@ -3,19 +3,40 @@
 import { auth } from "@clerk/nextjs";
 import { and, eq, gt, max, ne, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+
+import { type FormType as CreateTaskData } from "~/components/backlog/create-task";
+import { type StatefulTask } from "~/config/task-entity";
+import { schemaValidators } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
 import { tasks, insertTaskSchema__required } from "~/server/db/schema";
 import { type Task, type NewTask } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
+
 import {
 	deleteViewsForTask,
 	updateOrInsertTaskView,
 } from "./task-views-actions";
-import { type StatefulTask } from "~/config/task-entity";
 
-export async function createTask(data: NewTask) {
+
+
+export async function createTask(data: CreateTaskData) {
+	const CreateTaskSchema = z.object({
+		title: schemaValidators.title,
+		description: schemaValidators.description,
+		status: schemaValidators.status,
+		points: schemaValidators.points,
+		priority: schemaValidators.priority,
+		type: schemaValidators.type,
+		assignee: schemaValidators.assignee,
+		projectId: schemaValidators.projectId,
+		sprintId: schemaValidators.sprintId.transform((val) => parseInt(val)),
+		backlogOrder: schemaValidators.backlogOrder,
+		boardOrder: schemaValidators.boardOrder,
+	})
+
 	try {
-		const newTask = insertTaskSchema__required.parse(data);
+		const newTask = CreateTaskSchema.parse(data);
 
 		const maxBacklogOrder = await db
 			.select({ backlogOrder: max(tasks.backlogOrder) })

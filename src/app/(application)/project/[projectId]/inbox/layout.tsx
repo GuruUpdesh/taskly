@@ -1,10 +1,12 @@
 import React from "react";
+
 import { Button } from "~/components/ui/button";
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
+
 import NotificationItem from "./notification-item";
 
 type Params = {

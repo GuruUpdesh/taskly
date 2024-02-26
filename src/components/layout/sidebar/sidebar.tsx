@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
 	HomeIcon,
 	EnvelopeClosedIcon,
@@ -9,13 +10,15 @@ import {
 	TableIcon,
 	MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
+
+import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import SelectProject from "./select project/select-project";
-import SidebarButton from "./sidebar-button";
 import { Separator } from "~/components/ui/separator";
 import UserButtonWrapper from "~/components/user-button/user-button-wrapper";
-import { Button } from "~/components/ui/button";
+
+import SelectProject from "./select project/select-project";
 import SidebarBackgroundWrapper from "./sidebar-background";
+import SidebarButton from "./sidebar-button";
 
 interface SidebarProps {
 	projectId: string;

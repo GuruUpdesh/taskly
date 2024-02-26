@@ -3,14 +3,17 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
-import { getTasksFromProject } from "~/actions/application/task-actions";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import { Bot } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import CreateTask from "~/components/backlog/create-task";
+
 import { getAssigneesForProject } from "~/actions/application/project-actions";
-import TaskBoard from "./board";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
+import { getTasksFromProject } from "~/actions/application/task-actions";
+import CreateTask from "~/components/backlog/create-task";
+import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import { Button } from "~/components/ui/button";
+
+import TaskBoard from "./board";
+
 
 type Params = {
 	params: {

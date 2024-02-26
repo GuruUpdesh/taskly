@@ -1,5 +1,7 @@
 "use client";
 
+import React, { useEffect } from "react";
+
 import {
 	DragDropContext,
 	Draggable,
@@ -11,14 +13,24 @@ import {
 } from "@hello-pangea/dnd";
 import { DragHandleDots2Icon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import { useRegisterActions } from "kbar";
+import { find } from "lodash";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
 import {
 	deleteTask,
 	getTasksFromProject,
 	updateTask,
 } from "~/actions/application/task-actions";
 import Task from "~/components/backlog/task/task";
+import Message from "~/components/general/message";
+import { type TaskConfig } from "~/config/entityTypes";
+import {
+	type StatefulTask,
+	getTaskConfig,
+	optionVariants,
+} from "~/config/task-entity";
 import { cn } from "~/lib/utils";
 import type {
 	NewTask,
@@ -26,20 +38,14 @@ import type {
 	User,
 	Sprint,
 } from "~/server/db/schema";
-import { updateOrder } from "~/utils/order";
-import Message from "~/components/general/message";
-import { find } from "lodash";
 import { useAppStore } from "~/store/app";
-import { useRegisterActions } from "kbar";
-import { useRouter } from "next/navigation";
-import { TaskStatus } from "../page/project/recent-tasks";
 import { filterTasks } from "~/utils/filter";
-import {
-	type StatefulTask,
-	getTaskConfig,
-	optionVariants,
-} from "~/config/task-entity";
-import { type TaskConfig } from "~/config/entityTypes";
+import { updateOrder } from "~/utils/order";
+
+
+
+import { TaskStatus } from "../page/project/recent-tasks";
+
 
 export type UpdateTask = {
 	id: number;
@@ -360,8 +366,6 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 													<Task
 														key={task.id}
 														task={task}
-														assignees={assignees}
-														sprints={sprints}
 														addTaskMutation={
 															addTaskMutation
 														}

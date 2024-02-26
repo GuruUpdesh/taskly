@@ -1,5 +1,7 @@
 import React from "react";
+
 import { auth } from "@clerk/nextjs";
+
 import { checkPermissions } from "~/actions/security/permissions";
 import { type UserRole } from "~/server/db/schema";
 

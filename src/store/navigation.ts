@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
 import type { Project, Task } from "~/server/db/schema";
 
 interface SettingsNavigationState {

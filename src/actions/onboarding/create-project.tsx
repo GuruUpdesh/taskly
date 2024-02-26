@@ -1,20 +1,25 @@
 "use server";
 
 // import { getAverageColor } from "fast-average-color-node";
+import { addMinutes, startOfDay } from "date-fns";
+import { eq } from "drizzle-orm";
 import OpenAI from "openai";
+
+import { createSprintForProject } from "~/actions/application/sprint-actions";
+import { authenticate } from "~/actions/security/authenticate";
+import { addUserToProject } from "~/actions/user-actions";
+import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import {
 	type NewProject,
 	projects,
 	insertProjectSchema,
 } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
-import { addUserToProject } from "~/actions/user-actions";
-import { addMinutes, startOfDay } from "date-fns";
-import { createSprintForProject } from "~/actions/application/sprint-actions";
-import { authenticate } from "~/actions/security/authenticate";
+
+
+
 import { createInvite } from "./invite-actions";
-import { env } from "~/env.mjs";
+
 
 type ProjectResponse = {
 	newProjectId: number;

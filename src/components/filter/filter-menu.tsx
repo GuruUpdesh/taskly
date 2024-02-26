@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useMemo } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
 import { Button } from "~/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -29,8 +31,9 @@ import {
 } from "~/config/task-entity";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
-import { Form, FormField, FormItem } from "../ui/form";
 import { renderFilterValues } from "~/utils/filter-values";
+
+import { Form, FormField, FormItem } from "../ui/form";
 
 type Props = {
 	children: (menuOpen: boolean) => React.ReactNode;

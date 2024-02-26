@@ -10,7 +10,7 @@ import {
 	RadiobuttonIcon,
 } from "@radix-ui/react-icons";
 import { type VariantProps, cva } from "class-variance-authority";
-import { isAfter, isBefore } from "date-fns";
+import _ from "lodash";
 import {
 	Activity,
 	AlertOctagon,
@@ -34,9 +34,16 @@ import {
 	TbHexagon5Filled,
 	TbHexagonFilled,
 } from "react-icons/tb";
+import { z } from "zod";
+
 import UserProfilePicture from "~/components/user-profile-picture";
-import { type User, type Task, type Sprint } from "~/server/db/schema";
-import _ from "lodash";
+import {
+	type User,
+	type Task,
+	type Sprint,
+	selectTaskSchema,
+} from "~/server/db/schema";
+import { helperIsSprintActive } from "~/utils/getCurrentSprintId";
 
 export type TaskProperty = keyof Task;
 type StaticProperty = Extract<
@@ -165,7 +172,7 @@ export const taskVariants = cva([], {
 		{
 			color: "green",
 			hover: "group",
-			class: "group-hover:bg-green-400/25",	
+			class: "group-hover:bg-green-400/25",
 		},
 		{
 			color: "purple",
@@ -247,8 +254,8 @@ export const taskVariants = cva([], {
 		{
 			hover: true,
 			context: "default",
-			class: "hover:border-transparent focus:border-transparent"
-		}
+			class: "hover:border-transparent focus:border-transparent",
+		},
 	],
 	defaultVariants: {
 		color: "null",
@@ -287,20 +294,18 @@ type TaskConfig = {
 			? TaskGeneric<P> & {
 					type: "enum";
 					options: Option<Task[P]>[];
-					default: string;
 				}
 			: P extends DynamicProperty
 				? TaskGeneric<P> & {
 						type: "dynamic";
 						options: Option<string>[];
-						default: string;
 					}
 				: TaskGeneric<P> & {
 						type: "static";
 					};
 };
 
-const taskConfig: TaskConfig = {
+export const taskConfig: TaskConfig = {
 	id: {
 		key: "id",
 		displayName: "ID",
@@ -356,7 +361,6 @@ const taskConfig: TaskConfig = {
 				color: "green",
 			},
 		],
-		default: "todo",
 	},
 	points: {
 		key: "points",
@@ -401,7 +405,6 @@ const taskConfig: TaskConfig = {
 				color: "null",
 			},
 		],
-		default: "0",
 	},
 	priority: {
 		key: "priority",
@@ -440,7 +443,6 @@ const taskConfig: TaskConfig = {
 				color: "red",
 			},
 		],
-		default: "none",
 	},
 	type: {
 		key: "type",
@@ -485,7 +487,6 @@ const taskConfig: TaskConfig = {
 				color: "red",
 			},
 		],
-		default: "task",
 	},
 	assignee: {
 		key: "assignee",
@@ -500,7 +501,6 @@ const taskConfig: TaskConfig = {
 				color: "null",
 			},
 		],
-		default: "unassigned",
 	},
 	sprintId: {
 		key: "sprintId",
@@ -509,13 +509,12 @@ const taskConfig: TaskConfig = {
 		icon: <Component1Icon className="h-4 w-4" />,
 		options: [
 			{
-				key: "none",
+				key: "-1",
 				displayName: "No Sprint",
 				icon: <Component1Icon className="h-4 w-4 opacity-50" />,
 				color: "null",
 			},
 		],
-		default: "none",
 	},
 	lastEditedAt: {
 		key: "lastEditedAt",
@@ -560,7 +559,7 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 			icon: (
 				<UserProfilePicture size={16} src={assignee.profilePicture} />
 			),
-			color: "blue" as Color,
+			color: "grey" as Color,
 		})),
 	];
 
@@ -577,12 +576,6 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 	return config;
 }
 
-function helperIsSprintActive(sprint: Sprint) {
-	return (
-		isAfter(new Date(), sprint.startDate) &&
-		isBefore(new Date(), sprint.endDate)
-	);
-}
 
 // Implementation
 export function getPropertyConfig(
@@ -608,20 +601,77 @@ export function getPropertyConfig(
 	return config;
 }
 
+/**
+ * Given a value of a task property, return the corresponding option from the taskConfig
+ * Example: "backlog" -> { key: "backlog", displayName: "Backlog", icon: <CircleDashed />, color: "null" }
+ *
+ * @param optionKey
+ * @returns
+ */
 export function getEnumOptionByKey(optionKey: string) {
 	for (const property in taskConfig) {
-	  const config = taskConfig[property as keyof typeof taskConfig];
-  
-	  if (config.type === "enum" && config.options) {
-		const option = config.options.find(opt => opt.key === optionKey);
-  
-		if (option) {
-		  return option;
+		const config = taskConfig[property as keyof typeof taskConfig];
+
+		if (config.type === "enum" && config.options) {
+			const option = config.options.find((opt) => opt.key === optionKey);
+
+			if (option) {
+				return option;
+			}
 		}
-	  }
 	}
-  
-	console.warn(`getEnumOptionByKey: Option key '${optionKey}' was not found in any enum properties.`);
+
+	console.warn(
+		`getEnumOptionByKey: Option key '${optionKey}' was not found in any enum properties.`,
+	);
 	return null;
-  }
-  
+}
+
+export const schemaValidators = {
+	id: z.number().min(1),
+	title: z
+		.string()
+		.min(1, "Title must be at least one character long.")
+		.max(225, "Title must be at most 225 characters long."),
+	description: z.string(),
+	status: selectTaskSchema.shape.status,
+	points: selectTaskSchema.shape.points,
+	priority: selectTaskSchema.shape.priority,
+	type: selectTaskSchema.shape.type,
+	assignee: z
+		.string()
+		.max(225, "Assignee must be at most 225 characters long."),
+	projectId: z.number().min(1),
+	sprintId: z.string(),
+	boardOrder: z.number().min(0),
+	backlogOrder: z.number().min(0),
+	lastEditedAt: selectTaskSchema.shape.lastEditedAt,
+	insertedDate: selectTaskSchema.shape.insertedDate,
+};
+
+export function buildValidator(keys: TaskProperty[]) {
+	return z.object(
+		Object.fromEntries(
+			keys.map((key) => {
+				return [key, schemaValidators[key]];
+			}),
+		),
+	);
+}
+
+export const defaultValues = {
+	title: "",
+	description: "",
+	status: "backlog",
+	points: "0",
+	priority: "none",
+	type: "task",
+	assignee: "unassigned",
+	sprintId: "-1",
+	id: 0,
+	projectId: 0,
+	boardOrder: 0,
+	backlogOrder: 0,
+	lastEditedAt: new Date(),
+	insertedDate: new Date(),
+} as const;

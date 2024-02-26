@@ -2,25 +2,23 @@
 "use client";
 
 import React, { useEffect } from "react";
-import {
-	type User,
-	type NewTask,
-	type Task as TaskType,
-	type Sprint,
-} from "~/server/db/schema";
-import Property from "./property/property";
-import { taskSchema } from "~/config/task-entity";
-import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";
-import type { UpdateTask } from "~/components/backlog/tasks";
-import TaskDropDownMenu from "./task-dropdown-menu";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+
+import type { UpdateTask } from "~/components/backlog/tasks";
+import { taskSchema } from "~/config/task-entity";
+import { type TaskProperty, getPropertyConfig } from "~/config/TaskConfigType";
+import { type NewTask, type Task as TaskType } from "~/server/db/schema";
+import { useAppStore } from "~/store/app";
+
+import Property from "./property/property";
+import TaskDropDownMenu from "./task-dropdown-menu";
 
 type Props = {
 	task: TaskType;
-	assignees: User[];
-	sprints: Sprint[];
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 	projectId: string;
@@ -28,12 +26,15 @@ type Props = {
 
 const Task = ({
 	task,
-	assignees,
-	sprints,
 	addTaskMutation,
 	deleteTaskMutation,
 	projectId,
 }: Props) => {
+	const [assignees, sprints] = useAppStore((state) => [
+		state.assignees,
+		state.sprints,
+	]);
+
 	const form = useForm<NewTask>({
 		resolver: zodResolver(taskSchema),
 		defaultValues: { ...task },
@@ -56,7 +57,7 @@ const Task = ({
 			{ key: "assignee", size: "icon" },
 			{ key: "sprintId", size: "icon" },
 		],
-	] as { key: keyof TaskType; size: "default" | "icon" }[][];
+	] as { key: TaskProperty; size: "default" | "icon" }[][];
 
 	function onSubmit(newTask: NewTask) {
 		newTask.projectId = task.projectId;
@@ -82,16 +83,17 @@ const Task = ({
 				className="flex flex-shrink items-center gap-2 first:min-w-0 first:flex-grow first:pl-8 last:pr-8"
 			>
 				{group.map((item, idx) => {
-					if (item.key === "id" || item.key === "projectId")
-						return null;
+					const config = getPropertyConfig(
+						item.key,
+						assignees,
+						sprints,
+					);
 					return (
 						<Property
 							key={idx}
-							property={item.key}
+							config={config}
 							form={form}
 							onSubmit={onSubmit}
-							assignees={assignees}
-							sprints={sprints}
 							size={item.size}
 						/>
 					);

@@ -1,11 +1,9 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
-import { type UseFormReturn, useForm } from "react-hook-form";
-import { z } from "zod";
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { endOfYesterday, isMonday, nextMonday } from "date-fns";
 import {
 	ChevronLeft,
 	ChevronRight,
@@ -14,18 +12,23 @@ import {
 	SparkleIcon,
 	Sprout,
 } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { toast } from "sonner";
-import { cn } from "~/lib/utils";
 import { useRouter } from "next/navigation";
-import EmailInviteForm from "~/components/invite/by-email/email-invite-form";
-import SprintOptions from "~/components/projects/sprint-options/sprint-options";
-import { endOfYesterday, isMonday, nextMonday } from "date-fns";
-import StepButton from "./multi-step-form/step-button";
-import Step from "./multi-step-form/step";
-import StepHeader from "./multi-step-form/step-header";
-import { PiPersonSimpleRun } from "react-icons/pi";
+import { type UseFormReturn, useForm } from "react-hook-form";
 import { GoPeople } from "react-icons/go";
+import { PiPersonSimpleRun } from "react-icons/pi";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import {
+	type CreateForm,
+	createProject,
+} from "~/actions/onboarding/create-project";
+import { sendEmailInvites } from "~/actions/onboarding/invite-actions";
+import EmailInviteForm from "~/components/invite/by-email/email-invite-form";
+import InviteLink from "~/components/invite/invite-link";
+import SprintOptions from "~/components/projects/sprint-options/sprint-options";
+import { type ProjectSprintOptions } from "~/components/projects/sprint-options/sprint-options-form";
+import { Button } from "~/components/ui/button";
 import {
 	Form,
 	FormControl,
@@ -34,14 +37,17 @@ import {
 	FormLabel,
 	FormMessage,
 } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
-import {
-	type CreateForm,
-	createProject,
-} from "~/actions/onboarding/create-project";
-import InviteLink from "~/components/invite/invite-link";
-import { sendEmailInvites } from "~/actions/onboarding/invite-actions";
-import { type ProjectSprintOptions } from "~/components/projects/sprint-options/sprint-options-form";
+import { Textarea } from "~/components/ui/textarea";
+import { cn } from "~/lib/utils";
+
+
+import Step from "./multi-step-form/step";
+import StepButton from "./multi-step-form/step-button";
+import StepHeader from "./multi-step-form/step-header";
+
+
 
 const CreateProjectSchema = z.object({
 	name: z.string().min(3).max(25),

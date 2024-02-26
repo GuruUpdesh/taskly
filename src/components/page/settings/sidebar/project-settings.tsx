@@ -1,13 +1,19 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { useNavigationStore } from "~/store/navigation";
+
+import { GearIcon } from "@radix-ui/react-icons";
+import { usePathname } from "next/navigation";
+
 import SidebarButton from "~/components/layout/sidebar/sidebar-button";
 import { generalSettings } from "~/config/settings-config";
-import SettingsSidebarSubButton from "./settings-sidebar-sub-button";
-import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
-import { GearIcon } from "@radix-ui/react-icons";
+import { useNavigationStore } from "~/store/navigation";
+
+import SettingsSidebarSubButton from "./settings-sidebar-sub-button";
+
+
+
 
 const ProjectSettings = () => {
 	const project = useNavigationStore((state) => state.currentProject);

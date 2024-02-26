@@ -1,5 +1,5 @@
+import { startOfToday, addWeeks } from "date-fns";
 import { relations, type InferSelectModel } from "drizzle-orm";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import {
 	boolean,
 	datetime,
@@ -11,8 +11,8 @@ import {
 	text,
 	varchar,
 } from "drizzle-orm/mysql-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
-import { startOfToday, addWeeks } from "date-fns";
 
 export const mysqlTable = mysqlTableCreator((name) => `taskly_${name}`);
 
@@ -62,7 +62,7 @@ export const tasks = mysqlTable("tasks", {
 	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
 		.notNull()
 		.default(new Date()),
-	sprintId: int("sprint_id"),
+	sprintId: int("sprint_id").default(-1).notNull(),
 });
 
 export const notifications = mysqlTable("notifications", {

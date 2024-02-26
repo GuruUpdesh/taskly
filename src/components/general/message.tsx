@@ -1,6 +1,7 @@
 import React from "react";
-import { AlertTriangle, CheckCircle, Info, XCircle } from "lucide-react";
+
 import { type VariantProps, cva } from "class-variance-authority";
+import { AlertTriangle, CheckCircle, Info, XCircle } from "lucide-react";
 
 const messageVariants = cva("rounded border backdrop-blur-xl", {
 	variants: {

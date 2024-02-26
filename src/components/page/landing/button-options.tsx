@@ -1,10 +1,12 @@
 "use client";
 
 import React from "react";
-import { Button } from "~/components/ui/button";
-import Link from "next/link";
+
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+
+import { Button } from "~/components/ui/button";
 
 const ButtonOptions = () => {
 	const variants = {

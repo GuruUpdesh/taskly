@@ -1,15 +1,17 @@
 "use client";
 
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import React from "react";
+
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+
 import { Button } from "~/components/ui/button";
-import { useNavigationStore } from "~/store/navigation";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { useNavigationStore } from "~/store/navigation";
 
 const ToggleSidebarButton = () => {
 	const [isSideBarCollapsed, expandSideBar] = useNavigationStore((state) => [

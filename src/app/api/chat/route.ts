@@ -1,5 +1,6 @@
-import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
+import OpenAI from "openai";
+
 import { env } from "~/env.mjs";
 
 export const runtime = "edge";

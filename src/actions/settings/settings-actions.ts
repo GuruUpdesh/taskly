@@ -1,5 +1,11 @@
 "use server";
 
+import chroma from "chroma-js";
+import { and, eq } from "drizzle-orm";
+import { getAverageColor } from "fast-average-color-node";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
 import { db } from "~/server/db";
 import {
 	type Project,
@@ -9,13 +15,10 @@ import {
 	sprints,
 	invites,
 } from "~/server/db/schema";
-import { and, eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
+
 import { authenticate } from "../security/authenticate";
 import { checkPermissions } from "../security/permissions";
-import { revalidatePath } from "next/cache";
-import { getAverageColor } from "fast-average-color-node";
-import chroma from "chroma-js";
+
 
 export async function handleProjectInfo(
 	projectId: number,

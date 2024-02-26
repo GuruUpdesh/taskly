@@ -2,15 +2,17 @@
 
 import React from "react";
 
-import {
-	Table,
-	TableBody,
-	TableHeader,
-	TableHead,
-	TableRow,
-	TableCell,
-} from "~/components/ui/table";
 
+
+import { TrashIcon } from "@radix-ui/react-icons";
+import { Icon } from "@radix-ui/react-select";
+import { ChevronDown } from "lucide-react";
+
+import { type UserWithRole } from "~/actions/application/project-actions";
+import {
+	editUserRole,
+	removeUserFromProject,
+} from "~/actions/settings/settings-actions";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -22,9 +24,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "~/components/ui/dialog";
-
-import { userRoles } from "~/server/db/schema";
-import { TrashIcon } from "@radix-ui/react-icons";
 import {
 	Select,
 	SelectContent,
@@ -33,14 +32,16 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import { cn } from "~/lib/utils";
 import {
-	editUserRole,
-	removeUserFromProject,
-} from "~/actions/settings/settings-actions";
-import { type UserWithRole } from "~/actions/application/project-actions";
-import { Icon } from "@radix-ui/react-select";
-import { ChevronDown } from "lucide-react";
+	Table,
+	TableBody,
+	TableHeader,
+	TableHead,
+	TableRow,
+	TableCell,
+} from "~/components/ui/table";
+import { cn } from "~/lib/utils";
+import { userRoles } from "~/server/db/schema";
 
 function UsersTable({
 	users,

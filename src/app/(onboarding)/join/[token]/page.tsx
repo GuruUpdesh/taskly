@@ -1,5 +1,6 @@
-import { joinProject } from "~/actions/onboarding/invite-actions";
 import { redirect } from "next/navigation";
+
+import { joinProject } from "~/actions/onboarding/invite-actions";
 import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
 
 type Params = {

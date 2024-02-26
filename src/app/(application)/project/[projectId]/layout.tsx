@@ -1,11 +1,14 @@
 import React from "react";
+
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
 import { getProject } from "~/actions/application/project-actions";
 import Sidebar from "~/components/layout/sidebar/sidebar";
-import ProjectState from "./project-state";
-import { redirect } from "next/navigation";
 import SidebarPanel from "~/components/layout/sidebar/sidebar-panel";
-import { cookies } from "next/headers";
 import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
+
+import ProjectState from "./project-state";
 
 type Params = {
 	children: React.ReactNode;

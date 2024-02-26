@@ -1,12 +1,16 @@
 import React from "react";
-import { getProjectApplicationData } from "~/actions/application/redis-actions";
-import ProjectImage from "./project-image";
-import Link from "next/link";
-import { Button } from "~/components/ui/button";
+
+import { eq } from "drizzle-orm";
 import { ChevronRight, Plus } from "lucide-react";
+import Link from "next/link";
+
+import { getProjectApplicationData } from "~/actions/application/redis-actions";
+import { Button } from "~/components/ui/button";
 import { db } from "~/server/db";
 import { projects } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
+
+import ProjectImage from "./project-image";
+
 
 export function CurrentProjectNavWrapper() {
 	return (

@@ -1,14 +1,17 @@
 "use client";
 
 import React, { useEffect } from "react";
+
+import { type ImperativePanelHandle } from "react-resizable-panels";
+
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
-import SettingsNavigationState from "./settings-navigation-state";
 import { useNavigationStore } from "~/store/navigation";
-import { type ImperativePanelHandle } from "react-resizable-panels";
+
+import SettingsNavigationState from "./settings-navigation-state";
 
 type Props = {
 	children: React.ReactNode;

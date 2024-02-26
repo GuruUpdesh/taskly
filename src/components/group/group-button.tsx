@@ -1,12 +1,21 @@
 "use client";
 
+import React, { useMemo } from "react";
+
+import { Group, MinusIcon } from "lucide-react";
+
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
-	SelectValue,
 } from "~/components/ui/select";
+import { type TaskConfig } from "~/config/entityTypes";
+import { getTaskConfig } from "~/config/task-entity";
+import { cn } from "~/lib/utils";
+import { useAppStore } from "~/store/app";
+
+import { Button } from "../ui/button";
 
 const properties = [
 	"status",
@@ -16,13 +25,6 @@ const properties = [
 	"sprintId",
 ] as const;
 
-import React, { useMemo } from "react";
-import { Button } from "../ui/button";
-import { cn } from "~/lib/utils";
-import { Group, Minus, MinusIcon } from "lucide-react";
-import { getTaskConfig } from "~/config/task-entity";
-import { useAppStore } from "~/store/app";
-import { type TaskConfig } from "~/config/entityTypes";
 
 const GroupButton = () => {
     const [open, setOpen] = React.useState(false);

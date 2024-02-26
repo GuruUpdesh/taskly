@@ -1,6 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+
+import type { UseMutationResult } from "@tanstack/react-query";
+import { Priority, useRegisterActions } from "kbar";
+import { Trash2Icon } from "lucide-react";
+import { toast } from "sonner";
+
 import {
 	ContextMenu,
 	ContextMenuContent,
@@ -8,11 +14,8 @@ import {
 	ContextMenuShortcut,
 	ContextMenuTrigger,
 } from "~/components/ui/context-menu";
-import { Trash2Icon } from "lucide-react";
-import type { UseMutationResult } from "@tanstack/react-query";
 import type { Task } from "~/server/db/schema";
-import { toast } from "sonner";
-import { Priority, useRegisterActions } from "kbar";
+
 
 type Props = {
 	task: Task;

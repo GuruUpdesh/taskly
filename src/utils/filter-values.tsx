@@ -1,10 +1,11 @@
+import pluralize from "pluralize";
+
 import {
 	type EntityConfigSelect,
 	type EntityConfigText,
 } from "~/config/entityTypes";
-import pluralize from "pluralize";
-import { cn } from "~/lib/utils";
 import { optionVariants } from "~/config/task-entity";
+import { cn } from "~/lib/utils";
 
 export function renderFilterValues(
 	values: string[],

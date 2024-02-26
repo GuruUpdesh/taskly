@@ -1,10 +1,13 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
+
+import { usePathname } from "next/navigation";
 import { z } from "zod";
-import Crumb from "./crumb";
+
 import { useNavigationStore } from "~/store/navigation";
+
+import Crumb from "./crumb";
 
 const CRUMBTYPES = ["project", "notification", "task"] as const;
 type CrumbType = (typeof CRUMBTYPES)[number];

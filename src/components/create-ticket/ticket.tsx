@@ -1,6 +1,13 @@
 "use client";
 
+import { useState } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import { QuestionMarkIcon } from "@radix-ui/react-icons";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
 import { createTicket } from "~/actions/application/ticket-action";
 import { Button } from "~/components/ui/button";
 import {
@@ -13,7 +20,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "~/components/ui/dialog";
-import { Input } from "~/components/ui/input";
 import {
 	Form,
 	FormControl,
@@ -22,12 +28,9 @@ import {
 	FormLabel,
 	FormMessage,
 } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useState } from "react";
-import { toast } from "sonner";
+
 
 const formSchema = z.object({
 	title: z.string().max(100),

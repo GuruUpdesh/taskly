@@ -1,12 +1,14 @@
 import React from "react";
-import dynamic from "next/dynamic";
-import SidebarButton from "~/components/layout/sidebar/sidebar-button";
-import { Separator } from "~/components/ui/separator";
+
 import { ArrowLeftIcon, PersonIcon } from "@radix-ui/react-icons";
+import dynamic from "next/dynamic";
 import Link from "next/link";
+
+import SidebarButton from "~/components/layout/sidebar/sidebar-button";
+import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
-import { Button } from "~/components/ui/button";
 const ProjectSettings = dynamic(() => import("./project-settings"), {
 	ssr: false,
 });
