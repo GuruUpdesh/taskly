@@ -1,6 +1,6 @@
 "use server";
 
-// import { getAverageColor } from "fast-average-color-node";
+import { getAverageColor } from "fast-average-color-node";
 import OpenAI from "openai";
 import { db } from "~/server/db";
 import {
@@ -14,6 +14,9 @@ import { createSprintForProject } from "~/actions/application/sprint-actions";
 import { authenticate } from "~/actions/security/authenticate";
 import { createInvite } from "./invite-actions";
 import { env } from "~/env.mjs";
+import chroma from "chroma-js";
+import { kv } from "@vercel/kv";
+import { eq } from "drizzle-orm";
 
 type ProjectResponse = {
 	newProjectId: number;
@@ -66,11 +69,11 @@ export async function createProject(
 		}
 
 		// generate project image in background
-		// void generateAndUpdateProjectImage(
-		// 	insertId,
-		// 	newProject.name,
-		// 	newProject.description,
-		// );
+		void generateAndUpdateProjectImage(
+			insertId,
+			newProject.name,
+			newProject.description,
+		);
 
 		return {
 			newProjectId: insertId,
@@ -83,40 +86,40 @@ export async function createProject(
 	}
 }
 
-// export async function generateAndUpdateProjectImage(
-// 	projectId: number,
-// 	projectName: string,
-// 	projectDescription: string | null | undefined,
-// ) {
-// 	try {
-// 		// generate image
-// 		const image = await generateProjectImage(
-// 			projectName,
-// 			projectDescription,
-// 		);
-// 		if (!image) {
-// 			console.error("Error generating project image");
-// 			return;
-// 		}
+export async function generateAndUpdateProjectImage(
+	projectId: number,
+	projectName: string,
+	projectDescription: string | null | undefined,
+) {
+	try {
+		// generate image
+		const image = await generateProjectImage(
+			projectName,
+			projectDescription,
+		);
+		if (!image) {
+			console.error("Error generating project image");
+			return;
+		}
 
-// 		//  get average color
-// 		await getAverageColor(image).then(async (color: { hex: string }) => {
-// 			const hex = color.hex;
-// 			const vibrant = chroma(hex).darken(1).saturate(2).hex();
-// 			// store project color in Redis
-// 			await kv.set("project-color-" + projectId, vibrant);
-// 		});
+		//  get average color
+		await getAverageColor(image).then(async (color: { hex: string }) => {
+			const hex = color.hex;
+			const vibrant = chroma(hex).darken(1).saturate(2).hex();
+			// store project color in Redis
+			await kv.set("project-color-" + projectId, vibrant);
+		});
 
-// 		// update project image
-// 		await db
-// 			.update(projects)
-// 			.set({ image: image })
-// 			.where(eq(projects.id, projectId));
-// 		console.log("Project image generated and updated successfully.");
-// 	} catch (error) {
-// 		console.error("Error generating or updating project image:", error);
-// 	}
-// }
+		// update project image
+		await db
+			.update(projects)
+			.set({ image: image })
+			.where(eq(projects.id, projectId));
+		console.log("Project image generated and updated successfully.");
+	} catch (error) {
+		console.error("Error generating or updating project image:", error);
+	}
+}
 
 function handleCreateProjectError(error: unknown) {
 	if (error instanceof Error) {
