@@ -126,7 +126,6 @@ export async function deleteTask(id: number) {
 }
 
 export async function updateTask(id: number, data: NewTask) {
-
 	const user = await currentUser();
 
 	try {
@@ -139,7 +138,7 @@ export async function updateTask(id: number, data: NewTask) {
 		if (!currTask) return;
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
-		else if(user?.username !== updatedTaskData.assignee) {
+		else if (user?.username !== updatedTaskData.assignee) {
 			const assignee = await db
 				.select()
 				.from(users)
