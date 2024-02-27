@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import type { NewTask, Task } from "~/server/db/schema";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";
@@ -12,6 +11,19 @@ import _debounce from "lodash/debounce";
 import { Separator } from "~/components/ui/separator";
 import { Button } from "~/components/ui/button";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import {
+	headingsPlugin,
+	listsPlugin,
+	quotePlugin,
+	thematicBreakPlugin,
+	markdownShortcutPlugin,
+	MDXEditor,
+	type MDXEditorMethods,
+	type MDXEditorProps
+} from '@mdxeditor/editor';
+import { Textarea } from "../ui/textarea";
+
+
 
 type Props = {
 	task: Task;
@@ -57,6 +69,10 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 		[],
 	);
 
+	
+
+	const editorRef = useRef<MDXEditorMethods>(null);
+
 	return (
 		<form
 			onSubmit={form.handleSubmit(onSubmit)}
@@ -70,6 +86,21 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 				autoComplete="off"
 				{...form.register("title")}
 				onChangeCapture={debouncedHandleChange}
+			/>
+			<MDXEditor
+				plugins={[
+					headingsPlugin({ allowedHeadingLevels: [1, 2, 3] }),
+					listsPlugin(),
+					quotePlugin(),
+					thematicBreakPlugin(),
+					markdownShortcutPlugin()
+				]}
+				markdown={form.watch("description") || "# Hello, world!"}
+				{...form.register("description")}
+				onChange={value => {
+					form.setValue("description", value); 
+				}}
+				ref={editorRef}
 			/>
 			<Textarea
 				className="flex-grow resize-none p-4 focus-visible:ring-transparent"
