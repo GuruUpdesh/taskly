@@ -15,9 +15,11 @@ import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
 import type { NewTask, Task } from "~/server/db/schema";
 
+import { type UpdateTask } from "../backlog/tasks";
+
 type Props = {
 	task: Task;
-	editTaskMutation: UseMutationResult<void, Error, NewTask, unknown>;
+	editTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 };
 
 const insertTaskSchema__Primary = z.object({
@@ -44,7 +46,14 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	}, [JSON.stringify(task)]);
 
 	function onSubmit(updatedTask: FormType) {
-		editTaskMutation.mutate({ ...task, ...updatedTask });
+		editTaskMutation.mutate({
+			id: task.id,
+			newTask: {
+				...updatedTask,
+				...task,
+				sprintId: String(task.sprintId),
+			},
+		});
 	}
 
 	async function handleChange() {

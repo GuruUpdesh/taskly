@@ -14,9 +14,6 @@ import { useNavigationStore } from "~/store/navigation";
 
 import EmailInviteForm from "./email-invite-form";
 
-
-
-
 type Props = {
 	projectId: number;
 };

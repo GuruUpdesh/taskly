@@ -12,9 +12,6 @@ import CreateTask from "~/components/backlog/create-task";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import { Button } from "~/components/ui/button";
 
-import TaskBoard from "./board";
-
-
 type Params = {
 	params: {
 		projectId: string;
@@ -49,11 +46,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 			</header>
 			<section className="container flex flex-col pt-4">
 				<HydrationBoundary state={dehydrate(queryClient)}>
-					<TaskBoard
-						projectId={projectId}
-						assignees={assignees}
-						sprints={sprints}
-					/>
+					<p>Not Implemented</p>
 				</HydrationBoundary>
 			</section>
 		</div>

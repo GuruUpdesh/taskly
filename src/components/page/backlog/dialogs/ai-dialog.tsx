@@ -6,7 +6,7 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import { useChat } from "ai/react";
 import { Bot, ChevronRight, Loader2, SparkleIcon } from "lucide-react";
 
-import { createTask } from "~/actions/application/task-actions";
+// import { createTask } from "~/actions/application/task-actions";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -112,10 +112,11 @@ const AiDialog = ({ projectId }: Props) => {
 	};
 
 	const [isPending, startTransition] = useTransition();
-	async function handleAccept() {
+	function handleAccept() {
 		try {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const validatedTask = selectTaskSchema.parse(taskObject);
-			await createTask(validatedTask);
+			// await createTask(validatedTask);
 			setOpen(false);
 
 			setTaskObject(null);

@@ -42,12 +42,9 @@ import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
 import { cn } from "~/lib/utils";
 
-
 import Step from "./multi-step-form/step";
 import StepButton from "./multi-step-form/step-button";
 import StepHeader from "./multi-step-form/step-header";
-
-
 
 const CreateProjectSchema = z.object({
 	name: z.string().min(3).max(25),

@@ -35,7 +35,7 @@ const ToggleFilters = () => {
 				variant="outline"
 				size="sm"
 				className={cn(
-					"flex items-center gap-1 rounded-none border-b-0 border-l-0 border-r border-t-0 px-4 z-10 text-muted-foreground",
+					"z-10 flex items-center gap-1 rounded-none border-b-0 border-l-0 border-r border-t-0 px-4 text-muted-foreground",
 				)}
 			>
 				<ArrowDownNarrowWide className="h-4 w-4" />

@@ -27,7 +27,6 @@ import { cn } from "~/lib/utils";
 
 import type { ProjectSprintOptions } from "./sprint-options-form";
 
-
 type Props = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	form: UseFormReturn<ProjectSprintOptions | CreateForm>;

@@ -2,7 +2,11 @@ import React from "react";
 
 import { type VariantProps, cva } from "class-variance-authority";
 
-import { type Option, taskVariants, type VariantPropsType as TaskVariantsProps } from "~/config/TaskConfigType";
+import {
+	type Option,
+	taskVariants,
+	type VariantPropsType as TaskVariantsProps,
+} from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
 
 import PropertyTooltip from "./PropertyTooltip";
@@ -27,9 +31,14 @@ interface TaskPropertyProps extends TaskVariantsProps {
 	option: Option<string>;
 	className?: string;
 	size?: VariantPropsType["size"];
-};
+}
 
-const TaskProperty = ({ option, size = "default", hover = true, className = "" }: TaskPropertyProps) => {
+const TaskProperty = ({
+	option,
+	size = "default",
+	hover = true,
+	className = "",
+}: TaskPropertyProps) => {
 	return (
 		<PropertyTooltip content={option.displayName}>
 			<div

@@ -11,7 +11,6 @@ import { projects } from "~/server/db/schema";
 
 import ProjectImage from "./project-image";
 
-
 export function CurrentProjectNavWrapper() {
 	return (
 		<div>

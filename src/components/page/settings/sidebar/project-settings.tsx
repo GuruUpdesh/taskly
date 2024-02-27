@@ -12,9 +12,6 @@ import { useNavigationStore } from "~/store/navigation";
 
 import SettingsSidebarSubButton from "./settings-sidebar-sub-button";
 
-
-
-
 const ProjectSettings = () => {
 	const project = useNavigationStore((state) => state.currentProject);
 	const url = `/settings/project/${project?.id ?? -1}/general`;

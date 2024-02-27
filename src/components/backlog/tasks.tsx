@@ -26,36 +26,29 @@ import {
 import Task from "~/components/backlog/task/task";
 import Message from "~/components/general/message";
 import { type TaskConfig } from "~/config/entityTypes";
-import {
-	type StatefulTask,
-	getTaskConfig,
-	optionVariants,
-} from "~/config/task-entity";
+import { getEnumOptionByKey, getPropertyConfig } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
-import type {
-	NewTask,
-	Task as TaskType,
-	User,
-	Sprint,
-} from "~/server/db/schema";
+import type { Task as TaskType, User, Sprint } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
 import { filterTasks } from "~/utils/filter";
 import { updateOrder } from "~/utils/order";
 
-
-
+import { type TaskFormType } from "./create-task";
 import { TaskStatus } from "../page/project/recent-tasks";
-
 
 export type UpdateTask = {
 	id: number;
-	newTask: NewTask;
+	newTask: TaskFormType;
 };
 
 type Props = {
 	projectId: string;
 	assignees: User[];
 	sprints: Sprint[];
+};
+
+type TaskTypeOverride = Omit<TaskType, "sprintId"> & {
+	spintId: string;
 };
 
 export default function Tasks({ projectId, assignees, sprints }: Props) {
@@ -68,6 +61,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 			state.updateSprints,
 			state.filters,
 			state.groupBy,
+			state.hoveredTaskId,
 		],
 	);
 	useEffect(() => {
@@ -77,7 +71,6 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		updateSprints(sprints);
 	}, [sprints]);
 
-	
 	/**
 	 * Fetch the tasks from the server and handle optimistic updates
 	 */
@@ -118,7 +111,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 			const previousTasks = queryClient.getQueryData<TaskType[]>([
 				"tasks",
 			]);
-			queryClient.setQueryData<TaskType[]>(
+			queryClient.setQueryData<TaskTypeOverride[]>(
 				["tasks"],
 				(old) =>
 					old?.map((task) =>
@@ -219,47 +212,17 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		orderTasksMutation.mutate(taskOrderMap);
 	}
 
-
 	/**
 	 * Grouping tasks
 	 */
 	const config = React.useMemo(() => {
 		if (!groupBy) return null;
-		return getTaskConfig(groupBy as keyof TaskConfig);
-	}, [groupBy]);
-
-	const { groupedTasks, sortedGroupKeys } = React.useMemo(() => {
-		if (!config || !result.data)
-			return { groupedTasks: {}, sortedGroupKeys: [] };
-
-		const groups = result.data.reduce<Record<string, StatefulTask[]>>(
-			(acc, task) => {
-				const groupKey = task[groupBy as keyof StatefulTask] as string;
-				if (!acc[groupKey]) acc[groupKey] = [];
-				acc[groupKey]?.push(task);
-				return acc;
-			},
-			{},
+		return getPropertyConfig(
+			groupBy as keyof TaskConfig,
+			assignees,
+			sprints,
 		);
-
-		const sortedGroupKeys = Object.keys(groups).sort((a, b) => {
-			if (config.type !== "select") {
-				return 0;
-			}
-			const indexA = config.form.options.findIndex(
-				(option) => option.value === a,
-			);
-			const indexB = config.form.options.findIndex(
-				(option) => option.value === b,
-			);
-			return (
-				(indexA !== -1 ? indexA : Infinity) -
-				(indexB !== -1 ? indexB : Infinity)
-			);
-		});
-
-		return { groupedTasks: groups, sortedGroupKeys };
-	}, [result.data, groupBy, config]);
+	}, [groupBy]);
 
 	const router = useRouter();
 	useRegisterActions(
@@ -290,13 +253,10 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
-			{(groupBy ? sortedGroupKeys : ["tasks"]).map((group) => {
-				const tasks = groupBy ? groupedTasks[group] : result.data;
+			{["tasks"].map((group) => {
+				const tasks = result.data;
 				if (!tasks || config?.type === "text") return null;
-				const option = config?.form.options.find(
-					(open) => open.value === group,
-				);
-				if (!option && groupBy) return null;
+				const option = getEnumOptionByKey(group);
 
 				return (
 					<Droppable droppableId={group} key={group}>
@@ -308,8 +268,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 								{groupBy && option && (
 									<div
 										className={cn(
-											"flex items-center gap-1 p-1 px-4 pointer-events-none",
-											optionVariants({color: option.color}),
+											"pointer-events-none flex items-center gap-1 p-1 px-4",
 										)}
 									>
 										{option.icon}

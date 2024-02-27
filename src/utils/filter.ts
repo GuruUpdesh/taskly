@@ -1,4 +1,4 @@
-import { type StatefulTask } from "~/config/task-entity";
+import { type StatefulTask } from "~/config/TaskConfigType";
 import { type Filter } from "~/store/app";
 
 export function filterTasks(task: StatefulTask, filters: Filter[]): boolean {

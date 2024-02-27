@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { type taskConfig } from "~/config/task-entity";
+import { type TaskProperty } from "~/config/TaskConfigType";
 import { type Sprint, type User } from "~/server/db/schema";
 
 export type Filter = {
-	property: keyof typeof taskConfig | "";
+	property: TaskProperty | "";
 	is: boolean;
 	values: string[];
 };
@@ -22,8 +22,10 @@ interface AppState {
 	addFilter: (filter: Filter) => void;
 	deleteFilter: (filter: Filter) => void;
 	updateFilter: (oldFilter: Filter, filter: Filter) => void;
-	groupBy: string | null;
-	setGroupBy: (groupBy: string | null) => void;
+	groupBy: TaskProperty | null;
+	setGroupBy: (groupBy: TaskProperty | null) => void;
+	hoveredTaskId: number | null;
+	setHoveredTaskId: (id: number | null) => void;
 }
 
 const useAppStore = create<AppState>()(
@@ -55,7 +57,9 @@ const useAppStore = create<AppState>()(
 					return { filters };
 				}),
 			groupBy: null,
-			setGroupBy: (groupBy: string | null) => set({ groupBy }),
+			setGroupBy: (groupBy: TaskProperty | null) => set({ groupBy }),
+			hoveredTaskId: null,
+			setHoveredTaskId: (id: number | null) => set({ hoveredTaskId: id }),
 		}),
 		{
 			name: "settings-navigation-storage",

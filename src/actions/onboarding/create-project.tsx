@@ -16,10 +16,7 @@ import {
 	insertProjectSchema,
 } from "~/server/db/schema";
 
-
-
 import { createInvite } from "./invite-actions";
-
 
 type ProjectResponse = {
 	newProjectId: number;

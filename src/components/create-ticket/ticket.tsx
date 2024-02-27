@@ -31,7 +31,6 @@ import {
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 
-
 const formSchema = z.object({
 	title: z.string().max(100),
 	description: z.string().max(1000),

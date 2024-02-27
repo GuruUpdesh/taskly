@@ -2,8 +2,6 @@
 
 import React from "react";
 
-
-
 import { TrashIcon } from "@radix-ui/react-icons";
 import { Icon } from "@radix-ui/react-select";
 import { ChevronDown } from "lucide-react";

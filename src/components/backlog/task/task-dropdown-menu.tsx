@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 import type { UseMutationResult } from "@tanstack/react-query";
 import { Priority, useRegisterActions } from "kbar";
@@ -15,15 +15,20 @@ import {
 	ContextMenuTrigger,
 } from "~/components/ui/context-menu";
 import type { Task } from "~/server/db/schema";
-
+import { useAppStore } from "~/store/app";
 
 type Props = {
 	task: Task;
 	children: React.ReactNode;
-	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
+	deleteTaskMutation?: UseMutationResult<void, Error, number, unknown>;
 };
 
 const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
+	const [hoveredTaskId, setHoveredTaskId] = useAppStore((state) => [
+		state.hoveredTaskId,
+		state.setHoveredTaskId,
+	]);
+
 	const actions = [
 		{
 			id: "delete",
@@ -31,6 +36,7 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 			icon: <Trash2Icon className="h-4 w-4" />,
 			shortcut: ["d"],
 			perform: () => {
+				if (!deleteTaskMutation) return;
 				deleteTaskMutation.mutate(task.id);
 				toast.warning("Task deleted");
 			},
@@ -39,14 +45,17 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 		},
 	];
 
-	// todo move this to the backlog
-	const [isHovered, setIsHovered] = useState(false);
-
-	useRegisterActions(isHovered ? actions : [], [isHovered, actions]);
+	useRegisterActions(hoveredTaskId === task.id ? actions : [], [
+		hoveredTaskId,
+		actions,
+	]);
 
 	return (
 		<ContextMenu>
-			<ContextMenuTrigger asChild onMouseEnter={() => setIsHovered(true)}>
+			<ContextMenuTrigger
+				asChild
+				onMouseEnter={() => setHoveredTaskId(task.id)}
+			>
 				{children}
 			</ContextMenuTrigger>
 			<ContextMenuContent className="bg-accent/50 backdrop-blur-sm">

@@ -23,8 +23,8 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { type StatefulTask } from "~/config/task-entity";
 import {
+	type StatefulTask,
 	buildValidator,
 	defaultValues,
 	getPropertyConfig,
@@ -41,18 +41,16 @@ import {
 import { useNavigationStore } from "~/store/navigation";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
-
-
 import PropertySelect from "./task/property/propery-select";
 
 type FormProps = {
-	onSubmit: (newTask: FormType) => void;
-	form: UseFormReturn<FormType, undefined>;
+	onSubmit: (newTask: TaskFormType) => void;
+	form: UseFormReturn<TaskFormType, undefined>;
 	assignees: User[];
 	sprints: Sprint[];
 };
 
-const formSchema = buildValidator([
+export const taskFormSchema = buildValidator([
 	"projectId",
 	"title",
 	"description",
@@ -64,22 +62,23 @@ const formSchema = buildValidator([
 	"sprintId",
 	"backlogOrder",
 	"boardOrder",
-]).refine((data) => !(data.status === "backlog" && data.sprintId !== "-1"), {
-	message: "If the status is backlog, there cannot be a sprint.",
-})
-.refine((data) => !(data.sprintId !== "-1" && data.status === "backlog"), {
-	message: "If a sprint is selected, the status cannot be backlog.",
-});
+])
+	.refine((data) => !(data.status === "backlog" && data.sprintId !== "-1"), {
+		message: "If the status is backlog, there cannot be a sprint.",
+	})
+	.refine((data) => !(data.sprintId !== "-1" && data.status === "backlog"), {
+		message: "If a sprint is selected, the status cannot be backlog.",
+	});
 
-export type FormType = Omit<NewTask, "sprintId"> & { sprintId: string };
+export type TaskFormType = Omit<NewTask, "sprintId"> & { sprintId: string };
 
 const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 	const project = useNavigationStore((state) => state.currentProject);
 
 	// Framer motion transition
 	const transition = {
-		opacity: { ease: [0.075, 0.82, 0.165, 1] },
-		layout: { duration: 0.1 },
+		duration: 0.2,
+		ease: [0.075, 0.82, 0.165, 1],
 	};
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -118,10 +117,7 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 				rows={2}
 				{...form.register("description")}
 			/>
-			<motion.div
-				layout
-				layoutRoot
-				transition={transition}
+			<div
 				className={cn(
 					"flex gap-2",
 					isLoading ? "pointer-events-none opacity-50" : "",
@@ -130,8 +126,9 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 			>
 				{form.watch("description") && project?.isAiEnabled ? (
 					<motion.div
-						layout
-						className="h-[30px]"
+						className="h-[30px] origin-left"
+						initial={{ opacity: 0, scaleX: 0 }}
+						animate={{ opacity: 1, scaleX: 1 }}
 						transition={transition}
 					>
 						<Button
@@ -162,28 +159,22 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 					);
 					if (config.type === "enum" || config.type === "dynamic")
 						return (
-							<motion.div
-								key={config.key}
-								layout
-								transition={transition}
-								className="flex-1"
-							>
-								<PropertySelect
-									config={config}
-									form={form}
-									onSubmit={onSubmit}
-									autoSubmit={false}
-									
-									size={
-										["sprintId", "assignee", "priority", "points"].includes(config.key)
-											? "icon"
-											: "default"
-									}
-								/>
-							</motion.div>
+							<PropertySelect
+								config={config}
+								form={form}
+								onSubmit={onSubmit}
+								autoSubmit={false}
+								size={
+									["sprintId", "assignee", "points"].includes(
+										config.key,
+									)
+										? "icon"
+										: "default"
+								}
+							/>
 						);
 				})}
-			</motion.div>
+			</div>
 		</form>
 	);
 };
@@ -200,7 +191,7 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 	const project = useNavigationStore((state) => state.currentProject);
 
 	const addTaskMutation = useMutation({
-		mutationFn: ({ data }: { data: FormType }) => createTask(data),
+		mutationFn: ({ data }: { data: TaskFormType }) => createTask(data),
 		onMutate: async ({ data }) => {
 			await queryClient.cancelQueries({ queryKey: ["tasks"] });
 
@@ -235,8 +226,8 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 		},
 	});
 
-	const form = useForm<FormType>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<TaskFormType>({
+		resolver: zodResolver(taskFormSchema),
 		defaultValues: {
 			title: defaultValues.title,
 			description: defaultValues.description,
@@ -257,16 +248,38 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 		const sprintId = form.watch("sprintId");
 		const status = form.watch("status");
 		if (status === "backlog" && sprintId !== "-1") {
-			form.setValue("sprintId", "-1");
+			form.setValue("status", "todo", {
+				shouldDirty: true,
+				shouldValidate: true,
+			});
 		} else if (status !== "backlog" && sprintId === "-1") {
-			form.setValue("sprintId", `${getCurrentSprintId(sprints)}`);
+			form.setValue("status", "backlog", {
+				shouldDirty: true,
+				shouldValidate: true,
+			});
 		}
-	}, [form.watch("sprintId"), form.watch("status")]);
+	}, [form.watch("sprintId")]);
+
+	useEffect(() => {
+		const sprintId = form.watch("sprintId");
+		const status = form.watch("status");
+		if (status === "backlog" && sprintId !== "-1") {
+			form.setValue("sprintId", "-1", {
+				shouldDirty: true,
+				shouldValidate: true,
+			});
+		} else if (status !== "backlog" && sprintId === "-1") {
+			form.setValue("sprintId", `${getCurrentSprintId(sprints)}`, {
+				shouldDirty: true,
+				shouldValidate: true,
+			});
+		}
+	}, [form.watch("status")]);
 
 	useValidationErrors(form.formState.errors);
 
-	function handleSubmit(newTask: FormType) {
-		console.log(`🌱 Create Task >`, newTask)
+	function handleSubmit(newTask: TaskFormType) {
+		console.log(`🌱 Create Task >`, newTask);
 		addTaskMutation.mutate({ data: newTask });
 	}
 

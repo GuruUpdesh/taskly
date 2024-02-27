@@ -82,6 +82,7 @@
 		"tailwindcss-animate": "^1.0.7",
 		"uploadthing": "^6.4.1",
 		"zod": "^3.22.4",
+		"zod-validation-error": "^3.0.2",
 		"zustand": "^4.4.7"
 	},
 	"devDependencies": {

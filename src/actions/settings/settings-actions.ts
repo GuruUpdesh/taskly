@@ -19,7 +19,6 @@ import {
 import { authenticate } from "../security/authenticate";
 import { checkPermissions } from "../security/permissions";
 
-
 export async function handleProjectInfo(
 	projectId: number,
 	updatedValues: Partial<Project>,

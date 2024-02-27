@@ -14,7 +14,6 @@ import {
 import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 
-
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export async function initAction() {}

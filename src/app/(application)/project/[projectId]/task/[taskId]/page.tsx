@@ -4,8 +4,6 @@ import {
 	dehydrate,
 } from "@tanstack/react-query";
 
-import { getAssigneesForProject } from "~/actions/application/project-actions";
-import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { getTask } from "~/actions/application/task-actions";
 import Task from "~/components/task/Task";
 
@@ -19,9 +17,6 @@ type Params = {
 export default async function TaskPage({
 	params: { taskId, projectId },
 }: Params) {
-	const assignees = await getAssigneesForProject(parseInt(projectId));
-	const sprints = await getSprintsForProject(parseInt(projectId));
-
 	// Prefetch task using react-query
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
@@ -32,7 +27,7 @@ export default async function TaskPage({
 	return (
 		<div className="max-h-screen overflow-y-scroll">
 			<HydrationBoundary state={dehydrate(queryClient)}>
-				<Task taskId={taskId} assignees={assignees} sprints={sprints} />
+				<Task taskId={taskId} projectId={projectId} />
 			</HydrationBoundary>
 		</div>
 	);

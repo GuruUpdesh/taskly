@@ -1,11 +1,7 @@
 "use client";
 
-// hooks
 import React from "react";
 
-// ui
-
-// utils
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { ChevronDown } from "lucide-react";
 import { Controller, type UseFormReturn } from "react-hook-form";
@@ -19,14 +15,16 @@ import {
 } from "~/components/ui/select";
 import { type getPropertyConfig, taskVariants } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
-import { type NewTask } from "~/server/db/schema";
+
+import { type TaskFormType } from "../../create-task";
 
 type DataCellProps = {
 	config: ReturnType<typeof getPropertyConfig>;
-	form: UseFormReturn<NewTask>;
-	onSubmit: (newTask: NewTask) => void;
+	form: UseFormReturn<TaskFormType>;
+	onSubmit: (newTask: TaskFormType) => void;
 	size?: "default" | "icon";
 	autoSubmit?: boolean;
+	className?: string;
 };
 
 function PropertySelect({
@@ -35,13 +33,14 @@ function PropertySelect({
 	onSubmit,
 	size = "default",
 	autoSubmit = true,
+	className = "",
 }: DataCellProps) {
 	// Ensures any value is returned as a string
 	const stringifyValue = (value: string | number | null): string => {
 		if (value === null || value === undefined) {
 			console.warn("PropertySelect: Value is null or undefined");
-			return "unknown"
-		};
+			return "unknown";
+		}
 		return value.toString();
 	};
 
@@ -64,7 +63,7 @@ function PropertySelect({
 	}
 
 	return (
-		<div className="flex items-center justify-center">
+		<div className={cn("flex items-center justify-center", className)}>
 			<Controller
 				control={form.control}
 				name={config.key}
@@ -85,12 +84,12 @@ function PropertySelect({
 								className={cn(
 									"h-min",
 									size === "icon"
-										? "aspect-square justify-center !p-1.5 max-h-[30px]"
+										? "aspect-square max-h-[30px] w-[30px] justify-center !p-1.5"
 										: "",
-										taskVariants({
-											color: option?.color,
-											hover: true,
-										}),
+									taskVariants({
+										color: option?.color,
+										hover: true,
+									}),
 									"flex items-center space-x-2 whitespace-nowrap rounded-sm py-1 pl-2 pr-3",
 								)}
 							>
@@ -118,7 +117,6 @@ function PropertySelect({
 											taskVariants({
 												color: option.color,
 												hover: true,
-												context: "menu",
 											}),
 											"flex items-center space-x-2 whitespace-nowrap rounded-sm border py-1 pl-2 pr-3",
 											"border-none bg-transparent !pl-2",

@@ -11,8 +11,6 @@ import { useAppStore } from "~/store/app";
 import FilterChip from "./filter-chip";
 import FilterMenu from "./filter-menu";
 
-
-
 const filterContainer =
 	"rounded-full border bg-accent/25 p-1 transition-all hover:bg-accent";
 

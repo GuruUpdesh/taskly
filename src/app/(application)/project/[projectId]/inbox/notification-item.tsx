@@ -7,7 +7,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { Separator } from "~/components/ui/separator";
 import { cn } from "~/lib/utils";
 
-
 type Props = {
 	id: string;
 };

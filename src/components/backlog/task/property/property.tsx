@@ -3,26 +3,28 @@ import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 
 import { type getPropertyConfig } from "~/config/TaskConfigType";
-import type { NewTask } from "~/server/db/schema";
 
 import PropertyStatic from "./property-static";
 import PropertySelect from "./propery-select";
+import { type TaskFormType } from "../../create-task";
 
 type Props = {
-	config: ReturnType<typeof getPropertyConfig>
-	form: UseFormReturn<NewTask>;
-	onSubmit: (newTask: NewTask) => void;
+	config: ReturnType<typeof getPropertyConfig>;
+	form: UseFormReturn<TaskFormType>;
+	onSubmit: (newTask: TaskFormType) => void;
 	size: "default" | "icon";
+	className?: string;
 };
 
-function Property({
-	config,
-	form,
-	onSubmit,
-	size,
-}: Props) {
+function Property({ config, form, onSubmit, size, className = "" }: Props) {
 	if (config.type === "text") {
-		return <PropertyStatic form={form} property={config.key} />;
+		return (
+			<PropertyStatic
+				form={form}
+				property={config.key}
+				className={className}
+			/>
+		);
 	}
 
 	if (config.type === "enum" || config.type === "dynamic") {
@@ -32,6 +34,7 @@ function Property({
 				config={config}
 				onSubmit={onSubmit}
 				size={size}
+				className={className}
 			/>
 		);
 	}

@@ -14,6 +14,7 @@ import _ from "lodash";
 import {
 	Activity,
 	AlertOctagon,
+	ArrowUpDown,
 	Asterisk,
 	Beaker,
 	BugIcon,
@@ -409,7 +410,7 @@ export const taskConfig: TaskConfig = {
 	priority: {
 		key: "priority",
 		displayName: "Priority",
-		icon: <Dot />,
+		icon: <ArrowUpDown className="h-4 w-4" />,
 		type: "enum",
 		options: [
 			{
@@ -576,7 +577,6 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 	return config;
 }
 
-
 // Implementation
 export function getPropertyConfig(
 	property: TaskProperty,
@@ -675,3 +675,12 @@ export const defaultValues = {
 	lastEditedAt: new Date(),
 	insertedDate: new Date(),
 } as const;
+
+type TaskOptions = {
+	isPending?: boolean;
+	isNew?: boolean;
+};
+
+export interface StatefulTask extends Task {
+	options: TaskOptions;
+}

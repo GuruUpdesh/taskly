@@ -4,13 +4,13 @@ import { auth } from "@clerk/nextjs";
 import { and, eq, gt, max, ne, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { fromZodError } from "zod-validation-error";
 
-import { type FormType as CreateTaskData } from "~/components/backlog/create-task";
-import { type StatefulTask } from "~/config/task-entity";
-import { schemaValidators } from "~/config/TaskConfigType";
+import { type TaskFormType as CreateTaskData } from "~/components/backlog/create-task";
+import { type StatefulTask, schemaValidators } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
-import { tasks, insertTaskSchema__required } from "~/server/db/schema";
-import { type Task, type NewTask } from "~/server/db/schema";
+import { tasks } from "~/server/db/schema";
+import { type Task } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 
 import {
@@ -18,23 +18,23 @@ import {
 	updateOrInsertTaskView,
 } from "./task-views-actions";
 
-
+const CreateTaskSchema = z.object({
+	title: schemaValidators.title,
+	description: schemaValidators.description,
+	status: schemaValidators.status,
+	points: schemaValidators.points,
+	priority: schemaValidators.priority,
+	type: schemaValidators.type,
+	assignee: schemaValidators.assignee.transform((val) =>
+		val === "unassigned" ? null : val,
+	),
+	projectId: schemaValidators.projectId,
+	sprintId: schemaValidators.sprintId.transform((val) => parseInt(val)),
+	backlogOrder: schemaValidators.backlogOrder,
+	boardOrder: schemaValidators.boardOrder,
+});
 
 export async function createTask(data: CreateTaskData) {
-	const CreateTaskSchema = z.object({
-		title: schemaValidators.title,
-		description: schemaValidators.description,
-		status: schemaValidators.status,
-		points: schemaValidators.points,
-		priority: schemaValidators.priority,
-		type: schemaValidators.type,
-		assignee: schemaValidators.assignee,
-		projectId: schemaValidators.projectId,
-		sprintId: schemaValidators.sprintId.transform((val) => parseInt(val)),
-		backlogOrder: schemaValidators.backlogOrder,
-		boardOrder: schemaValidators.boardOrder,
-	})
-
 	try {
 		const newTask = CreateTaskSchema.parse(data);
 
@@ -50,11 +50,18 @@ export async function createTask(data: CreateTaskData) {
 		) {
 			newTask.backlogOrder = maxBacklogOrder[0].backlogOrder + 1;
 			newTask.boardOrder = maxBacklogOrder[0].backlogOrder + 1;
+		} else {
+			newTask.backlogOrder = 0;
+			newTask.boardOrder = 0;
 		}
 
 		await db.insert(tasks).values(newTask);
 		revalidatePath("/");
 	} catch (error) {
+		if (error instanceof z.ZodError) {
+			const validationError = fromZodError(error);
+			if (validationError) throw Error(validationError.message);
+		}
 		console.error(error);
 		if (error instanceof Error) throwServerError(error.message);
 	}
@@ -128,9 +135,9 @@ export async function deleteTask(id: number) {
 	}
 }
 
-export async function updateTask(id: number, data: NewTask) {
+export async function updateTask(id: number, data: CreateTaskData) {
 	try {
-		const updatedTaskData = insertTaskSchema__required.parse(data);
+		const updatedTaskData = CreateTaskSchema.parse(data);
 		const currentTask = await db
 			.select()
 			.from(tasks)
@@ -140,19 +147,23 @@ export async function updateTask(id: number, data: NewTask) {
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
 
-		updatedTaskData.lastEditedAt = new Date();
+		const taskData = {
+			...updatedTaskData,
+			lastEditedAt: new Date(),
+		};
 
-		if (updatedTaskData.status === "backlog" && currTask.sprintId !== -1) {
-			updatedTaskData.sprintId = -1;
-		} else if (
-			updatedTaskData.sprintId !== -1 &&
-			updatedTaskData.status === "backlog"
-		) {
-			updatedTaskData.status = "todo";
+		if (taskData.status === "backlog" && currTask.sprintId !== -1) {
+			taskData.sprintId = -1;
+		} else if (taskData.sprintId !== -1 && taskData.status === "backlog") {
+			taskData.status = "todo";
 		}
-		await db.update(tasks).set(updatedTaskData).where(eq(tasks.id, id));
+		await db.update(tasks).set(taskData).where(eq(tasks.id, id));
 		revalidatePath("/");
 	} catch (error) {
+		if (error instanceof z.ZodError) {
+			const validationError = fromZodError(error);
+			if (validationError) throw Error(validationError.message);
+		}
 		if (error instanceof Error) throwServerError(error.message);
 	}
 }

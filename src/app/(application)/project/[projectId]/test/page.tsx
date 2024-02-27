@@ -26,23 +26,38 @@ async function TaskPage({ params: { projectId } }: Params) {
 						{taskProperties.map((key) => {
 							if (!taskProperties.includes(key)) return null;
 
-							const config = getPropertyConfig(key, assignees, sprints);
-							if (config.type !== "enum" && config.type !== "dynamic") return null;
+							const config = getPropertyConfig(
+								key,
+								assignees,
+								sprints,
+							);
+							if (
+								config.type !== "enum" &&
+								config.type !== "dynamic"
+							)
+								return null;
 
-							const options = config.options
-							
-							return <div key={key} className="flex flex-col items-center gap-2">
-								<h1 className="text-lg font-bold">{config.displayName}</h1>
-								{options.map((option) => {
-									return (
-										<TaskProperty 
-											key={option.key}
-											option={option}
-											size="default"
-										/>
-									);
-								})}  
-							</div>
+							const options = config.options;
+
+							return (
+								<div
+									key={key}
+									className="flex flex-col items-center gap-2"
+								>
+									<h1 className="text-lg font-bold">
+										{config.displayName}
+									</h1>
+									{options.map((option) => {
+										return (
+											<TaskProperty
+												key={option.key}
+												option={option}
+												size="default"
+											/>
+										);
+									})}
+								</div>
+							);
 						})}
 					</div>
 				);
