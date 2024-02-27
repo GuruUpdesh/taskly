@@ -12,7 +12,6 @@ import {
 
 import NotificationItem from "./notification-item";
 
-
 type Params = {
 	children: React.ReactNode;
 	params: {

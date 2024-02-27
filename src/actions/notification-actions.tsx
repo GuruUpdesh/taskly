@@ -1,8 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { db } from "~/server/db";
 import { eq, desc } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+
+import { db } from "~/server/db";
 import {
 	notifications,
 	insertNotificationSchema,

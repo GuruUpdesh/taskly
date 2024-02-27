@@ -131,7 +131,7 @@ export async function sendEmailInvites(
 	if (!invitees || invitees.length === 0) {
 		return {
 			status: false,
-			message: "No invites sent as no emails were provided",
+			message: "Skipping Invites",
 		};
 	}
 	const inviteToken = await createInvite(projectId);

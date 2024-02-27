@@ -1,9 +1,12 @@
 "use client";
 
 import React from "react";
-import SidebarButton from "../layout/sidebar/sidebar-button";
+
 import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
+
 import { useNavigationStore } from "~/store/navigation";
+
+import SidebarButton from "../layout/sidebar/sidebar-button";
 
 type Props = {
 	projectId: string;

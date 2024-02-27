@@ -317,7 +317,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 												>
 													<DragHandleDots2Icon
 														className={cn(
-															"absolute bottom-[50%] left-1 translate-y-[50%] opacity-0 group-hover:opacity-50",
+															"absolute bottom-[50%] left-0 translate-y-[50%] opacity-0 group-hover:opacity-50",
 															snapshot.isDragging &&
 																"opacity-100",
 														)}

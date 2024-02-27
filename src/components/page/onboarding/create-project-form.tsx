@@ -191,7 +191,16 @@ const CreateProjectForm = () => {
 				</StepButton>
 			</div>
 			<Form {...form}>
-				<form className="flex w-[600px] flex-col p-8">
+				<form
+					className="flex w-[600px] flex-col p-8"
+					onSubmit={(e) => {
+						e.preventDefault();
+						if (!isStepValid(formStep) || formStep > 4) {
+							return;
+						}
+						setFormStep((prev) => prev + 1);
+					}}
+				>
 					<Step visible={formStep === 1}>
 						<StepHeader
 							header="Create a Project"
@@ -218,7 +227,7 @@ const CreateProjectForm = () => {
 												className={cn(
 													"w-full rounded-md border px-4 py-2",
 												)}
-												autoFocus
+												autoFocus={true}
 												autoComplete="off"
 												hidden={formStep !== 1}
 											/>

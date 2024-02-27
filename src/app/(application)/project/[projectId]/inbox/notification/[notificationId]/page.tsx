@@ -1,7 +1,9 @@
 import React from "react";
+
+import { redirect } from "next/navigation";
+
 import { getNotification } from "~/actions/notification-actions";
 import { TaskWrapper } from "~/components/task/TaskWrapper";
-import { redirect } from "next/navigation";
 import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
 
 type Params = {

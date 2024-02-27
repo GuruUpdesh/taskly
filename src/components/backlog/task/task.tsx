@@ -133,7 +133,7 @@ const Task = ({
 				<div
 					key={groupIdx}
 					className={cn({
-						"flex flex-shrink items-center gap-2 first:min-w-0 first:flex-grow first:pl-8 last:pr-8":
+						"flex flex-shrink items-center gap-2 first:min-w-0 first:flex-grow first:pl-4 last:pr-4":
 							variant === "backlog",
 						"flex w-full flex-col gap-2": variant === "list",
 					})}
