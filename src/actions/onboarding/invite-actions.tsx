@@ -97,6 +97,7 @@ export async function joinProject(token: string) {
 			projectId: inviteData.projectId,
 			userRole: "member",
 		});
+
 		return {
 			success: true,
 			message: "You have successfully joined this project",

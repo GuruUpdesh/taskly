@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs";
 import { and, eq, gt, max, ne, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -9,7 +9,7 @@ import { fromZodError } from "zod-validation-error";
 import { type TaskFormType as CreateTaskData } from "~/components/backlog/create-task";
 import { type StatefulTask, schemaValidators } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
-import { tasks } from "~/server/db/schema";
+import { tasks, users } from "~/server/db/schema";
 import { type Task } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 
@@ -17,6 +17,7 @@ import {
 	deleteViewsForTask,
 	updateOrInsertTaskView,
 } from "./task-views-actions";
+import { createNotification } from "../notification-actions";
 
 const CreateTaskSchema = z.object({
 	title: schemaValidators.title,
@@ -55,7 +56,24 @@ export async function createTask(data: CreateTaskData) {
 			newTask.boardOrder = 0;
 		}
 
-		await db.insert(tasks).values(newTask);
+		const task = await db.insert(tasks).values(newTask);
+
+		if (newTask.assignee) {
+			const assignee = await db
+				.select()
+				.from(users)
+				.where(eq(users.username, newTask.assignee ?? ""))
+				.limit(1);
+
+			await createNotification({
+				date: new Date(),
+				message: `Task "${newTask.title}" was created and assigned to you.`,
+				userId: assignee[0]?.userId ?? "unknown user",
+				taskId: parseInt(task.insertId),
+				projectId: newTask.projectId,
+			});
+		}
+
 		revalidatePath("/");
 	} catch (error) {
 		if (error instanceof z.ZodError) {
@@ -137,6 +155,7 @@ export async function deleteTask(id: number) {
 
 export async function updateTask(id: number, data: CreateTaskData) {
 	try {
+		const user = await currentUser();
 		const updatedTaskData = CreateTaskSchema.parse(data);
 		const currentTask = await db
 			.select()
@@ -146,6 +165,21 @@ export async function updateTask(id: number, data: CreateTaskData) {
 		if (!currTask) return;
 		if (updatedTaskData.assignee === "unassigned")
 			updatedTaskData.assignee = null;
+		else if (user?.username !== updatedTaskData.assignee) {
+			const assignee = await db
+				.select()
+				.from(users)
+				.where(eq(users.username, updatedTaskData.assignee ?? ""))
+				.limit(1);
+
+			await createNotification({
+				date: new Date(),
+				message: `Task "${updatedTaskData.title}" was assigned to you.`,
+				userId: assignee[0]?.userId ?? "unknown user",
+				taskId: id,
+				projectId: updatedTaskData.projectId,
+			});
+		}
 
 		const taskData = {
 			...updatedTaskData,

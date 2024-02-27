@@ -2,7 +2,6 @@ import React from "react";
 
 import {
 	HomeIcon,
-	EnvelopeClosedIcon,
 	GearIcon,
 	ReaderIcon,
 	DashboardIcon,
@@ -11,6 +10,7 @@ import {
 	MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 
+import InboxSidebarButton from "~/components/inbox/InboxSidebarButton";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
@@ -64,18 +64,7 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 						icon={<DashboardIcon className="min-w-4" />}
 						url={`/project/${projectId}`}
 					/>
-					<SidebarButton
-						label="Inbox"
-						icon={
-							<div className="relative">
-								<div className="absolute -right-2 -top-2 rounded-full bg-accent px-1 text-xs">
-									1
-								</div>
-								<EnvelopeClosedIcon className="min-w-4" />
-							</div>
-						}
-						url={`/project/${projectId}/inbox`}
-					/>
+					<InboxSidebarButton projectId={projectId} />
 					<SidebarButton
 						label="Docs"
 						icon={<ReaderIcon className="min-w-4" />}
