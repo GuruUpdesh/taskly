@@ -684,3 +684,19 @@ type TaskOptions = {
 export interface StatefulTask extends Task {
 	options: TaskOptions;
 }
+
+export const CreateTaskSchema = z.object({
+	title: schemaValidators.title,
+	description: schemaValidators.description,
+	status: schemaValidators.status,
+	points: schemaValidators.points,
+	priority: schemaValidators.priority,
+	type: schemaValidators.type,
+	assignee: schemaValidators.assignee.transform((val) =>
+		val === "unassigned" ? null : val,
+	),
+	projectId: schemaValidators.projectId,
+	sprintId: schemaValidators.sprintId.transform((val) => parseInt(val)),
+	backlogOrder: schemaValidators.backlogOrder,
+	boardOrder: schemaValidators.boardOrder,
+});

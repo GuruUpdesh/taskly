@@ -7,7 +7,7 @@ import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 
 import { type TaskFormType as CreateTaskData } from "~/components/backlog/create-task";
-import { type StatefulTask, schemaValidators } from "~/config/TaskConfigType";
+import { type StatefulTask, schemaValidators, CreateTaskSchema } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
 import { tasks, users } from "~/server/db/schema";
 import { type Task } from "~/server/db/schema";
@@ -18,22 +18,6 @@ import {
 	updateOrInsertTaskView,
 } from "./task-views-actions";
 import { createNotification } from "../notification-actions";
-
-const CreateTaskSchema = z.object({
-	title: schemaValidators.title,
-	description: schemaValidators.description,
-	status: schemaValidators.status,
-	points: schemaValidators.points,
-	priority: schemaValidators.priority,
-	type: schemaValidators.type,
-	assignee: schemaValidators.assignee.transform((val) =>
-		val === "unassigned" ? null : val,
-	),
-	projectId: schemaValidators.projectId,
-	sprintId: schemaValidators.sprintId.transform((val) => parseInt(val)),
-	backlogOrder: schemaValidators.backlogOrder,
-	boardOrder: schemaValidators.boardOrder,
-});
 
 export async function createTask(data: CreateTaskData) {
 	try {

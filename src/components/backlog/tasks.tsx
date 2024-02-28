@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import {
 	DragDropContext,
@@ -94,7 +94,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		}
 
 		return newTasks;
-	}
+	} 
 
 	const result = useQuery({
 		queryKey: ["tasks"],
@@ -224,19 +224,6 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		);
 	}, [groupBy]);
 
-	const router = useRouter();
-	useRegisterActions(
-		result?.data?.map((task, idx) => ({
-			id: String(task.id),
-			name: task.title,
-			icon: <TaskStatus status={task.status} />,
-			shortcut: idx + 1 < 10 ? ["t", String(idx + 1)] : [],
-			perform: () => router.push(`/project/${projectId}/task/${task.id}`),
-			section: "Tasks",
-		})) ?? [],
-		[result.data],
-	);
-
 	if (!result.data) return <div>Loading...</div>;
 
 	if (taskOrder.length === 0)
@@ -253,30 +240,14 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
-			{["tasks"].map((group) => {
-				const tasks = result.data;
-				if (!tasks || config?.type === "text") return null;
-				const option = getEnumOptionByKey(group);
-
-				return (
-					<Droppable droppableId={group} key={group}>
+					<Droppable droppableId="tasks">
 						{(provided: DroppableProvided) => (
 							<div
 								{...provided.droppableProps}
 								ref={provided.innerRef}
 							>
-								{groupBy && option && (
-									<div
-										className={cn(
-											"pointer-events-none flex items-center gap-1 p-1 px-4",
-										)}
-									>
-										{option.icon}
-										{option.displayName}
-									</div>
-								)}
 								{taskOrder.map((taskId, idx) => {
-									const task = tasks.find(
+									const task = result.data?.find(
 										(task) => task.id === taskId,
 									);
 
@@ -292,7 +263,6 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 										>
 											{(
 												provided: DraggableProvided,
-												// eslint-disable-next-line @typescript-eslint/no-unused-vars
 												snapshot: DraggableStateSnapshot,
 											) => (
 												<div
@@ -342,8 +312,6 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 							</div>
 						)}
 					</Droppable>
-				);
-			})}
 		</DragDropContext>
 	);
 }

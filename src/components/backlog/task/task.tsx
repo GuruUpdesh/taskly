@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";
@@ -34,6 +34,32 @@ const taskVariants = cva(["flex items-center gap-2"], {
 
 type VariantPropsType = VariantProps<typeof taskVariants>;
 
+const backlogOrder = [
+	[
+		{ key: "priority", size: "icon" },
+		{ key: "points", size: "icon" },
+		{ key: "status", size: "icon" },
+		{ key: "title", size: "default" },
+		{ key: "description", size: "icon" },
+	],
+	[
+		{ key: "type", size: "default" },
+		{ key: "assignee", size: "icon" },
+		{ key: "sprintId", size: "icon" },
+	],
+] as { key: TaskProperty; size: "default" | "icon" }[][];
+
+const listOrder = [
+	[
+		{ key: "priority", size: "default" },
+		{ key: "points", size: "default" },
+		{ key: "status", size: "default" },
+		{ key: "type", size: "default" },
+		{ key: "assignee", size: "default" },
+		{ key: "sprintId", size: "default" },
+	],
+] as { key: TaskProperty; size: "default" | "icon" }[][];
+
 interface Props extends VariantPropsType {
 	task: TaskType;
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
@@ -64,10 +90,10 @@ const Task = ({
 			points: task.points,
 			sprintId: String(task.sprintId),
 			projectId: parseInt(projectId),
-			backlogOrder: 1000000,
-			boardOrder: 1000000,
+			backlogOrder: task.backlogOrder,
+			boardOrder: task.boardOrder,
 		};
-	}, [task]);
+	}, [JSON.stringify(task)]);
 
 	const form = useForm<TaskFormType>({
 		resolver: zodResolver(taskFormSchema),
@@ -76,33 +102,7 @@ const Task = ({
 
 	useEffect(() => {
 		form.reset(defaultValues);
-	}, [JSON.stringify(task), defaultValues]);
-
-	const backlogOrder = [
-		[
-			{ key: "priority", size: "icon" },
-			{ key: "points", size: "icon" },
-			{ key: "status", size: "icon" },
-			{ key: "title", size: "default" },
-			{ key: "description", size: "icon" },
-		],
-		[
-			{ key: "type", size: "default" },
-			{ key: "assignee", size: "icon" },
-			{ key: "sprintId", size: "icon" },
-		],
-	] as { key: TaskProperty; size: "default" | "icon" }[][];
-
-	const listOrder = [
-		[
-			{ key: "priority", size: "default" },
-			{ key: "points", size: "default" },
-			{ key: "status", size: "default" },
-			{ key: "type", size: "default" },
-			{ key: "assignee", size: "default" },
-			{ key: "sprintId", size: "default" },
-		],
-	] as { key: TaskProperty; size: "default" | "icon" }[][];
+	}, [defaultValues]);
 
 	function onSubmit(newTask: TaskFormType) {
 		newTask.projectId = task.projectId;
@@ -127,7 +127,7 @@ const Task = ({
 		});
 	}
 
-	function renderProperties() {
+	const renderProperties = useCallback(() => {
 		return (variant === "backlog" ? backlogOrder : listOrder).map(
 			(group, groupIdx) => (
 				<div
@@ -177,7 +177,7 @@ const Task = ({
 				</div>
 			),
 		);
-	}
+	}, [JSON.stringify(task), variant]) 
 
 	if (variant === "list") {
 		return (
