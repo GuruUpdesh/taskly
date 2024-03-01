@@ -110,12 +110,7 @@ export async function removeUserFromProject(projectId: number, userId: string) {
 	await db
 		.update(tasks)
 		.set({ assignee: null })
-		.where(
-			and(
-				eq(tasks.projectId, projectId),
-				eq(tasks.assignee, String(userId)),
-			),
-		);
+		.where(and(eq(tasks.projectId, projectId), eq(tasks.assignee, userId)));
 
 	if (activeUserId !== userId) {
 		revalidatePath("/");
