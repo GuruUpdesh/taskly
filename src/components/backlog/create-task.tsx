@@ -38,6 +38,7 @@ import {
 	type Task,
 	type User,
 } from "~/server/db/schema";
+import { useAppStore } from "~/store/app";
 import { useNavigationStore } from "~/store/navigation";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
@@ -181,11 +182,13 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 
 type Props = {
 	projectId: string;
-	assignees: User[];
-	sprints: Sprint[];
 };
 
-const CreateTask = ({ projectId, assignees, sprints }: Props) => {
+const CreateTask = ({ projectId }: Props) => {
+	const [assignees, sprints] = useAppStore((state) => [
+		state.assignees,
+		state.sprints,
+	]);
 	const [open, setOpen] = useState(false);
 	const queryClient = useQueryClient();
 	const project = useNavigationStore((state) => state.currentProject);
@@ -193,29 +196,37 @@ const CreateTask = ({ projectId, assignees, sprints }: Props) => {
 	const addTaskMutation = useMutation({
 		mutationFn: ({ data }: { data: TaskFormType }) => createTask(data),
 		onMutate: async ({ data }) => {
-			await queryClient.cancelQueries({ queryKey: ["tasks"] });
+			await queryClient.cancelQueries({ queryKey: ["tasks", projectId] });
 
-			const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);
-
-			queryClient.setQueryData<StatefulTask[]>(["tasks"], (old) => [
-				...(old ?? []),
-				{
-					...data,
-					sprintId: parseInt(data.sprintId),
-					backlogOrder: 1000000,
-					projectId: parseInt(projectId),
-					id: -1,
-					options: {
-						isPending: true,
-					},
-				},
+			const previousTasks = queryClient.getQueryData<Task[]>([
+				"tasks",
+				projectId,
 			]);
+
+			queryClient.setQueryData<StatefulTask[]>(
+				["tasks", projectId],
+				(old) => [
+					...(old ?? []),
+					{
+						...data,
+						sprintId: parseInt(data.sprintId),
+						backlogOrder: 1000000,
+						projectId: parseInt(projectId),
+						id: -1,
+						options: {
+							isPending: true,
+						},
+					},
+				],
+			);
 			setOpen(false);
 
 			return { previousTasks };
 		},
 		onSuccess: async () => {
-			await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+			await queryClient.invalidateQueries({
+				queryKey: ["tasks", projectId],
+			});
 			toast.success("Task created successfully!");
 			setOpen(false);
 			form.reset();

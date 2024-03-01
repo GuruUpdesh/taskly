@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 
 import { PlusIcon } from "@radix-ui/react-icons";
 import { ChevronsUpDown } from "lucide-react";
@@ -24,6 +24,7 @@ import {
 import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/utils";
 import type { Project } from "~/server/db/schema";
+import { useNavigationStore } from "~/store/navigation";
 
 type Props = {
 	projects: Project[];
@@ -31,11 +32,19 @@ type Props = {
 };
 
 const ProjectCombobox = ({ projects, projectId }: Props) => {
+	const currentProject = useNavigationStore((state) => state.currentProject);
 	const [open, setOpen] = React.useState(false);
 
-	const project = projects.find(
-		(project) => String(project.id) === projectId,
-	);
+	const project = useMemo(() => {
+		const foundProject = projects.find(
+			(project) => String(project.id) === projectId,
+		);
+		if (foundProject?.id === currentProject?.id) {
+			return currentProject;
+		} else {
+			return foundProject;
+		}
+	}, [projects, projectId, currentProject]);
 
 	const buttonRef = useRef<HTMLButtonElement>(null);
 

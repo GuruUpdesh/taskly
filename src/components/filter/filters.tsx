@@ -31,7 +31,10 @@ const Filters = () => {
 			animate={isFiltersOpen ? "open" : "closed"}
 			variants={variants}
 			transition={{ duration: 0.2, ease: [0.075, 0.82, 0.165, 1] }}
-			className="sticky top-[57px] z-50 bg-background/75 backdrop-blur-xl"
+			className={cn(
+				"sticky top-[57px] z-50 bg-background/75 backdrop-blur-xl",
+				{ "pointer-events-none": !isFiltersOpen },
+			)}
 		>
 			<div className="flex flex-wrap items-center gap-2 bg-gradient-to-b from-accent/25 to-transparent px-4 py-2 text-muted-foreground">
 				{filters.map((filter, idx) => (

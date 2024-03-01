@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { type NotificationWithTask } from "~/actions/notification-actions";
 import { type TaskProperty } from "~/config/TaskConfigType";
 import { type Sprint, type User } from "~/server/db/schema";
 
@@ -17,6 +18,8 @@ interface AppState {
 	updateAssignees: (assignees: User[]) => void;
 	sprints: Sprint[];
 	updateSprints: (sprints: Sprint[]) => void;
+	notifications: NotificationWithTask[];
+	updateNotifications: (notifications: NotificationWithTask[]) => void;
 	filters: Filter[];
 	updateFilters: (filters: Filter[]) => void;
 	addFilter: (filter: Filter) => void;
@@ -35,18 +38,20 @@ const useAppStore = create<AppState>()(
 			toggleFilters: () =>
 				set((state) => ({ isFiltersOpen: !state.isFiltersOpen })),
 			assignees: [],
-			updateAssignees: (assignees: User[]) => set({ assignees }),
+			updateAssignees: (assignees) => set({ assignees }),
 			sprints: [],
-			updateSprints: (sprints: Sprint[]) => set({ sprints }),
+			updateSprints: (sprints) => set({ sprints }),
+			notifications: [],
+			updateNotifications: (notifications) => set({ notifications }),
 			filters: [],
-			updateFilters: (filters: Filter[]) => set({ filters }),
-			addFilter: (filter: Filter) =>
+			updateFilters: (filters) => set({ filters }),
+			addFilter: (filter) =>
 				set((state) => ({ filters: [...state.filters, filter] })),
-			deleteFilter: (filter: Filter) =>
+			deleteFilter: (filter) =>
 				set((state) => ({
 					filters: state.filters.filter((f) => f !== filter),
 				})),
-			updateFilter: (oldFilter: Filter, filter: Filter) =>
+			updateFilter: (oldFilter, filter) =>
 				set((state) => {
 					const filters = [...state.filters];
 					const index = filters.findIndex((f) => f === oldFilter);

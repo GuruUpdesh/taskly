@@ -46,14 +46,7 @@ export default async function InboxLayout({ children }: Params) {
 							Inbox
 						</h3>
 						<div className="flex gap-2">
-							<InboxButtons
-								notificationCount={
-									notifications.filter(
-										(n) => n.readAt === null,
-									).length
-								}
-								user={user.id}
-							/>
+							<InboxButtons user={user.id} />
 						</div>
 					</header>
 					<section className="flex flex-col gap-2 py-2">

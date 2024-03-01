@@ -1,28 +1,18 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 
 import {
 	deleteAllNotifications,
 	readAllNotifications,
 } from "~/actions/notification-actions";
 import { Button } from "~/components/ui/button";
-import { useNavigationStore } from "~/store/navigation";
 
 type Props = {
 	user: string;
-	notificationCount: number;
 };
 
-export default function InboxButtons({ user, notificationCount }: Props) {
-	const updateNotificationCount = useNavigationStore(
-		(state) => state.updateNotificationCount,
-	);
-
-	useEffect(() => {
-		updateNotificationCount(notificationCount);
-	}, [notificationCount]);
-
+export default function InboxButtons({ user }: Props) {
 	async function markAllAsRead(userId: string) {
 		await readAllNotifications(userId);
 	}

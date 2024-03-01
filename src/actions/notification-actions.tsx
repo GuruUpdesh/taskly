@@ -8,6 +8,8 @@ import {
 	notifications,
 	insertNotificationSchema,
 	type NewNotification,
+	type Task,
+	type Notification,
 } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 
@@ -41,6 +43,7 @@ export async function getNotification(notificationId: number) {
 	}
 }
 
+export type NotificationWithTask = Notification & { task: Task };
 export async function getAllNotifications(userId: string) {
 	try {
 		const allNotifications = await db.query.notifications.findMany({

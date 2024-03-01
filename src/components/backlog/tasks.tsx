@@ -26,7 +26,7 @@ import {
 import Task from "~/components/backlog/task/task";
 import Message from "~/components/general/message";
 import { cn } from "~/lib/utils";
-import type { Task as TaskType, User, Sprint } from "~/server/db/schema";
+import type { Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
 import { filterTasks } from "~/utils/filter";
 import { updateOrder } from "~/utils/order";
@@ -40,31 +40,21 @@ export type UpdateTask = {
 
 type Props = {
 	projectId: string;
-	assignees: User[];
-	sprints: Sprint[];
 };
 
 type TaskTypeOverride = Omit<TaskType, "sprintId"> & {
 	spintId: string;
 };
 
-export default function Tasks({ projectId, assignees, sprints }: Props) {
+export default function Tasks({ projectId }: Props) {
 	/**
-	 * Update the assignees and sprints in the store when they change
+	 * Get the assignees and sprints
 	 */
-	const [updateAssignees, updateSprints, filters] = useAppStore((state) => [
-		state.updateAssignees,
-		state.updateSprints,
+	const [assignees, sprints, filters] = useAppStore((state) => [
+		state.assignees,
+		state.sprints,
 		state.filters,
-		state.groupBy,
-		state.hoveredTaskId,
 	]);
-	useEffect(() => {
-		updateAssignees(assignees);
-	}, [assignees]);
-	useEffect(() => {
-		updateSprints(sprints);
-	}, [sprints]);
 
 	/**
 	 * Fetch the tasks from the server and handle optimistic updates
@@ -78,6 +68,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		if (newTasks) {
 			const previousTasks = queryClient.getQueryData<TaskType[]>([
 				"tasks",
+				projectId,
 			]);
 
 			newTasks = newTasks.map((task) => {
@@ -92,7 +83,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 	}
 
 	const result = useQuery({
-		queryKey: ["tasks"],
+		queryKey: ["tasks", projectId],
 		queryFn: () => refetch(),
 		staleTime: 6 * 1000,
 		refetchInterval: 6 * 1000,
@@ -102,12 +93,12 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		mutationFn: ({ id, newTask }: UpdateTask) => updateTask(id, newTask),
 		onMutate: async ({ id, newTask }) => {
 			console.log("onMutate > addTaskMutation");
-			await queryClient.cancelQueries({ queryKey: ["tasks"] });
+			await queryClient.cancelQueries({ queryKey: ["tasks", projectId] });
 			const previousTasks = queryClient.getQueryData<TaskType[]>([
 				"tasks",
 			]);
 			queryClient.setQueryData<TaskTypeOverride[]>(
-				["tasks"],
+				["tasks", projectId],
 				(old) =>
 					old?.map((task) =>
 						task.id === id ? { ...task, ...newTask } : task,
@@ -117,7 +108,10 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		},
 		onError: (err, _, context) => {
 			toast.error(err.message);
-			queryClient.setQueryData(["tasks"], context?.previousTasks);
+			queryClient.setQueryData(
+				["tasks", projectId],
+				context?.previousTasks,
+			);
 		},
 		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
 	});
@@ -126,52 +120,64 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		mutationFn: (id: number) => deleteTask(id),
 		onMutate: async (id) => {
 			console.log("onMutate > deleteTaskMutation");
-			await queryClient.cancelQueries({ queryKey: ["tasks"] });
+			await queryClient.cancelQueries({ queryKey: ["tasks", projectId] });
 			const previousTasks = queryClient.getQueryData<TaskType[]>([
 				"tasks",
 			]);
 			queryClient.setQueryData<TaskType[]>(
-				["tasks"],
+				["tasks", projectId],
 				(old) => old?.filter((task) => task.id !== id) ?? [],
 			);
 			return { previousTasks };
 		},
 		onError: (err, variables, context) => {
 			toast.error(err.message);
-			queryClient.setQueryData(["tasks"], context?.previousTasks);
+			queryClient.setQueryData(
+				["tasks", projectId],
+				context?.previousTasks,
+			);
 		},
-		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+		onSettled: () =>
+			queryClient.invalidateQueries({ queryKey: ["tasks", projectId] }),
 	});
 
 	const orderTasksMutation = useMutation({
 		mutationFn: (taskOrder: Map<number, number>) => updateOrder(taskOrder),
 		onMutate: async (taskOrder: Map<number, number>) => {
 			console.log("onMutate > orderTasksMutation");
-			await queryClient.cancelQueries({ queryKey: ["tasks"] });
+			await queryClient.cancelQueries({ queryKey: ["tasks", projectId] });
 
 			const previousTasks = queryClient.getQueryData<TaskType[]>([
 				"tasks",
+				projectId,
 			]);
 
-			queryClient.setQueryData<TaskType[]>(["tasks"], (oldTasks) => {
-				const updatedTasks =
-					oldTasks?.map((task) => {
-						const newOrder = taskOrder.get(task.id);
-						return newOrder !== undefined
-							? { ...task, backlogOrder: newOrder }
-							: task;
-					}) ?? [];
+			queryClient.setQueryData<TaskType[]>(
+				["tasks", projectId],
+				(oldTasks) => {
+					const updatedTasks =
+						oldTasks?.map((task) => {
+							const newOrder = taskOrder.get(task.id);
+							return newOrder !== undefined
+								? { ...task, backlogOrder: newOrder }
+								: task;
+						}) ?? [];
 
-				return updatedTasks;
-			});
+					return updatedTasks;
+				},
+			);
 
 			return { previousTasks };
 		},
 		onError: (err, variables, context) => {
 			toast.error(err.message);
-			queryClient.setQueryData(["tasks"], context?.previousTasks);
+			queryClient.setQueryData(
+				["tasks", projectId],
+				context?.previousTasks,
+			);
 		},
-		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+		onSettled: () =>
+			queryClient.invalidateQueries({ queryKey: ["tasks", projectId] }),
 	});
 
 	/**
@@ -185,7 +191,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 				.map((task) => task.id);
 			setTaskOrder(orderedIds);
 		}
-	}, [result.data]);
+	}, [result.data, assignees, sprints]);
 
 	function onDragEnd(dragResult: DropResult) {
 		const { source, destination } = dragResult;
