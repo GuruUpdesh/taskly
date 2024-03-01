@@ -2,7 +2,6 @@
 
 import OpenAI from "openai";
 
-import { type TaskFormType, taskFormSchema } from "~/components/backlog/create-task";
 import { env } from "~/env.mjs";
 import { type User, insertTaskSchema__required } from "~/server/db/schema";
 import { getTaskAiSchema } from "~/utils/ai-context";
@@ -114,10 +113,10 @@ export async function aiGenerateTask(description: string, projectId: number) {
 		"🤖 - Response received",
 		gptResponse.choices[0]?.message.content,
 	);
-	
+
 	const jsonString = gptResponse.choices[0]?.message.content;
-	const jsonStart = jsonString.indexOf('[');
-  	const jsonEnd = jsonString.lastIndexOf(']') + 1;
-  
+	const jsonStart = jsonString.indexOf("[");
+	const jsonEnd = jsonString.lastIndexOf("]") + 1;
+
 	return jsonString.substring(jsonStart, jsonEnd);
 }

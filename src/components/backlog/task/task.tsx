@@ -177,7 +177,7 @@ const Task = ({
 				</div>
 			),
 		);
-	}, [JSON.stringify(task), variant]) 
+	}, [JSON.stringify(task), variant]);
 
 	if (variant === "list") {
 		return (

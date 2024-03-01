@@ -2,10 +2,9 @@
 // @ts-check
 const { fontFamily } = require("tailwindcss/defaultTheme");
 const containerQueriesPlugin = require("@tailwindcss/container-queries");
-const { withUt } = require("uploadthing/tw");
 
 /** @type {import('tailwindcss').Config} */
-module.exports = withUt({
+module.exports = {
 	darkMode: ["class"],
 	content: [
 		"./pages/**/*.{ts,tsx}",
@@ -105,13 +104,13 @@ module.exports = withUt({
 					},
 				},
 				loadBackground: {
-          "0%": {
-            backgroundPosition: "left"
-          },
-          "100%": {
-            backgroundPosition: "right"
-          }
-        },
+					"0%": {
+						backgroundPosition: "left"
+					},
+					"100%": {
+						backgroundPosition: "right"
+					},
+       			},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
@@ -130,4 +129,4 @@ module.exports = withUt({
 		},
 	},
 	plugins: [require("tailwindcss-animate"), containerQueriesPlugin],
-});
+};

@@ -1,6 +1,7 @@
 "use server";
 
 // import { getAverageColor } from "fast-average-color-node";
+import { put } from "@vercel/blob";
 import { addMinutes, startOfDay } from "date-fns";
 import { eq } from "drizzle-orm";
 import OpenAI from "openai";
@@ -17,6 +18,7 @@ import {
 } from "~/server/db/schema";
 
 import { createInvite } from "./invite-actions";
+import { autoColor } from "../settings/settings-actions";
 
 type ProjectResponse = {
 	newProjectId: number;
@@ -102,18 +104,11 @@ export async function generateAndUpdateProjectImage(
 			return;
 		}
 
-		// //  get average color
-		// await getAverageColor(image).then(async (color: { hex: string }) => {
-		// 	const hex = color.hex;
-		// 	const vibrant = chroma(hex).darken(1).saturate(2).hex();
-		// 	// store project color in Redis
-		// 	await kv.set("project-color-" + projectId, vibrant);
-		// });
+		const color = await autoColor(image);
 
-		// update project image
 		await db
 			.update(projects)
-			.set({ image: image })
+			.set({ image: image, color: color })
 			.where(eq(projects.id, projectId));
 		console.log("Project image generated and updated successfully.");
 	} catch (error) {
@@ -173,7 +168,17 @@ export async function generateProjectImage(
 	}
 
 	console.log("🤖 - Finished generating image!");
-	return image_url;
+	const imageResponse = await (await fetch(image_url)).arrayBuffer();
+	const imageData = Buffer.from(imageResponse);
+	const filename = `project_image_generated_${Date.now()}.png`;
+	const blob = await put(filename, imageData, {
+		access: "public",
+		contentType: "image/png",
+	});
+
+	console.log("🤖 - Finished uploading image!", blob);
+
+	return blob.url;
 }
 
 async function imageGenerationHelper(

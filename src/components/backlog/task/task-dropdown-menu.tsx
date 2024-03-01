@@ -24,10 +24,10 @@ type Props = {
 };
 
 const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
-	// const [hoveredTaskId, setHoveredTaskId] = useAppStore((state) => [
-	// 	state.hoveredTaskId,
-	// 	state.setHoveredTaskId,
-	// ]);
+	const [hoveredTaskId, setHoveredTaskId] = useAppStore((state) => [
+		state.hoveredTaskId,
+		state.setHoveredTaskId,
+	]);
 
 	const actions = [
 		{
@@ -45,25 +45,21 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 		},
 	];
 
-	// useRegisterActions(hoveredTaskId === task.id ? actions : [], [
-	// 	hoveredTaskId,
-	// 	actions,
-	// ]);
-	
-	// () => setHoveredTaskId(task.id)
+	useRegisterActions(hoveredTaskId === task.id ? actions : [], [
+		hoveredTaskId,
+		actions,
+	]);
+
 	return (
 		<ContextMenu>
-			<ContextMenuTrigger
-				asChild
-			>
-				{children}
-			</ContextMenuTrigger>
+			<ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
 			<ContextMenuContent className="bg-accent/50 backdrop-blur-sm">
 				{actions.map((action) => (
 					<ContextMenuItem
 						key={action.id}
 						onClick={action.perform}
 						className="gap-2"
+						onMouseEnter={() => setHoveredTaskId(task.id)}
 					>
 						{action.icon}
 						{action.name}

@@ -13,6 +13,7 @@ import {
 	autoColor,
 	handleProjectTheme,
 } from "~/actions/settings/settings-actions";
+import ImageUploadArea from "~/components/general/image-upload-area";
 import { Button } from "~/components/ui/button";
 import {
 	Form,
@@ -32,7 +33,6 @@ import {
 } from "~/components/ui/popover";
 import { Separator } from "~/components/ui/separator";
 import safeAsync from "~/lib/safe-action";
-import { UploadDropzone } from "~/lib/uploadthing";
 import { type Project } from "~/server/db/schema";
 import typography from "~/styles/typography";
 
@@ -122,6 +122,7 @@ const ProjectTheme = ({ project }: Props) => {
 							width={85}
 							height={85}
 							className="z-10 rounded-full"
+							quality={100}
 						/>
 						<Image
 							src={
@@ -133,28 +134,13 @@ const ProjectTheme = ({ project }: Props) => {
 							style={{ backdropFilter: "blur(10px)" }}
 						/>
 					</div>
-					<UploadDropzone
-						endpoint="imageUploader"
-						onClientUploadComplete={(res) => {
-							console.log(res);
-							const result = res[0];
-							if (!result) return;
-							form.setValue("image", result.url, {
+					<ImageUploadArea
+						key={form.watch("image")}
+						urlCallback={(url) => {
+							form.setValue("image", url, {
 								shouldValidate: true,
 								shouldDirty: true,
 							});
-							toast.success("Image uploaded successfully");
-						}}
-						onUploadError={(error: Error) => {
-							console.error(error);
-							toast.error("Error uploading image", {
-								description: `Details: ${error.message}`,
-							});
-						}}
-						className="bg-background outline outline-1 outline-border"
-						appearance={{
-							container:
-								"bg-accent/25 col-span-2 rounded m-0 p-1",
 						}}
 					/>
 				</div>

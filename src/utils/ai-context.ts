@@ -1,5 +1,5 @@
 import { getPropertyConfig, taskProperties } from "~/config/TaskConfigType";
-import { Sprint, User } from "~/server/db/schema";
+import { type Sprint, type User } from "~/server/db/schema";
 
 export function getTaskAiSchema(assignees: User[], sprints: Sprint[]): string {
 	const properties = taskProperties.map((property) => {

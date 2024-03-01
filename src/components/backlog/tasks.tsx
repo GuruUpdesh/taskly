@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import {
 	DragDropContext,
@@ -13,9 +13,9 @@ import {
 } from "@hello-pangea/dnd";
 import { DragHandleDots2Icon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRegisterActions } from "kbar";
+// import { useRegisterActions } from "kbar";
 import { find } from "lodash";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import {
@@ -25,8 +25,6 @@ import {
 } from "~/actions/application/task-actions";
 import Task from "~/components/backlog/task/task";
 import Message from "~/components/general/message";
-import { type TaskConfig } from "~/config/entityTypes";
-import { getEnumOptionByKey, getPropertyConfig } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
 import type { Task as TaskType, User, Sprint } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
@@ -34,7 +32,6 @@ import { filterTasks } from "~/utils/filter";
 import { updateOrder } from "~/utils/order";
 
 import { type TaskFormType } from "./create-task";
-import { TaskStatus } from "../page/project/recent-tasks";
 
 export type UpdateTask = {
 	id: number;
@@ -55,15 +52,13 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 	/**
 	 * Update the assignees and sprints in the store when they change
 	 */
-	const [updateAssignees, updateSprints, filters, groupBy] = useAppStore(
-		(state) => [
-			state.updateAssignees,
-			state.updateSprints,
-			state.filters,
-			state.groupBy,
-			state.hoveredTaskId,
-		],
-	);
+	const [updateAssignees, updateSprints, filters] = useAppStore((state) => [
+		state.updateAssignees,
+		state.updateSprints,
+		state.filters,
+		state.groupBy,
+		state.hoveredTaskId,
+	]);
 	useEffect(() => {
 		updateAssignees(assignees);
 	}, [assignees]);
@@ -94,7 +89,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		}
 
 		return newTasks;
-	} 
+	}
 
 	const result = useQuery({
 		queryKey: ["tasks"],
@@ -215,14 +210,14 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 	/**
 	 * Grouping tasks
 	 */
-	const config = React.useMemo(() => {
-		if (!groupBy) return null;
-		return getPropertyConfig(
-			groupBy as keyof TaskConfig,
-			assignees,
-			sprints,
-		);
-	}, [groupBy]);
+	// const config = React.useMemo(() => {
+	// 	if (!groupBy) return null;
+	// 	return getPropertyConfig(
+	// 		groupBy as keyof TaskConfig,
+	// 		assignees,
+	// 		sprints,
+	// 	);
+	// }, [groupBy]);
 
 	if (!result.data) return <div>Loading...</div>;
 
@@ -240,78 +235,72 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
-					<Droppable droppableId="tasks">
-						{(provided: DroppableProvided) => (
-							<div
-								{...provided.droppableProps}
-								ref={provided.innerRef}
-							>
-								{taskOrder.map((taskId, idx) => {
-									const task = result.data?.find(
-										(task) => task.id === taskId,
-									);
+			<Droppable droppableId="tasks">
+				{(provided: DroppableProvided) => (
+					<div {...provided.droppableProps} ref={provided.innerRef}>
+						{taskOrder.map((taskId, idx) => {
+							const task = result.data?.find(
+								(task) => task.id === taskId,
+							);
 
-									if (!task || !filterTasks(task, filters)) {
-										return null;
-									}
+							if (!task || !filterTasks(task, filters)) {
+								return null;
+							}
 
-									return task ? (
-										<Draggable
-											draggableId={String(task.id)}
-											index={idx}
-											key={task.id}
-										>
-											{(
-												provided: DraggableProvided,
-												snapshot: DraggableStateSnapshot,
-											) => (
-												<div
-													className={cn(
-														"group relative bg-background/50 backdrop-blur-xl transition-colors",
-														{
-															"bg-accent-foreground/5":
-																snapshot.isDragging,
-															"pointer-events-none opacity-50":
-																task.options
-																	.isPending,
-															"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
-																task.options
-																	.isNew &&
-																!task.options
-																	.isPending,
-														},
-													)}
-													{...provided.draggableProps}
-													{...provided.dragHandleProps}
-													ref={provided.innerRef}
-												>
-													<DragHandleDots2Icon
-														className={cn(
-															"absolute bottom-[50%] left-0 translate-y-[50%] opacity-0 group-hover:opacity-50",
-															snapshot.isDragging &&
-																"opacity-100",
-														)}
-													/>
-													<Task
-														key={task.id}
-														task={task}
-														addTaskMutation={
-															addTaskMutation
-														}
-														deleteTaskMutation={
-															deleteTaskMutation
-														}
-														projectId={projectId}
-													/>
-												</div>
+							return task ? (
+								<Draggable
+									draggableId={String(task.id)}
+									index={idx}
+									key={task.id}
+								>
+									{(
+										provided: DraggableProvided,
+										snapshot: DraggableStateSnapshot,
+									) => (
+										<div
+											className={cn(
+												"group relative bg-background/50 backdrop-blur-xl transition-colors",
+												{
+													"bg-accent-foreground/5":
+														snapshot.isDragging,
+													"pointer-events-none opacity-50":
+														task.options.isPending,
+													"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
+														task.options.isNew &&
+														!task.options.isPending,
+												},
 											)}
-										</Draggable>
-									) : null;
-								})}
-								{provided.placeholder}
-							</div>
-						)}
-					</Droppable>
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}
+											ref={provided.innerRef}
+										>
+											<DragHandleDots2Icon
+												className={cn(
+													"absolute bottom-[50%] left-0 translate-y-[50%] opacity-0 group-hover:opacity-50",
+													snapshot.isDragging &&
+														"opacity-100",
+												)}
+											/>
+											<Task
+												key={task.id}
+												task={task}
+												addTaskMutation={
+													addTaskMutation
+												}
+												deleteTaskMutation={
+													deleteTaskMutation
+												}
+												projectId={projectId}
+											/>
+										</div>
+									)}
+								</Draggable>
+							) : null;
+						})}
+						{provided.placeholder}
+					</div>
+				)}
+			</Droppable>
 		</DragDropContext>
 	);
 }

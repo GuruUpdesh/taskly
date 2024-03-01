@@ -7,7 +7,7 @@ import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 
 import { type TaskFormType as CreateTaskData } from "~/components/backlog/create-task";
-import { type StatefulTask, schemaValidators, CreateTaskSchema } from "~/config/TaskConfigType";
+import { type StatefulTask, CreateTaskSchema } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
 import { tasks, users } from "~/server/db/schema";
 import { type Task } from "~/server/db/schema";

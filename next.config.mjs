@@ -17,7 +17,7 @@ const config = {
 			},
 			{
 				protocol: "https",
-				hostname: "oaidalleapiprodscus.blob.core.windows.net",
+				hostname: "ujxc2e33aswtcpny.public.blob.vercel-storage.com",
 				port: "",
 				pathname: "/**",
 			},
