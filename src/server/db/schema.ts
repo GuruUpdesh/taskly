@@ -324,3 +324,23 @@ export const notificationRelations = relations(notifications, ({ one }) => ({
 		references: [tasks.id],
 	}),
 }));
+
+/**
+ * Comments
+ */
+
+export const comments = mysqlTable("comments", {
+	id: serial("id").primaryKey(),
+	title: varchar("title", { length: 255 }).notNull(),
+	assignee: varchar("assignee", { length: 255 }),
+	projectId: int("project_id").notNull(),
+	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
+		.notNull()
+		.default(new Date()),
+});
+
+// relations
+export const commentsRelations = relations(comments, ({ one, many }) => ({
+
+
+}));

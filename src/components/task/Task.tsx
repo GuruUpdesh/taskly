@@ -17,6 +17,9 @@ import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Separator } from "~/components/ui/separator";
 import BackButtonRelative from "~/components/layout/navbar/back-button-relative";
 import TaskState from "./task-state";
+import { Textarea } from "../ui/textarea";
+import { Input } from "../ui/input";
+import Comments from "./Comments";
 
 type Props = {
 	taskId: string;
@@ -100,9 +103,7 @@ const Task = ({ taskId, assignees, sprints }: Props) => {
 							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 								Comments
 							</h3>
-							<div className="rounded-lg border bg-background p-4">
-								<div className=""></div>
-							</div>
+							<Comments />
 						</section>
 					</div>
 				</ResizablePanel>
