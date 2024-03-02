@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 
 import { type ImperativePanelHandle } from "react-resizable-panels";
+import { useShallow } from "zustand/react/shallow";
 
 import {
 	ResizableHandle,
@@ -25,11 +26,13 @@ const SidebarPanel = ({
 	defaultLayout = [15, 85],
 }: Props) => {
 	const [isSideBarCollapsed, setSideBarCollapsed, setExpandSideBar] =
-		useNavigationStore((state) => [
-			state.isSideBarCollapsed,
-			state.setSideBarCollapsed,
-			state.setExpandSideBar,
-		]);
+		useNavigationStore(
+			useShallow((state) => [
+				state.isSideBarCollapsed,
+				state.setSideBarCollapsed,
+				state.setExpandSideBar,
+			]),
+		);
 	const sidebarRef = React.useRef<ImperativePanelHandle>(null);
 
 	function handleResize() {

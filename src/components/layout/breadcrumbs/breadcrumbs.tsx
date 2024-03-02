@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 
 import { usePathname } from "next/navigation";
 import { z } from "zod";
+import { useShallow } from "zustand/react/shallow";
 
 import { useNavigationStore } from "~/store/navigation";
 
@@ -58,10 +59,9 @@ function getCrumbs(
 const BreadCrumbs = () => {
 	const pathname = usePathname();
 	const [crumbs, setCrumbs] = React.useState<Crumb[]>([]);
-	const [project, task] = useNavigationStore((state) => [
-		state.currentProject,
-		state.currentTask,
-	]);
+	const [project, task] = useNavigationStore(
+		useShallow((state) => [state.currentProject, state.currentTask]),
+	);
 
 	function getFromState(id: string, type?: CrumbType) {
 		if (type === "project") {

@@ -3,7 +3,7 @@
 import React from "react";
 
 import type { UseMutationResult } from "@tanstack/react-query";
-import { Priority, useRegisterActions } from "kbar";
+import { Priority } from "kbar";
 import { Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 
@@ -17,17 +17,17 @@ import {
 import type { Task } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
 
+import TaskKBarUpdater from "./task-kbar-updater";
+
 type Props = {
 	task: Task;
 	children: React.ReactNode;
 	deleteTaskMutation?: UseMutationResult<void, Error, number, unknown>;
 };
+const TaskKBarUpdaterMemoized = React.memo(TaskKBarUpdater);
 
 const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
-	const [hoveredTaskId, setHoveredTaskId] = useAppStore((state) => [
-		state.hoveredTaskId,
-		state.setHoveredTaskId,
-	]);
+	const setHoveredTaskId = useAppStore((state) => state.setHoveredTaskId);
 
 	const actions = [
 		{
@@ -45,21 +45,21 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 		},
 	];
 
-	useRegisterActions(hoveredTaskId === task.id ? actions : [], [
-		hoveredTaskId,
-		actions,
-	]);
-
 	return (
 		<ContextMenu>
-			<ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
+			<TaskKBarUpdaterMemoized actions={actions} taskId={task.id} />
+			<ContextMenuTrigger
+				asChild
+				onMouseEnter={() => setHoveredTaskId(task.id)}
+			>
+				{children}
+			</ContextMenuTrigger>
 			<ContextMenuContent className="bg-accent/50 backdrop-blur-sm">
 				{actions.map((action) => (
 					<ContextMenuItem
 						key={action.id}
 						onClick={action.perform}
 						className="gap-2"
-						onMouseEnter={() => setHoveredTaskId(task.id)}
 					>
 						{action.icon}
 						{action.name}
@@ -73,4 +73,4 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 	);
 };
 
-export default TaskDropDownMenu;
+export default React.memo(TaskDropDownMenu);

@@ -3,6 +3,7 @@
 import React from "react";
 
 import { ArrowDownNarrowWide, Filter } from "lucide-react";
+import { useShallow } from "zustand/react/shallow";
 
 import GroupButton from "~/components/group/group-button";
 import { Button } from "~/components/ui/button";
@@ -10,10 +11,9 @@ import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
 
 const ToggleFilters = () => {
-	const [toggleFilters, isFiltersOpen] = useAppStore((state) => [
-		state.toggleFilters,
-		state.isFiltersOpen,
-	]);
+	const [toggleFilters, isFiltersOpen] = useAppStore(
+		useShallow((state) => [state.toggleFilters, state.isFiltersOpen]),
+	);
 
 	return (
 		<div className="flex overflow-hidden rounded-lg border">

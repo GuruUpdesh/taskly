@@ -8,6 +8,7 @@ import type { UseMutationResult } from "@tanstack/react-query";
 import { cva, type VariantProps } from "class-variance-authority";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { useShallow } from "zustand/react/shallow";
 
 import type { UpdateTask } from "~/components/backlog/tasks";
 import { type TaskProperty, getPropertyConfig } from "~/config/TaskConfigType";
@@ -74,10 +75,9 @@ const Task = ({
 	projectId,
 	variant = "backlog",
 }: Props) => {
-	const [assignees, sprints] = useAppStore((state) => [
-		state.assignees,
-		state.sprints,
-	]);
+	const [assignees, sprints] = useAppStore(
+		useShallow((state) => [state.assignees, state.sprints]),
+	);
 
 	const defaultValues = useMemo(() => {
 		return {

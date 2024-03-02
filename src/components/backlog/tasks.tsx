@@ -5,9 +5,12 @@ import React, { useEffect } from "react";
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 // import { useRegisterActions } from "kbar";
+import { useRegisterActions } from "kbar";
 import { find } from "lodash";
 // import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useShallow } from "zustand/react/shallow";
 
 import {
 	type UpdateTaskData,
@@ -28,6 +31,7 @@ import { updateOrder } from "~/utils/order";
 
 import LoadingTaskList from "../page/backlog/loading-task-list";
 import TaskList from "../page/backlog/task-list";
+import { TaskStatus } from "../page/project/recent-tasks";
 
 export type UpdateTask = {
 	id: number;
@@ -52,12 +56,14 @@ export default function Tasks({ projectId }: Props) {
 	/**
 	 * Get the assignees and sprints
 	 */
-	const [assignees, sprints, filters, groupBy] = useAppStore((state) => [
-		state.assignees,
-		state.sprints,
-		state.filters,
-		state.groupBy,
-	]);
+	const [assignees, sprints, filters, groupBy] = useAppStore(
+		useShallow((state) => [
+			state.assignees,
+			state.sprints,
+			state.filters,
+			state.groupBy,
+		]),
+	);
 
 	/**
 	 * Fetch the tasks from the server and handle optimistic updates
@@ -259,6 +265,22 @@ export default function Tasks({ projectId }: Props) {
 		if (config.type !== "enum" && config.type !== "dynamic") return null;
 		return config.options;
 	}, [groupBy, assignees, sprints]);
+
+	/**
+	 * Kbar
+	 */
+	const router = useRouter();
+	useRegisterActions(
+		result?.data?.map((task, idx) => ({
+			id: String(task.id),
+			name: task.title,
+			icon: <TaskStatus status={task.status} />,
+			shortcut: idx + 1 < 10 ? ["t", String(idx + 1)] : [],
+			perform: () => router.push(`/project/${projectId}/task/${task.id}`),
+			section: "Tasks",
+		})) ?? [],
+		[result.data],
+	);
 
 	if (!result.data || (taskOrder.length === 0 && result.data.length !== 0))
 		return <LoadingTaskList />;

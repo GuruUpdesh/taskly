@@ -3,6 +3,7 @@
 import React from "react";
 
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -14,10 +15,9 @@ import {
 import { useNavigationStore } from "~/store/navigation";
 
 const ToggleSidebarButton = () => {
-	const [isSideBarCollapsed, expandSideBar] = useNavigationStore((state) => [
-		state.isSideBarCollapsed,
-		state.expandSideBar,
-	]);
+	const [isSideBarCollapsed, expandSideBar] = useNavigationStore(
+		useShallow((state) => [state.isSideBarCollapsed, state.expandSideBar]),
+	);
 	return (
 		<TooltipProvider delayDuration={150}>
 			<Tooltip>

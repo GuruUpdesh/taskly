@@ -3,6 +3,7 @@
 import React, { useMemo } from "react";
 
 import { Group, MinusIcon } from "lucide-react";
+import { useShallow } from "zustand/react/shallow";
 
 import {
 	Select,
@@ -26,12 +27,14 @@ const properties = [
 
 const GroupButton = () => {
 	const [open, setOpen] = React.useState(false);
-	const [groupBy, setGroupBy, assignees, sprints] = useAppStore((state) => [
-		state.groupBy,
-		state.setGroupBy,
-		state.assignees,
-		state.sprints,
-	]);
+	const [groupBy, setGroupBy, assignees, sprints] = useAppStore(
+		useShallow((state) => [
+			state.groupBy,
+			state.setGroupBy,
+			state.assignees,
+			state.sprints,
+		]),
+	);
 
 	const config = useMemo(() => {
 		if (!groupBy) return null;

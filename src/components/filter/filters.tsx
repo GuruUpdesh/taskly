@@ -4,6 +4,7 @@ import React from "react";
 
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
+import { useShallow } from "zustand/react/shallow";
 
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
@@ -15,10 +16,9 @@ const filterContainer =
 	"rounded-full border bg-accent/25 p-1 transition-all hover:bg-accent";
 
 const Filters = () => {
-	const [isFiltersOpen, filters] = useAppStore((state) => [
-		state.isFiltersOpen,
-		state.filters,
-	]);
+	const [isFiltersOpen, filters] = useAppStore(
+		useShallow((state) => [state.isFiltersOpen, state.filters]),
+	);
 
 	const variants = {
 		open: { opacity: 1, height: "auto" },

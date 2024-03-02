@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
+import { useShallow } from "zustand/react/shallow";
 
 import { aiAction } from "~/actions/ai/ai-action";
 import { createTask } from "~/actions/application/task-actions";
@@ -185,10 +186,9 @@ type Props = {
 };
 
 const CreateTask = ({ projectId }: Props) => {
-	const [assignees, sprints] = useAppStore((state) => [
-		state.assignees,
-		state.sprints,
-	]);
+	const [assignees, sprints] = useAppStore(
+		useShallow((state) => [state.assignees, state.sprints]),
+	);
 	const [open, setOpen] = useState(false);
 	const queryClient = useQueryClient();
 	const project = useNavigationStore((state) => state.currentProject);

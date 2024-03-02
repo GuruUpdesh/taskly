@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -59,13 +60,13 @@ const FilterMenu = ({ children, defaultValues }: Props) => {
 	const [open, setOpen] = React.useState(false);
 
 	const [assignees, sprints, addFilter, updateFilter, filters] = useAppStore(
-		(state) => [
+		useShallow((state) => [
 			state.assignees,
 			state.sprints,
 			state.addFilter,
 			state.updateFilter,
 			state.filters,
-		],
+		]),
 	);
 
 	const usedProperties = useMemo(() => {

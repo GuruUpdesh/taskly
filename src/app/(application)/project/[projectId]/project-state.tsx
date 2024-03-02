@@ -4,6 +4,7 @@ import { useEffect } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useShallow } from "zustand/react/shallow";
 
 import {
 	getAssigneesForProject,
@@ -24,12 +25,14 @@ type Props = {
 const ProjectState = ({ projectId, userId }: Props) => {
 	const updateProject = useNavigationStore((state) => state.updateProject);
 	const [updateAssignees, updateSprints, updateNotifications] = useAppStore(
-		(state) => [
+		useShallow((state) => [
 			state.updateAssignees,
 			state.updateSprints,
 			state.updateNotifications,
-		],
+		]),
 	);
+
+	console.log("ProjectState", projectId);
 
 	const projectResult = useQuery({
 		queryKey: ["project", projectId],
