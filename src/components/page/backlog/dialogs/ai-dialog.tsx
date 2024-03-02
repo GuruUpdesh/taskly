@@ -4,12 +4,13 @@ import React, { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
+import { ChevronRight, Loader2, SparklesIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { aiGenerateTask } from "~/actions/ai/ai-action";
 import { createTask } from "~/actions/application/task-actions";
+import SimpleTooltip from "~/components/general/simple-tooltip";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -22,6 +23,7 @@ import {
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Textarea } from "~/components/ui/textarea";
 import { schemaValidators } from "~/config/TaskConfigType";
+import { useNavigationStore } from "~/store/navigation";
 
 type Props = {
 	projectId: string;
@@ -33,6 +35,7 @@ const formSchema = z.object({
 
 const AiDialog = ({ projectId }: Props) => {
 	const [open, setOpen] = useState(false);
+	const project = useNavigationStore((state) => state.currentProject);
 
 	function resetForm() {
 		form.reset({
@@ -98,6 +101,10 @@ const AiDialog = ({ projectId }: Props) => {
 		setOpen(false);
 	}
 
+	if (project?.isAiEnabled === false) {
+		return null;
+	}
+
 	return (
 		<>
 			<Dialog
@@ -109,15 +116,17 @@ const AiDialog = ({ projectId }: Props) => {
 					setOpen(open);
 				}}
 			>
-				<DialogTrigger asChild>
-					<Button variant="outline" size="sm">
-						<SparkleIcon className="h-4 w-4" />
-					</Button>
-				</DialogTrigger>
+				<SimpleTooltip label="AI Task Creation">
+					<DialogTrigger asChild>
+						<Button variant="outline" size="sm">
+							<SparklesIcon className="h-4 w-4" />
+						</Button>
+					</DialogTrigger>
+				</SimpleTooltip>
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle className="flex items-center gap-2">
-							<SparkleIcon className="h-4 w-4" />
+							<SparklesIcon className="h-4 w-4" />
 							AI Task Creation
 						</DialogTitle>
 					</DialogHeader>

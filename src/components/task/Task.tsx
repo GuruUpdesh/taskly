@@ -29,9 +29,10 @@ import { type UpdateTask } from "../backlog/tasks";
 type Props = {
 	taskId: string;
 	projectId: string;
+	context: "page" | "inbox";
 };
 
-const TaskPage = ({ taskId, projectId }: Props) => {
+const TaskPage = ({ taskId, projectId, context }: Props) => {
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
@@ -71,7 +72,7 @@ const TaskPage = ({ taskId, projectId }: Props) => {
 					<div className="flex flex-col">
 						<header className="container flex items-center justify-between gap-2 border-b py-2">
 							<div className="flex items-center gap-2">
-								<BackButtonRelative />
+								{context === "page" && <BackButtonRelative />}
 								<BreadCrumbs />
 							</div>
 						</header>

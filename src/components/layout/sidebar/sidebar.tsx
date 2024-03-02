@@ -7,18 +7,16 @@ import {
 	DashboardIcon,
 	LayoutIcon,
 	TableIcon,
-	MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 
 import InboxSidebarButton from "~/components/inbox/InboxSidebarButton";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import UserButtonWrapper from "~/components/user-button/user-button-wrapper";
 
 import SelectProject from "./select project/select-project";
 import SidebarBackgroundWrapper from "./sidebar-background";
 import SidebarButton from "./sidebar-button";
+import SidebarSearch from "./sidebar-search";
 
 interface SidebarProps {
 	projectId: string;
@@ -43,20 +41,7 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 			</div>
 			<div className="flex h-full flex-col gap-4 px-1 py-4 @sidebar:p-4">
 				<SelectProject projectId={projectId} />
-				<div className="relative hidden @sidebar:block">
-					<MagnifyingGlassIcon className="absolute left-2 top-[50%] h-4 w-4 translate-y-[-50%] text-muted-foreground" />
-					<Input
-						placeholder="Search"
-						className="h-9 bg-background/75 pl-8"
-					/>
-				</div>
-				<Button
-					variant="outline"
-					size="icon"
-					className="z-10 h-9 bg-background/75 text-muted-foreground @sidebar:hidden"
-				>
-					<MagnifyingGlassIcon />
-				</Button>
+				<SidebarSearch />
 				<Separator />
 				<div className="border-b pb-4">
 					<SidebarButton

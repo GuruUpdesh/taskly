@@ -10,9 +10,14 @@ import Task from "~/components/task/Task";
 type Props = {
 	taskId: string;
 	projectId: string;
+	context?: "page" | "inbox";
 };
 
-export async function TaskWrapper({ taskId, projectId }: Props) {
+export async function TaskWrapper({
+	taskId,
+	projectId,
+	context = "page",
+}: Props) {
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
 		queryKey: ["task", taskId],
@@ -21,7 +26,7 @@ export async function TaskWrapper({ taskId, projectId }: Props) {
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<Task taskId={taskId} projectId={projectId} />
+			<Task taskId={taskId} projectId={projectId} context={context} />
 		</HydrationBoundary>
 	);
 }

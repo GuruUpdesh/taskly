@@ -67,7 +67,7 @@ const BreadCrumbs = () => {
 		if (type === "project") {
 			return project?.name + ` (${id})` ?? "";
 		}
-		if (type === "task") {
+		if (type === "task" || type === "notification") {
 			return task?.title + ` (${id})` ?? "";
 		}
 

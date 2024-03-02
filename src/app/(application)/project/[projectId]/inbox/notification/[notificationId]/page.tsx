@@ -26,7 +26,6 @@ export default async function InboxPage({
 				`/project/${projectId}/inbox`,
 			),
 		);
-		return;
 	}
 
 	if (notification.length === 0 || notification[0] === undefined) {
@@ -37,6 +36,7 @@ export default async function InboxPage({
 		<TaskWrapper
 			taskId={notification[0].taskId.toString()}
 			projectId={notification[0].projectId.toString()}
+			context="inbox"
 		/>
 	);
 }

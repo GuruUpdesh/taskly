@@ -5,6 +5,7 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import SimpleTooltip from "~/components/general/simple-tooltip";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
@@ -28,24 +29,26 @@ const SidebarButton = ({
 	const pathname = usePathname();
 	const active = useMemo(() => pathname === url, [pathname, url]);
 	return (
-		<Link
-			href={url}
-			target={openInNewTab ? "_blank" : ""}
-			className={cn("flex-1 @sidebar:block", hidden && "hidden")}
-		>
-			<Button
-				variant="ghost"
-				size="sm"
-				className={cn(
-					"w-full justify-center gap-2 p-0 font-semibold  @sidebar:justify-start @sidebar:px-4",
-					active && "bg-accent",
-				)}
+		<SimpleTooltip label={label} side="right">
+			<Link
+				href={url}
+				target={openInNewTab ? "_blank" : ""}
+				className={cn("flex-1 @sidebar:block", hidden && "hidden")}
 			>
-				{icon ? icon : null}
-				<span className="hidden @sidebar:inline-flex">{label}</span>
-				{children}
-			</Button>
-		</Link>
+				<Button
+					variant="ghost"
+					size="sm"
+					className={cn(
+						"w-full justify-center gap-2 p-0 font-semibold  @sidebar:justify-start @sidebar:px-4",
+						active && "bg-accent",
+					)}
+				>
+					{icon ? icon : null}
+					<span className="hidden @sidebar:inline-flex">{label}</span>
+					{children}
+				</Button>
+			</Link>
+		</SimpleTooltip>
 	);
 };
 

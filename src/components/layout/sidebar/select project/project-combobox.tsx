@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import SimpleTooltip from "~/components/general/simple-tooltip";
 import { Button } from "~/components/ui/button";
 import {
 	Command,
@@ -88,30 +89,32 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
-			<PopoverTrigger asChild>
-				<Button
-					ref={buttonRef}
-					variant="outline"
-					role="combobox"
-					aria-expanded={open}
-					className="group relative z-10 w-full justify-center gap-2 overflow-hidden whitespace-nowrap bg-background/75 px-1 @sidebar:justify-between @sidebar:px-4"
-				>
-					{renderProjectImage(project)}
-					<span className="hidden font-bold @sidebar:inline-flex">
-						{project ? project.name : "Select project..."}
-					</span>
-					<div className="absolute left-0 -z-10 aspect-square w-full opacity-50 blur-3xl transition-opacity gradient-mask-l-50 group-hover:opacity-75  group-focus:opacity-75">
-						{project?.image ? (
-							<Image
-								src={project.image ?? "/project.svg"}
-								alt={project.name}
-								fill
-							/>
-						) : null}
-					</div>
-					<ChevronDown className="hidden h-4 w-4 shrink-0 opacity-50 @sidebar:inline-flex" />
-				</Button>
-			</PopoverTrigger>
+			<SimpleTooltip label="Switch Project" side="right">
+				<PopoverTrigger asChild>
+					<Button
+						ref={buttonRef}
+						variant="outline"
+						role="combobox"
+						aria-expanded={open}
+						className="group relative z-10 w-full justify-center gap-2 overflow-hidden whitespace-nowrap bg-background/75 px-1 @sidebar:justify-between @sidebar:px-4"
+					>
+						{renderProjectImage(project)}
+						<span className="hidden font-bold @sidebar:inline-flex">
+							{project ? project.name : "Select project..."}
+						</span>
+						<div className="absolute left-0 -z-10 aspect-square w-full opacity-50 blur-3xl transition-opacity gradient-mask-l-50 group-hover:opacity-75  group-focus:opacity-75">
+							{project?.image ? (
+								<Image
+									src={project.image ?? "/project.svg"}
+									alt={project.name}
+									fill
+								/>
+							) : null}
+						</div>
+						<ChevronDown className="hidden h-4 w-4 shrink-0 opacity-50 @sidebar:inline-flex" />
+					</Button>
+				</PopoverTrigger>
+			</SimpleTooltip>
 			<PopoverContent
 				style={{
 					width: buttonRef.current

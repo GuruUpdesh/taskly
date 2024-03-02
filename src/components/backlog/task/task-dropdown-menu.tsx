@@ -41,7 +41,7 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 				toast.warning("Task deleted");
 			},
 			priority: Priority.HIGH,
-			section: "Task Actions",
+			section: `Actions - ${task.title}`,
 		},
 	];
 
