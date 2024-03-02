@@ -2,9 +2,8 @@ import React from "react";
 
 import type { UseFormReturn } from "react-hook-form";
 
+import { type TaskFormType } from "~/components/backlog/create-task";
 import { cn } from "~/lib/utils";
-
-import { type TaskFormType } from "../../create-task";
 
 type Props = {
 	form: UseFormReturn<TaskFormType>;

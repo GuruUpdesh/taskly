@@ -9,13 +9,12 @@ import { and, eq } from "drizzle-orm";
 import { Resend } from "resend";
 import { z } from "zod";
 
+import { authenticate } from "~/actions/security/authenticate";
+import { checkPermissions } from "~/actions/security/permissions";
 import ProjectInviteEmail from "~/components/email/project-invite";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { invites, usersToProjects } from "~/server/db/schema";
-
-import { authenticate } from "../security/authenticate";
-import { checkPermissions } from "../security/permissions";
 
 const getInviteSchema = z.object({
 	userId: z.string(),
@@ -66,8 +65,6 @@ export async function createInvite(projectId: number) {
 }
 
 export async function joinProject(token: string) {
-	console.log("Joining project with token", token);
-
 	const userId = authenticate();
 
 	const requestInvite = await db
@@ -75,7 +72,6 @@ export async function joinProject(token: string) {
 		.from(invites)
 		.where(eq(invites.token, token));
 
-	console.log("Request invite", requestInvite);
 	if (!requestInvite || requestInvite.length === 0) {
 		return { success: false, message: "No invite link was provided" };
 	}

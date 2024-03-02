@@ -32,8 +32,6 @@ const ProjectState = ({ projectId, userId }: Props) => {
 		]),
 	);
 
-	console.log("ProjectState", projectId);
-
 	const projectResult = useQuery({
 		queryKey: ["project", projectId],
 		queryFn: () => getProject(Number(projectId)),
@@ -63,7 +61,6 @@ const ProjectState = ({ projectId, userId }: Props) => {
 	const router = useRouter();
 
 	useEffect(() => {
-		console.log("projectResult.data", projectResult.data);
 		const result = projectResult.data;
 		if (!result?.success || !result.project) {
 			if (result?.message) {

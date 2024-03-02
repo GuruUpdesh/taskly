@@ -6,6 +6,8 @@ import { getAverageColor } from "fast-average-color-node";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { authenticate } from "~/actions/security/authenticate";
+import { checkPermissions } from "~/actions/security/permissions";
 import { db } from "~/server/db";
 import {
 	type Project,
@@ -15,9 +17,6 @@ import {
 	sprints,
 	invites,
 } from "~/server/db/schema";
-
-import { authenticate } from "../security/authenticate";
-import { checkPermissions } from "../security/permissions";
 
 export async function handleProjectInfo(
 	projectId: number,

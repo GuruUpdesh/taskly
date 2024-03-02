@@ -9,13 +9,12 @@ import _debounce from "lodash/debounce";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { type UpdateTask } from "~/components/backlog/tasks";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
 import type { NewTask, Task } from "~/server/db/schema";
-
-import { type UpdateTask } from "../backlog/tasks";
 
 type Props = {
 	task: Task;

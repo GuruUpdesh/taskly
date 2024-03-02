@@ -19,6 +19,9 @@ import {
 	updateTask,
 } from "~/actions/application/task-actions";
 import Message from "~/components/general/message";
+import LoadingTaskList from "~/components/page/backlog/loading-task-list";
+import TaskList from "~/components/page/backlog/task-list";
+import { TaskStatus } from "~/components/page/project/recent-tasks";
 import {
 	type StatefulTask,
 	getPropertyConfig,
@@ -28,10 +31,6 @@ import { cn } from "~/lib/utils";
 import type { Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
 import { updateOrder } from "~/utils/order";
-
-import LoadingTaskList from "../page/backlog/loading-task-list";
-import TaskList from "../page/backlog/task-list";
-import { TaskStatus } from "../page/project/recent-tasks";
 
 export type UpdateTask = {
 	id: number;
@@ -47,9 +46,7 @@ type TaskTypeOverride = Omit<TaskType, "sprintId"> & {
 };
 
 async function updateTaskWrapper({ id, newTask }: UpdateTask) {
-	console.time("updateTaskWrapper");
 	await updateTask(id, newTask);
-	console.timeEnd("updateTaskWrapper");
 }
 
 export default function Tasks({ projectId }: Props) {
@@ -133,7 +130,6 @@ export default function Tasks({ projectId }: Props) {
 	const deleteTaskMutation = useMutation({
 		mutationFn: (id: number) => deleteTask(id),
 		onMutate: async (id) => {
-			console.log("onMutate > deleteTaskMutation");
 			await queryClient.cancelQueries({ queryKey: ["tasks", projectId] });
 			const previousTasks = queryClient.getQueryData<TaskType[]>([
 				"tasks",
@@ -158,7 +154,6 @@ export default function Tasks({ projectId }: Props) {
 	const orderTasksMutation = useMutation({
 		mutationFn: (taskOrder: Map<number, number>) => updateOrder(taskOrder),
 		onMutate: async (taskOrder: Map<number, number>) => {
-			console.log("onMutate > orderTasksMutation");
 			await queryClient.cancelQueries({ queryKey: ["tasks", projectId] });
 
 			const previousTasks = queryClient.getQueryData<TaskType[]>([
@@ -180,7 +175,6 @@ export default function Tasks({ projectId }: Props) {
 					return updatedTasks;
 				},
 			);
-			console.timeEnd("order change");
 
 			return { previousTasks };
 		},
@@ -209,7 +203,6 @@ export default function Tasks({ projectId }: Props) {
 	}, [result.data, assignees, sprints]);
 
 	function onDragEnd(dragResult: DropResult) {
-		console.time("order change");
 		const { source, destination } = dragResult;
 		if (!destination || source.index === destination.index) {
 			return;

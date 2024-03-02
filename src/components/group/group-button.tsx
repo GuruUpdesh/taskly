@@ -5,6 +5,7 @@ import React, { useMemo } from "react";
 import { Group, MinusIcon } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
+import { Button } from "~/components/ui/button";
 import {
 	Select,
 	SelectContent,
@@ -14,8 +15,6 @@ import {
 import { type TaskProperty, getPropertyConfig } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
-
-import { Button } from "../ui/button";
 
 const properties = [
 	"status",

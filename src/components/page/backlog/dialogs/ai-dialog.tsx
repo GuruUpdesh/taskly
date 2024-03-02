@@ -57,7 +57,6 @@ const AiDialog = ({ projectId }: Props) => {
 		);
 
 		const jsonResult = JSON.parse(result) as unknown;
-		console.log(jsonResult);
 
 		const schema = z.array(
 			z.object({

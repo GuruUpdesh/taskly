@@ -290,7 +290,6 @@ const CreateTask = ({ projectId }: Props) => {
 	useValidationErrors(form.formState.errors);
 
 	function handleSubmit(newTask: TaskFormType) {
-		console.log(`🌱 Create Task >`, newTask);
 		addTaskMutation.mutate({ data: newTask });
 	}
 

@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 
+import { createNotification } from "~/actions/notification-actions";
 import { type TaskFormType as CreateTaskData } from "~/components/backlog/create-task";
 import { type StatefulTask, CreateTaskSchema } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
@@ -17,7 +18,6 @@ import {
 	deleteViewsForTask,
 	updateOrInsertTaskView,
 } from "./task-views-actions";
-import { createNotification } from "../notification-actions";
 
 export async function createTask(data: CreateTaskData) {
 	try {
@@ -139,7 +139,6 @@ export async function deleteTask(id: number) {
 
 export type UpdateTaskData = Partial<CreateTaskData>;
 export async function updateTask(id: number, data: UpdateTaskData) {
-	console.time("update task");
 	try {
 		const updatedTaskData = CreateTaskSchema.partial().parse(data);
 		if (Object.keys(updatedTaskData).length === 0) {
@@ -153,7 +152,6 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 		};
 
 		await db.update(tasks).set(taskData).where(eq(tasks.id, id));
-		// revalidatePath("/");
 		void createTaskUpdateNotification(id);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
@@ -162,7 +160,6 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 		}
 		if (error instanceof Error) throwServerError(error.message);
 	}
-	console.timeEnd("update task");
 }
 
 async function createTaskUpdateNotification(taskId: number) {

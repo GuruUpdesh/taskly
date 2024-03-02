@@ -112,7 +112,6 @@ const SprintOptions = ({ form, hidden = false }: Props) => {
 							mode="single"
 							selected={watch("sprintStart")}
 							onSelect={(val) => {
-								console.log(val);
 								if (val instanceof Date) {
 									setValue("sprintStart", val);
 								}

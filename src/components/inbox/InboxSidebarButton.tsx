@@ -4,9 +4,8 @@ import React, { useMemo } from "react";
 
 import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
 
+import SidebarButton from "~/components/layout/sidebar/sidebar-button";
 import { useAppStore } from "~/store/app";
-
-import SidebarButton from "../layout/sidebar/sidebar-button";
 
 type Props = {
 	projectId: string;

@@ -2,11 +2,11 @@ import React from "react";
 
 import type { UseFormReturn } from "react-hook-form";
 
+import { type TaskFormType } from "~/components/backlog/create-task";
 import { type getPropertyConfig } from "~/config/TaskConfigType";
 
 import PropertyStatic from "./property-static";
 import PropertySelect from "./propery-select";
-import { type TaskFormType } from "../../create-task";
 
 type Props = {
 	config: ReturnType<typeof getPropertyConfig>;

@@ -106,7 +106,6 @@ async function onSessionCreated(payload: SessionWebhookEvent) {
 export async function POST(request: Request) {
 	try {
 		const payload = await validateRequest(request);
-		console.log("Clerk Webhook Received >", payload.type);
 
 		switch (payload.type) {
 			case "user.created":

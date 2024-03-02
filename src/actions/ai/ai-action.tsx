@@ -2,12 +2,11 @@
 
 import OpenAI from "openai";
 
+import { getAssigneesForProject } from "~/actions/application/project-actions";
+import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { env } from "~/env.mjs";
 import { type User, insertTaskSchema__required } from "~/server/db/schema";
 import { getTaskAiSchema } from "~/utils/ai-context";
-
-import { getAssigneesForProject } from "../application/project-actions";
-import { getSprintsForProject } from "../application/sprint-actions";
 
 const openai = new OpenAI({
 	apiKey: env.OPENAI_API_KEY,

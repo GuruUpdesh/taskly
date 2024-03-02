@@ -10,6 +10,10 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
 
+import {
+	taskFormSchema,
+	type TaskFormType,
+} from "~/components/backlog/create-task";
 import type { UpdateTask } from "~/components/backlog/tasks";
 import { type TaskProperty, getPropertyConfig } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
@@ -18,7 +22,6 @@ import { useAppStore } from "~/store/app";
 
 import Property from "./property/property";
 import TaskDropDownMenu from "./task-dropdown-menu";
-import { taskFormSchema, type TaskFormType } from "../create-task";
 
 const taskVariants = cva(["flex items-center gap-2"], {
 	variants: {

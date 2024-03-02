@@ -1,6 +1,5 @@
 "use server";
 
-// import { getAverageColor } from "fast-average-color-node";
 import { put } from "@vercel/blob";
 import { addMinutes, startOfDay } from "date-fns";
 import { eq } from "drizzle-orm";
@@ -9,6 +8,7 @@ import OpenAI from "openai";
 
 import { createSprintForProject } from "~/actions/application/sprint-actions";
 import { authenticate } from "~/actions/security/authenticate";
+import { autoColor } from "~/actions/settings/settings-actions";
 import { addUserToProject } from "~/actions/user-actions";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
@@ -19,7 +19,6 @@ import {
 } from "~/server/db/schema";
 
 import { createInvite } from "./invite-actions";
-import { autoColor } from "../settings/settings-actions";
 
 type ProjectResponse = {
 	newProjectId: number;
@@ -111,7 +110,6 @@ export async function generateAndUpdateProjectImage(
 			.update(projects)
 			.set({ image: image, color: color })
 			.where(eq(projects.id, projectId));
-		console.log("Project image generated and updated successfully.");
 	} catch (error) {
 		console.error("Error generating or updating project image:", error);
 	}
