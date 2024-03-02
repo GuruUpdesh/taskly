@@ -100,6 +100,7 @@ export const taskRelations = relations(tasks, ({ one, many }) => ({
 		fields: [tasks.sprintId],
 		references: [sprints.id],
 	}),
+	comments: many(comments),
 }));
 
 /**
@@ -331,9 +332,10 @@ export const notificationRelations = relations(notifications, ({ one }) => ({
 
 export const comments = mysqlTable("comments", {
 	id: serial("id").primaryKey(),
-	title: varchar("title", { length: 255 }).notNull(),
-	assignee: varchar("assignee", { length: 255 }),
-	projectId: int("project_id").notNull(),
+	comment: varchar("comment", { length: 255 }),
+	taskId: int("task_id").notNull(),
+	propertyKey: varchar("property_key", { length: 255 }).notNull(),
+	propertyValue: varchar("property_value", { length: 255 }).notNull(),
 	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
 		.notNull()
 		.default(new Date()),
@@ -341,6 +343,8 @@ export const comments = mysqlTable("comments", {
 
 // relations
 export const commentsRelations = relations(comments, ({ one, many }) => ({
-
-
+	tasks: one(tasks, {
+		fields: [comments.taskId],
+		references: [tasks.id],
+	}),
 }));
