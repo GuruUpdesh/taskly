@@ -34,12 +34,14 @@ const RecentTasks = async ({ number }: RecentTasksProps) => {
 					key={task.id}
 					href={`/project/${task.projectId}/task/${task.id}`}
 				>
-					<li className="group flex items-center justify-between gap-1 rounded-full p-1 px-4 hover:bg-muted">
-						<div className="flex items-center gap-1">
+					<li className="group relative flex items-center justify-between gap-1 rounded-full p-1 px-4 hover:bg-muted">
+						<div className="flex min-w-0 flex-1 items-center gap-1">
 							<TaskStatus status={task.status} />
-							{task.title}
+							<p className=" min-w-0 flex-shrink overflow-hidden whitespace-nowrap overflow-ellipsis">
+								{task.title}
+							</p>
 						</div>
-						<p className="text-xs capitalize text-muted-foreground">
+						<p className="flex-shrink-0 whitespace-nowrap text-xs capitalize text-muted-foreground">
 							{task.category}{" "}
 							{formatDistanceToNow(
 								task.categoryTimestamp ?? new Date(),
@@ -65,7 +67,7 @@ export const TaskStatus = ({ status }: Props) => {
 		<TaskProperty
 			option={option}
 			size="iconSm"
-			className={cn("group-hover:shadow-lg", {
+			className={cn("group-hover:shadow-lg aspect-square", {
 				"group-hover:border-background": status === "backlog",
 			})}
 			hover="group"
