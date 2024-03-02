@@ -1,23 +1,24 @@
 import React from "react";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
-import UserGreeting from "~/components/page/project/user-greeting";
+
 import { Calendar } from "lucide-react";
-import { Button } from "~/components/ui/button";
 
 import {
 	DataCardLineGraph,
 	DataCardAreaGraph,
 	DataCardFigure,
 } from "~/components/dashboard/data-card";
-import { Separator } from "~/components/ui/separator";
+import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import RecentTasks from "~/components/page/project/recent-tasks";
+import UserGreeting from "~/components/page/project/user-greeting";
+import { Button } from "~/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 } from "~/components/ui/card";
-import RecentTasks from "~/components/page/project/recent-tasks";
+import { Separator } from "~/components/ui/separator";
 
 function ProjectPage() {
 	return (

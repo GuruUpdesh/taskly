@@ -1,16 +1,19 @@
 "use client";
 
 import React, { useEffect } from "react";
-import SprintOptions from "./sprint-options";
-import { Button } from "~/components/ui/button";
-import { ChevronRight, Loader2Icon } from "lucide-react";
-import { type Project } from "~/server/db/schema";
-import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { endOfYesterday, isEqual } from "date-fns";
-import { updateSprintsForProject } from "~/actions/application/sprint-actions";
+import { ChevronRight, Loader2Icon } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+import { updateSprintsForProject } from "~/actions/application/sprint-actions";
+import { Button } from "~/components/ui/button";
+import { type Project } from "~/server/db/schema";
+
+import SprintOptions from "./sprint-options";
 
 type Props = {
 	project: Project;

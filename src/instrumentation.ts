@@ -1,7 +1,8 @@
+import { z } from "zod";
+
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
-import { z } from "zod";
 
 const clerkUserSchema = z.object({
 	id: z.string(),

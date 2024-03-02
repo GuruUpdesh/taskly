@@ -1,13 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "~/components/ui/card";
+
 import {
 	LineChart,
 	Line,
@@ -16,6 +10,15 @@ import {
 	Tooltip,
 	Area,
 } from "recharts";
+
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "~/components/ui/card";
+
 import GraphTooltip from "./graph-tooltip";
 
 const DataCardLineGraph: React.FC = () => {

@@ -1,7 +1,9 @@
 "use client";
 
-import { useInView } from "framer-motion";
 import React, { useEffect, useRef } from "react";
+
+import { useInView } from "framer-motion";
+
 import { type SettingsConfig } from "~/config/settings-config";
 import { cn } from "~/lib/utils";
 import { useNavigationStore } from "~/store/navigation";

@@ -1,20 +1,24 @@
 "use server";
 
-// import { getAverageColor } from "fast-average-color-node";
+import { put } from "@vercel/blob";
+import { addMinutes, startOfDay } from "date-fns";
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import OpenAI from "openai";
+
+import { createSprintForProject } from "~/actions/application/sprint-actions";
+import { authenticate } from "~/actions/security/authenticate";
+import { autoColor } from "~/actions/settings/settings-actions";
+import { addUserToProject } from "~/actions/user-actions";
+import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import {
 	type NewProject,
 	projects,
 	insertProjectSchema,
 } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
-import { addUserToProject } from "~/actions/user-actions";
-import { addMinutes, startOfDay } from "date-fns";
-import { createSprintForProject } from "~/actions/application/sprint-actions";
-import { authenticate } from "~/actions/security/authenticate";
+
 import { createInvite } from "./invite-actions";
-import { env } from "~/env.mjs";
 
 type ProjectResponse = {
 	newProjectId: number;
@@ -100,23 +104,17 @@ export async function generateAndUpdateProjectImage(
 			return;
 		}
 
-		// //  get average color
-		// await getAverageColor(image).then(async (color: { hex: string }) => {
-		// 	const hex = color.hex;
-		// 	const vibrant = chroma(hex).darken(1).saturate(2).hex();
-		// 	// store project color in Redis
-		// 	await kv.set("project-color-" + projectId, vibrant);
-		// });
+		const color = await autoColor(image);
 
-		// update project image
 		await db
 			.update(projects)
-			.set({ image: image })
+			.set({ image: image, color: color })
 			.where(eq(projects.id, projectId));
-		console.log("Project image generated and updated successfully.");
 	} catch (error) {
 		console.error("Error generating or updating project image:", error);
 	}
+
+	revalidatePath("/");
 }
 
 function handleCreateProjectError(error: unknown) {
@@ -171,7 +169,17 @@ export async function generateProjectImage(
 	}
 
 	console.log("🤖 - Finished generating image!");
-	return image_url;
+	const imageResponse = await (await fetch(image_url)).arrayBuffer();
+	const imageData = Buffer.from(imageResponse);
+	const filename = `project_image_generated_${Date.now()}.png`;
+	const blob = await put(filename, imageData, {
+		access: "public",
+		contentType: "image/png",
+	});
+
+	console.log("🤖 - Finished uploading image!", blob);
+
+	return blob.url;
 }
 
 async function imageGenerationHelper(

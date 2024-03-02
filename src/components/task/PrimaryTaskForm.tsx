@@ -1,21 +1,24 @@
 "use client";
 
 import React, { useCallback, useEffect } from "react";
-import type { NewTask, Task } from "~/server/db/schema";
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
-import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { UseMutationResult } from "@tanstack/react-query";
-import { z } from "zod";
-import _debounce from "lodash/debounce";
-import { Separator } from "~/components/ui/separator";
-import { Button } from "~/components/ui/button";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import type { UseMutationResult } from "@tanstack/react-query";
+import _debounce from "lodash/debounce";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { type UpdateTask } from "~/components/backlog/tasks";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Separator } from "~/components/ui/separator";
+import { Textarea } from "~/components/ui/textarea";
+import type { NewTask, Task } from "~/server/db/schema";
 
 type Props = {
 	task: Task;
-	editTaskMutation: UseMutationResult<void, Error, NewTask, unknown>;
+	editTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 };
 
 const insertTaskSchema__Primary = z.object({
@@ -42,7 +45,14 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	}, [JSON.stringify(task)]);
 
 	function onSubmit(updatedTask: FormType) {
-		editTaskMutation.mutate({ ...task, ...updatedTask });
+		editTaskMutation.mutate({
+			id: task.id,
+			newTask: {
+				...updatedTask,
+				...task,
+				sprintId: String(task.sprintId),
+			},
+		});
 	}
 
 	async function handleChange() {

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import {
 	KBarPortal,
 	KBarPositioner,
@@ -11,6 +12,7 @@ import {
 	type ActionImpl,
 	type ActionId,
 } from "kbar";
+
 import { cn } from "~/lib/utils";
 
 const searchStyle = {

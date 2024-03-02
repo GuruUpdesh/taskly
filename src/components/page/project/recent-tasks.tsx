@@ -1,17 +1,14 @@
 import React from "react";
+
+import { formatDistanceToNow } from "date-fns";
+import Link from "next/link";
+
 import { getMostRecentTasks } from "~/actions/application/task-views-actions";
+import TaskProperty from "~/components/task/TaskProperty";
+import { Label } from "~/components/ui/label";
+import { getEnumOptionByKey } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
 import { type Task as TaskType } from "~/server/db/schema";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "~/components/ui/tooltip";
-import { getStatusDisplayName } from "~/config/task-entity";
-import Link from "next/link";
-import { formatDistanceToNow } from "date-fns";
-import { Label } from "~/components/ui/label";
 
 export function RecentTasksNavWrapper() {
 	return (
@@ -37,12 +34,14 @@ const RecentTasks = async ({ number }: RecentTasksProps) => {
 					key={task.id}
 					href={`/project/${task.projectId}/task/${task.id}`}
 				>
-					<li className="flex items-center justify-between gap-1 rounded-full p-1 px-4 hover:bg-muted">
-						<div className="flex items-center gap-1">
+					<li className="group relative flex items-center justify-between gap-1 rounded-full p-1 px-4 hover:bg-muted">
+						<div className="flex min-w-0 flex-1 items-center gap-1">
 							<TaskStatus status={task.status} />
-							{task.title}
+							<p className=" min-w-0 flex-shrink overflow-hidden overflow-ellipsis whitespace-nowrap">
+								{task.title}
+							</p>
 						</div>
-						<p className="text-xs capitalize text-muted-foreground">
+						<p className="flex-shrink-0 whitespace-nowrap text-xs capitalize text-muted-foreground">
 							{task.category}{" "}
 							{formatDistanceToNow(
 								task.categoryTimestamp ?? new Date(),
@@ -61,22 +60,18 @@ type Props = {
 };
 
 export const TaskStatus = ({ status }: Props) => {
+	const option = getEnumOptionByKey(status);
+	if (!option) return null;
+
 	return (
-		<TooltipProvider>
-			<Tooltip>
-				<TooltipTrigger asChild>
-					<div
-						className={cn("h-1 rounded-full border p-1", {
-							"border-grey-600 bg-muted": status === "todo",
-							"border-blue-500 bg-blue-600":
-								status === "inprogress",
-							"border-green-500 bg-green-600": status === "done",
-						})}
-					/>
-				</TooltipTrigger>
-				<TooltipContent>{getStatusDisplayName(status)}</TooltipContent>
-			</Tooltip>
-		</TooltipProvider>
+		<TaskProperty
+			option={option}
+			size="iconSm"
+			className={cn("aspect-square group-hover:shadow-lg", {
+				"group-hover:border-background": status === "backlog",
+			})}
+			hover="group"
+		/>
 	);
 };
 

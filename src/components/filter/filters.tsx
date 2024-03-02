@@ -1,21 +1,24 @@
 "use client";
 
 import React from "react";
-import { useAppStore } from "~/store/app";
+
 import { motion } from "framer-motion";
+import { Plus } from "lucide-react";
+import { useShallow } from "zustand/react/shallow";
+
+import { cn } from "~/lib/utils";
+import { useAppStore } from "~/store/app";
+
 import FilterChip from "./filter-chip";
 import FilterMenu from "./filter-menu";
-import { cn } from "~/lib/utils";
-import { Plus } from "lucide-react";
 
 const filterContainer =
 	"rounded-full border bg-accent/25 p-1 transition-all hover:bg-accent";
 
 const Filters = () => {
-	const [isFiltersOpen, filters] = useAppStore((state) => [
-		state.isFiltersOpen,
-		state.filters,
-	]);
+	const [isFiltersOpen, filters] = useAppStore(
+		useShallow((state) => [state.isFiltersOpen, state.filters]),
+	);
 
 	const variants = {
 		open: { opacity: 1, height: "auto" },
@@ -28,6 +31,10 @@ const Filters = () => {
 			animate={isFiltersOpen ? "open" : "closed"}
 			variants={variants}
 			transition={{ duration: 0.2, ease: [0.075, 0.82, 0.165, 1] }}
+			className={cn(
+				"sticky top-[57px] z-50 bg-background/75 backdrop-blur-xl",
+				{ "pointer-events-none": !isFiltersOpen },
+			)}
 		>
 			<div className="flex flex-wrap items-center gap-2 bg-gradient-to-b from-accent/25 to-transparent px-4 py-2 text-muted-foreground">
 				{filters.map((filter, idx) => (
