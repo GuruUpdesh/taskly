@@ -10,24 +10,28 @@ import { find } from "lodash";
 import { toast } from "sonner";
 
 import {
+	type UpdateTaskData,
 	deleteTask,
 	getTasksFromProject,
 	updateTask,
 } from "~/actions/application/task-actions";
 import Message from "~/components/general/message";
-import { getPropertyConfig, taskVariants } from "~/config/TaskConfigType";
+import {
+	type StatefulTask,
+	getPropertyConfig,
+	taskVariants,
+} from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
 import type { Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
 import { updateOrder } from "~/utils/order";
 
-import { type TaskFormType } from "./create-task";
 import LoadingTaskList from "../page/backlog/loading-task-list";
 import TaskList from "../page/backlog/task-list";
 
 export type UpdateTask = {
 	id: number;
-	newTask: TaskFormType;
+	newTask: UpdateTaskData;
 };
 
 type Props = {
@@ -37,6 +41,12 @@ type Props = {
 type TaskTypeOverride = Omit<TaskType, "sprintId"> & {
 	spintId: string;
 };
+
+async function updateTaskWrapper({ id, newTask }: UpdateTask) {
+	console.time("updateTaskWrapper");
+	await updateTask(id, newTask);
+	console.timeEnd("updateTaskWrapper");
+}
 
 export default function Tasks({ projectId }: Props) {
 	/**
@@ -82,10 +92,10 @@ export default function Tasks({ projectId }: Props) {
 		refetchInterval: 6 * 1000,
 	});
 
-	const addTaskMutation = useMutation({
-		mutationFn: ({ id, newTask }: UpdateTask) => updateTask(id, newTask),
+	const editTaskMutation = useMutation({
+		mutationFn: ({ id, newTask }: UpdateTask) =>
+			updateTaskWrapper({ id, newTask }),
 		onMutate: async ({ id, newTask }) => {
-			console.log("onMutate > addTaskMutation");
 			await queryClient.cancelQueries({ queryKey: ["tasks", projectId] });
 			const previousTasks = queryClient.getQueryData<TaskType[]>([
 				"tasks",
@@ -94,7 +104,12 @@ export default function Tasks({ projectId }: Props) {
 				["tasks", projectId],
 				(old) =>
 					old?.map((task) =>
-						task.id === id ? { ...task, ...newTask } : task,
+						task.id === id
+							? {
+									...task,
+									...newTask,
+								}
+							: task,
 					) ?? [],
 			);
 			return { previousTasks };
@@ -159,6 +174,7 @@ export default function Tasks({ projectId }: Props) {
 					return updatedTasks;
 				},
 			);
+			console.timeEnd("order change");
 
 			return { previousTasks };
 		},
@@ -187,6 +203,7 @@ export default function Tasks({ projectId }: Props) {
 	}, [result.data, assignees, sprints]);
 
 	function onDragEnd(dragResult: DropResult) {
+		console.time("order change");
 		const { source, destination } = dragResult;
 		if (!destination || source.index === destination.index) {
 			return;
@@ -199,7 +216,21 @@ export default function Tasks({ projectId }: Props) {
 		if (source.droppableId !== destination.droppableId) {
 			const task = result.data?.find((task) => task.id === reorderedId);
 			if (!task || !groupBy) return;
-			addTaskMutation.mutate({
+			// to avoid popping we need to set the task to the new group here
+			queryClient.setQueryData<StatefulTask[]>(
+				["tasks", projectId],
+				(old) =>
+					old?.map((currentTask) =>
+						currentTask.id === reorderedId
+							? {
+									...task,
+									[groupBy]: destination.droppableId,
+									backlogOrder: destination.index,
+								}
+							: currentTask,
+					) ?? [],
+			);
+			editTaskMutation.mutate({
 				id: task.id,
 				newTask: {
 					...task,
@@ -211,9 +242,7 @@ export default function Tasks({ projectId }: Props) {
 		}
 
 		newTaskOrder.splice(destination.index, 0, reorderedId);
-
 		setTaskOrder(newTaskOrder);
-
 		const taskOrderMap = new Map(
 			newTaskOrder.map((id, index) => [id, index]),
 		);
@@ -231,9 +260,10 @@ export default function Tasks({ projectId }: Props) {
 		return config.options;
 	}, [groupBy, assignees, sprints]);
 
-	if (!result.data) return <LoadingTaskList />;
+	if (!result.data || (taskOrder.length === 0 && result.data.length !== 0))
+		return <LoadingTaskList />;
 
-	if (taskOrder.length === 0)
+	if (result.data.length === 0) {
 		return (
 			<Message
 				type="faint"
@@ -244,6 +274,7 @@ export default function Tasks({ projectId }: Props) {
 				This project doesn&apos;t have any tasks yet.
 			</Message>
 		);
+	}
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
@@ -270,7 +301,7 @@ export default function Tasks({ projectId }: Props) {
 								taskOrder={taskOrder}
 								tasks={result.data}
 								filters={filters}
-								addTaskMutation={addTaskMutation}
+								addTaskMutation={editTaskMutation}
 								deleteTaskMutation={deleteTaskMutation}
 								projectId={projectId}
 							/>
@@ -283,7 +314,7 @@ export default function Tasks({ projectId }: Props) {
 					taskOrder={taskOrder}
 					tasks={result.data}
 					filters={filters}
-					addTaskMutation={addTaskMutation}
+					addTaskMutation={editTaskMutation}
 					deleteTaskMutation={deleteTaskMutation}
 					projectId={projectId}
 				/>

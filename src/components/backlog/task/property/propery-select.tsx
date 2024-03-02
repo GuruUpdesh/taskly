@@ -75,6 +75,7 @@ function PropertySelect({
 						<Select
 							onValueChange={(val) => {
 								onChange(convertToOriginalType(val));
+								console.time("value change");
 								if (autoSubmit) void onSubmit(form.getValues());
 							}}
 							value={currentValue}

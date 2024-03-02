@@ -121,7 +121,6 @@ const Task = ({
 		addTaskMutation.mutate({
 			id: task.id,
 			newTask: {
-				...{ ...task, sprintId: String(task.sprintId) },
 				...changes,
 			},
 		});

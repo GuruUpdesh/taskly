@@ -42,6 +42,7 @@ const TaskList = ({
 	if (!tasks) {
 		return null;
 	}
+
 	return (
 		<Droppable droppableId={listId}>
 			{(
@@ -52,7 +53,8 @@ const TaskList = ({
 					{...provided.droppableProps}
 					ref={provided.innerRef}
 					className={cn("min-h-2", {
-						"bg-accent-foreground/5": snapshot.isDraggingOver,
+						"bg-accent-foreground/5":
+							snapshot.isDraggingOver && listId !== "tasks",
 					})}
 				>
 					{taskOrder.map((taskId, idx) => {
@@ -62,7 +64,7 @@ const TaskList = ({
 							return null;
 						}
 
-						if (groupBy) {
+						if (listId !== "tasks" && groupBy) {
 							let groupValue = task[groupBy];
 							if (groupBy === "sprintId") {
 								groupValue = String(groupValue);

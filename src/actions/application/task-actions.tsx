@@ -137,32 +137,14 @@ export async function deleteTask(id: number) {
 	}
 }
 
-export async function updateTask(id: number, data: CreateTaskData) {
+export type UpdateTaskData = Partial<CreateTaskData>;
+export async function updateTask(id: number, data: UpdateTaskData) {
+	console.time("update task");
 	try {
-		const user = await currentUser();
-		const updatedTaskData = CreateTaskSchema.parse(data);
-		const currentTask = await db
-			.select()
-			.from(tasks)
-			.where(eq(tasks.id, id));
-		const currTask = currentTask[0];
-		if (!currTask) return;
-		if (updatedTaskData.assignee === "unassigned")
-			updatedTaskData.assignee = null;
-		else if (user?.username !== updatedTaskData.assignee) {
-			const assignee = await db
-				.select()
-				.from(users)
-				.where(eq(users.username, updatedTaskData.assignee ?? ""))
-				.limit(1);
-
-			await createNotification({
-				date: new Date(),
-				message: `Task "${updatedTaskData.title}" was assigned to you.`,
-				userId: assignee[0]?.userId ?? "unknown user",
-				taskId: id,
-				projectId: updatedTaskData.projectId,
-			});
+		const updatedTaskData = CreateTaskSchema.partial().parse(data);
+		if (Object.keys(updatedTaskData).length === 0) {
+			console.warn("No data to update");
+			return;
 		}
 
 		const taskData = {
@@ -170,13 +152,9 @@ export async function updateTask(id: number, data: CreateTaskData) {
 			lastEditedAt: new Date(),
 		};
 
-		if (taskData.status === "backlog" && currTask.sprintId !== -1) {
-			taskData.sprintId = -1;
-		} else if (taskData.sprintId !== -1 && taskData.status === "backlog") {
-			taskData.status = "todo";
-		}
 		await db.update(tasks).set(taskData).where(eq(tasks.id, id));
-		revalidatePath("/");
+		// revalidatePath("/");
+		void createTaskUpdateNotification(id);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			const validationError = fromZodError(error);
@@ -184,6 +162,26 @@ export async function updateTask(id: number, data: CreateTaskData) {
 		}
 		if (error instanceof Error) throwServerError(error.message);
 	}
+	console.timeEnd("update task");
+}
+
+async function createTaskUpdateNotification(taskId: number) {
+	const user = await currentUser();
+	if (!user) return;
+
+	const task = await db.query.tasks.findFirst({
+		where: (tasks) => eq(tasks.id, taskId),
+	});
+	if (!task) return;
+	if (user?.username === task.assignee || task.assignee === null) return;
+
+	await createNotification({
+		date: new Date(),
+		message: `Task "${task.title}" was updated.`,
+		userId: user.id,
+		taskId: taskId,
+		projectId: task.projectId,
+	});
 }
 
 export async function getTask(id: number) {
