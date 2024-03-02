@@ -18,6 +18,8 @@ import {
 	deleteViewsForTask,
 	updateOrInsertTaskView,
 } from "./task-views-actions";
+import { commentAction } from "./comment-actions";
+import { create } from "domain";
 
 export async function createTask(data: CreateTaskData) {
 	try {
@@ -42,21 +44,7 @@ export async function createTask(data: CreateTaskData) {
 
 		const task = await db.insert(tasks).values(newTask);
 
-		if (newTask.assignee) {
-			const assignee = await db
-				.select()
-				.from(users)
-				.where(eq(users.username, newTask.assignee ?? ""))
-				.limit(1);
-
-			await createNotification({
-				date: new Date(),
-				message: `Task "${newTask.title}" was created and assigned to you.`,
-				userId: assignee[0]?.userId ?? "unknown user",
-				taskId: parseInt(task.insertId),
-				projectId: newTask.projectId,
-			});
-		}
+		createTaskCreateNotification(parseInt(task.insertId), newTask);
 
 		revalidatePath("/");
 	} catch (error) {
@@ -162,6 +150,34 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 	}
 }
 
+async function createTaskCreateNotification(taskId: number, newTask: z.infer<typeof CreateTaskSchema>) {
+
+	const user = await currentUser();
+	if (!user) return;
+
+	await commentAction({
+		comment: `Task "${newTask.title}" was created.`,
+		taskId: taskId,
+		propertyKey: "assignee",
+		propertyValue: user.username ?? "unassigned",
+		insertedDate: new Date(),
+	});
+
+	const assignee = await db
+		.select()
+		.from(users)
+		.where(eq(users.username, newTask.assignee ?? ""))
+		.limit(1);
+
+	await createNotification({
+		date: new Date(),
+		message: `Task "${newTask.title}" was created and assigned to you.`,
+		userId: assignee[0]?.userId ?? "unknown user",
+		taskId: taskId,
+		projectId: newTask.projectId,
+	});
+}
+
 async function createTaskUpdateNotification(taskId: number) {
 	const user = await currentUser();
 	if (!user) return;
@@ -170,6 +186,15 @@ async function createTaskUpdateNotification(taskId: number) {
 		where: (tasks) => eq(tasks.id, taskId),
 	});
 	if (!task) return;
+
+	await commentAction({
+		comment: `Task "${task.title}" was updated.`,
+		taskId: taskId,
+		propertyKey: "status",
+		propertyValue: "todo",
+		insertedDate: new Date(),
+	});
+
 	if (user?.username === task.assignee || task.assignee === null) return;
 
 	await createNotification({
@@ -179,6 +204,7 @@ async function createTaskUpdateNotification(taskId: number) {
 		taskId: taskId,
 		projectId: task.projectId,
 	});
+
 }
 
 export async function getTask(id: number) {
