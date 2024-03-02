@@ -37,7 +37,7 @@ const RecentTasks = async ({ number }: RecentTasksProps) => {
 					<li className="group relative flex items-center justify-between gap-1 rounded-full p-1 px-4 hover:bg-muted">
 						<div className="flex min-w-0 flex-1 items-center gap-1">
 							<TaskStatus status={task.status} />
-							<p className=" min-w-0 flex-shrink overflow-hidden whitespace-nowrap overflow-ellipsis">
+							<p className=" min-w-0 flex-shrink overflow-hidden overflow-ellipsis whitespace-nowrap">
 								{task.title}
 							</p>
 						</div>
@@ -67,7 +67,7 @@ export const TaskStatus = ({ status }: Props) => {
 		<TaskProperty
 			option={option}
 			size="iconSm"
-			className={cn("group-hover:shadow-lg aspect-square", {
+			className={cn("aspect-square group-hover:shadow-lg", {
 				"group-hover:border-background": status === "backlog",
 			})}
 			hover="group"
