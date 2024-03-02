@@ -128,5 +128,5 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [require("tailwindcss-animate"), containerQueriesPlugin],
+	plugins: [require("tailwindcss-animate"), containerQueriesPlugin, require("tailwind-gradient-mask-image")],
 };
