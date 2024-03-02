@@ -25,6 +25,10 @@ import PrimaryTaskForm from "./PrimaryTaskForm";
 import TaskState from "./task-state";
 import Task from "../backlog/task/task";
 import { type UpdateTask } from "../backlog/tasks";
+import { Textarea } from "../ui/textarea";
+import { Input } from "../ui/input";
+import Comments from "./Comments";
+
 
 type Props = {
 	taskId: string;
@@ -117,9 +121,7 @@ const TaskPage = ({ taskId, projectId, context }: Props) => {
 							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 								Comments
 							</h3>
-							<div className="rounded-lg border bg-background p-4">
-								<div className=""></div>
-							</div>
+							<Comments />
 						</section>
 					</div>
 				</ResizablePanel>
