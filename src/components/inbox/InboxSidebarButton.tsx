@@ -1,18 +1,21 @@
 "use client";
 
-import React from "react";
-import SidebarButton from "../layout/sidebar/sidebar-button";
+import React, { useMemo } from "react";
+
 import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
-import { useNavigationStore } from "~/store/navigation";
+
+import SidebarButton from "~/components/layout/sidebar/sidebar-button";
+import { useAppStore } from "~/store/app";
 
 type Props = {
 	projectId: string;
 };
 
 export default function InboxSidebarButton({ projectId }: Props) {
-	const notificationCount = useNavigationStore(
-		(state) => state.notificationCount,
-	);
+	const notifications = useAppStore((state) => state.notifications);
+	const notificationCount = useMemo(() => {
+		return notifications.filter((n) => n.readAt === null).length;
+	}, [notifications]);
 
 	return (
 		<SidebarButton

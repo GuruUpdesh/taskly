@@ -1,8 +1,17 @@
 "use client";
 
-import React, { useEffect, useTransition, useState, useRef } from "react";
-import { useChat } from "ai/react";
+import React, { useState } from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { ChevronRight, Loader2, SparklesIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { aiGenerateTask } from "~/actions/ai/ai-action";
+import { createTask } from "~/actions/application/task-actions";
+import SimpleTooltip from "~/components/general/simple-tooltip";
+import { Button } from "~/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -11,120 +20,89 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "~/components/ui/dialog";
-import { Button } from "~/components/ui/button";
+import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Textarea } from "~/components/ui/textarea";
-import { Bot, ChevronRight, Loader2, SparkleIcon } from "lucide-react";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { type Task, selectTaskSchema } from "~/server/db/schema";
-import { createTask } from "~/actions/application/task-actions";
-import { throwClientError } from "~/utils/errors";
+import { schemaValidators } from "~/config/TaskConfigType";
 import { useNavigationStore } from "~/store/navigation";
-
-type AiTask = Task;
 
 type Props = {
 	projectId: string;
 };
 
-function extractValidJson(data: string): unknown {
-	// Check if the last character is a closing brace
-	if (data.endsWith("}")) {
-		try {
-			return JSON.parse(data);
-		} catch (error) {
-			if (error instanceof Error) throwClientError(error.message);
-		}
-	}
-
-	// Count the number of quotation marks
-	const quotes = data.match(/"/g) ?? [];
-	if (quotes.length < 4) {
-		return null; // Not enough data to form a valid JSON object
-	}
-
-	// Round down to the nearest multiple of 4
-	const evenQuotes = quotes.length - (quotes.length % 4);
-
-	// Find the index of the last quotation mark in the even count
-	let lastIndex = -1;
-	for (let i = 0; i < evenQuotes; i++) {
-		lastIndex = data.indexOf('"', lastIndex + 1);
-	}
-
-	// Extract the valid substring and trim trailing comma if any
-	let validJsonStr = data.substring(0, lastIndex + 1);
-	validJsonStr = validJsonStr.replace(/,\s*$/, "") + "}";
-
-	// Parse the valid JSON string
-	try {
-		return JSON.parse(validJsonStr);
-	} catch (error) {
-		if (error instanceof Error) throwClientError(error.message);
-	}
-}
+const formSchema = z.object({
+	description: z.string().max(1000),
+});
 
 const AiDialog = ({ projectId }: Props) => {
 	const [open, setOpen] = useState(false);
-	const {
-		messages,
-		input,
-		isLoading,
-		handleInputChange,
-		handleSubmit,
-		stop,
-		setMessages,
-	} = useChat({
-		api: "/api/chat",
-	});
-
 	const project = useNavigationStore((state) => state.currentProject);
-	const formRef = useRef<HTMLFormElement | null>(null);
-	const [reviewResponse, setReviewResponse] = useState(false);
-	const [taskObject, setTaskObject] = useState<AiTask | null>(null);
-	useEffect(() => {
-		const filtered = messages.filter((m) => m.role === "assistant");
-		if (filtered.length === 0) return;
-		setReviewResponse(true);
-		if (!filtered[0]) return;
 
-		const taskObject = extractValidJson(filtered[0].content) as AiTask;
-		if (taskObject) {
-			taskObject.projectId = parseInt(projectId);
-			taskObject.assignee = null;
-			taskObject.id = Math.random() * 1000;
-			taskObject.backlogOrder = 0;
-			taskObject.boardOrder = 0;
-			taskObject.insertedDate = new Date();
-			taskObject.lastEditedAt = new Date();
-			taskObject.sprintId = 0;
-			taskObject.points = "0";
-			setTaskObject(taskObject);
-		}
-	}, [messages]);
-
-	const resetForm = () => {
-		if (formRef.current) {
-			formRef.current.reset();
-		}
-		setTaskObject(null);
-		setReviewResponse(false);
-	};
-
-	const [isPending, startTransition] = useTransition();
-	async function handleAccept() {
-		try {
-			const validatedTask = selectTaskSchema.parse(taskObject);
-			await createTask(validatedTask);
-			setOpen(false);
-
-			setTaskObject(null);
-			setReviewResponse(false);
-		} catch (error) {
-			if (error instanceof Error) throwClientError(error.message);
-		}
+	function resetForm() {
+		form.reset({
+			description: "",
+		});
 	}
 
-	if (project?.isAiEnabled === false) return null;
+	const form = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			description: "",
+		},
+	});
+
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+		const result = await aiGenerateTask(
+			values.description,
+			parseInt(projectId),
+		);
+
+		const jsonResult = JSON.parse(result) as unknown;
+
+		const schema = z.array(
+			z.object({
+				title: schemaValidators.title,
+				description: schemaValidators.description,
+				status: schemaValidators.status,
+				points: schemaValidators.points,
+				priority: schemaValidators.priority,
+				type: schemaValidators.type,
+				assignee: schemaValidators.assignee,
+				sprintId: schemaValidators.sprintId,
+			}),
+		);
+
+		const tasks = schema.parse(jsonResult);
+
+		const createTasksPromises = tasks.map((task) =>
+			createTask({
+				...task,
+				projectId: parseInt(projectId),
+				boardOrder: 1000000,
+				backlogOrder: 1000000,
+				insertedDate: new Date(),
+				lastEditedAt: null,
+			}),
+		);
+
+		const results = await Promise.allSettled(createTasksPromises);
+
+		results.forEach((result, index) => {
+			if (result.status === "fulfilled") {
+				console.log(
+					`Task ${index} created successfully:`,
+					result.value,
+				);
+			} else {
+				console.error(`Task ${index} failed to create:`, result.reason);
+			}
+		});
+
+		setOpen(false);
+	}
+
+	if (project?.isAiEnabled === false) {
+		return null;
+	}
 
 	return (
 		<>
@@ -132,92 +110,43 @@ const AiDialog = ({ projectId }: Props) => {
 				open={open}
 				onOpenChange={(open: boolean) => {
 					if (!open) {
-						stop();
-						setMessages([]);
 						resetForm();
 					}
 					setOpen(open);
 				}}
 			>
-				<DialogTrigger asChild>
-					<Button variant="outline" size="sm">
-						<Bot className="h-4 w-4" />
-					</Button>
-				</DialogTrigger>
+				<SimpleTooltip label="AI Task Creation">
+					<DialogTrigger asChild>
+						<Button variant="outline" size="sm">
+							<SparklesIcon className="h-4 w-4" />
+						</Button>
+					</DialogTrigger>
+				</SimpleTooltip>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>
-							<Button size="iconSm" className="mr-2">
-								<SparkleIcon className="h-4 w-4" />
-							</Button>
+						<DialogTitle className="flex items-center gap-2">
+							<SparklesIcon className="h-4 w-4" />
 							AI Task Creation
 						</DialogTitle>
 					</DialogHeader>
-					<div>
-						{taskObject ? (
-							<ul>
-								{selectTaskSchema.safeParse(taskObject)
-									.success === false ? (
-									<div className="flex items-center gap-1">
-										<p>Creating Task</p>
-										<Loader2 className="ml-2 h-4 w-4 animate-spin" />
-									</div>
-								) : null}
-								{taskObject?.title && (
-									<li>
-										<strong>Title:</strong>{" "}
-										{taskObject.title}
-									</li>
+					<Form {...form}>
+						<form onSubmit={form.handleSubmit(onSubmit)}>
+							<FormField
+								control={form.control}
+								name="description"
+								render={({ field }) => (
+									<FormItem>
+										<Textarea
+											placeholder="Describe the task you would like to create, and our AI model will create it for you..."
+											className="h-[200px] max-h-[350px]"
+											{...field}
+										/>
+										<FormMessage />
+									</FormItem>
 								)}
-								{taskObject?.description && (
-									<li>
-										<strong>Description:</strong>{" "}
-										{taskObject.description}
-									</li>
-								)}
-								{taskObject?.priority && (
-									<li>
-										<strong>Priority:</strong>{" "}
-										{taskObject.priority}
-									</li>
-								)}
-								{taskObject?.status && (
-									<li>
-										<strong>Status:</strong>{" "}
-										{taskObject.status}
-									</li>
-								)}
-								{taskObject?.type && (
-									<li>
-										<strong>Type:</strong> {taskObject.type}
-									</li>
-								)}
-								{taskObject?.assignee && (
-									<li>
-										<strong>assignee:</strong>{" "}
-										{taskObject.assignee}
-									</li>
-								)}
-							</ul>
-						) : null}
-						{reviewResponse ? (
-							<></>
-						) : (
-							<form
-								ref={formRef}
-								onSubmit={handleSubmit}
-								id="chat"
-							>
-								<Textarea
-									name="description"
-									id="description"
-									placeholder="Describe the task you would like to create, and our AI model will create it for you..."
-									value={input}
-									onChange={handleInputChange}
-								/>
-							</form>
-						)}
-					</div>
+							/>
+						</form>
+					</Form>
 					<DialogFooter>
 						<DialogClose asChild>
 							<Button
@@ -228,39 +157,24 @@ const AiDialog = ({ projectId }: Props) => {
 								Close
 							</Button>
 						</DialogClose>
-						{reviewResponse ? (
-							<Button
-								type="submit"
-								onClick={() =>
-									startTransition(() => handleAccept())
-								}
-								disabled={
-									isPending ||
-									selectTaskSchema.safeParse(taskObject)
-										.success === false
-								}
-							>
-								{isPending ? "Creating" : "Accept Suggestion"}
-								{isPending ? (
-									<Loader2 className="ml-2 h-4 w-4 animate-spin" />
-								) : (
-									<ChevronRight className="ml-2 h-4 w-4" />
-								)}
-							</Button>
-						) : (
-							<Button
-								type="submit"
-								form="chat"
-								disabled={isLoading}
-							>
-								{isLoading ? "Submitting" : "Submit"}
-								{isLoading ? (
-									<Loader2 className="ml-2 h-4 w-4 animate-spin" />
-								) : (
-									<ChevronRight className="ml-2 h-4 w-4" />
-								)}
-							</Button>
-						)}
+						<Button
+							className="flex items-center gap-2"
+							onClick={form.handleSubmit(onSubmit)}
+							disabled={
+								!form.formState.isValid ||
+								!form.formState.isDirty ||
+								form.formState.isSubmitting
+							}
+						>
+							{form.formState.isSubmitting
+								? "Submitting"
+								: "Submit"}
+							{form.formState.isSubmitting ? (
+								<Loader2 className="h-4 w-4 animate-spin" />
+							) : (
+								<ChevronRight className="h-4 w-4" />
+							)}
+						</Button>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>

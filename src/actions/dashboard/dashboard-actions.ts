@@ -1,7 +1,8 @@
 "use server";
 
-import { authenticate } from "~/actions/security/authenticate";
 import { eq } from "drizzle-orm";
+
+import { authenticate } from "~/actions/security/authenticate";
 import { db } from "~/server/db";
 import { type User } from "~/server/db/schema";
 

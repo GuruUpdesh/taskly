@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+
 import { getUserApplicationData } from "~/actions/application/redis-actions";
 
 export default async function RedirectToApp() {

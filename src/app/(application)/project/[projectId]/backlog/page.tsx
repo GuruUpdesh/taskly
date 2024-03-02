@@ -3,17 +3,16 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
-import Tasks from "~/components/backlog/tasks";
+
 import { getTasksFromProject } from "~/actions/application/task-actions";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import CreateTask from "~/components/backlog/create-task";
-import { getAssigneesForProject } from "~/actions/application/project-actions";
-import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
-import { getSprintsForProject } from "~/actions/application/sprint-actions";
-import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import Tasks from "~/components/backlog/tasks";
 import CreateTicket from "~/components/create-ticket/ticket";
-import ToggleFilters from "~/components/page/backlog/toggle-filters";
 import Filters from "~/components/filter/filters";
+import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
+import ToggleFilters from "~/components/page/backlog/display-toggles";
 
 type Params = {
 	params: {
@@ -22,12 +21,10 @@ type Params = {
 };
 
 export default async function BacklogPage({ params: { projectId } }: Params) {
-	const assignees = await getAssigneesForProject(parseInt(projectId));
-	const sprints = await getSprintsForProject(parseInt(projectId));
 	// Prefetch tasks using react-query
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
-		queryKey: ["tasks"],
+		queryKey: ["tasks", projectId],
 		queryFn: () => getTasksFromProject(parseInt(projectId)),
 	});
 
@@ -41,21 +38,13 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 				<div className="flex items-center gap-2">
 					<ToggleFilters />
 					<AiDialog projectId={projectId} />
-					<CreateTask
-						projectId={projectId}
-						assignees={assignees}
-						sprints={sprints}
-					/>
+					<CreateTask projectId={projectId} />
 				</div>
 			</header>
 			<section className="flex flex-col">
 				<Filters />
 				<HydrationBoundary state={dehydrate(queryClient)}>
-					<Tasks
-						projectId={projectId}
-						assignees={assignees}
-						sprints={sprints}
-					/>
+					<Tasks projectId={projectId} />
 				</HydrationBoundary>
 			</section>
 			<CreateTicket />

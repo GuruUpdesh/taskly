@@ -1,67 +1,70 @@
 "use client";
 
-import {
-	DragDropContext,
-	Draggable,
-	type DraggableProvided,
-	type DropResult,
-	Droppable,
-	type DroppableProvided,
-	type DraggableStateSnapshot,
-} from "@hello-pangea/dnd";
-import { DragHandleDots2Icon } from "@radix-ui/react-icons";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect } from "react";
+
+import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+// import { useRegisterActions } from "kbar";
+import { useRegisterActions } from "kbar";
+import { find } from "lodash";
+// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useShallow } from "zustand/react/shallow";
+
 import {
+	type UpdateTaskData,
 	deleteTask,
 	getTasksFromProject,
 	updateTask,
 } from "~/actions/application/task-actions";
-import Task from "~/components/backlog/task/task";
-import { cn } from "~/lib/utils";
-import type {
-	NewTask,
-	Task as TaskType,
-	User,
-	Sprint,
-} from "~/server/db/schema";
-import { updateOrder } from "~/utils/order";
 import Message from "~/components/general/message";
-import { find } from "lodash";
+import LoadingTaskList from "~/components/page/backlog/loading-task-list";
+import TaskList from "~/components/page/backlog/task-list";
+import { TaskStatus } from "~/components/page/project/recent-tasks";
+import {
+	type StatefulTask,
+	getPropertyConfig,
+	taskVariants,
+} from "~/config/TaskConfigType";
+import { cn } from "~/lib/utils";
+import type { Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
-import { useRegisterActions } from "kbar";
-import { useRouter } from "next/navigation";
-import { TaskStatus } from "../page/project/recent-tasks";
-import { filterTasks } from "~/utils/filter";
+import { updateOrder } from "~/utils/order";
 
 export type UpdateTask = {
 	id: number;
-	newTask: NewTask;
+	newTask: UpdateTaskData;
 };
 
 type Props = {
 	projectId: string;
-	assignees: User[];
-	sprints: Sprint[];
 };
 
-export default function Tasks({ projectId, assignees, sprints }: Props) {
-	// update app assignees and sprints
-	const [updateAssignees, updateSprints, filters] = useAppStore((state) => [
-		state.updateAssignees,
-		state.updateSprints,
-		state.filters,
-	]);
+type TaskTypeOverride = Omit<TaskType, "sprintId"> & {
+	spintId: string;
+};
 
-	useEffect(() => {
-		updateAssignees(assignees);
-	}, [assignees]);
+async function updateTaskWrapper({ id, newTask }: UpdateTask) {
+	await updateTask(id, newTask);
+}
 
-	useEffect(() => {
-		updateSprints(sprints);
-	}, [sprints]);
+export default function Tasks({ projectId }: Props) {
+	/**
+	 * Get the assignees and sprints
+	 */
+	const [assignees, sprints, filters, groupBy] = useAppStore(
+		useShallow((state) => [
+			state.assignees,
+			state.sprints,
+			state.filters,
+			state.groupBy,
+		]),
+	);
 
+	/**
+	 * Fetch the tasks from the server and handle optimistic updates
+	 */
 	const queryClient = useQueryClient();
 
 	async function refetch() {
@@ -71,6 +74,7 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		if (newTasks) {
 			const previousTasks = queryClient.getQueryData<TaskType[]>([
 				"tasks",
+				projectId,
 			]);
 
 			newTasks = newTasks.map((task) => {
@@ -85,13 +89,109 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 	}
 
 	const result = useQuery({
-		queryKey: ["tasks"],
+		queryKey: ["tasks", projectId],
 		queryFn: () => refetch(),
 		staleTime: 6 * 1000,
 		refetchInterval: 6 * 1000,
 	});
 
-	// to get seamless dnd to work, we need local state (outside of react-query)
+	const editTaskMutation = useMutation({
+		mutationFn: ({ id, newTask }: UpdateTask) =>
+			updateTaskWrapper({ id, newTask }),
+		onMutate: async ({ id, newTask }) => {
+			await queryClient.cancelQueries({ queryKey: ["tasks", projectId] });
+			const previousTasks = queryClient.getQueryData<TaskType[]>([
+				"tasks",
+			]);
+			queryClient.setQueryData<TaskTypeOverride[]>(
+				["tasks", projectId],
+				(old) =>
+					old?.map((task) =>
+						task.id === id
+							? {
+									...task,
+									...newTask,
+								}
+							: task,
+					) ?? [],
+			);
+			return { previousTasks };
+		},
+		onError: (err, _, context) => {
+			toast.error(err.message);
+			queryClient.setQueryData(
+				["tasks", projectId],
+				context?.previousTasks,
+			);
+		},
+		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+	});
+
+	const deleteTaskMutation = useMutation({
+		mutationFn: (id: number) => deleteTask(id),
+		onMutate: async (id) => {
+			await queryClient.cancelQueries({ queryKey: ["tasks", projectId] });
+			const previousTasks = queryClient.getQueryData<TaskType[]>([
+				"tasks",
+			]);
+			queryClient.setQueryData<TaskType[]>(
+				["tasks", projectId],
+				(old) => old?.filter((task) => task.id !== id) ?? [],
+			);
+			return { previousTasks };
+		},
+		onError: (err, variables, context) => {
+			toast.error(err.message);
+			queryClient.setQueryData(
+				["tasks", projectId],
+				context?.previousTasks,
+			);
+		},
+		onSettled: () =>
+			queryClient.invalidateQueries({ queryKey: ["tasks", projectId] }),
+	});
+
+	const orderTasksMutation = useMutation({
+		mutationFn: (taskOrder: Map<number, number>) => updateOrder(taskOrder),
+		onMutate: async (taskOrder: Map<number, number>) => {
+			await queryClient.cancelQueries({ queryKey: ["tasks", projectId] });
+
+			const previousTasks = queryClient.getQueryData<TaskType[]>([
+				"tasks",
+				projectId,
+			]);
+
+			queryClient.setQueryData<TaskType[]>(
+				["tasks", projectId],
+				(oldTasks) => {
+					const updatedTasks =
+						oldTasks?.map((task) => {
+							const newOrder = taskOrder.get(task.id);
+							return newOrder !== undefined
+								? { ...task, backlogOrder: newOrder }
+								: task;
+						}) ?? [];
+
+					return updatedTasks;
+				},
+			);
+
+			return { previousTasks };
+		},
+		onError: (err, variables, context) => {
+			toast.error(err.message);
+			queryClient.setQueryData(
+				["tasks", projectId],
+				context?.previousTasks,
+			);
+		},
+		onSettled: () =>
+			queryClient.invalidateQueries({ queryKey: ["tasks", projectId] }),
+	});
+
+	/**
+	 * Handle Task Ordering and drag and drop
+	 */
 	const [taskOrder, setTaskOrder] = React.useState<number[]>([]);
 	useEffect(() => {
 		if (result.data) {
@@ -100,8 +200,68 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 				.map((task) => task.id);
 			setTaskOrder(orderedIds);
 		}
-	}, [result.data]);
+	}, [result.data, assignees, sprints]);
 
+	function onDragEnd(dragResult: DropResult) {
+		const { source, destination } = dragResult;
+		if (!destination || source.index === destination.index) {
+			return;
+		}
+
+		const newTaskOrder = Array.from(taskOrder);
+		const [reorderedId] = newTaskOrder.splice(source.index, 1);
+		if (!reorderedId) return;
+
+		if (source.droppableId !== destination.droppableId) {
+			const task = result.data?.find((task) => task.id === reorderedId);
+			if (!task || !groupBy) return;
+			// to avoid popping we need to set the task to the new group here
+			queryClient.setQueryData<StatefulTask[]>(
+				["tasks", projectId],
+				(old) =>
+					old?.map((currentTask) =>
+						currentTask.id === reorderedId
+							? {
+									...task,
+									[groupBy]: destination.droppableId,
+									backlogOrder: destination.index,
+								}
+							: currentTask,
+					) ?? [],
+			);
+			editTaskMutation.mutate({
+				id: task.id,
+				newTask: {
+					...task,
+					sprintId: String(task.sprintId),
+					[groupBy]: destination.droppableId,
+					backlogOrder: destination.index,
+				},
+			});
+		}
+
+		newTaskOrder.splice(destination.index, 0, reorderedId);
+		setTaskOrder(newTaskOrder);
+		const taskOrderMap = new Map(
+			newTaskOrder.map((id, index) => [id, index]),
+		);
+		orderTasksMutation.mutate(taskOrderMap);
+	}
+
+	/**
+	 * Grouping tasks
+	 */
+	const options = React.useMemo(() => {
+		if (!groupBy) return null;
+		const config = getPropertyConfig(groupBy, assignees, sprints);
+		if (!config) return null;
+		if (config.type !== "enum" && config.type !== "dynamic") return null;
+		return config.options;
+	}, [groupBy, assignees, sprints]);
+
+	/**
+	 * Kbar
+	 */
 	const router = useRouter();
 	useRegisterActions(
 		result?.data?.map((task, idx) => ({
@@ -115,105 +275,10 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 		[result.data],
 	);
 
-	const addTaskMutation = useMutation({
-		mutationFn: ({ id, newTask }: UpdateTask) => updateTask(id, newTask),
-		onMutate: async ({ id, newTask }) => {
-			console.log("onMutate > addTaskMutation");
-			await queryClient.cancelQueries({ queryKey: ["tasks"] });
-			const previousTasks = queryClient.getQueryData<TaskType[]>([
-				"tasks",
-			]);
-			queryClient.setQueryData<TaskType[]>(
-				["tasks"],
-				(old) =>
-					old?.map((task) =>
-						task.id === id ? { ...task, ...newTask } : task,
-					) ?? [],
-			);
-			return { previousTasks };
-		},
-		onError: (err, _, context) => {
-			toast.error(err.message);
-			queryClient.setQueryData(["tasks"], context?.previousTasks);
-		},
-		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
-	});
+	if (!result.data || (taskOrder.length === 0 && result.data.length !== 0))
+		return <LoadingTaskList />;
 
-	const deleteTaskMutation = useMutation({
-		mutationFn: (id: number) => deleteTask(id),
-		onMutate: async (id) => {
-			console.log("onMutate > deleteTaskMutation");
-			await queryClient.cancelQueries({ queryKey: ["tasks"] });
-			const previousTasks = queryClient.getQueryData<TaskType[]>([
-				"tasks",
-			]);
-			queryClient.setQueryData<TaskType[]>(
-				["tasks"],
-				(old) => old?.filter((task) => task.id !== id) ?? [],
-			);
-			return { previousTasks };
-		},
-		onError: (err, variables, context) => {
-			toast.error(err.message);
-			queryClient.setQueryData(["tasks"], context?.previousTasks);
-		},
-		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
-	});
-
-	const orderTasksMutation = useMutation({
-		mutationFn: (taskOrder: Map<number, number>) => updateOrder(taskOrder),
-		onMutate: async (taskOrder: Map<number, number>) => {
-			console.log("onMutate > orderTasksMutation");
-			await queryClient.cancelQueries({ queryKey: ["tasks"] });
-
-			const previousTasks = queryClient.getQueryData<TaskType[]>([
-				"tasks",
-			]);
-
-			queryClient.setQueryData<TaskType[]>(["tasks"], (oldTasks) => {
-				const updatedTasks =
-					oldTasks?.map((task) => {
-						const newOrder = taskOrder.get(task.id);
-						return newOrder !== undefined
-							? { ...task, backlogOrder: newOrder }
-							: task;
-					}) ?? [];
-
-				return updatedTasks;
-			});
-
-			return { previousTasks };
-		},
-		onError: (err, variables, context) => {
-			toast.error(err.message);
-			queryClient.setQueryData(["tasks"], context?.previousTasks);
-		},
-		onSettled: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
-	});
-
-	if (!result.data) return <div>Loading...</div>;
-
-	function onDragEnd(dragResult: DropResult) {
-		const { source, destination } = dragResult;
-
-		if (!destination || source.index === destination.index) {
-			return;
-		}
-
-		const newTaskOrder = Array.from(taskOrder);
-		const [reorderedId] = newTaskOrder.splice(source.index, 1);
-		if (!reorderedId) return;
-		newTaskOrder.splice(destination.index, 0, reorderedId);
-
-		setTaskOrder(newTaskOrder);
-
-		const taskOrderMap = new Map(
-			newTaskOrder.map((id, index) => [id, index]),
-		);
-		orderTasksMutation.mutate(taskOrderMap);
-	}
-
-	if (taskOrder.length === 0)
+	if (result.data.length === 0) {
 		return (
 			<Message
 				type="faint"
@@ -224,78 +289,51 @@ export default function Tasks({ projectId, assignees, sprints }: Props) {
 				This project doesn&apos;t have any tasks yet.
 			</Message>
 		);
+	}
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
-			<Droppable droppableId="tasks">
-				{(provided: DroppableProvided) => (
-					<div {...provided.droppableProps} ref={provided.innerRef}>
-						{taskOrder.map((taskId, idx) => {
-							const task = result.data?.find(
-								(task) => task.id === taskId,
-							);
-
-							if (!task || !filterTasks(task, filters)) {
-								return null;
-							}
-
-							return task ? (
-								<Draggable
-									draggableId={String(task.id)}
-									index={idx}
-									key={task.id}
-								>
-									{(
-										provided: DraggableProvided,
-										// eslint-disable-next-line @typescript-eslint/no-unused-vars
-										snapshot: DraggableStateSnapshot,
-									) => (
-										<div
-											className={cn(
-												"group relative bg-background/50 backdrop-blur-xl transition-colors",
-												{
-													"bg-accent-foreground/5":
-														snapshot.isDragging,
-													"pointer-events-none opacity-50":
-														task.options.isPending,
-													"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
-														task.options.isNew &&
-														!task.options.isPending,
-												},
-											)}
-											{...provided.draggableProps}
-											{...provided.dragHandleProps}
-											ref={provided.innerRef}
-										>
-											<DragHandleDots2Icon
-												className={cn(
-													"absolute bottom-[50%] left-1 translate-y-[50%] opacity-0 group-hover:opacity-50",
-													snapshot.isDragging &&
-														"opacity-100",
-												)}
-											/>
-											<Task
-												key={task.id}
-												task={task}
-												assignees={assignees}
-												sprints={sprints}
-												addTaskMutation={
-													addTaskMutation
-												}
-												deleteTaskMutation={
-													deleteTaskMutation
-												}
-												projectId={projectId}
-											/>
-										</div>
-									)}
-								</Draggable>
-							) : null;
-						})}
-						{provided.placeholder}
+			{groupBy && options ? (
+				options.map((option) => (
+					<div
+						key={option.key}
+						className={cn(
+							"",
+							taskVariants({
+								color: option.color,
+								hover: false,
+								context: "menu",
+							}),
+						)}
+					>
+						<div className="flex items-center gap-2 px-4 py-2 pb-0">
+							{option.icon}
+							{option.displayName}
+						</div>
+						<div className="pb-2">
+							<TaskList
+								listId={option.key}
+								taskOrder={taskOrder}
+								tasks={result.data}
+								filters={filters}
+								addTaskMutation={editTaskMutation}
+								deleteTaskMutation={deleteTaskMutation}
+								projectId={projectId}
+							/>
+						</div>
 					</div>
-				)}
-			</Droppable>
+				))
+			) : (
+				<TaskList
+					listId="tasks"
+					taskOrder={taskOrder}
+					tasks={result.data}
+					filters={filters}
+					addTaskMutation={editTaskMutation}
+					deleteTaskMutation={deleteTaskMutation}
+					projectId={projectId}
+				/>
+			)}
 		</DragDropContext>
 	);
 }

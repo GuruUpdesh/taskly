@@ -1,34 +1,44 @@
 "use client";
 
 import React from "react";
+
+import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+
+import {
+	deleteTask,
+	getTask,
+	updateTask,
+} from "~/actions/application/task-actions";
+import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import BackButtonRelative from "~/components/layout/navbar/back-button-relative";
+import { Button } from "~/components/ui/button";
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import PrimaryTaskForm from "./PrimaryTaskForm";
-import type { NewTask, Sprint, User } from "~/server/db/schema";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getTask, updateTask } from "~/actions/application/task-actions";
-import SecondaryTaskForm from "./SecondaryTaskForm";
-import { Button } from "~/components/ui/button";
-import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Separator } from "~/components/ui/separator";
-import BackButtonRelative from "~/components/layout/navbar/back-button-relative";
+
+import PrimaryTaskForm from "./PrimaryTaskForm";
 import TaskState from "./task-state";
+import Task from "../backlog/task/task";
+import { type UpdateTask } from "../backlog/tasks";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
 import Comments from "./Comments";
 
+
 type Props = {
 	taskId: string;
-	assignees: User[];
-	sprints: Sprint[];
+	projectId: string;
+	context: "page" | "inbox";
 };
 
-const Task = ({ taskId, assignees, sprints }: Props) => {
+const TaskPage = ({ taskId, projectId, context }: Props) => {
 	const queryClient = useQueryClient();
+	const router = useRouter();
 
 	const result = useQuery({
 		queryKey: ["task", taskId],
@@ -38,9 +48,16 @@ const Task = ({ taskId, assignees, sprints }: Props) => {
 	});
 
 	const editTaskMutation = useMutation({
-		mutationFn: (newTask: NewTask) => updateTask(parseInt(taskId), newTask),
+		mutationFn: ({ id, newTask }: UpdateTask) => updateTask(id, newTask),
 		onSettled: () =>
 			queryClient.invalidateQueries({ queryKey: ["task", taskId] }),
+	});
+
+	const deleteTaskMutation = useMutation({
+		mutationFn: (id: number) => deleteTask(id),
+		onMutate: () => {
+			router.back();
+		},
 	});
 
 	if (!result.data) {
@@ -59,7 +76,7 @@ const Task = ({ taskId, assignees, sprints }: Props) => {
 					<div className="flex flex-col">
 						<header className="container flex items-center justify-between gap-2 border-b py-2">
 							<div className="flex items-center gap-2">
-								<BackButtonRelative />
+								{context === "page" && <BackButtonRelative />}
 								<BreadCrumbs />
 							</div>
 						</header>
@@ -71,7 +88,7 @@ const Task = ({ taskId, assignees, sprints }: Props) => {
 				</ResizablePanel>
 				<ResizableHandle className="" />
 				<ResizablePanel id="task-info" defaultSize={25} minSize={20}>
-					<div className="h-screen bg-accent/50">
+					<div className="h-screen bg-accent/25">
 						<header className="container flex items-center justify-between gap-2 border-b py-2">
 							<div className="flex w-full items-center justify-between gap-2">
 								<Button size="icon" variant="outline">
@@ -93,11 +110,12 @@ const Task = ({ taskId, assignees, sprints }: Props) => {
 							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 								Attributes
 							</h3>
-							<SecondaryTaskForm
+							<Task
 								task={result.data.task}
-								assignees={assignees}
-								sprints={sprints}
-								editTaskMutation={editTaskMutation}
+								addTaskMutation={editTaskMutation}
+								deleteTaskMutation={deleteTaskMutation}
+								variant="list"
+								projectId={projectId}
 							/>
 							<Separator className="my-8" />
 							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
@@ -112,4 +130,4 @@ const Task = ({ taskId, assignees, sprints }: Props) => {
 	);
 };
 
-export default Task;
+export default TaskPage;

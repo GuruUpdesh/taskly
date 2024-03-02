@@ -3,6 +3,7 @@
 // from https://tanstack.com/query/v5/docs/framework/react/guides/advanced-ssr
 
 import { useState } from "react";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 type Props = {

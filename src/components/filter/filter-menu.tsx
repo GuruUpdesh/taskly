@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useMemo } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useShallow } from "zustand/react/shallow";
+
 import { Button } from "~/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -23,14 +26,15 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import {
-	buildDynamicOptions,
-	getTaskConfig,
-	optionVariants,
-} from "~/config/task-entity";
+	type TaskProperty,
+	getPropertyConfig,
+	taskVariants,
+} from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
-import { Form, FormField, FormItem } from "../ui/form";
 import { renderFilterValues } from "~/utils/filter-values";
+
+import { Form, FormField, FormItem } from "../ui/form";
 
 type Props = {
 	children: (menuOpen: boolean) => React.ReactNode;
@@ -45,6 +49,7 @@ const properties = [
 	"assignee",
 	"sprintId",
 ] as const;
+
 const formSchema = z.object({
 	property: z.enum(properties),
 	is: z.boolean(),
@@ -55,13 +60,13 @@ const FilterMenu = ({ children, defaultValues }: Props) => {
 	const [open, setOpen] = React.useState(false);
 
 	const [assignees, sprints, addFilter, updateFilter, filters] = useAppStore(
-		(state) => [
+		useShallow((state) => [
 			state.assignees,
 			state.sprints,
 			state.addFilter,
 			state.updateFilter,
 			state.filters,
-		],
+		]),
 	);
 
 	const usedProperties = useMemo(() => {
@@ -117,12 +122,7 @@ const FilterMenu = ({ children, defaultValues }: Props) => {
 		const property = form.watch("property");
 		if (property === "") return null;
 
-		return buildDynamicOptions(
-			getTaskConfig(property),
-			property,
-			assignees,
-			sprints,
-		);
+		return getPropertyConfig(property, assignees, sprints);
 	}, [form.watch("property")]);
 
 	function onSubmit(values: Filter) {
@@ -177,36 +177,53 @@ const FilterMenu = ({ children, defaultValues }: Props) => {
 														p,
 													);
 												})
-												.map((property) => {
-													const config =
-														getTaskConfig(property);
+												.map(
+													(
+														property: TaskProperty,
+													) => {
+														const config =
+															getPropertyConfig(
+																property,
+																assignees,
+																sprints,
+															);
 
-													if (
-														config.type !== "select"
-													)
-														return null;
+														if (
+															config.type !==
+																"enum" &&
+															config.type !==
+																"dynamic"
+														) {
+															console.warn(
+																`Invalid property type: ${config.type}`,
+															);
+															return null;
+														}
 
-													return (
-														<SelectItem
-															key={config.value}
-															value={config.value}
-															className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
-														>
-															<div className="flex min-w-[8rem] items-center gap-2">
-																<span className="text-muted-foreground">
-																	{
-																		config.icon
-																	}
-																</span>
-																<p>
-																	{
-																		config.displayName
-																	}
-																</p>
-															</div>
-														</SelectItem>
-													);
-												})}
+														return (
+															<SelectItem
+																key={config.key}
+																value={
+																	config.key
+																}
+																className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
+															>
+																<div className="flex min-w-[8rem] items-center gap-2">
+																	<span className="text-muted-foreground">
+																		{
+																			config.icon
+																		}
+																	</span>
+																	<p>
+																		{
+																			config.displayName
+																		}
+																	</p>
+																</div>
+															</SelectItem>
+														);
+													},
+												)}
 										</SelectContent>
 									</Select>
 								</FormItem>
@@ -265,38 +282,32 @@ const FilterMenu = ({ children, defaultValues }: Props) => {
 								</button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent className="w-[286px] bg-popover/50 shadow-md backdrop-blur-lg">
-								{currentConfig?.type === "select" &&
-									currentConfig?.form.options.map(
-										(option) => (
-											<DropdownMenuCheckboxItem
-												key={option.value}
-												checked={form
-													.watch("values")
-													.includes(
-														option.value.toString(),
-													)}
-												onCheckedChange={() =>
-													toggleCheck(
-														option.value.toString(),
-													)
-												}
-												onSelect={(e) =>
-													e.preventDefault()
-												}
-												className={cn(
-													optionVariants({
-														color: option.color,
-													}),
-													"border-none bg-transparent",
-												)}
-											>
-												<span className="flex items-center gap-1">
-													{option.icon}
-													{option.displayName}
-												</span>
-											</DropdownMenuCheckboxItem>
-										),
-									)}
+								{(currentConfig?.type === "enum" ||
+									currentConfig?.type === "dynamic") &&
+									currentConfig?.options.map((option) => (
+										<DropdownMenuCheckboxItem
+											key={option.key}
+											checked={form
+												.watch("values")
+												.includes(option.key)}
+											onCheckedChange={() =>
+												toggleCheck(option.key)
+											}
+											onSelect={(e) => e.preventDefault()}
+											className={cn(
+												taskVariants({
+													color: option.color,
+													hover: true,
+												}),
+												"border-none bg-transparent",
+											)}
+										>
+											<span className="flex items-center gap-1">
+												{option.icon}
+												{option.displayName}
+											</span>
+										</DropdownMenuCheckboxItem>
+									))}
 							</DropdownMenuContent>
 						</DropdownMenu>
 						<Button

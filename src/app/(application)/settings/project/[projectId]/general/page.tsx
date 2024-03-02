@@ -1,21 +1,23 @@
-import { redirect } from "next/navigation";
 import React from "react";
+
+import { redirect } from "next/navigation";
+
 import {
 	getAllUsersInProject,
 	getProject,
 } from "~/actions/application/project-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { authenticate } from "~/actions/security/authenticate";
-import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
-import { generalSettings } from "~/config/settings-config";
-import SettingsSection from "~/components/page/settings/settings-section";
+import Permission from "~/components/auth/Permission";
+import ProjectDangerZone from "~/components/page/settings/project-danger-zone";
 import ProjectInfo from "~/components/page/settings/project-info";
-import ProjectTheme from "~/components/page/settings/project-theme";
-import UsersTable from "~/components/projects/users-table";
 import ProjectInvite from "~/components/page/settings/project-invite";
 import ProjectSprints from "~/components/page/settings/project-sprints";
-import ProjectDangerZone from "~/components/page/settings/project-danger-zone";
-import Permission from "~/components/auth/Permission";
+import ProjectTheme from "~/components/page/settings/project-theme";
+import SettingsSection from "~/components/page/settings/settings-section";
+import UsersTable from "~/components/projects/users-table";
+import { generalSettings } from "~/config/settings-config";
+import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
 
 type Params = {
 	params: {
