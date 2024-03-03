@@ -312,6 +312,7 @@ export const defaultValues: NewTask = {
 	backlogOrder: 0,
 	boardOrder: 0,
 	lastEditedAt: new Date(),
+	completedAt: null,
 	insertedDate: new Date(),
 };
 

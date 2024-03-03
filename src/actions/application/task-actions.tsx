@@ -84,6 +84,26 @@ export async function getTasksFromProject(projectId: number) {
 	}
 }
 
+export async function getAllActiveTasksForProject(projectId: number) {
+	try {
+		const allTasks: Task[] = await db
+			.select()
+			.from(tasks)
+			.where(
+				and(
+					eq(tasks.projectId, projectId),
+					ne(tasks.status, "todo"),
+					ne(tasks.status, "inprogress"),
+					ne(tasks.status, "done"),
+				),
+			);
+
+		return allTasks;
+	} catch (error) {
+		if (error instanceof Error) throwServerError(error.message);
+	}
+}
+
 export async function deleteTask(id: number) {
 	try {
 		// get all the tasks from the project that who's order is greater than the task being deleted
@@ -155,6 +175,12 @@ export async function updateTask(id: number, data: NewTask) {
 		}
 
 		updatedTaskData.lastEditedAt = new Date();
+
+		if (updatedTaskData.status === "done") {
+			updatedTaskData.completedAt = new Date();
+		} else {
+			updatedTaskData.completedAt = null;
+		}
 
 		if (updatedTaskData.status === "backlog" && currTask.sprintId !== -1) {
 			updatedTaskData.sprintId = -1;

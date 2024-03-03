@@ -2,7 +2,7 @@
 
 import { auth } from "@clerk/nextjs";
 import { addWeeks } from "date-fns";
-import { and, desc, eq, gte } from "drizzle-orm";
+import { and, asc, desc, eq, gte, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
 import { projects, sprints, usersToProjects } from "~/server/db/schema";
@@ -76,6 +76,22 @@ export async function getSprintsForProject(projectId: number) {
 		name: `Sprint ${index + 1}`,
 		...sprint,
 	}));
+}
+
+export async function getCurrentSprintForProject(projectId: number) {
+	const currentSprints = await db
+		.select()
+		.from(sprints)
+		.where(
+			and(
+				eq(sprints.projectId, projectId),
+				gte(sprints.endDate, new Date()),
+			),
+		)
+		.orderBy(asc(sprints.endDate))
+		.limit(1);
+
+	return currentSprints[0];
 }
 
 export async function updateSprintsForProject(
