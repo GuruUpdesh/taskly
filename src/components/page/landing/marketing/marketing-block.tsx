@@ -28,6 +28,8 @@ const MarketingBlock = ({ className, children }: Props) => {
 			ref={ref}
 			className={cn(className, "rounded-lg p-[2px]")}
 			variants={variants}
+			initial="inactive"
+			animate="active"
 			transition={{ duration: 1, ease: [0.075, 0.82, 0.165, 1] }}
 		>
 			<div className="flex h-full w-full flex-col gap-4 rounded-md p-4">

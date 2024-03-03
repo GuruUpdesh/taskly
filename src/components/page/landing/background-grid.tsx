@@ -10,7 +10,7 @@ const Grid = () => {
 		function handleResize() {
 			const size = 130;
 			setCols(Math.floor(document.body.clientWidth / size));
-			setRows(Math.floor(document.body.clientHeight / size));
+			setRows(Math.floor(document.documentElement.scrollHeight / size));
 		}
 
 		handleResize();
