@@ -1,9 +1,10 @@
 "use server";
 
 import { and, eq } from "drizzle-orm";
+
+import { authenticate } from "~/actions/security/authenticate";
 import { db } from "~/server/db";
 import { tasksToViews } from "~/server/db/schema";
-import { authenticate } from "../security/authenticate";
 
 export async function updateOrInsertTaskView(taskId: number, userId: string) {
 	const taskView = await db.query.tasksToViews.findFirst({

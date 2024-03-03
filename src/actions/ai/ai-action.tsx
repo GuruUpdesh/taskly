@@ -1,8 +1,12 @@
 "use server";
 
 import OpenAI from "openai";
+
+import { getAssigneesForProject } from "~/actions/application/project-actions";
+import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { env } from "~/env.mjs";
 import { type User, insertTaskSchema__required } from "~/server/db/schema";
+import { getTaskAiSchema } from "~/utils/ai-context";
 
 const openai = new OpenAI({
 	apiKey: env.OPENAI_API_KEY,
@@ -64,4 +68,54 @@ export async function aiAction(
 		return;
 	}
 	return results.data;
+}
+
+export async function aiGenerateTask(description: string, projectId: number) {
+	console.log("🤖 - Beginning AI task creation");
+	const assignees = await getAssigneesForProject(projectId);
+	const sprints = await getSprintsForProject(projectId);
+
+	const taskSchema = getTaskAiSchema(assignees, sprints);
+	console.log("🤖 - Generated task schema", taskSchema);
+
+	const prompt = `
+	RESPOND IN JSON FORMAT!
+	Create a new task for project management. Provide the following details:
+	Description of the task: ${description}
+	
+	If you feel this should be broken up into multiple tasks feel free to do so.
+	Please always return an array of tasks, even if it's just one task.
+
+	${taskSchema}
+
+	Note:
+		1. If the status is backlog, there cannot be a sprint.
+		2. If a sprint is selected, the status cannot be backlog.
+	`;
+
+	const gptResponse = await openai.chat.completions.create({
+		messages: [
+			{
+				role: "assistant",
+				content: prompt,
+			},
+		],
+		model: "gpt-3.5-turbo",
+	});
+
+	if (!gptResponse.choices[0]?.message.content) {
+		console.log("🤖 - No response received");
+		return "";
+	}
+
+	console.log(
+		"🤖 - Response received",
+		gptResponse.choices[0]?.message.content,
+	);
+
+	const jsonString = gptResponse.choices[0]?.message.content;
+	const jsonStart = jsonString.indexOf("[");
+	const jsonEnd = jsonString.lastIndexOf("]") + 1;
+
+	return jsonString.substring(jsonStart, jsonEnd);
 }

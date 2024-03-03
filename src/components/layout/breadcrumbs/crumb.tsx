@@ -1,9 +1,12 @@
 import React from "react";
-import type { Crumb as TypeCrumb } from "./breadcrumbs";
-import { cn } from "~/lib/utils";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+
 import { HomeIcon } from "@radix-ui/react-icons";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+
+import { cn } from "~/lib/utils";
+
+import type { Crumb as TypeCrumb } from "./breadcrumbs";
 
 interface CrumbProps extends TypeCrumb {
 	last: boolean;

@@ -1,8 +1,10 @@
 import React from "react";
+
 import { toast } from "sonner";
+
 import { getUser } from "~/actions/dashboard/dashboard-actions";
-import { getTimeOfDay } from "~/utils/time";
 import typography from "~/styles/typography";
+import { getTimeOfDay } from "~/utils/time";
 
 async function UserGreeting() {
 	const result = await getUser();

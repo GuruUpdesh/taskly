@@ -1,10 +1,14 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
+
+import { usePathname } from "next/navigation";
 import { z } from "zod";
-import Crumb from "./crumb";
+import { useShallow } from "zustand/react/shallow";
+
 import { useNavigationStore } from "~/store/navigation";
+
+import Crumb from "./crumb";
 
 const CRUMBTYPES = ["project", "notification", "task"] as const;
 type CrumbType = (typeof CRUMBTYPES)[number];
@@ -55,16 +59,15 @@ function getCrumbs(
 const BreadCrumbs = () => {
 	const pathname = usePathname();
 	const [crumbs, setCrumbs] = React.useState<Crumb[]>([]);
-	const [project, task] = useNavigationStore((state) => [
-		state.currentProject,
-		state.currentTask,
-	]);
+	const [project, task] = useNavigationStore(
+		useShallow((state) => [state.currentProject, state.currentTask]),
+	);
 
 	function getFromState(id: string, type?: CrumbType) {
 		if (type === "project") {
 			return project?.name + ` (${id})` ?? "";
 		}
-		if (type === "task") {
+		if (type === "task" || type === "notification") {
 			return task?.title + ` (${id})` ?? "";
 		}
 

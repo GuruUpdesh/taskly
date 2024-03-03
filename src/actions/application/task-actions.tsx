@@ -3,20 +3,25 @@
 import { auth, currentUser } from "@clerk/nextjs";
 import { and, eq, gt, max, ne, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { fromZodError } from "zod-validation-error";
+
+import { createNotification } from "~/actions/notification-actions";
+import { type TaskFormType as CreateTaskData } from "~/components/backlog/create-task";
+import { type StatefulTask, CreateTaskSchema } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
-import { tasks, insertTaskSchema__required, users } from "~/server/db/schema";
-import { type Task, type NewTask } from "~/server/db/schema";
+import { tasks, users } from "~/server/db/schema";
+import { type Task } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
+
 import {
 	deleteViewsForTask,
 	updateOrInsertTaskView,
 } from "./task-views-actions";
-import { createNotification } from "../notification-actions";
-import { type StatefulTask } from "~/config/task-entity";
 
-export async function createTask(data: NewTask) {
+export async function createTask(data: CreateTaskData) {
 	try {
-		const newTask = insertTaskSchema__required.parse(data);
+		const newTask = CreateTaskSchema.parse(data);
 
 		const maxBacklogOrder = await db
 			.select({ backlogOrder: max(tasks.backlogOrder) })
@@ -30,6 +35,9 @@ export async function createTask(data: NewTask) {
 		) {
 			newTask.backlogOrder = maxBacklogOrder[0].backlogOrder + 1;
 			newTask.boardOrder = maxBacklogOrder[0].backlogOrder + 1;
+		} else {
+			newTask.backlogOrder = 0;
+			newTask.boardOrder = 0;
 		}
 
 		const task = await db.insert(tasks).values(newTask);
@@ -52,6 +60,10 @@ export async function createTask(data: NewTask) {
 
 		revalidatePath("/");
 	} catch (error) {
+		if (error instanceof z.ZodError) {
+			const validationError = fromZodError(error);
+			if (validationError) throw Error(validationError.message);
+		}
 		console.error(error);
 		if (error instanceof Error) throwServerError(error.message);
 	}
@@ -125,50 +137,48 @@ export async function deleteTask(id: number) {
 	}
 }
 
-export async function updateTask(id: number, data: NewTask) {
-	const user = await currentUser();
-
+export type UpdateTaskData = Partial<CreateTaskData>;
+export async function updateTask(id: number, data: UpdateTaskData) {
 	try {
-		const updatedTaskData = insertTaskSchema__required.parse(data);
-		const currentTask = await db
-			.select()
-			.from(tasks)
-			.where(eq(tasks.id, id));
-		const currTask = currentTask[0];
-		if (!currTask) return;
-		if (updatedTaskData.assignee === "unassigned")
-			updatedTaskData.assignee = null;
-		else if (user?.username !== updatedTaskData.assignee) {
-			const assignee = await db
-				.select()
-				.from(users)
-				.where(eq(users.username, updatedTaskData.assignee ?? ""))
-				.limit(1);
-
-			await createNotification({
-				date: new Date(),
-				message: `Task "${updatedTaskData.title}" was assigned to you.`,
-				userId: assignee[0]?.userId ?? "unknown user",
-				taskId: id,
-				projectId: updatedTaskData.projectId,
-			});
+		const updatedTaskData = CreateTaskSchema.partial().parse(data);
+		if (Object.keys(updatedTaskData).length === 0) {
+			console.warn("No data to update");
+			return;
 		}
 
-		updatedTaskData.lastEditedAt = new Date();
+		const taskData = {
+			...updatedTaskData,
+			lastEditedAt: new Date(),
+		};
 
-		if (updatedTaskData.status === "backlog" && currTask.sprintId !== -1) {
-			updatedTaskData.sprintId = -1;
-		} else if (
-			updatedTaskData.sprintId !== -1 &&
-			updatedTaskData.status === "backlog"
-		) {
-			updatedTaskData.status = "todo";
-		}
-		await db.update(tasks).set(updatedTaskData).where(eq(tasks.id, id));
-		revalidatePath("/");
+		await db.update(tasks).set(taskData).where(eq(tasks.id, id));
+		void createTaskUpdateNotification(id);
 	} catch (error) {
+		if (error instanceof z.ZodError) {
+			const validationError = fromZodError(error);
+			if (validationError) throw Error(validationError.message);
+		}
 		if (error instanceof Error) throwServerError(error.message);
 	}
+}
+
+async function createTaskUpdateNotification(taskId: number) {
+	const user = await currentUser();
+	if (!user) return;
+
+	const task = await db.query.tasks.findFirst({
+		where: (tasks) => eq(tasks.id, taskId),
+	});
+	if (!task) return;
+	if (user?.username === task.assignee || task.assignee === null) return;
+
+	await createNotification({
+		date: new Date(),
+		message: `Task "${task.title}" was updated.`,
+		userId: user.id,
+		taskId: taskId,
+		projectId: task.projectId,
+	});
 }
 
 export async function getTask(id: number) {

@@ -1,10 +1,13 @@
 "use server";
 
 import React from "react";
-import { getAllProjects } from "~/actions/application/project-actions";
-import ProjectCombobox from "./project-combobox";
+
 import { auth } from "@clerk/nextjs";
+
+import { getAllProjects } from "~/actions/application/project-actions";
 import { throwServerError } from "~/utils/errors";
+
+import ProjectCombobox from "./project-combobox";
 
 type Props = {
 	projectId: string;

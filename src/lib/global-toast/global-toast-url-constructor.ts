@@ -1,5 +1,6 @@
-import type { globalToastSchema } from "./global-toast-handler";
 import type z from "zod";
+
+import type { globalToastSchema } from "./global-toast-handler";
 
 /**
  * Constructs a URL with query parameters for displaying a toast notification.

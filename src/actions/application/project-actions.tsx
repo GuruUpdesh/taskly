@@ -1,8 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { db } from "~/server/db";
+import { auth } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+
+import { db } from "~/server/db";
 import {
 	projects,
 	insertProjectSchema,
@@ -11,7 +13,6 @@ import {
 } from "~/server/db/schema";
 import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
-import { auth } from "@clerk/nextjs";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function

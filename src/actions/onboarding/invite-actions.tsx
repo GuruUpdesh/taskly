@@ -1,18 +1,20 @@
 "use server";
 
-import { z } from "zod";
 import crypto from "crypto";
-import { db } from "~/server/db";
-import { invites, usersToProjects } from "~/server/db/schema";
-import { and, eq } from "drizzle-orm";
-import { differenceInDays } from "date-fns";
+
 import { auth, clerkClient } from "@clerk/nextjs";
 import { render } from "@react-email/render";
-import ProjectInviteEmail from "~/components/email/project-invite";
+import { differenceInDays } from "date-fns";
+import { and, eq } from "drizzle-orm";
 import { Resend } from "resend";
+import { z } from "zod";
+
+import { authenticate } from "~/actions/security/authenticate";
+import { checkPermissions } from "~/actions/security/permissions";
+import ProjectInviteEmail from "~/components/email/project-invite";
 import { env } from "~/env.mjs";
-import { authenticate } from "../security/authenticate";
-import { checkPermissions } from "../security/permissions";
+import { db } from "~/server/db";
+import { invites, usersToProjects } from "~/server/db/schema";
 
 const getInviteSchema = z.object({
 	userId: z.string(),
@@ -63,8 +65,6 @@ export async function createInvite(projectId: number) {
 }
 
 export async function joinProject(token: string) {
-	console.log("Joining project with token", token);
-
 	const userId = authenticate();
 
 	const requestInvite = await db
@@ -72,7 +72,6 @@ export async function joinProject(token: string) {
 		.from(invites)
 		.where(eq(invites.token, token));
 
-	console.log("Request invite", requestInvite);
 	if (!requestInvite || requestInvite.length === 0) {
 		return { success: false, message: "No invite link was provided" };
 	}
@@ -128,7 +127,7 @@ export async function sendEmailInvites(
 	if (!invitees || invitees.length === 0) {
 		return {
 			status: false,
-			message: "No invites sent as no emails were provided",
+			message: "Skipping Invites",
 		};
 	}
 	const inviteToken = await createInvite(projectId);

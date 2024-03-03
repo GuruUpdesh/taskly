@@ -1,5 +1,7 @@
-import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { forwardRef } from "react";
+
+import { CrossCircledIcon } from "@radix-ui/react-icons";
+
 import { cn } from "~/lib/utils";
 
 const Chip = forwardRef<

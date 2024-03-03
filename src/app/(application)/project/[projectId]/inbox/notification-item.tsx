@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { cn } from "~/lib/utils";
 
-import { Separator } from "~/components/ui/separator";
+import { usePathname, useRouter } from "next/navigation";
+
 import { readNotification } from "~/actions/notification-actions";
+import { Separator } from "~/components/ui/separator";
+import { cn } from "~/lib/utils";
 import { type Task } from "~/server/db/schema";
 
 type Props = {
