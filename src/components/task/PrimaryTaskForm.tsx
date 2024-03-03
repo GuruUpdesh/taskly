@@ -14,14 +14,17 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
-import type { Comment, NewTask, Task } from "~/server/db/schema";
-import Activity from "./activity";
-import Comments from "./Comments";
+import type { Comment as CommentType, NewTask, Task, User } from "~/server/db/schema";
+import Comment, { CommentWithUser } from "./Comment";
+import { cn } from "~/lib/utils";
+
+interface TaskWithComments extends Task {
+	comments: CommentWithUser[];
+}
 
 type Props = {
-	task: Task;
+	task: TaskWithComments;
 	editTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
-	comments: Comment[];
 };
 
 const insertTaskSchema__Primary = z.object({
@@ -31,7 +34,7 @@ const insertTaskSchema__Primary = z.object({
 
 type FormType = Pick<NewTask, "title" | "description">;
 
-const PrimaryTaskForm = ({ task, editTaskMutation, comments }: Props) => {
+const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	const form = useForm<FormType>({
 		resolver: zodResolver(insertTaskSchema__Primary),
 		defaultValues: {
@@ -70,10 +73,6 @@ const PrimaryTaskForm = ({ task, editTaskMutation, comments }: Props) => {
 		[],
 	);
 
-	// loop through comments to get all comments
-	console.log(comments);
-	const array = ['a', 'b', 'c', 'd', 'e'];
-
 	return (
 		<form
 			onSubmit={form.handleSubmit(onSubmit)}
@@ -106,16 +105,14 @@ const PrimaryTaskForm = ({ task, editTaskMutation, comments }: Props) => {
 				<ArrowTopRightIcon />
 			</Button>
 			<Separator />
-			<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-				Activity
-				{comments.map(comment => (
-					<div key={comment.id}>
-						<p>
-							{comment.comment}
-						</p>
-					</div>
-				))}
-			</h3>
+			<div className="overflow-hidden flex flex-col gap-4">
+				<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+					Activity
+				</h3>
+				{task.comments.map((comment) => {
+					return <Comment comment={comment} key={comment.id}/>
+				})}
+			</div>
 		</form >
 	);
 };

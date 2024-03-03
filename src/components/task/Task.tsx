@@ -27,8 +27,7 @@ import Task from "../backlog/task/task";
 import { type UpdateTask } from "../backlog/tasks";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
-import Comments from "./Comments";
-import Activity from "./activity";
+import Comments from "./Comment";
 import { Comment } from "~/server/db/schema";
 
 
@@ -36,10 +35,9 @@ type Props = {
 	taskId: string;
 	projectId: string;
 	context: "page" | "inbox";
-	comments: Comment[];
 };
 
-const TaskPage = ({ taskId, projectId, context, comments }: Props) => {
+const TaskPage = ({ taskId, projectId, context }: Props) => {
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
@@ -86,7 +84,6 @@ const TaskPage = ({ taskId, projectId, context, comments }: Props) => {
 						<PrimaryTaskForm
 							task={result.data.task}
 							editTaskMutation={editTaskMutation}
-							comments={comments}
 						/>
 					</div>
 				</ResizablePanel>

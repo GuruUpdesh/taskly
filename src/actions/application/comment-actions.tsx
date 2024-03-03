@@ -9,6 +9,6 @@ export async function commentAction(comment: {
     insertedDate: Date;
 }) {
 
-    await db.insert(comments).values(comment);
+    //await db.insert(comments).values(comment);
 
 }

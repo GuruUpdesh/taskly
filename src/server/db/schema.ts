@@ -156,6 +156,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 	usersToProjects: many(usersToProjects),
 	tasks: many(tasks),
 	views: many(tasksToViews),
+	comments: many(comments),
 }));
 
 /**
@@ -336,6 +337,8 @@ export const comments = mysqlTable("comments", {
 	taskId: int("task_id").notNull(),
 	propertyKey: varchar("property_key", { length: 255 }).notNull(),
 	propertyValue: varchar("property_value", { length: 255 }).notNull(),
+	oldPropertyValue: varchar("old_property_value", { length: 255 }),
+	userId: varchar("user_id", { length: 255 }).notNull(),
 	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
 		.notNull()
 		.default(new Date()),
@@ -345,9 +348,13 @@ export const comments = mysqlTable("comments", {
 export type Comment = InferSelectModel<typeof comments>;
 
 // relations
-export const commentsRelations = relations(comments, ({ one, many }) => ({
-	tasks: one(tasks, {
+export const commentsRelations = relations(comments, ({ one }) => ({
+	task: one(tasks, {
 		fields: [comments.taskId],
 		references: [tasks.id],
+	}),
+	user: one(users, {
+		fields: [comments.userId],
+		references: [users.userId],
 	}),
 }));

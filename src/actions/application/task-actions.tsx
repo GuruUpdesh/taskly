@@ -10,7 +10,7 @@ import { createNotification } from "~/actions/notification-actions";
 import { type TaskFormType as CreateTaskData } from "~/components/backlog/create-task";
 import { type StatefulTask, CreateTaskSchema } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
-import { tasks, users } from "~/server/db/schema";
+import { comments, tasks, users } from "~/server/db/schema";
 import { type Task } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 
@@ -129,7 +129,6 @@ export async function deleteTask(id: number) {
 export type UpdateTaskData = Partial<CreateTaskData>;
 export async function updateTask(id: number, data: UpdateTaskData) {
 	try {
-		const existingTask = await db.select().from(tasks).where(eq(tasks.id, id));
 		const updatedTaskData = CreateTaskSchema.partial().parse(data);
 		if (Object.keys(updatedTaskData).length === 0) {
 			console.warn("No data to update");
@@ -142,19 +141,10 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 		};
 
 		if (!taskData) return;
-
-		const priorityKey = Object.entries(taskData)[0]?.[0];
-		const priorityValue = Object.entries(taskData)[0]?.[1];
-
+		const existingTask = await db.query.tasks.findFirst({where: (tasks) => eq(tasks.id, id)});
+		if (!existingTask) return;
 		await db.update(tasks).set(taskData).where(eq(tasks.id, id));		
-		await commentAction({
-			comment: `Task "${existingTask[0]?.title}" ${priorityKey} changed from "${existingTask[0]?.[priorityKey]}" to "${priorityValue}".`,
-			taskId: id,
-			propertyKey: priorityKey ?? "undefined",
-			propertyValue: String(priorityValue) ?? "unassigned",
-			insertedDate: new Date(),
-		});
-		void createTaskUpdateNotification(id);
+		void createTaskUpdateNotification(id, data, existingTask);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			const validationError = fromZodError(error);
@@ -169,13 +159,14 @@ async function createTaskCreateNotification(taskId: number, newTask: z.infer<typ
 	const user = await currentUser();
 	if (!user) return;
 
-	await commentAction({
-		comment: `Task "${newTask.title}" was created and was assigned to ${user.username}.`,
-		taskId: taskId,
-		propertyKey: "assignee",
-		propertyValue: user.username ?? "unassigned",
-		insertedDate: new Date(),
-	});
+	// await commentAction({
+	// 	comment: `Task "${newTask.title}" was created and was assigned to ${user.username}.`,
+	// 	taskId: taskId,
+	// 	propertyKey: "assignee",
+	// 	propertyValue: user.username ?? "unassigned",
+	// 	insertedDate: new Date(),
+	// });
+
 
 	const assignee = await db
 		.select()
@@ -192,7 +183,7 @@ async function createTaskCreateNotification(taskId: number, newTask: z.infer<typ
 	});
 }
 
-async function createTaskUpdateNotification(taskId: number) {
+async function createTaskUpdateNotification(taskId: number, taskData: UpdateTaskData, existingTask: Task) {
 	const user = await currentUser();
 	if (!user) return;
 
@@ -200,6 +191,34 @@ async function createTaskUpdateNotification(taskId: number) {
 		where: (tasks) => eq(tasks.id, taskId),
 	});
 	if (!task) return;
+
+	taskData.sprintId = String(taskData.sprintId);
+	if (taskData.assignee === null) {
+		taskData.assignee = "unassigned";
+	}
+
+	console.log(taskData);
+
+	await db.transaction(async (tx) => {
+		for (const key in taskData) {
+		  const value = taskData[key as keyof typeof taskData];
+		  const excludedKeys = ['lastEditedAt', 'insertedDate', 'boardOrder', 'backlogOrder', 'id', 'title', 'description'];
+		  if (value === undefined || excludedKeys.includes(key)) continue;
+
+		  if (Object.keys(taskData).length > 1 && (key === "sprintId" || (key === "assignee" && value === "unassigned" && Object.keys(taskData).length !== 2))) {
+			continue;
+		  }
+	  
+		  await tx.insert(comments).values({
+			taskId: taskId,
+			propertyKey: key,
+			propertyValue: String(value),
+			oldPropertyValue: String(existingTask[key as keyof Task]),
+			userId: user.id,
+			insertedDate: new Date(),
+		  });
+		}
+	});
 
 	if (user?.username === task.assignee || task.assignee === null) return;
 
@@ -231,6 +250,11 @@ export async function getTask(id: number) {
 							},
 							where: (user) => eq(user.userId, userId),
 						},
+					},
+				},
+				comments: {
+					with: {
+						user: true,
 					},
 				},
 			},

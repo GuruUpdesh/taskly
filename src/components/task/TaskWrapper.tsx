@@ -27,12 +27,11 @@ export async function TaskWrapper({
 		queryFn: () => getTask(parseInt(taskId)),
 	});
 
-	const getSystemComments = await db.select().from(comments).where(eq(comments.taskId, parseInt(taskId)));
-	console.log(taskId)
+	
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<Task taskId={taskId} projectId={projectId} context={context} comments={getSystemComments} />
+			<Task taskId={taskId} projectId={projectId} context={context} />
 		</HydrationBoundary>
 	);
 }
