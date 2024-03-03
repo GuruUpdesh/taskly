@@ -14,11 +14,14 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
-import type { NewTask, Task } from "~/server/db/schema";
+import type { Comment, NewTask, Task } from "~/server/db/schema";
+import Activity from "./activity";
+import Comments from "./Comments";
 
 type Props = {
 	task: Task;
 	editTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
+	comments: Comment[];
 };
 
 const insertTaskSchema__Primary = z.object({
@@ -28,7 +31,7 @@ const insertTaskSchema__Primary = z.object({
 
 type FormType = Pick<NewTask, "title" | "description">;
 
-const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
+const PrimaryTaskForm = ({ task, editTaskMutation, comments }: Props) => {
 	const form = useForm<FormType>({
 		resolver: zodResolver(insertTaskSchema__Primary),
 		defaultValues: {
@@ -67,6 +70,10 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 		[],
 	);
 
+	// loop through comments to get all comments
+	console.log(comments);
+	const array = ['a', 'b', 'c', 'd', 'e'];
+
 	return (
 		<form
 			onSubmit={form.handleSubmit(onSubmit)}
@@ -101,8 +108,15 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 			<Separator />
 			<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 				Activity
+				{comments.map(comment => (
+					<div key={comment.id}>
+						<p>
+							{comment.comment}
+						</p>
+					</div>
+				))}
 			</h3>
-		</form>
+		</form >
 	);
 };
 

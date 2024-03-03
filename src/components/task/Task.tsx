@@ -28,15 +28,18 @@ import { type UpdateTask } from "../backlog/tasks";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
 import Comments from "./Comments";
+import Activity from "./activity";
+import { Comment } from "~/server/db/schema";
 
 
 type Props = {
 	taskId: string;
 	projectId: string;
 	context: "page" | "inbox";
+	comments: Comment[];
 };
 
-const TaskPage = ({ taskId, projectId, context }: Props) => {
+const TaskPage = ({ taskId, projectId, context, comments }: Props) => {
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
@@ -83,6 +86,7 @@ const TaskPage = ({ taskId, projectId, context }: Props) => {
 						<PrimaryTaskForm
 							task={result.data.task}
 							editTaskMutation={editTaskMutation}
+							comments={comments}
 						/>
 					</div>
 				</ResizablePanel>
@@ -121,7 +125,7 @@ const TaskPage = ({ taskId, projectId, context }: Props) => {
 							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 								Comments
 							</h3>
-							<Comments />
+							{/* <Comments taskId={parseInt(taskId)}/> */}
 						</section>
 					</div>
 				</ResizablePanel>

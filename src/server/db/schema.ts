@@ -341,6 +341,9 @@ export const comments = mysqlTable("comments", {
 		.default(new Date()),
 });
 
+// types
+export type Comment = InferSelectModel<typeof comments>;
+
 // relations
 export const commentsRelations = relations(comments, ({ one, many }) => ({
 	tasks: one(tasks, {

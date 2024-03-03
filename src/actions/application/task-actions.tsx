@@ -20,6 +20,7 @@ import {
 } from "./task-views-actions";
 import { commentAction } from "./comment-actions";
 import { create } from "domain";
+import { comment } from "postcss";
 
 export async function createTask(data: CreateTaskData) {
 	try {
@@ -128,6 +129,7 @@ export async function deleteTask(id: number) {
 export type UpdateTaskData = Partial<CreateTaskData>;
 export async function updateTask(id: number, data: UpdateTaskData) {
 	try {
+		const existingTask = await db.select().from(tasks).where(eq(tasks.id, id));
 		const updatedTaskData = CreateTaskSchema.partial().parse(data);
 		if (Object.keys(updatedTaskData).length === 0) {
 			console.warn("No data to update");
@@ -139,7 +141,19 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 			lastEditedAt: new Date(),
 		};
 
-		await db.update(tasks).set(taskData).where(eq(tasks.id, id));
+		if (!taskData) return;
+
+		const priorityKey = Object.entries(taskData)[0]?.[0];
+		const priorityValue = Object.entries(taskData)[0]?.[1];
+
+		await db.update(tasks).set(taskData).where(eq(tasks.id, id));		
+		await commentAction({
+			comment: `Task "${existingTask[0]?.title}" ${priorityKey} changed from "${existingTask[0]?.[priorityKey]}" to "${priorityValue}".`,
+			taskId: id,
+			propertyKey: priorityKey ?? "undefined",
+			propertyValue: String(priorityValue) ?? "unassigned",
+			insertedDate: new Date(),
+		});
 		void createTaskUpdateNotification(id);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
@@ -156,7 +170,7 @@ async function createTaskCreateNotification(taskId: number, newTask: z.infer<typ
 	if (!user) return;
 
 	await commentAction({
-		comment: `Task "${newTask.title}" was created.`,
+		comment: `Task "${newTask.title}" was created and was assigned to ${user.username}.`,
 		taskId: taskId,
 		propertyKey: "assignee",
 		propertyValue: user.username ?? "unassigned",
@@ -186,14 +200,6 @@ async function createTaskUpdateNotification(taskId: number) {
 		where: (tasks) => eq(tasks.id, taskId),
 	});
 	if (!task) return;
-
-	await commentAction({
-		comment: `Task "${task.title}" was updated.`,
-		taskId: taskId,
-		propertyKey: "status",
-		propertyValue: "todo",
-		insertedDate: new Date(),
-	});
 
 	if (user?.username === task.assignee || task.assignee === null) return;
 

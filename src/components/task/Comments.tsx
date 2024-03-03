@@ -1,21 +1,20 @@
+import { db } from "~/server/db";
 import { Textarea } from "../ui/textarea";
 import React from 'react';
+import { comments } from "~/server/db/schema";
+import { commentAction } from "~/actions/application/comment-actions";
 
-const Comments = () => {
+type Props = {
+    comments: any;
+};
 
-    const handleEnterKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            console.log("Enter key pressed");
-            const comment = (e.target as HTMLTextAreaElement).value;
-            console.log('comment:  ', comment);
-        }
-    };
+const Comments = ( {comments}: Props ) => {
+
+    console.log(comments[0].comment);
 
     return (
         <Textarea
             placeholder="Add a comment..."
-            onKeyDown={handleEnterKey}
         >
         </Textarea>
     );
