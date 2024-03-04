@@ -1,0 +1,153 @@
+@import '../../../node_modules/@mdxeditor/editor/dist/style.css';
+
+.dark-editor {
+    --accentBase: var(--tomato-1);
+    --accentBgSubtle: var(--tomato-2);
+    --accentBg: var(--tomato-3);
+    --accentBgHover: var(--tomato-4);
+    --accentBgActive: var(--tomato-5);
+    --accentLine: var(--tomato-6);
+    --accentBorder: var(--tomato-7);
+    --accentBorderHover: var(--tomato-8);
+    --accentSolid: var(--tomato-9);
+    --accentSolidHover: var(--tomato-10);
+    --accentText: var(--tomato-11);
+    --accentTextContrast: var(--tomato-12);
+  
+    --baseBase: var(--mauve-1);
+    --baseBgSubtle: var(--mauve-2);
+    --baseBg: var(--mauve-3);
+    --baseBgHover: var(--mauve-4);
+    --baseBgActive: var(--mauve-5);
+    --baseLine: var(--mauve-6);
+    --baseBorder: var(--mauve-7);
+    --baseBorderHover: var(--mauve-8);
+    --baseSolid: var(--mauve-9);
+    --baseSolidHover: var(--mauve-10);
+    --baseText: var(--mauve-11);
+    --baseTextContrast: var(--mauve-12);
+  
+    --admonitionTipBg: var(--cyan4);
+    --admonitionTipBorder: var(--cyan8);
+  
+    --admonitionInfoBg: var(--grass4);
+    --admonitionInfoBorder: var(--grass8);
+  
+    --admonitionCautionBg: var(--amber4);
+    --admonitionCautionBorder: var(--amber8);
+  
+    --admonitionDangerBg: var(--red4);
+    --admonitionDangerBorder: var(--red8);
+  
+    --admonitionNoteBg: var(--mauve-4);
+    --admonitionNoteBorder: var(--mauve-8);
+  
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  
+    color: var(--baseText);
+    --basePageBg: black;
+    background: var(--basePageBg);
+  }
+
+.mdxeditor {
+	/* Common styles for both MDXEditor and Textarea */
+	padding: 10px;
+    outline: none;
+	background-color: hsl(var(--background));
+	border-width: 1px;
+	border-radius: calc(var(--radius) - 2px);
+	border-color: hsl(var(--input));
+	min-height: 80px;
+	--tw-ring-color: transparent;
+  }
+  
+  .mdxeditor:focus-visible {
+    outline: none;
+    border-color: hsl(var(--ring));
+  }
+
+  /* Headers */
+  .mdxeditor h1 {
+	margin: 20px 0;
+	font-size: 2.25rem;
+	font-weight: 800;
+	letter-spacing: -0.025em;
+	line-height: 1.2;
+  }
+  
+  .mdxeditor h2 {
+	margin: 20px 0;
+	font-size: 1.875rem;
+	font-weight: 600;
+	letter-spacing: -0.0125em;
+	border-bottom: 1px solid #e5e7eb;
+	padding-bottom: 0.5rem;
+  }
+  
+  .mdxeditor h3 {
+	margin: 20px 0;
+	font-size: 1.5rem;
+	font-weight: 600;
+	letter-spacing: -0.0125em;
+  }
+  
+  .mdxeditor h4 {
+	margin: 20px 0;
+	font-size: 1.25rem;
+	font-weight: 600;
+	letter-spacing: -0.0125em;
+  }
+  
+  /* Paragraphs */
+  .mdxeditor p {
+	line-height: 1.75;
+  }
+  
+  .mdxeditor p:not(:first-child) {
+	margin-top: 1.5rem;
+  }
+  
+  .mdxeditor p.large {
+	font-size: 1.125rem;
+	font-weight: 600;
+  }
+  
+  .mdxeditor p.lead {
+	font-size: 1.25rem;
+	color: #6b7280;
+  }
+  
+  .mdxeditor p.muted {
+	color: #6b7280;
+  }
+  
+  .mdxeditor p.code {
+	position: relative;
+	border-radius: 0.25rem;
+	background-color: #f3f4f6;
+	padding: 0.125rem 0.25rem;
+	font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+	font-size: 0.875rem;
+	font-weight: 600;
+  }
+  
+  /* Lists */
+  .mdxeditor ul,
+  .mdxeditor ol {
+	margin-top: 1.5rem;
+	margin-left: 1.5rem;
+	list-style-type: disc;
+  }
+  
+  .mdxeditor ul ul,
+  .mdxeditor ul ol,
+  .mdxeditor ol ul,
+  .mdxeditor ol ol {
+	margin-top: 0; /* Remove margin-top for nested lists */
+  }
+  
+  .mdxeditor ul > li,
+  .mdxeditor ol > li {
+	margin-top: 0.5rem;
+  }
