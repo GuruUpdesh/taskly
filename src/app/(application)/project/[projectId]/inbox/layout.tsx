@@ -50,6 +50,7 @@ export default async function InboxLayout({ children }: Params) {
 						</div>
 					</header>
 					<section className="flex flex-col">
+						<NotificationList projectId={projectId} />
 						{notifications.map((notification, i) => (
 							<NotificationItem
 								key={i}
