@@ -9,7 +9,12 @@ const BackButtonRelative = () => {
 	const router = useRouter();
 
 	return (
-		<Button onClick={() => router.back()} variant="ghost" className="gap-2">
+		<Button
+			onClick={() => router.back()}
+			variant="outline"
+			size="sm"
+			className="gap-2 font-semibold"
+		>
 			<ArrowLeftIcon />
 			Back
 		</Button>

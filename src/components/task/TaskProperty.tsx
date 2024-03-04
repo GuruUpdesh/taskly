@@ -9,7 +9,7 @@ import {
 } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
 
-import PropertyTooltip from "./PropertyTooltip";
+import SimpleTooltip from "../general/simple-tooltip";
 
 const propertyVariants = cva(["flex items-center gap-2"], {
 	variants: {
@@ -40,7 +40,7 @@ const TaskProperty = ({
 	className = "",
 }: TaskPropertyProps) => {
 	return (
-		<PropertyTooltip content={option.displayName}>
+		<SimpleTooltip label={option.displayName}>
 			<div
 				className={cn(
 					propertyVariants({ size }),
@@ -57,7 +57,7 @@ const TaskProperty = ({
 					? null
 					: option.displayName}
 			</div>
-		</PropertyTooltip>
+		</SimpleTooltip>
 	);
 };
 
