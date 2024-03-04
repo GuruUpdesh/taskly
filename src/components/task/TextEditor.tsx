@@ -1,6 +1,7 @@
 "use client";
 
-import React, { ForwardedRef } from "react";
+import React, { type ForwardedRef } from "react";
+
 import {
 	headingsPlugin,
 	listsPlugin,
@@ -10,13 +11,10 @@ import {
 	MDXEditor,
 	type MDXEditorMethods,
 	type MDXEditorProps,
-    linkPlugin,
-    linkDialogPlugin,
+	linkPlugin,
+	linkDialogPlugin,
 } from "@mdxeditor/editor";
 import "./texteditor.css";
-
-
-type Props = {};
 
 export default function TextEditor({
 	editorRef,
@@ -24,13 +22,13 @@ export default function TextEditor({
 }: { editorRef: ForwardedRef<MDXEditorMethods> | null } & MDXEditorProps) {
 	return (
 		<MDXEditor
-            className="dark-theme dark-editor"
+			className="dark-theme dark-editor"
 			plugins={[
 				headingsPlugin({ allowedHeadingLevels: [1, 2, 3] }),
 				listsPlugin(),
 				quotePlugin(),
-                linkPlugin(),
-                linkDialogPlugin(),
+				linkPlugin(),
+				linkDialogPlugin(),
 				thematicBreakPlugin(),
 				markdownShortcutPlugin(),
 			]}
