@@ -18,9 +18,6 @@ import {
 	deleteViewsForTask,
 	updateOrInsertTaskView,
 } from "./task-views-actions";
-import { commentAction } from "./comment-actions";
-import { create } from "domain";
-import { comment } from "postcss";
 
 export async function createTask(data: CreateTaskData) {
 	try {
@@ -45,7 +42,7 @@ export async function createTask(data: CreateTaskData) {
 
 		const task = await db.insert(tasks).values(newTask);
 
-		createTaskCreateNotification(parseInt(task.insertId), newTask);
+		void createTaskCreateNotification(parseInt(task.insertId), newTask);
 
 		revalidatePath("/");
 	} catch (error) {
@@ -56,6 +53,37 @@ export async function createTask(data: CreateTaskData) {
 		console.error(error);
 		if (error instanceof Error) throwServerError(error.message);
 	}
+}
+
+async function createTaskCreateNotification(
+	taskId: number,
+	newTask: z.infer<typeof CreateTaskSchema>,
+) {
+	const user = await currentUser();
+	if (!user?.username) return;
+
+	const assignee = await db
+		.select()
+		.from(users)
+		.where(eq(users.username, newTask.assignee ?? ""))
+		.limit(1);
+
+	await db.insert(comments).values({
+		taskId: taskId,
+		propertyKey: "assignee",
+		propertyValue: user.username,
+		comment: `created the task.`,
+		userId: user.id,
+		insertedDate: new Date(),
+	});
+
+	await createNotification({
+		date: new Date(),
+		message: `Task "${newTask.title}" was created and assigned to you.`,
+		userId: assignee[0]?.userId ?? "unassigned",
+		taskId: taskId,
+		projectId: newTask.projectId,
+	});
 }
 
 export async function getAllTasks() {
@@ -141,9 +169,11 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 		};
 
 		if (!taskData) return;
-		const existingTask = await db.query.tasks.findFirst({where: (tasks) => eq(tasks.id, id)});
+		const existingTask = await db.query.tasks.findFirst({
+			where: (tasks) => eq(tasks.id, id),
+		});
 		if (!existingTask) return;
-		await db.update(tasks).set(taskData).where(eq(tasks.id, id));		
+		await db.update(tasks).set(taskData).where(eq(tasks.id, id));
 		void createTaskUpdateNotification(id, data, existingTask);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
@@ -154,36 +184,11 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 	}
 }
 
-async function createTaskCreateNotification(taskId: number, newTask: z.infer<typeof CreateTaskSchema>) {
-
-	const user = await currentUser();
-	if (!user) return;
-
-	// await commentAction({
-	// 	comment: `Task "${newTask.title}" was created and was assigned to ${user.username}.`,
-	// 	taskId: taskId,
-	// 	propertyKey: "assignee",
-	// 	propertyValue: user.username ?? "unassigned",
-	// 	insertedDate: new Date(),
-	// });
-
-
-	const assignee = await db
-		.select()
-		.from(users)
-		.where(eq(users.username, newTask.assignee ?? ""))
-		.limit(1);
-
-	await createNotification({
-		date: new Date(),
-		message: `Task "${newTask.title}" was created and assigned to you.`,
-		userId: assignee[0]?.userId ?? "unknown user",
-		taskId: taskId,
-		projectId: newTask.projectId,
-	});
-}
-
-async function createTaskUpdateNotification(taskId: number, taskData: UpdateTaskData, existingTask: Task) {
+async function createTaskUpdateNotification(
+	taskId: number,
+	taskData: UpdateTaskData,
+	existingTask: Task,
+) {
 	const user = await currentUser();
 	if (!user) return;
 
@@ -197,28 +202,52 @@ async function createTaskUpdateNotification(taskId: number, taskData: UpdateTask
 		taskData.assignee = "unassigned";
 	}
 
-	console.log(taskData);
+	const existingTaskTransformed = {
+		...existingTask,
+		sprintId: String(existingTask.sprintId),
+	};
+	if (existingTaskTransformed.assignee === null) {
+		existingTaskTransformed.assignee = "unassigned";
+	}
 
 	await db.transaction(async (tx) => {
 		for (const key in taskData) {
-		  const value = taskData[key as keyof typeof taskData];
-		  const excludedKeys = ['lastEditedAt', 'insertedDate', 'boardOrder', 'backlogOrder', 'id', 'title', 'description'];
-		  if (value === undefined || excludedKeys.includes(key)) continue;
+			const value = taskData[key as keyof typeof taskData];
+			const excludedKeys = [
+				"lastEditedAt",
+				"insertedDate",
+				"boardOrder",
+				"backlogOrder",
+				"id",
+				"title",
+				"description",
+			];
+			if (value === undefined || excludedKeys.includes(key)) continue;
 
-		  if (Object.keys(taskData).length > 1 && (key === "sprintId" || (key === "assignee" && value === "unassigned" && Object.keys(taskData).length !== 2))) {
-			continue;
-		  }
-	  
-		  await tx.insert(comments).values({
-			taskId: taskId,
-			propertyKey: key,
-			propertyValue: String(value),
-			oldPropertyValue: String(existingTask[key as keyof Task]),
-			userId: user.id,
-			insertedDate: new Date(),
-		  });
+			if (
+				Object.keys(taskData).length > 1 &&
+				(key === "sprintId" ||
+					(key === "assignee" &&
+						value === "unassigned" &&
+						Object.keys(taskData).length !== 2))
+			) {
+				continue;
+			}
+
+			await tx.insert(comments).values({
+				taskId: taskId,
+				propertyKey: key,
+				propertyValue: String(value),
+				oldPropertyValue: String(
+					existingTaskTransformed[key as keyof Task],
+				),
+				userId: user.id,
+				insertedDate: new Date(),
+			});
 		}
 	});
+
+	revalidatePath("/");
 
 	if (user?.username === task.assignee || task.assignee === null) return;
 
@@ -229,7 +258,6 @@ async function createTaskUpdateNotification(taskId: number, taskData: UpdateTask
 		taskId: taskId,
 		projectId: task.projectId,
 	});
-
 }
 
 export async function getTask(id: number) {

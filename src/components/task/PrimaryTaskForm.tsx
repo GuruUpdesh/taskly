@@ -3,20 +3,18 @@
 import React, { useCallback, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 import type { UseMutationResult } from "@tanstack/react-query";
 import _debounce from "lodash/debounce";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { type UpdateTask } from "~/components/backlog/tasks";
-import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
-import type { Comment as CommentType, NewTask, Task, User } from "~/server/db/schema";
-import Comment, { CommentWithUser } from "./Comment";
-import { cn } from "~/lib/utils";
+import type { NewTask, Task } from "~/server/db/schema";
+
+import Comment, { type CommentWithUser } from "./Comment";
 
 interface TaskWithComments extends Task {
 	comments: CommentWithUser[];
@@ -55,7 +53,6 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 			id: task.id,
 			newTask: {
 				...updatedTask,
-				...task,
 				sprintId: String(task.sprintId),
 			},
 		});
@@ -76,7 +73,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	return (
 		<form
 			onSubmit={form.handleSubmit(onSubmit)}
-			className="container flex flex-grow flex-col gap-4 pb-4 pt-2"
+			className="flex flex-grow flex-col gap-2 px-4 pb-4 pt-2"
 		>
 			<Input
 				type="text"
@@ -96,24 +93,26 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 					(form.watch("description").match(/\n/g) ?? []).length ?? 2
 				}
 			/>
-			<Separator />
+			{/* <Separator />
 			<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 				Subtasks
 			</h3>
 			<Button variant="outline" className="w-fit gap-2">
 				Add Subtask
 				<ArrowTopRightIcon />
-			</Button>
-			<Separator />
-			<div className="overflow-hidden flex flex-col gap-4">
-				<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-					Activity
-				</h3>
-				{task.comments.map((comment) => {
-					return <Comment comment={comment} key={comment.id}/>
-				})}
+			</Button> */}
+			<Separator className="my-4" />
+			<div className="pb-4">
+				<div className="flex flex-col gap-4 overflow-hidden">
+					<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+						Activity
+					</h3>
+					{task.comments.map((comment) => {
+						return <Comment key={comment.id} comment={comment} />;
+					})}
+				</div>
 			</div>
-		</form >
+		</form>
 	);
 };
 

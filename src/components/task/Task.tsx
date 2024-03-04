@@ -5,6 +5,7 @@ import React from "react";
 import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import {
 	deleteTask,
@@ -23,21 +24,24 @@ import { Separator } from "~/components/ui/separator";
 
 import PrimaryTaskForm from "./PrimaryTaskForm";
 import TaskState from "./task-state";
+import UserComment from "./UserComment";
 import Task from "../backlog/task/task";
 import { type UpdateTask } from "../backlog/tasks";
-import { Textarea } from "../ui/textarea";
-import { Input } from "../ui/input";
-import Comments from "./Comment";
-import { Comment } from "~/server/db/schema";
-
+import ToggleSidebarButton from "../layout/sidebar/toggle-sidebar-button";
 
 type Props = {
 	taskId: string;
 	projectId: string;
 	context: "page" | "inbox";
+	defaultLayout?: number[];
 };
 
-const TaskPage = ({ taskId, projectId, context }: Props) => {
+const TaskPage = ({
+	taskId,
+	projectId,
+	context,
+	defaultLayout = [75, 25],
+}: Props) => {
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
@@ -49,7 +53,10 @@ const TaskPage = ({ taskId, projectId, context }: Props) => {
 	});
 
 	const editTaskMutation = useMutation({
-		mutationFn: ({ id, newTask }: UpdateTask) => updateTask(id, newTask),
+		mutationFn: ({ id, newTask }: UpdateTask) => {
+			console.log("newTask", newTask);
+			return updateTask(id, newTask);
+		},
 		onSettled: () =>
 			queryClient.invalidateQueries({ queryKey: ["task", taskId] }),
 	});
@@ -61,6 +68,12 @@ const TaskPage = ({ taskId, projectId, context }: Props) => {
 		},
 	});
 
+	function handleDelete() {
+		router.push(`/project/${projectId}/backlog`);
+		deleteTaskMutation.mutate(parseInt(taskId));
+		toast.success("Task deleted");
+	}
+
 	if (!result.data) {
 		return <div>Loading...</div>;
 	}
@@ -69,14 +82,27 @@ const TaskPage = ({ taskId, projectId, context }: Props) => {
 		return <div>{result.data.message}</div>;
 	}
 
+	const onLayout = (sizes: number[]) => {
+		document.cookie = `react-resizable-panels:taskLayout=${JSON.stringify(sizes)}`;
+	};
+
 	return (
 		<>
 			<TaskState task={result.data.task} />
-			<ResizablePanelGroup direction="horizontal">
-				<ResizablePanel id="task" defaultSize={75} minSize={50}>
-					<div className="flex flex-col">
-						<header className="container flex items-center justify-between gap-2 border-b py-2">
+			<ResizablePanelGroup
+				direction="horizontal"
+				onLayout={onLayout}
+				id="task-group"
+			>
+				<ResizablePanel
+					id="task"
+					defaultSize={defaultLayout?.[0]}
+					minSize={50}
+				>
+					<div className="flex max-h-screen flex-col overflow-y-scroll">
+						<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b bg-background/75 px-4 py-2 pb-2 pt-2 backdrop-blur-xl">
 							<div className="flex items-center gap-2">
+								<ToggleSidebarButton />
 								{context === "page" && <BackButtonRelative />}
 								<BreadCrumbs />
 							</div>
@@ -88,9 +114,13 @@ const TaskPage = ({ taskId, projectId, context }: Props) => {
 					</div>
 				</ResizablePanel>
 				<ResizableHandle className="" />
-				<ResizablePanel id="task-info" defaultSize={25} minSize={20}>
+				<ResizablePanel
+					id="task-info"
+					defaultSize={defaultLayout?.[1]}
+					minSize={20}
+				>
 					<div className="h-screen bg-accent/25">
-						<header className="container flex items-center justify-between gap-2 border-b py-2">
+						<header className="flex items-center justify-between gap-2 border-b px-6 py-2 pb-2 pt-2">
 							<div className="flex w-full items-center justify-between gap-2">
 								<Button size="icon" variant="outline">
 									<BellIcon />
@@ -102,12 +132,15 @@ const TaskPage = ({ taskId, projectId, context }: Props) => {
 								>
 									<GitHubLogoIcon />
 								</Button>
-								<Button variant="outline">
+								<Button
+									variant="outline"
+									onClick={handleDelete}
+								>
 									<TrashIcon />
 								</Button>
 							</div>
 						</header>
-						<section className="container flex flex-col gap-2 pt-8">
+						<section className="flex flex-col gap-2 px-6 pt-8">
 							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 								Attributes
 							</h3>
@@ -122,7 +155,25 @@ const TaskPage = ({ taskId, projectId, context }: Props) => {
 							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 								Comments
 							</h3>
-							{/* <Comments taskId={parseInt(taskId)}/> */}
+							<UserComment
+								comment={{
+									id: 1,
+									userId: "demo",
+									user: {
+										userId: "demo",
+										username: "gsingh1",
+										profilePicture:
+											"https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18yYjZ0TlJ1cEJjZ1BqSEoyUG1OTU9GdEVXTm0ifQ",
+									},
+									propertyKey: "assignee",
+									propertyValue: "gsingh1",
+									taskId: 150,
+									oldPropertyValue: null,
+									insertedDate: new Date(),
+									comment:
+										"This is a modified comment for demo purposes, Lauren Ipsum is a great tool for this. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project.",
+								}}
+							/>
 						</section>
 					</div>
 				</ResizablePanel>

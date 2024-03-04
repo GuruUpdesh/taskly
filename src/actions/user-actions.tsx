@@ -1,8 +1,9 @@
 "use server";
 
 import { eq } from "drizzle-orm";
+
 import { db } from "~/server/db";
-import { type UserRole, usersToProjects, users } from "~/server/db/schema";
+import { type UserRole, usersToProjects } from "~/server/db/schema";
 
 export async function addUserToProject(
 	userId: string,
@@ -17,9 +18,9 @@ export async function addUserToProject(
 }
 
 export async function getUser(userId: string) {
-	const user = await db
-        .query
-		.users.findFirst({ where: (users) => eq(users.userId, userId) });
+	const user = await db.query.users.findFirst({
+		where: (users) => eq(users.userId, userId),
+	});
 
-	return user;		
+	return user;
 }
