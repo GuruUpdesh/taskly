@@ -41,23 +41,19 @@ export default async function InboxLayout({ children }: Params) {
 				defaultSize={20}
 			>
 				<div className="min-h-screen">
-					<header className="flex items-center justify-between gap-2 border-b p-4">
+					<header className="flex items-center justify-between gap-2 border-b px-4 py-2">
 						<h3 className="scroll-m-20 text-2xl font-bold tracking-tight">
 							Inbox
 						</h3>
-						<div className="flex gap-2">
+						<div className="flex gap-2 pb-1">
 							<InboxButtons user={user.id} />
 						</div>
 					</header>
-					<section className="flex flex-col gap-2 py-2">
+					<section className="flex flex-col">
 						{notifications.map((notification, i) => (
 							<NotificationItem
 								key={i}
-								id={notification.id.toString()}
-								message={notification.message}
-								date={notification.date.toDateString()}
-								task={notification.task}
-								read={notification.readAt !== null}
+								notification={notification}
 							/>
 						))}
 					</section>

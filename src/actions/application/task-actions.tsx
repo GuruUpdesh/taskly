@@ -51,7 +51,7 @@ export async function createTask(data: CreateTaskData) {
 
 			await createNotification({
 				date: new Date(),
-				message: `Task "${newTask.title}" was created and assigned to you.`,
+				message: `Task was created and assigned to you.`,
 				userId: assignee[0]?.userId ?? "unknown user",
 				taskId: parseInt(task.insertId),
 				projectId: newTask.projectId,
@@ -174,7 +174,7 @@ async function createTaskUpdateNotification(taskId: number) {
 
 	await createNotification({
 		date: new Date(),
-		message: `Task "${task.title}" was updated.`,
+		message: `Task was updated.`,
 		userId: user.id,
 		taskId: taskId,
 		projectId: task.projectId,
