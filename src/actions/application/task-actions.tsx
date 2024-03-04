@@ -10,7 +10,12 @@ import { createNotification } from "~/actions/notification-actions";
 import { type TaskFormType as CreateTaskData } from "~/components/backlog/create-task";
 import { type StatefulTask, CreateTaskSchema } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
-import { insertTaskHistorySchema, selectTaskHistorySchema, taskHistory, tasks, users } from "~/server/db/schema";
+import {
+	insertTaskHistorySchema,
+	taskHistory,
+	tasks,
+	users,
+} from "~/server/db/schema";
 import { type Task } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 
@@ -155,7 +160,11 @@ export async function deleteTask(id: number) {
 }
 
 export type UpdateTaskData = Partial<CreateTaskData>;
-export async function updateTask(id: number, data: UpdateTaskData, waitForNotification = false) {
+export async function updateTask(
+	id: number,
+	data: UpdateTaskData,
+	waitForNotification = false,
+) {
 	try {
 		const updatedTaskData = CreateTaskSchema.partial().parse(data);
 		if (Object.keys(updatedTaskData).length === 0) {
@@ -177,8 +186,7 @@ export async function updateTask(id: number, data: UpdateTaskData, waitForNotifi
 		if (waitForNotification) {
 			await createTaskUpdateNotification(id, data, existingTask);
 			revalidatePath("/");
-		}
-		else{
+		} else {
 			void createTaskUpdateNotification(id, data, existingTask);
 		}
 	} catch (error) {

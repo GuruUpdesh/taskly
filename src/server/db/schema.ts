@@ -337,7 +337,14 @@ export const taskHistory = mysqlTable("task_history", {
 	id: serial("id").primaryKey(),
 	comment: varchar("comment", { length: 255 }),
 	taskId: int("task_id").notNull(),
-	propertyKey: mysqlEnum("property_key", ["status", "priority", "assignee", "sprintId", "type", "points"]),
+	propertyKey: mysqlEnum("property_key", [
+		"status",
+		"priority",
+		"assignee",
+		"sprintId",
+		"type",
+		"points",
+	]),
 	propertyValue: varchar("property_value", { length: 255 }),
 	oldPropertyValue: varchar("old_property_value", { length: 255 }),
 	userId: varchar("user_id", { length: 255 }).notNull(),
@@ -371,7 +378,6 @@ export const taskHistoryRelations = relations(taskHistory, ({ one }) => ({
 		references: [users.userId],
 	}),
 }));
-
 
 /**
  * Comments

@@ -25,11 +25,13 @@ export async function TaskWrapper({
 		queryFn: () => getTask(parseInt(taskId)),
 	});
 
-	const layout = cookies().get("react-resizable-panels:taskLayout");
+	const layout = cookies().get("react-resizable-panels:task-layout");
 	let defaultLayout;
 	if (layout) {
 		defaultLayout = JSON.parse(layout.value) as number[] | undefined;
 	}
+
+	console.log("defaultLayout", defaultLayout);
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>

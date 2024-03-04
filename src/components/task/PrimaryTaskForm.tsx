@@ -108,7 +108,12 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 						Activity
 					</h3>
 					{task.taskHistory.map((history) => {
-						return <TaskHistoryItem key={history.id} history={history} />;
+						return (
+							<TaskHistoryItem
+								key={history.id}
+								history={history}
+							/>
+						);
 					})}
 				</div>
 			</div>

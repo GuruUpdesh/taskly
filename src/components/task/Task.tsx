@@ -22,13 +22,12 @@ import {
 } from "~/components/ui/resizable";
 import { Separator } from "~/components/ui/separator";
 
+import Comments from "./comments/Comments";
 import PrimaryTaskForm from "./PrimaryTaskForm";
 import TaskState from "./task-state";
-import UserComment from "./UserComment";
 import Task from "../backlog/task/task";
 import { type UpdateTask } from "../backlog/tasks";
 import ToggleSidebarButton from "../layout/sidebar/toggle-sidebar-button";
-import CommentForm from "./CommentForm";
 
 type Props = {
 	taskId: string;
@@ -84,7 +83,7 @@ const TaskPage = ({
 	}
 
 	const onLayout = (sizes: number[]) => {
-		document.cookie = `react-resizable-panels:taskLayout=${JSON.stringify(sizes)}`;
+		document.cookie = `react-resizable-panels:task-layout=${JSON.stringify(sizes)}`;
 	};
 
 	return (
@@ -99,6 +98,7 @@ const TaskPage = ({
 					id="task"
 					defaultSize={defaultLayout?.[0]}
 					minSize={50}
+					order={0}
 				>
 					<div className="flex max-h-screen flex-col overflow-y-scroll">
 						<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b bg-background/75 px-4 py-2 pb-2 pt-2 backdrop-blur-xl">
@@ -119,8 +119,9 @@ const TaskPage = ({
 					id="task-info"
 					defaultSize={defaultLayout?.[1]}
 					minSize={20}
+					order={1}
 				>
-					<div className="h-screen bg-accent/25">
+					<div className="flex h-screen max-h-screen flex-col bg-[#081020]">
 						<header className="flex items-center justify-between gap-2 border-b px-6 py-2 pb-2 pt-2">
 							<div className="flex w-full items-center justify-between gap-2">
 								<Button size="icon" variant="outline">
@@ -152,15 +153,18 @@ const TaskPage = ({
 								variant="list"
 								projectId={projectId}
 							/>
-							<Separator className="my-8" />
-							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+						</section>
+						<Separator className="my-4" />
+						<div className="relative z-10">
+							<h3 className="scroll-m-20 px-6 pb-2 text-xl font-semibold tracking-tight">
 								Comments
 							</h3>
-							{result.data.task.comments.map((comment) => {
-								return <UserComment key={comment.id} comment={comment} />;
-							})}
-							<CommentForm taskId={result.data.task.id} />
-						</section>
+							<div className="pointer-events-none absolute left-0 top-0 -z-10 h-[135%] w-full bg-gradient-to-t from-transparent to-[#081020] to-25%" />
+						</div>
+						<Comments
+							taskComments={result.data.task.comments}
+							taskId={result.data.task.id}
+						/>
 					</div>
 				</ResizablePanel>
 			</ResizablePanelGroup>
