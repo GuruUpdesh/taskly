@@ -28,6 +28,7 @@ import UserComment from "./UserComment";
 import Task from "../backlog/task/task";
 import { type UpdateTask } from "../backlog/tasks";
 import ToggleSidebarButton from "../layout/sidebar/toggle-sidebar-button";
+import CommentForm from "./CommentForm";
 
 type Props = {
 	taskId: string;
@@ -55,7 +56,7 @@ const TaskPage = ({
 	const editTaskMutation = useMutation({
 		mutationFn: ({ id, newTask }: UpdateTask) => {
 			console.log("newTask", newTask);
-			return updateTask(id, newTask);
+			return updateTask(id, newTask, true);
 		},
 		onSettled: () =>
 			queryClient.invalidateQueries({ queryKey: ["task", taskId] }),
@@ -155,25 +156,10 @@ const TaskPage = ({
 							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 								Comments
 							</h3>
-							<UserComment
-								comment={{
-									id: 1,
-									userId: "demo",
-									user: {
-										userId: "demo",
-										username: "gsingh1",
-										profilePicture:
-											"https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18yYjZ0TlJ1cEJjZ1BqSEoyUG1OTU9GdEVXTm0ifQ",
-									},
-									propertyKey: "assignee",
-									propertyValue: "gsingh1",
-									taskId: 150,
-									oldPropertyValue: null,
-									insertedDate: new Date(),
-									comment:
-										"This is a modified comment for demo purposes, Lauren Ipsum is a great tool for this. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project. I am going to use it for the next project. This is AI generated text, I am not sure if it is going to be useful for the project.",
-								}}
-							/>
+							{result.data.task.comments.map((comment) => {
+								return <UserComment key={comment.id} comment={comment} />;
+							})}
+							<CommentForm taskId={result.data.task.id} />
 						</section>
 					</div>
 				</ResizablePanel>

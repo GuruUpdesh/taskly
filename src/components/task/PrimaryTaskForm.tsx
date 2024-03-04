@@ -14,10 +14,10 @@ import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
 import type { NewTask, Task } from "~/server/db/schema";
 
-import Comment, { type CommentWithUser } from "./Comment";
+import TaskHistoryItem, { type TaskHistoryWithUser } from "./HistoryItem";
 
 interface TaskWithComments extends Task {
-	comments: CommentWithUser[];
+	taskHistory: TaskHistoryWithUser[];
 }
 
 type Props = {
@@ -107,8 +107,8 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 					<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 						Activity
 					</h3>
-					{task.comments.map((comment) => {
-						return <Comment key={comment.id} comment={comment} />;
+					{task.taskHistory.map((history) => {
+						return <TaskHistoryItem key={history.id} history={history} />;
 					})}
 				</div>
 			</div>

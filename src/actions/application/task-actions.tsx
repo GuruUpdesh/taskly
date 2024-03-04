@@ -10,7 +10,7 @@ import { createNotification } from "~/actions/notification-actions";
 import { type TaskFormType as CreateTaskData } from "~/components/backlog/create-task";
 import { type StatefulTask, CreateTaskSchema } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
-import { comments, tasks, users } from "~/server/db/schema";
+import { insertTaskHistorySchema, selectTaskHistorySchema, taskHistory, tasks, users } from "~/server/db/schema";
 import { type Task } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 
@@ -68,7 +68,7 @@ async function createTaskCreateNotification(
 		.where(eq(users.username, newTask.assignee ?? ""))
 		.limit(1);
 
-	await db.insert(comments).values({
+	await db.insert(taskHistory).values({
 		taskId: taskId,
 		propertyKey: "assignee",
 		propertyValue: user.username,
@@ -155,7 +155,7 @@ export async function deleteTask(id: number) {
 }
 
 export type UpdateTaskData = Partial<CreateTaskData>;
-export async function updateTask(id: number, data: UpdateTaskData) {
+export async function updateTask(id: number, data: UpdateTaskData, waitForNotification = false) {
 	try {
 		const updatedTaskData = CreateTaskSchema.partial().parse(data);
 		if (Object.keys(updatedTaskData).length === 0) {
@@ -174,7 +174,13 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 		});
 		if (!existingTask) return;
 		await db.update(tasks).set(taskData).where(eq(tasks.id, id));
-		void createTaskUpdateNotification(id, data, existingTask);
+		if (waitForNotification) {
+			await createTaskUpdateNotification(id, data, existingTask);
+			revalidatePath("/");
+		}
+		else{
+			void createTaskUpdateNotification(id, data, existingTask);
+		}
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			const validationError = fromZodError(error);
@@ -234,7 +240,7 @@ async function createTaskUpdateNotification(
 				continue;
 			}
 
-			await tx.insert(comments).values({
+			const values = {
 				taskId: taskId,
 				propertyKey: key,
 				propertyValue: String(value),
@@ -243,7 +249,11 @@ async function createTaskUpdateNotification(
 				),
 				userId: user.id,
 				insertedDate: new Date(),
-			});
+			};
+
+			const validatedValues = insertTaskHistorySchema.parse(values);
+
+			await tx.insert(taskHistory).values(validatedValues);
 		}
 	});
 
@@ -278,6 +288,11 @@ export async function getTask(id: number) {
 							},
 							where: (user) => eq(user.userId, userId),
 						},
+					},
+				},
+				taskHistory: {
+					with: {
+						user: true,
 					},
 				},
 				comments: {

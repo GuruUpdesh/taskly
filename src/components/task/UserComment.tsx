@@ -10,37 +10,18 @@ import {
 	type TaskProperty as TaskPropertyType,
 } from "~/config/TaskConfigType";
 import { useAppStore } from "~/store/app";
-
-import { type CommentWithUser } from "./Comment";
 import UserProfilePicture from "../user-profile-picture";
+import { Comment, User } from "~/server/db/schema";
+
+export interface CommentsWithUser extends Comment {
+	user: User;
+}
 
 type Props = {
-	comment: CommentWithUser;
+	comment: CommentsWithUser;
 };
 
 const UserComment = ({ comment }: Props) => {
-	const [assignees, sprints] = useAppStore(
-		useShallow((state) => [state.assignees, state.sprints]),
-	);
-
-	const userOption = useMemo(() => {
-		const config = getPropertyConfig(
-			comment.propertyKey as TaskPropertyType,
-			assignees,
-			sprints,
-		);
-
-		if (!config) return null;
-		if (config.type !== "enum" && config.type !== "dynamic") return null;
-
-		return config.options.find(
-			(option) => option.key === comment.propertyValue,
-		);
-	}, [comment.user.username]);
-
-	if (!userOption) {
-		return null;
-	}
 
 	return (
 		<div className="flex-1rounded-lg rounded-lg border bg-accent/25 p-4 hover:bg-accent/35">

@@ -12,7 +12,7 @@ import {
 	varchar,
 } from "drizzle-orm/mysql-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import type { z } from "zod";
+import { z } from "zod";
 
 export const mysqlTable = mysqlTableCreator((name) => `taskly_${name}`);
 
@@ -100,6 +100,7 @@ export const taskRelations = relations(tasks, ({ one, many }) => ({
 		fields: [tasks.sprintId],
 		references: [sprints.id],
 	}),
+	taskHistory: many(taskHistory),
 	comments: many(comments),
 }));
 
@@ -156,6 +157,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 	usersToProjects: many(usersToProjects),
 	tasks: many(tasks),
 	views: many(tasksToViews),
+	taskHistory: many(taskHistory),
 	comments: many(comments),
 }));
 
@@ -328,16 +330,57 @@ export const notificationRelations = relations(notifications, ({ one }) => ({
 }));
 
 /**
+ * Task History
+ */
+
+export const taskHistory = mysqlTable("task_history", {
+	id: serial("id").primaryKey(),
+	comment: varchar("comment", { length: 255 }),
+	taskId: int("task_id").notNull(),
+	propertyKey: mysqlEnum("property_key", ["status", "priority", "assignee", "sprintId", "type", "points"]),
+	propertyValue: varchar("property_value", { length: 255 }),
+	oldPropertyValue: varchar("old_property_value", { length: 255 }),
+	userId: varchar("user_id", { length: 255 }).notNull(),
+	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
+		.notNull()
+		.default(new Date()),
+});
+
+// validators
+export const selectTaskHistorySchema = createSelectSchema(taskHistory);
+export const insertTaskHistorySchema = z.object({
+	taskId: selectTaskHistorySchema.shape.taskId,
+	propertyKey: selectTaskHistorySchema.shape.propertyKey,
+	propertyValue: selectTaskHistorySchema.shape.propertyValue,
+	oldPropertyValue: selectTaskHistorySchema.shape.oldPropertyValue,
+	userId: selectTaskHistorySchema.shape.userId,
+	insertedDate: selectTaskHistorySchema.shape.insertedDate,
+});
+
+// types
+export type TaskHistory = InferSelectModel<typeof taskHistory>;
+
+// relations
+export const taskHistoryRelations = relations(taskHistory, ({ one }) => ({
+	task: one(tasks, {
+		fields: [taskHistory.taskId],
+		references: [tasks.id],
+	}),
+	user: one(users, {
+		fields: [taskHistory.userId],
+		references: [users.userId],
+	}),
+}));
+
+
+/**
  * Comments
  */
 
 export const comments = mysqlTable("comments", {
 	id: serial("id").primaryKey(),
-	comment: varchar("comment", { length: 255 }),
+	comment: text("comment").notNull(),
 	taskId: int("task_id").notNull(),
-	propertyKey: varchar("property_key", { length: 255 }).notNull(),
-	propertyValue: varchar("property_value", { length: 255 }).notNull(),
-	oldPropertyValue: varchar("old_property_value", { length: 255 }),
 	userId: varchar("user_id", { length: 255 }).notNull(),
 	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
 		.notNull()
