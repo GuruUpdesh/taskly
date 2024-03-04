@@ -53,10 +53,7 @@ const TaskPage = ({
 	});
 
 	const editTaskMutation = useMutation({
-		mutationFn: ({ id, newTask }: UpdateTask) => {
-			console.log("newTask", newTask);
-			return updateTask(id, newTask, true);
-		},
+		mutationFn: ({ id, newTask }: UpdateTask) => updateTask(id, newTask),
 		onSettled: () =>
 			queryClient.invalidateQueries({ queryKey: ["task", taskId] }),
 	});
