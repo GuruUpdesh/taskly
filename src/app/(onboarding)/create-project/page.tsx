@@ -1,10 +1,11 @@
-import ProjectCreateForm from "~/components/page/onboarding/create-project-form";
+import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+
 import {
 	getAllProjects,
 	initAction,
 } from "~/actions/application/project-actions";
-import { auth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import ProjectCreateForm from "~/components/page/onboarding/create-project-form";
 
 export default async function createProjectPage() {
 	await initAction();

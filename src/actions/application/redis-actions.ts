@@ -3,9 +3,11 @@
 import { auth } from "@clerk/nextjs";
 import { kv } from "@vercel/kv";
 import { z } from "zod";
-import { getAllProjects } from "./project-actions";
+
+import { authenticate } from "~/actions/security/authenticate";
 import { type Project, selectProjectSchema } from "~/server/db/schema";
-import { authenticate } from "../security/authenticate";
+
+import { getAllProjects } from "./project-actions";
 
 export async function updateUserApplicationData(pathname: string) {
 	const user = auth();

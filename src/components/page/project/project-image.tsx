@@ -1,7 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import React, { useState } from "react";
+
+import Image from "next/image";
+
 import { Skeleton } from "~/components/ui/skeleton";
 import type { Project } from "~/server/db/schema";
 

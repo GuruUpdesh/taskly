@@ -1,7 +1,21 @@
 "use client";
 
 import React from "react";
+
+import { endOfYesterday, format } from "date-fns";
+import { ChevronDown } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { Controller, type UseFormReturn } from "react-hook-form";
+
+import type { CreateForm } from "~/actions/onboarding/create-project";
+import { Button } from "~/components/ui/button";
+import { Calendar } from "~/components/ui/calendar";
+import { Label } from "~/components/ui/label";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "~/components/ui/popover";
 import {
 	Select,
 	SelectContent,
@@ -9,21 +23,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import { Label } from "~/components/ui/label";
-import { ChevronDown } from "lucide-react";
-import { endOfYesterday, format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-
 import { cn } from "~/lib/utils";
-import { Button } from "~/components/ui/button";
-import { Calendar } from "~/components/ui/calendar";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "~/components/ui/popover";
+
 import type { ProjectSprintOptions } from "./sprint-options-form";
-import type { CreateForm } from "~/actions/onboarding/create-project";
 
 type Props = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -110,7 +112,6 @@ const SprintOptions = ({ form, hidden = false }: Props) => {
 							mode="single"
 							selected={watch("sprintStart")}
 							onSelect={(val) => {
-								console.log(val);
 								if (val instanceof Date) {
 									setValue("sprintStart", val);
 								}

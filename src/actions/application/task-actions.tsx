@@ -3,20 +3,30 @@
 import { auth, currentUser } from "@clerk/nextjs";
 import { and, eq, gt, max, ne, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { fromZodError } from "zod-validation-error";
+
+import { createNotification } from "~/actions/notification-actions";
+import { type TaskFormType as CreateTaskData } from "~/components/backlog/create-task";
+import { type StatefulTask, CreateTaskSchema } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
-import { tasks, insertTaskSchema__required, users } from "~/server/db/schema";
-import { type Task, type NewTask } from "~/server/db/schema";
+import {
+	insertTaskHistorySchema,
+	taskHistory,
+	tasks,
+	users,
+} from "~/server/db/schema";
+import { type Task } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
+
 import {
 	deleteViewsForTask,
 	updateOrInsertTaskView,
 } from "./task-views-actions";
-import { createNotification } from "../notification-actions";
-import { type StatefulTask } from "~/config/task-entity";
 
-export async function createTask(data: NewTask) {
+export async function createTask(data: CreateTaskData) {
 	try {
-		const newTask = insertTaskSchema__required.parse(data);
+		const newTask = CreateTaskSchema.parse(data);
 
 		const maxBacklogOrder = await db
 			.select({ backlogOrder: max(tasks.backlogOrder) })
@@ -30,31 +40,55 @@ export async function createTask(data: NewTask) {
 		) {
 			newTask.backlogOrder = maxBacklogOrder[0].backlogOrder + 1;
 			newTask.boardOrder = maxBacklogOrder[0].backlogOrder + 1;
+		} else {
+			newTask.backlogOrder = 0;
+			newTask.boardOrder = 0;
 		}
 
 		const task = await db.insert(tasks).values(newTask);
 
-		if (newTask.assignee) {
-			const assignee = await db
-				.select()
-				.from(users)
-				.where(eq(users.username, newTask.assignee ?? ""))
-				.limit(1);
-
-			await createNotification({
-				date: new Date(),
-				message: `Task "${newTask.title}" was created and assigned to you.`,
-				userId: assignee[0]?.userId ?? "unknown user",
-				taskId: parseInt(task.insertId),
-				projectId: newTask.projectId,
-			});
-		}
+		void createTaskCreateNotification(parseInt(task.insertId), newTask);
 
 		revalidatePath("/");
 	} catch (error) {
+		if (error instanceof z.ZodError) {
+			const validationError = fromZodError(error);
+			if (validationError) throw Error(validationError.message);
+		}
 		console.error(error);
 		if (error instanceof Error) throwServerError(error.message);
 	}
+}
+
+async function createTaskCreateNotification(
+	taskId: number,
+	newTask: z.infer<typeof CreateTaskSchema>,
+) {
+	const user = await currentUser();
+	if (!user?.username) return;
+
+	const assignee = await db
+		.select()
+		.from(users)
+		.where(eq(users.username, newTask.assignee ?? ""))
+		.limit(1);
+
+	await db.insert(taskHistory).values({
+		taskId: taskId,
+		propertyKey: "assignee",
+		propertyValue: user.username,
+		comment: `created the task.`,
+		userId: user.id,
+		insertedDate: new Date(),
+	});
+
+	await createNotification({
+		date: new Date(),
+		message: `Task "${newTask.title}" was created and assigned to you.`,
+		userId: assignee[0]?.userId ?? "unassigned",
+		taskId: taskId,
+		projectId: newTask.projectId,
+	});
 }
 
 export async function getAllTasks() {
@@ -125,50 +159,123 @@ export async function deleteTask(id: number) {
 	}
 }
 
-export async function updateTask(id: number, data: NewTask) {
-	const user = await currentUser();
-
+export type UpdateTaskData = Partial<CreateTaskData>;
+export async function updateTask(
+	id: number,
+	data: UpdateTaskData,
+	waitForNotification = false,
+) {
 	try {
-		const updatedTaskData = insertTaskSchema__required.parse(data);
-		const currentTask = await db
-			.select()
-			.from(tasks)
-			.where(eq(tasks.id, id));
-		const currTask = currentTask[0];
-		if (!currTask) return;
-		if (updatedTaskData.assignee === "unassigned")
-			updatedTaskData.assignee = null;
-		else if (user?.username !== updatedTaskData.assignee) {
-			const assignee = await db
-				.select()
-				.from(users)
-				.where(eq(users.username, updatedTaskData.assignee ?? ""))
-				.limit(1);
-
-			await createNotification({
-				date: new Date(),
-				message: `Task "${updatedTaskData.title}" was assigned to you.`,
-				userId: assignee[0]?.userId ?? "unknown user",
-				taskId: id,
-				projectId: updatedTaskData.projectId,
-			});
+		const updatedTaskData = CreateTaskSchema.partial().parse(data);
+		if (Object.keys(updatedTaskData).length === 0) {
+			console.warn("No data to update");
+			return;
 		}
 
-		updatedTaskData.lastEditedAt = new Date();
+		const taskData = {
+			...updatedTaskData,
+			lastEditedAt: new Date(),
+		};
 
-		if (updatedTaskData.status === "backlog" && currTask.sprintId !== -1) {
-			updatedTaskData.sprintId = -1;
-		} else if (
-			updatedTaskData.sprintId !== -1 &&
-			updatedTaskData.status === "backlog"
-		) {
-			updatedTaskData.status = "todo";
+		if (!taskData) return;
+		const existingTask = await db.query.tasks.findFirst({
+			where: (tasks) => eq(tasks.id, id),
+		});
+		if (!existingTask) return;
+		await db.update(tasks).set(taskData).where(eq(tasks.id, id));
+		if (waitForNotification) {
+			await createTaskUpdateNotification(id, data, existingTask);
+			revalidatePath("/");
+		} else {
+			void createTaskUpdateNotification(id, data, existingTask);
 		}
-		await db.update(tasks).set(updatedTaskData).where(eq(tasks.id, id));
-		revalidatePath("/");
 	} catch (error) {
+		if (error instanceof z.ZodError) {
+			const validationError = fromZodError(error);
+			if (validationError) throw Error(validationError.message);
+		}
 		if (error instanceof Error) throwServerError(error.message);
 	}
+}
+
+async function createTaskUpdateNotification(
+	taskId: number,
+	taskData: UpdateTaskData,
+	existingTask: Task,
+) {
+	const user = await currentUser();
+	if (!user) return;
+
+	const task = await db.query.tasks.findFirst({
+		where: (tasks) => eq(tasks.id, taskId),
+	});
+	if (!task) return;
+
+	taskData.sprintId = String(taskData.sprintId);
+	if (taskData.assignee === null) {
+		taskData.assignee = "unassigned";
+	}
+
+	const existingTaskTransformed = {
+		...existingTask,
+		sprintId: String(existingTask.sprintId),
+	};
+	if (existingTaskTransformed.assignee === null) {
+		existingTaskTransformed.assignee = "unassigned";
+	}
+
+	await db.transaction(async (tx) => {
+		for (const key in taskData) {
+			const value = taskData[key as keyof typeof taskData];
+			const excludedKeys = [
+				"lastEditedAt",
+				"insertedDate",
+				"boardOrder",
+				"backlogOrder",
+				"id",
+				"title",
+				"description",
+			];
+			if (value === undefined || excludedKeys.includes(key)) continue;
+
+			if (
+				Object.keys(taskData).length > 1 &&
+				(key === "sprintId" ||
+					(key === "assignee" &&
+						value === "unassigned" &&
+						Object.keys(taskData).length !== 2))
+			) {
+				continue;
+			}
+
+			const values = {
+				taskId: taskId,
+				propertyKey: key,
+				propertyValue: String(value),
+				oldPropertyValue: String(
+					existingTaskTransformed[key as keyof Task],
+				),
+				userId: user.id,
+				insertedDate: new Date(),
+			};
+
+			const validatedValues = insertTaskHistorySchema.parse(values);
+
+			await tx.insert(taskHistory).values(validatedValues);
+		}
+	});
+
+	revalidatePath("/");
+
+	if (user?.username === task.assignee || task.assignee === null) return;
+
+	await createNotification({
+		date: new Date(),
+		message: `Task "${task.title}" was updated.`,
+		userId: user.id,
+		taskId: taskId,
+		projectId: task.projectId,
+	});
 }
 
 export async function getTask(id: number) {
@@ -189,6 +296,16 @@ export async function getTask(id: number) {
 							},
 							where: (user) => eq(user.userId, userId),
 						},
+					},
+				},
+				taskHistory: {
+					with: {
+						user: true,
+					},
+				},
+				comments: {
+					with: {
+						user: true,
 					},
 				},
 			},

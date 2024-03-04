@@ -1,9 +1,11 @@
 "use server";
 
 import React from "react";
+
 import { auth } from "@clerk/nextjs";
-import { createInvite } from "~/actions/onboarding/invite-actions";
 import dynamic from "next/dynamic";
+
+import { createInvite } from "~/actions/onboarding/invite-actions";
 const InviteLink = dynamic(() => import("./invite-link"), { ssr: false });
 
 type Props = {

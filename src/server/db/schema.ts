@@ -1,5 +1,5 @@
+import { startOfToday, addWeeks } from "date-fns";
 import { relations, type InferSelectModel } from "drizzle-orm";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import {
 	boolean,
 	datetime,
@@ -11,8 +11,8 @@ import {
 	text,
 	varchar,
 } from "drizzle-orm/mysql-core";
-import type { z } from "zod";
-import { startOfToday, addWeeks } from "date-fns";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { z } from "zod";
 
 export const mysqlTable = mysqlTableCreator((name) => `taskly_${name}`);
 
@@ -62,7 +62,7 @@ export const tasks = mysqlTable("tasks", {
 	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
 		.notNull()
 		.default(new Date()),
-	sprintId: int("sprint_id"),
+	sprintId: int("sprint_id").default(-1).notNull(),
 });
 
 // validators
@@ -100,6 +100,8 @@ export const taskRelations = relations(tasks, ({ one, many }) => ({
 		fields: [tasks.sprintId],
 		references: [sprints.id],
 	}),
+	taskHistory: many(taskHistory),
+	comments: many(comments),
 }));
 
 /**
@@ -155,6 +157,8 @@ export const usersRelations = relations(users, ({ many }) => ({
 	usersToProjects: many(usersToProjects),
 	tasks: many(tasks),
 	views: many(tasksToViews),
+	taskHistory: many(taskHistory),
+	comments: many(comments),
 }));
 
 /**
@@ -322,5 +326,84 @@ export const notificationRelations = relations(notifications, ({ one }) => ({
 	task: one(tasks, {
 		fields: [notifications.taskId],
 		references: [tasks.id],
+	}),
+}));
+
+/**
+ * Task History
+ */
+
+export const taskHistory = mysqlTable("task_history", {
+	id: serial("id").primaryKey(),
+	comment: varchar("comment", { length: 255 }),
+	taskId: int("task_id").notNull(),
+	propertyKey: mysqlEnum("property_key", [
+		"status",
+		"priority",
+		"assignee",
+		"sprintId",
+		"type",
+		"points",
+	]),
+	propertyValue: varchar("property_value", { length: 255 }),
+	oldPropertyValue: varchar("old_property_value", { length: 255 }),
+	userId: varchar("user_id", { length: 255 }).notNull(),
+	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
+		.notNull()
+		.default(new Date()),
+});
+
+// validators
+export const selectTaskHistorySchema = createSelectSchema(taskHistory);
+export const insertTaskHistorySchema = z.object({
+	taskId: selectTaskHistorySchema.shape.taskId,
+	propertyKey: selectTaskHistorySchema.shape.propertyKey,
+	propertyValue: selectTaskHistorySchema.shape.propertyValue,
+	oldPropertyValue: selectTaskHistorySchema.shape.oldPropertyValue,
+	userId: selectTaskHistorySchema.shape.userId,
+	insertedDate: selectTaskHistorySchema.shape.insertedDate,
+});
+
+// types
+export type TaskHistory = InferSelectModel<typeof taskHistory>;
+
+// relations
+export const taskHistoryRelations = relations(taskHistory, ({ one }) => ({
+	task: one(tasks, {
+		fields: [taskHistory.taskId],
+		references: [tasks.id],
+	}),
+	user: one(users, {
+		fields: [taskHistory.userId],
+		references: [users.userId],
+	}),
+}));
+
+/**
+ * Comments
+ */
+
+export const comments = mysqlTable("comments", {
+	id: serial("id").primaryKey(),
+	comment: text("comment").notNull(),
+	taskId: int("task_id").notNull(),
+	userId: varchar("user_id", { length: 255 }).notNull(),
+	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
+		.notNull()
+		.default(new Date()),
+});
+
+// types
+export type Comment = InferSelectModel<typeof comments>;
+
+// relations
+export const commentsRelations = relations(comments, ({ one }) => ({
+	task: one(tasks, {
+		fields: [comments.taskId],
+		references: [tasks.id],
+	}),
+	user: one(users, {
+		fields: [comments.userId],
+		references: [users.userId],
 	}),
 }));

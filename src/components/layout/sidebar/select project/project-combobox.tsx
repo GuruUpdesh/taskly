@@ -1,10 +1,15 @@
 "use client";
 
-import React, { useRef } from "react";
-import type { Project } from "~/server/db/schema";
-import { ChevronsUpDown } from "lucide-react";
+import React, { useMemo, useRef } from "react";
 
-import { cn } from "~/lib/utils";
+import { PlusIcon } from "@radix-ui/react-icons";
+import { useRegisterActions } from "kbar";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import SimpleTooltip from "~/components/general/simple-tooltip";
 import { Button } from "~/components/ui/button";
 import {
 	Command,
@@ -19,10 +24,10 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "~/components/ui/popover";
-import Link from "next/link";
-import { PlusIcon } from "@radix-ui/react-icons";
-import Image from "next/image";
 import { Skeleton } from "~/components/ui/skeleton";
+import { cn } from "~/lib/utils";
+import type { Project } from "~/server/db/schema";
+import { useNavigationStore } from "~/store/navigation";
 
 type Props = {
 	projects: Project[];
@@ -30,44 +35,86 @@ type Props = {
 };
 
 const ProjectCombobox = ({ projects, projectId }: Props) => {
+	const currentProject = useNavigationStore((state) => state.currentProject);
 	const [open, setOpen] = React.useState(false);
 
-	const project = projects.find(
-		(project) => String(project.id) === projectId,
-	);
+	const project = useMemo(() => {
+		const foundProject = projects.find(
+			(project) => String(project.id) === projectId,
+		);
+		if (foundProject?.id === currentProject?.id) {
+			return currentProject;
+		} else {
+			return foundProject;
+		}
+	}, [projects, projectId, currentProject]);
 
 	const buttonRef = useRef<HTMLButtonElement>(null);
 
+	function renderProjectImage(project: Project | null | undefined) {
+		if (!project) return null;
+
+		return (
+			<>
+				{project?.image ? (
+					<Image
+						src={project.image}
+						alt={project.name}
+						width={24}
+						height={24}
+						className="min-w-[24px] rounded-full mix-blend-screen"
+						onError={(e) => {
+							e.currentTarget.src = "/project.svg";
+						}}
+					/>
+				) : (
+					<Skeleton className="h-6 w-6 rounded-full" />
+				)}
+			</>
+		);
+	}
+
+	const router = useRouter();
+	useRegisterActions(
+		projects.map((project, idx) => ({
+			id: String(project.id),
+			name: project.name,
+			icon: renderProjectImage(project),
+			shortcut: idx + 1 < 10 ? ["p", String(idx + 1)] : [],
+			perform: () => router.push(`/project/${project.id}`),
+			section: "Projects",
+		})) ?? [],
+		[projects, project],
+	);
+
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
-			<PopoverTrigger asChild>
-				<Button
-					ref={buttonRef}
-					variant="outline"
-					role="combobox"
-					aria-expanded={open}
-					className="z-10 w-full justify-center gap-2 whitespace-nowrap bg-background/75 px-1 @sidebar:justify-between @sidebar:px-4"
-				>
-					{project?.image ? (
-						<Image
-							src={project.image}
-							alt={project.name}
-							width={24}
-							height={24}
-							className="min-w-[24px] rounded-full mix-blend-screen"
-							onError={(e) => {
-								e.currentTarget.src = "/project.svg";
-							}}
-						/>
-					) : (
-						<Skeleton className="h-6 w-6 rounded-full" />
-					)}
-					<span className="hidden @sidebar:inline-flex">
-						{project ? project.name : "Select project..."}
-					</span>
-					<ChevronsUpDown className="hidden h-4 w-4 shrink-0 opacity-50 @sidebar:inline-flex" />
-				</Button>
-			</PopoverTrigger>
+			<SimpleTooltip label="Switch Project" side="right">
+				<PopoverTrigger asChild>
+					<Button
+						ref={buttonRef}
+						variant="outline"
+						role="combobox"
+						aria-expanded={open}
+						className="group relative z-10 w-full justify-center gap-2 overflow-hidden whitespace-nowrap bg-background/75 px-1 @sidebar:justify-between @sidebar:px-4"
+					>
+						{renderProjectImage(project)}
+						<span className="hidden font-bold @sidebar:inline-flex">
+							{project ? project.name : "Select project..."}
+						</span>
+						<div className="absolute left-0 -z-10 aspect-square w-full opacity-50 blur-3xl transition-opacity gradient-mask-l-50 group-hover:opacity-75  group-focus:opacity-75">
+							{project?.image ? (
+								<Image
+									src={project.image ?? "/project.svg"}
+									alt={project.name}
+									fill
+								/>
+							) : null}
+						</div>
+						<ChevronDown className="hidden h-4 w-4 shrink-0 opacity-50 @sidebar:inline-flex" />
+					</Button>
+				</PopoverTrigger>
+			</SimpleTooltip>
 			<PopoverContent
 				style={{
 					width: buttonRef.current
@@ -81,37 +128,45 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 					<CommandList>
 						<CommandEmpty>No project found.</CommandEmpty>
 						<CommandGroup>
-							{projects.map((project) => (
-								<Link
-									key={project.id}
-									href={`/project/${project.id}/backlog`}
-								>
-									<CommandItem
-										className={cn(
-											"flex items-center gap-2",
-											projectId === String(project.id)
-												? "bg-primary text-background hover:bg-primary/50"
-												: "",
-										)}
+							{projects
+								.filter(
+									(project) =>
+										String(project.id) !== projectId,
+								)
+								.map((project) => (
+									<Link
+										key={project.id}
+										href={`/project/${project.id}/backlog`}
 									>
-										{project.image ? (
-											<Image
-												src={
-													project.image ??
-													"/project.svg"
-												}
-												alt={project.name}
-												width={24}
-												height={24}
-												className="rounded-full"
-											/>
-										) : (
-											<Skeleton className="h-6 w-6 rounded-full mix-blend-overlay" />
-										)}
-										{project.name}
-									</CommandItem>
-								</Link>
-							))}
+										<CommandItem
+											value={
+												project.name +
+												String(project.id)
+											}
+											className={cn(
+												"group relative cursor-pointer gap-2 overflow-hidden rounded-none !bg-transparent font-semibold text-foreground/75",
+												"bg-gradient-to-r from-background to-transparent to-50% bg-[length:200%] bg-left transition-all duration-300 ease-linear hover:bg-right",
+											)}
+										>
+											<div className="absolute left-0 -z-10 aspect-square w-full opacity-50 transition-opacity gradient-mask-l-50 group-hover:opacity-75  group-focus:opacity-75">
+												{project.image ? (
+													<Image
+														src={
+															project.image ??
+															"/project.svg"
+														}
+														alt={project.name}
+														fill
+													/>
+												) : null}
+											</div>
+											<span className="group-focus-opacity-100 absolute right-2 opacity-0 transition-opacity group-hover:opacity-100">
+												<ArrowRight className="h-4 w-4" />
+											</span>
+											{project.name}
+										</CommandItem>
+									</Link>
+								))}
 						</CommandGroup>
 					</CommandList>
 					<CommandGroup className=" border-t">

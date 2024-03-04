@@ -1,36 +1,36 @@
-import {
-	type EntityConfigSelect,
-	type EntityConfigText,
-} from "~/config/entityTypes";
 import pluralize from "pluralize";
+
+import { type getPropertyConfig, taskVariants } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
-import { optionVariants } from "~/config/task-entity";
 
 export function renderFilterValues(
 	values: string[],
-	config: EntityConfigSelect | EntityConfigText | null,
+	config: ReturnType<typeof getPropertyConfig> | null,
 	showText = true,
 ) {
-	if (!config || config.type !== "select") return null;
-	const options = config.form.options;
+	if (!config || (config.type !== "enum" && config.type !== "dynamic"))
+		return null;
+	const options = config.options;
 	const pluralProperty = pluralize(config.displayName);
 
 	return (
-		<div className="flex items-center gap-2 mix-blend-screen">
+		<div className="mx-2 flex items-center gap-2 mix-blend-screen">
 			{values.map((value) => {
-				const option = options.find(
-					(option) => option.value.toString() === value,
-				);
+				const option = options.find((option) => option.key === value);
 				if (!option) return null;
 
 				return (
 					<div
-						key={option.value}
+						key={option.key}
 						className={cn(
-							optionVariants({ color: option.color }),
+							taskVariants({
+								color: option.color,
+								context:
+									values.length === 1 ? "menu" : "default",
+							}),
 							values.length === 1
-								? "flex !bg-transparent"
-								: "-m-2 flex gap-1 rounded-full !bg-black p-1",
+								? "flex !bg-transparent "
+								: "relative z-10 -m-2 flex gap-1 overflow-hidden rounded-full p-1 shadow-sm ring-2 ring-black after:absolute after:-left-[1px] after:-top-[1px] after:-z-[1] after:h-full after:w-full after:border after:border-black after:bg-black",
 						)}
 					>
 						{option.icon}
@@ -41,7 +41,7 @@ export function renderFilterValues(
 				);
 			})}
 			{values.length > 1 && showText ? (
-				<div>
+				<div className="ml-2">
 					<span>{values.length} </span>
 					<span>{pluralProperty}</span>
 				</div>

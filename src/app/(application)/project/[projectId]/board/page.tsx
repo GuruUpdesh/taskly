@@ -3,14 +3,12 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
-import { getTasksFromProject } from "~/actions/application/task-actions";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import { Bot } from "lucide-react";
-import { Button } from "~/components/ui/button";
+
+import { getTasksFromProject } from "~/actions/application/task-actions";
 import CreateTask from "~/components/backlog/create-task";
-import { getAssigneesForProject } from "~/actions/application/project-actions";
-import TaskBoard from "./board";
-import { getSprintsForProject } from "~/actions/application/sprint-actions";
+import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import { Button } from "~/components/ui/button";
 
 type Params = {
 	params: {
@@ -19,9 +17,6 @@ type Params = {
 };
 
 export default async function BacklogPage({ params: { projectId } }: Params) {
-	const assignees = await getAssigneesForProject(parseInt(projectId));
-	const sprints = await getSprintsForProject(parseInt(projectId));
-
 	// Prefetch tasks using react-query
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
@@ -37,20 +32,12 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<Button variant="outline" size="sm">
 						<Bot className="h-4 w-4" />
 					</Button>
-					<CreateTask
-						projectId={projectId}
-						assignees={assignees}
-						sprints={sprints}
-					/>
+					<CreateTask projectId={projectId} />
 				</div>
 			</header>
 			<section className="container flex flex-col pt-4">
 				<HydrationBoundary state={dehydrate(queryClient)}>
-					<TaskBoard
-						projectId={projectId}
-						assignees={assignees}
-						sprints={sprints}
-					/>
+					<p>Not Implemented</p>
 				</HydrationBoundary>
 			</section>
 		</div>

@@ -1,12 +1,13 @@
 "use server";
 
-import { auth } from "@clerk/nextjs";
 import React from "react";
+
+import { auth } from "@clerk/nextjs";
+
 import { getAllProjects } from "~/actions/application/project-actions";
-
 import ProjectMenuItem from "~/components/layout/navbar/project-menu-item";
-
 import { throwServerError } from "~/utils/errors";
+
 import CreateProjectMenuItem from "./create-project-menu-item";
 
 async function ProjectList() {

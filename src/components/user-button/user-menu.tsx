@@ -1,5 +1,7 @@
 "use client";
 
+import React from "react";
+
 import { useClerk } from "@clerk/nextjs";
 import {
 	GearIcon,
@@ -11,7 +13,7 @@ import {
 } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+
 import {
 	DropdownMenu,
 	DropdownMenuContent,

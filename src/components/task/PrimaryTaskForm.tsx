@@ -1,13 +1,16 @@
 "use client";
 
+
 import React, { useCallback, useEffect, useRef } from "react";
 import type { NewTask, Task } from "~/server/db/schema";
 import { Input } from "~/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";
-import { z } from "zod";
 import _debounce from "lodash/debounce";
+import { z } from "zod";
+
+import { type UpdateTask } from "~/components/backlog/tasks";
 import { Separator } from "~/components/ui/separator";
 import { Button } from "~/components/ui/button";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
@@ -21,13 +24,17 @@ import {
 	type MDXEditorMethods,
 	type MDXEditorProps
 } from '@mdxeditor/editor';
-import { Textarea } from "../ui/textarea";
+import { Textarea } from "~/components/ui/textarea";
 
+import TaskHistoryItem, { type TaskHistoryWithUser } from "./HistoryItem";
 
+interface TaskWithComments extends Task {
+	taskHistory: TaskHistoryWithUser[];
+}
 
 type Props = {
-	task: Task;
-	editTaskMutation: UseMutationResult<void, Error, NewTask, unknown>;
+	task: TaskWithComments;
+	editTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 };
 
 const insertTaskSchema__Primary = z.object({
@@ -54,7 +61,13 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	}, [JSON.stringify(task)]);
 
 	function onSubmit(updatedTask: FormType) {
-		editTaskMutation.mutate({ ...task, ...updatedTask });
+		editTaskMutation.mutate({
+			id: task.id,
+			newTask: {
+				...updatedTask,
+				sprintId: String(task.sprintId),
+			},
+		});
 	}
 
 	async function handleChange() {
@@ -76,7 +89,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	return (
 		<form
 			onSubmit={form.handleSubmit(onSubmit)}
-			className="container flex flex-grow flex-col gap-4 pb-4 pt-2"
+			className="flex flex-grow flex-col gap-2 px-4 pb-4 pt-2"
 		>
 			<Input
 				type="text"
@@ -111,18 +124,30 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 					(form.watch("description").match(/\n/g) ?? []).length ?? 2
 				}
 			/>
-			<Separator />
+			{/* <Separator />
 			<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 				Subtasks
 			</h3>
 			<Button variant="outline" className="w-fit gap-2">
 				Add Subtask
 				<ArrowTopRightIcon />
-			</Button>
-			<Separator />
-			<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-				Activity
-			</h3>
+			</Button> */}
+			<Separator className="my-4" />
+			<div className="pb-4">
+				<div className="flex flex-col gap-4 overflow-hidden">
+					<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+						Activity
+					</h3>
+					{task.taskHistory.map((history) => {
+						return (
+							<TaskHistoryItem
+								key={history.id}
+								history={history}
+							/>
+						);
+					})}
+				</div>
+			</div>
 		</form>
 	);
 };

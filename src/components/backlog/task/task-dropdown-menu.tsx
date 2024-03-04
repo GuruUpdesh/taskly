@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+
+import type { UseMutationResult } from "@tanstack/react-query";
+import { Priority } from "kbar";
+import { Trash2Icon } from "lucide-react";
+import { toast } from "sonner";
+
 import {
 	ContextMenu,
 	ContextMenuContent,
@@ -8,19 +14,21 @@ import {
 	ContextMenuShortcut,
 	ContextMenuTrigger,
 } from "~/components/ui/context-menu";
-import { Trash2Icon } from "lucide-react";
-import type { UseMutationResult } from "@tanstack/react-query";
 import type { Task } from "~/server/db/schema";
-import { toast } from "sonner";
-import { Priority, useRegisterActions } from "kbar";
+import { useAppStore } from "~/store/app";
+
+import TaskKBarUpdater from "./task-kbar-updater";
 
 type Props = {
 	task: Task;
 	children: React.ReactNode;
-	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
+	deleteTaskMutation?: UseMutationResult<void, Error, number, unknown>;
 };
+const TaskKBarUpdaterMemoized = React.memo(TaskKBarUpdater);
 
 const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
+	const setHoveredTaskId = useAppStore((state) => state.setHoveredTaskId);
+
 	const actions = [
 		{
 			id: "delete",
@@ -28,22 +36,22 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 			icon: <Trash2Icon className="h-4 w-4" />,
 			shortcut: ["d"],
 			perform: () => {
+				if (!deleteTaskMutation) return;
 				deleteTaskMutation.mutate(task.id);
 				toast.warning("Task deleted");
 			},
 			priority: Priority.HIGH,
-			section: "Task Actions",
+			section: `Actions - ${task.title}`,
 		},
 	];
 
-	// todo move this to the backlog
-	const [isHovered, setIsHovered] = useState(false);
-
-	useRegisterActions(isHovered ? actions : [], [isHovered, actions]);
-
 	return (
 		<ContextMenu>
-			<ContextMenuTrigger asChild onMouseEnter={() => setIsHovered(true)}>
+			<TaskKBarUpdaterMemoized actions={actions} taskId={task.id} />
+			<ContextMenuTrigger
+				asChild
+				onMouseEnter={() => setHoveredTaskId(task.id)}
+			>
 				{children}
 			</ContextMenuTrigger>
 			<ContextMenuContent className="bg-accent/50 backdrop-blur-sm">
@@ -65,4 +73,4 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 	);
 };
 
-export default TaskDropDownMenu;
+export default React.memo(TaskDropDownMenu);
