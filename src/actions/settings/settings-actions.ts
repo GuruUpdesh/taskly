@@ -16,6 +16,7 @@ import {
 	usersToProjects,
 	sprints,
 	invites,
+	notifications,
 } from "~/server/db/schema";
 
 export async function handleProjectInfo(
@@ -81,6 +82,9 @@ export async function handleDeleteProject(formData: FormData) {
 		return { success: false, message: "Project not found" };
 	}
 	await db.transaction(async (tx) => {
+		await tx
+			.delete(notifications)
+			.where(eq(notifications.projectId, projectData.id));
 		await tx.delete(projects).where(eq(projects.id, projectData.id));
 		await tx
 			.delete(usersToProjects)
