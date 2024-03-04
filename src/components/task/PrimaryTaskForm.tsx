@@ -12,21 +12,15 @@ import { z } from "zod";
 
 import { type UpdateTask } from "~/components/backlog/tasks";
 import { Separator } from "~/components/ui/separator";
-import { Button } from "~/components/ui/button";
-import { ArrowTopRightIcon } from "@radix-ui/react-icons";
-import {
-	headingsPlugin,
-	listsPlugin,
-	quotePlugin,
-	thematicBreakPlugin,
-	markdownShortcutPlugin,
-	MDXEditor,
-	type MDXEditorMethods,
-	type MDXEditorProps
-} from '@mdxeditor/editor';
 import { Textarea } from "~/components/ui/textarea";
 
 import TaskHistoryItem, { type TaskHistoryWithUser } from "./HistoryItem";
+import dynamic from "next/dynamic";
+import { MDXEditorMethods } from "@mdxeditor/editor";
+
+const Editor = dynamic(() => import("~/components/task/TextEditor"), {
+	ssr: false,
+});
 
 interface TaskWithComments extends Task {
 	taskHistory: TaskHistoryWithUser[];
@@ -47,6 +41,7 @@ type FormType = Pick<NewTask, "title" | "description">;
 const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	const form = useForm<FormType>({
 		resolver: zodResolver(insertTaskSchema__Primary),
+		mode: "onChange",
 		defaultValues: {
 			title: task.title,
 			description: task.description,
@@ -82,8 +77,6 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 		[],
 	);
 
-	
-
 	const editorRef = useRef<MDXEditorMethods>(null);
 
 	return (
@@ -100,22 +93,8 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 				{...form.register("title")}
 				onChangeCapture={debouncedHandleChange}
 			/>
-			<MDXEditor
-				plugins={[
-					headingsPlugin({ allowedHeadingLevels: [1, 2, 3] }),
-					listsPlugin(),
-					quotePlugin(),
-					thematicBreakPlugin(),
-					markdownShortcutPlugin()
-				]}
-				markdown={form.watch("description") || "# Hello, world!"}
-				{...form.register("description")}
-				onChange={value => {
-					form.setValue("description", value); 
-				}}
-				ref={editorRef}
-			/>
-			<Textarea
+			<Editor editorRef={editorRef} markdown={form.watch("description")} onChange={debouncedHandleChange}/>
+			{/* <Textarea
 				className="flex-grow resize-none p-4 focus-visible:ring-transparent"
 				placeholder="Add a description..."
 				{...form.register("description")}
@@ -123,7 +102,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 				rows={
 					(form.watch("description").match(/\n/g) ?? []).length ?? 2
 				}
-			/>
+			/> */}
 			{/* <Separator />
 			<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 				Subtasks
