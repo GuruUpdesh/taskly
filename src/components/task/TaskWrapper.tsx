@@ -3,6 +3,7 @@ import {
 	QueryClient,
 	dehydrate,
 } from "@tanstack/react-query";
+import { cookies } from "next/headers";
 
 import { getTask } from "~/actions/application/task-actions";
 import Task from "~/components/task/Task";
@@ -24,9 +25,22 @@ export async function TaskWrapper({
 		queryFn: () => getTask(parseInt(taskId)),
 	});
 
+	const layout = cookies().get("react-resizable-panels:task-layout");
+	let defaultLayout;
+	if (layout) {
+		defaultLayout = JSON.parse(layout.value) as number[] | undefined;
+	}
+
+	console.log("defaultLayout", defaultLayout);
+
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<Task taskId={taskId} projectId={projectId} context={context} />
+			<Task
+				taskId={taskId}
+				projectId={projectId}
+				context={context}
+				defaultLayout={defaultLayout}
+			/>
 		</HydrationBoundary>
 	);
 }
