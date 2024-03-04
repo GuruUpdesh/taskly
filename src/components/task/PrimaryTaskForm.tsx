@@ -1,22 +1,21 @@
 "use client";
 
-
 import React, { useCallback, useEffect, useRef } from "react";
-import type { NewTask, Task } from "~/server/db/schema";
-import { Input } from "~/components/ui/input";
-import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { type MDXEditorMethods } from "@mdxeditor/editor";
 import type { UseMutationResult } from "@tanstack/react-query";
 import _debounce from "lodash/debounce";
+import dynamic from "next/dynamic";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { type UpdateTask } from "~/components/backlog/tasks";
+import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
-import { Textarea } from "~/components/ui/textarea";
+import type { NewTask, Task } from "~/server/db/schema";
 
 import TaskHistoryItem, { type TaskHistoryWithUser } from "./HistoryItem";
-import dynamic from "next/dynamic";
-import { MDXEditorMethods } from "@mdxeditor/editor";
 
 const Editor = dynamic(() => import("~/components/task/TextEditor"), {
 	ssr: false,
@@ -93,16 +92,14 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 				{...form.register("title")}
 				onChangeCapture={debouncedHandleChange}
 			/>
-			<Editor editorRef={editorRef} markdown={form.watch("description")} onChange={debouncedHandleChange}/>
-			{/* <Textarea
-				className="flex-grow resize-none p-4 focus-visible:ring-transparent"
-				placeholder="Add a description..."
-				{...form.register("description")}
-				onChangeCapture={debouncedHandleChange}
-				rows={
-					(form.watch("description").match(/\n/g) ?? []).length ?? 2
-				}
-			/> */}
+			<Editor
+				editorRef={editorRef}
+				markdown={form.watch("description")}
+				onChange={(content) => {
+					form.setValue("description", content);
+					debouncedHandleChange();
+				}}
+			/>
 			{/* <Separator />
 			<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 				Subtasks
