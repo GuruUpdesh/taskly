@@ -34,6 +34,7 @@ const DataCardLineGraph: React.FC<{
 				<ResponsiveContainer width="100%" height={200}>
 					<LineChart data={data.data}>
 						<XAxis dataKey="name" />
+						<YAxis />
 						<Legend />
 						<Line
 							type="monotone"

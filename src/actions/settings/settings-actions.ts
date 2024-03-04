@@ -8,6 +8,7 @@ import {
 	usersToProjects,
 	sprints,
 	invites,
+	notifications,
 } from "~/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
