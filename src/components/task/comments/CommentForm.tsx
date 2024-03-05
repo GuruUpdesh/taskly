@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronRight, Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { SuggestionDataItem } from "react-mentions";
 import { z } from "zod";
 
 import { createComment } from "~/actions/application/comment-actions";
@@ -10,6 +11,13 @@ import { createComment } from "~/actions/application/comment-actions";
 import { Button } from "../../ui/button";
 import { Form, FormControl, FormField, FormItem } from "../../ui/form";
 import { Textarea } from "../../ui/textarea";
+// import { getAllUsersInProject } from "~/actions/application/project-actions";
+import { getTask } from "~/actions/application/task-actions";
+// import { User } from "~/server/db/schema";
+import TextAreaWithMentions from "./TextAreaWithMentions";
+import { getAllUsersInProject } from "~/actions/application/project-actions";
+import { User } from "~/server/db/schema";
+import { useAppStore } from "~/store/app";
 
 type Props = {
 	taskId: number;
@@ -20,6 +28,14 @@ const formSchema = z.object({
 });
 
 const CommentForm = ({ taskId }: Props) => {
+	const assignees = useAppStore((state) => state.assignees);
+
+	const mentions: SuggestionDataItem[] = assignees.map((assignee) => ({
+		id: assignee.userId,
+		display: assignee.username,
+		profileUrl: assignee.profilePicture,
+	}));
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -43,13 +59,11 @@ const CommentForm = ({ taskId }: Props) => {
 					control={form.control}
 					name="comment"
 					render={({ field }) => (
-						<FormItem>
+						<FormItem className="absolute w-full">
 							<FormControl>
-								<Textarea
-									placeholder="Add a comment..."
-									className="resize-none bg-accent/25"
-									rows={2}
-									{...field}
+								<TextAreaWithMentions
+									mentions={mentions}
+									field={field}
 								/>
 							</FormControl>
 						</FormItem>
@@ -57,6 +71,10 @@ const CommentForm = ({ taskId }: Props) => {
 				/>
 				<Button
 					className="absolute bottom-1.5 right-1.5 text-xs"
+					style={{
+						marginTop: "32px",
+						transform: "translateY(100px);",
+					}}
 					size="sm"
 					disabled={
 						!form.formState.isDirty || form.formState.isSubmitting

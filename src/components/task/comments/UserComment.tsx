@@ -70,6 +70,40 @@ const UserComment = ({
 		await deleteComment(comment.id);
 	}
 
+	function parseCommentForMentions(comment: string) {
+		const words = comment.split(" ");
+		const new_words = words.map((word, index) => {
+			console.log(word);
+			if (word.startsWith("@[")) {
+				return {
+					word: "@" + word.slice(2).split("]", 1)[0] + " ",
+					isMention: true,
+				};
+			}
+			return { word: word + " ", isMention: false };
+		});
+
+		return new_words.map((word, index) => {
+			if (word.isMention) {
+				return (
+					<span
+						key={index}
+						className="font-bold text-accent"
+						style={{ color: "white" }}
+						suppressHydrationWarning
+					>
+						{word.word}
+					</span>
+				);
+			}
+			return (
+				<span key={index} suppressHydrationWarning>
+					{word.word}
+				</span>
+			);
+		});
+	}
+
 	return (
 		<motion.div
 			initial={{ height: 0, opacity: 0 }}
@@ -95,7 +129,7 @@ const UserComment = ({
 		>
 			<div
 				className={cn(
-					"relative mb-4 rounded-lg border bg-accent/25 p-4 hover:bg-accent/35",
+					"relative mb-4 overflow-hidden text-wrap rounded-lg border bg-accent/25 p-4 hover:bg-accent/35",
 					{
 						"mb-0": isLastComment,
 					},
@@ -143,7 +177,9 @@ const UserComment = ({
 						) : null}
 					</div>
 				</div>
-				<p className="mt-2 text-sm leading-6">{comment.comment}</p>
+				<p className="mt-2 text-sm leading-6">
+					{parseCommentForMentions(comment.comment)}
+				</p>
 			</div>
 		</motion.div>
 	);
