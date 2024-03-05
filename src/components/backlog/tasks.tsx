@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -54,14 +54,20 @@ export default function Tasks({ projectId, variant = "backlog" }: Props) {
 	/**
 	 * Get the assignees and sprints
 	 */
-	const [assignees, sprints, filters, groupBy] = useAppStore(
-		useShallow((state) => [
-			state.assignees,
-			state.sprints,
-			state.filters,
-			state.groupBy,
-		]),
-	);
+	const [assignees, sprints, filters, groupByBacklog, groupByBoard] =
+		useAppStore(
+			useShallow((state) => [
+				state.assignees,
+				state.sprints,
+				state.filters,
+				state.groupByBacklog,
+				state.groupByBoard,
+			]),
+		);
+
+	const groupBy = useMemo(() => {
+		return variant === "backlog" ? groupByBacklog : groupByBoard;
+	}, [variant, groupByBacklog, groupByBoard]);
 
 	/**
 	 * Fetch the tasks from the server and handle optimistic updates

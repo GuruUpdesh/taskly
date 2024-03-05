@@ -29,7 +29,7 @@ const taskVariants = cva(["flex items-center gap-2"], {
 			backlog:
 				"flex items-center justify-between border-b py-2 hover:bg-accent-foreground/5",
 			list: "",
-			board: "flex flex-col p-2 rounded-md border bg-accent/25 hover:bg-accent w-full max-w-full overflow-hidden group",
+			board: "flex flex-col p-2 rounded-md border bg-accent/25 hover:bg-accent/50 transition-color w-full max-w-full overflow-hidden group",
 		},
 	},
 	defaultVariants: {
