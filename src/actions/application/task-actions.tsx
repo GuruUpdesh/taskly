@@ -12,6 +12,7 @@ import { type StatefulTask, CreateTaskSchema } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
 import {
 	insertTaskHistorySchema,
+	notifications,
 	taskHistory,
 	tasks,
 	users,
@@ -128,6 +129,7 @@ export async function deleteTask(id: number) {
 
 		// update the boardOrder and backlogOrder of the tasks
 		await db.transaction(async (tx) => {
+			await tx.delete(notifications).where(eq(notifications.taskId, id));
 			await tx
 				.update(tasks)
 				.set({ boardOrder: sql`${tasks.boardOrder} - 1` })
@@ -271,7 +273,7 @@ async function createTaskUpdateNotification(
 
 	await createNotification({
 		date: new Date(),
-		message: `Task "${task.title}" was updated.`,
+		message: `Task was updated.`,
 		userId: user.id,
 		taskId: taskId,
 		projectId: task.projectId,

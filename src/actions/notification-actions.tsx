@@ -43,7 +43,11 @@ export async function getNotification(notificationId: number) {
 	}
 }
 
-export type NotificationWithTask = Notification & { task: Task };
+export type NotificationWithTask = Notification & {
+	task: Task;
+	options?: { isNew: boolean };
+};
+
 export async function getAllNotifications(userId: string) {
 	try {
 		const allNotifications = await db.query.notifications.findMany({
