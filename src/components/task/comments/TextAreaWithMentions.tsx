@@ -1,10 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 import type { ControllerRenderProps } from "react-hook-form";
-import { Mention, MentionsInput, SuggestionDataItem } from "react-mentions";
-import { Textarea } from "~/components/ui/textarea";
+import {
+	Mention,
+	MentionsInput,
+	type SuggestionDataItem,
+} from "react-mentions";
+
 import "~/styles/mentions.css";
 
 const mentionsStyle = {

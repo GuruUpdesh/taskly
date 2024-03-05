@@ -72,8 +72,7 @@ const UserComment = ({
 
 	function parseCommentForMentions(comment: string) {
 		const words = comment.split(" ");
-		const new_words = words.map((word, index) => {
-			console.log(word);
+		const new_words = words.map((word) => {
 			if (word.startsWith("@[")) {
 				return {
 					word: "@" + word.slice(2).split("]", 1)[0] + " ",

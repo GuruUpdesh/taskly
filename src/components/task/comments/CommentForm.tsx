@@ -1,23 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronRight, Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { SuggestionDataItem } from "react-mentions";
+import { type SuggestionDataItem } from "react-mentions";
 import { z } from "zod";
 
 import { createComment } from "~/actions/application/comment-actions";
+import { useAppStore } from "~/store/app";
 
+import TextAreaWithMentions from "./TextAreaWithMentions";
 import { Button } from "../../ui/button";
 import { Form, FormControl, FormField, FormItem } from "../../ui/form";
-import { Textarea } from "../../ui/textarea";
-// import { getAllUsersInProject } from "~/actions/application/project-actions";
-import { getTask } from "~/actions/application/task-actions";
-// import { User } from "~/server/db/schema";
-import TextAreaWithMentions from "./TextAreaWithMentions";
-import { getAllUsersInProject } from "~/actions/application/project-actions";
-import { User } from "~/server/db/schema";
-import { useAppStore } from "~/store/app";
 
 type Props = {
 	taskId: number;
