@@ -1,8 +1,8 @@
 import React from "react";
 
 import { currentUser } from "@clerk/nextjs";
+import { cookies } from "next/headers";
 
-import { getAllNotifications } from "~/actions/notification-actions";
 import InboxButtons from "~/components/inbox/InboxButtons";
 import {
 	ResizableHandle,
@@ -10,7 +10,8 @@ import {
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
 
-import NotificationItem from "./notification-item";
+import NotificationList from "./notification-list";
+import InboxPanel from "./inbox-panel";
 
 type Params = {
 	children: React.ReactNode;
@@ -26,21 +27,16 @@ export default async function InboxLayout({ children }: Params) {
 		return null;
 	}
 
-	const notifications = await getAllNotifications(user.id);
-
-	if (notifications === undefined) {
-		return null;
+	const layout = cookies().get("react-resizable-panels:inbox-layout");
+	let defaultLayout;
+	if (layout) {
+		defaultLayout = JSON.parse(layout.value) as number[] | undefined;
 	}
 
 	return (
-		<ResizablePanelGroup direction="horizontal">
-			<ResizablePanel
-				id="inbox-sidebar"
-				minSize={12}
-				maxSize={25}
-				defaultSize={20}
-			>
-				<div className="min-h-screen">
+		<InboxPanel
+			sidebarChildren={
+				<div className="flex max-h-screen min-h-screen flex-col">
 					<header className="flex items-center justify-between gap-2 border-b px-4 py-2">
 						<h3 className="scroll-m-20 text-2xl font-bold tracking-tight">
 							Inbox
@@ -49,19 +45,15 @@ export default async function InboxLayout({ children }: Params) {
 							<InboxButtons user={user.id} />
 						</div>
 					</header>
-					<section className="flex flex-col">
-						<NotificationList projectId={projectId} />
-						{notifications.map((notification, i) => (
-							<NotificationItem
-								key={i}
-								notification={notification}
-							/>
-						))}
+					<section className="flex flex-col overflow-y-scroll">
+						<div className="flex flex-grow flex-col overflow-y-auto">
+							<NotificationList />
+						</div>
 					</section>
 				</div>
-			</ResizablePanel>
-			<ResizableHandle className="" />
-			<ResizablePanel defaultSize={75}>{children}</ResizablePanel>
-		</ResizablePanelGroup>
+			}
+		>
+			{children}
+		</InboxPanel>
 	);
 }

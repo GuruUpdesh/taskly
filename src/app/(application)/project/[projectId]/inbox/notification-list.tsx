@@ -1,13 +1,23 @@
-import React from 'react'
+"use client";
 
-type Props = {
-    projectId: string
-}
+import React from "react";
 
-const NotificationList = ({projectId}: Props) => {
-  return (
-    <div>NotificationList</div>
-  )
-}
+import { AnimatePresence } from "framer-motion";
 
-export default NotificationList
+import { useAppStore } from "~/store/app";
+
+import NotificationItem from "./notification-item";
+
+const NotificationList = () => {
+	const notifications = useAppStore((state) => state.notifications);
+
+	return (
+		<AnimatePresence initial={false}>
+			{notifications.map((notification, i) => (
+				<NotificationItem key={i} notification={notification} />
+			))}
+		</AnimatePresence>
+	);
+};
+
+export default NotificationList;
