@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
-import { type Project } from "~/server/db/schema";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronRight, Loader2Icon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { handleProjectInfo } from "~/actions/settings/settings-actions";
+import { Button } from "~/components/ui/button";
 import {
 	Form,
 	FormControl,
@@ -16,15 +19,14 @@ import {
 	FormLabel,
 	FormMessage,
 } from "~/components/ui/form";
-import { Button } from "~/components/ui/button";
-import { ChevronRight, Loader2Icon } from "lucide-react";
-import { cn } from "~/lib/utils";
-import typography from "~/styles/typography";
-import { handleProjectInfo } from "~/actions/settings/settings-actions";
-import safeAsync from "~/lib/safe-action";
-import { toast } from "sonner";
+import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import { Switch } from "~/components/ui/switch";
+import { Textarea } from "~/components/ui/textarea";
+import safeAsync from "~/lib/safe-action";
+import { cn } from "~/lib/utils";
+import { type Project } from "~/server/db/schema";
+import typography from "~/styles/typography";
 
 type Props = {
 	project: Project;

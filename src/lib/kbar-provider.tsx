@@ -11,6 +11,7 @@ import {
 import { KBarProvider as KBarProviderImpl } from "kbar";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
 import { useNavigationStore } from "~/store/navigation";
 
 type Props = {

@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useCallback, useMemo } from "react";
+
+import { CrossCircledIcon } from "@radix-ui/react-icons";
+
+import { getPropertyConfig } from "~/config/TaskConfigType";
+import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
 import { renderFilterValues } from "~/utils/filter-values";
-import { buildDynamicOptions, getTaskConfig } from "~/config/task-entity";
-import { CrossCircledIcon } from "@radix-ui/react-icons";
+
 import FilterMenu from "./filter-menu";
-import { cn } from "~/lib/utils";
 
 type Props = {
 	filter: Filter;
@@ -23,12 +26,7 @@ const FilterChip = ({ filter }: Props) => {
 		const property = filter.property;
 		if (property === "") return null;
 
-		return buildDynamicOptions(
-			getTaskConfig(property),
-			property,
-			assignees,
-			sprints,
-		);
+		return getPropertyConfig(property, assignees, sprints);
 	}, [assignees, sprints, filter]);
 
 	const renderValues = useCallback(() => {

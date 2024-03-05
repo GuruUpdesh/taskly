@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { clerkClient } from "@clerk/nextjs";
 import type {
 	SessionWebhookEvent,
 	UserJSON,
 	UserWebhookEvent,
 	WebhookEvent,
 } from "@clerk/nextjs/server";
-import { clerkClient } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { Webhook as svixWebhook } from "svix";
+
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { type NewUser, insertUserSchema, users } from "~/server/db/schema";
@@ -105,7 +106,6 @@ async function onSessionCreated(payload: SessionWebhookEvent) {
 export async function POST(request: Request) {
 	try {
 		const payload = await validateRequest(request);
-		console.log("Clerk Webhook Received >", payload.type);
 
 		switch (payload.type) {
 			case "user.created":

@@ -1,14 +1,17 @@
 import React from "react";
+
 import type { UseFormReturn } from "react-hook-form";
+
+import { type TaskFormType } from "~/components/backlog/create-task";
 import { cn } from "~/lib/utils";
-import type { NewTask } from "~/server/db/schema";
 
 type Props = {
-	form: UseFormReturn<NewTask>;
-	property: keyof NewTask;
+	form: UseFormReturn<TaskFormType>;
+	property: keyof TaskFormType;
+	className?: string;
 };
 
-const PropertyStatic = ({ form, property }: Props) => {
+const PropertyStatic = ({ form, property, className = "" }: Props) => {
 	return (
 		<>
 			{property === "description" && form.watch(property) !== "" ? (
@@ -23,6 +26,7 @@ const PropertyStatic = ({ form, property }: Props) => {
 						"min-w-[2ch] opacity-80": property === "description",
 						"min-w-fit font-medium": property === "title",
 					},
+					className,
 				)}
 			>
 				{String(form.watch(property))}

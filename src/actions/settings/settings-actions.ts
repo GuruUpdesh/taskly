@@ -1,5 +1,13 @@
 "use server";
 
+import chroma from "chroma-js";
+import { and, eq } from "drizzle-orm";
+import { getAverageColor } from "fast-average-color-node";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
+import { authenticate } from "~/actions/security/authenticate";
+import { checkPermissions } from "~/actions/security/permissions";
 import { db } from "~/server/db";
 import {
 	type Project,
@@ -10,13 +18,6 @@ import {
 	invites,
 	notifications,
 } from "~/server/db/schema";
-import { and, eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
-import { authenticate } from "../security/authenticate";
-import { checkPermissions } from "../security/permissions";
-import { revalidatePath } from "next/cache";
-import { getAverageColor } from "fast-average-color-node";
-import chroma from "chroma-js";
 
 export async function handleProjectInfo(
 	projectId: number,
@@ -109,12 +110,7 @@ export async function removeUserFromProject(projectId: number, userId: string) {
 	await db
 		.update(tasks)
 		.set({ assignee: null })
-		.where(
-			and(
-				eq(tasks.projectId, projectId),
-				eq(tasks.assignee, String(userId)),
-			),
-		);
+		.where(and(eq(tasks.projectId, projectId), eq(tasks.assignee, userId)));
 
 	if (activeUserId !== userId) {
 		revalidatePath("/");

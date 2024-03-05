@@ -1,14 +1,16 @@
 "use client";
 
 import React from "react";
+
+import { useAuth } from "@clerk/nextjs";
+import Link from "next/link";
+
 import {
 	NavigationMenuContent,
 	NavigationMenuItem,
 	NavigationMenuLink,
 	NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
-import Link from "next/link";
-import { useAuth } from "@clerk/nextjs";
 type Props = {
 	children: React.ReactNode;
 };

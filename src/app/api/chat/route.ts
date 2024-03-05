@@ -1,6 +1,11 @@
-import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
+import OpenAI from "openai";
+import { z } from "zod";
+
+import { getAssigneesForProject } from "~/actions/application/project-actions";
+import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { env } from "~/env.mjs";
+import { getTaskAiSchema } from "~/utils/ai-context";
 
 export const runtime = "edge";
 
@@ -9,6 +14,19 @@ const openai = new OpenAI({
 });
 
 export async function POST(req: Request) {
+	console.log("🤖 - Beginning AI task creation");
+	const body: unknown = await req.json();
+	const schema = z.object({
+		projectId: z.string(),
+	});
+	const { projectId } = schema.parse(body);
+	console.log("🤖 - Getting sprints and assignees for project", projectId);
+	const assignees = await getAssigneesForProject(parseInt(projectId));
+	const sprints = await getSprintsForProject(parseInt(projectId));
+
+	const taskSchema = getTaskAiSchema(assignees, sprints);
+	console.error("🤖 - Generated task schema", taskSchema);
+
 	const { messages } = (await req.json()) as {
 		messages: OpenAI.ChatCompletionMessageParam[];
 	};

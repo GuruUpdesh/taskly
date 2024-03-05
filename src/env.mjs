@@ -29,6 +29,7 @@ export const env = createEnv({
 		UPLOADTHING_SECRET: z.string(),
 		UPLOADTHING_APP_ID: z.string(),
 		ACCESS_TOKEN: z.string(),
+		BLOB_READ_WRITE_TOKEN: z.string(),
 	},
 
 	/**
@@ -65,6 +66,7 @@ export const env = createEnv({
 		UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
 		UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
 		ACCESS_TOKEN: process.env.ACCESS_TOKEN,
+		BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

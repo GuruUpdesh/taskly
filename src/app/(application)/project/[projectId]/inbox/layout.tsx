@@ -1,13 +1,16 @@
 import React from "react";
+
+import { currentUser } from "@clerk/nextjs";
+
+import { getAllNotifications } from "~/actions/notification-actions";
+import InboxButtons from "~/components/inbox/InboxButtons";
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
+
 import NotificationItem from "./notification-item";
-import { getAllNotifications } from "~/actions/notification-actions";
-import { currentUser } from "@clerk/nextjs";
-import InboxButtons from "~/components/inbox/InboxButtons";
 
 type Params = {
 	children: React.ReactNode;
@@ -43,14 +46,7 @@ export default async function InboxLayout({ children }: Params) {
 							Inbox
 						</h3>
 						<div className="flex gap-2">
-							<InboxButtons
-								notificationCount={
-									notifications.filter(
-										(n) => n.readAt === null,
-									).length
-								}
-								user={user.id}
-							/>
+							<InboxButtons user={user.id} />
 						</div>
 					</header>
 					<section className="flex flex-col gap-2 py-2">

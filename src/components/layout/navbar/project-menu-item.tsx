@@ -1,16 +1,18 @@
 "use client";
 
 import React from "react";
-import { type Project } from "~/server/db/schema";
+
+import { ChevronRight, Plus } from "lucide-react";
+
+import ProjectImage from "~/components/page/project/project-image";
+import { Button } from "~/components/ui/button";
 import {
 	NavigationMenuContent,
 	NavigationMenuItem,
 	NavigationMenuLink,
 	NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
-import { ChevronRight, Plus } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import ProjectImage from "~/components/page/project/project-image";
+import { type Project } from "~/server/db/schema";
 
 type ProjectMenuItemProps = {
 	projects: Project[];

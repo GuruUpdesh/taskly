@@ -1,12 +1,14 @@
 import React from "react";
-import Navbar from "~/components/layout/navbar/navbar";
-import ProjectList from "~/components/layout/navbar/project-list";
+
 import Image from "next/image";
 import Link from "next/link";
-import UserNav from "~/components/layout/user-nav";
+
 import AppNavMenu from "~/components/layout/navbar/app-nav-menu";
-import { RecentTasksNavWrapper } from "~/components/page/project/recent-tasks";
+import Navbar from "~/components/layout/navbar/navbar";
+import ProjectList from "~/components/layout/navbar/project-list";
+import UserNav from "~/components/layout/user-nav";
 import { CurrentProjectNavWrapper } from "~/components/page/project/current-project";
+import { RecentTasksNavWrapper } from "~/components/page/project/recent-tasks";
 
 export default function LandingLayout({
 	children,

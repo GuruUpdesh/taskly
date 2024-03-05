@@ -1,11 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import { cn } from "~/lib/utils";
 import { BookIcon, Brain, LampDesk, Network, Rabbit } from "lucide-react";
+
+import Grid from "~/components/page/landing/background-grid";
+import ButtonOptions from "~/components/page/landing/button-options";
 import MarketingBlock from "~/components/page/landing/marketing/marketing-block";
 import MarketingGrid from "~/components/page/landing/marketing/marketing-grid";
 import MarketingTaskChips from "~/components/page/landing/marketing/marketing-task-chips";
-import ButtonOptions from "~/components/page/landing/button-options";
-import Grid from "~/components/page/landing/background-grid";
+import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 
 export default function HomePage() {

@@ -1,8 +1,10 @@
 "use client";
 
+import React from "react";
+
 import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import React from "react";
+
 import { updateUserApplicationData } from "~/actions/application/redis-actions";
 import { useNavigationStore } from "~/store/navigation";
 

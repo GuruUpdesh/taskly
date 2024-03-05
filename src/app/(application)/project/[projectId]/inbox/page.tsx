@@ -1,4 +1,5 @@
 import React from "react";
+
 import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
 
 export default function InboxPage() {

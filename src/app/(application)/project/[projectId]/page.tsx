@@ -1,26 +1,29 @@
 import React from "react";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
-import UserGreeting from "~/components/page/project/user-greeting";
 
+import { auth } from "@clerk/nextjs/server";
+import { Calendar } from "lucide-react";
+
+import { getCurrentSprintForProject } from "~/actions/application/sprint-actions";
+import { getTasksFromProject } from "~/actions/application/task-actions";
+import { getAllNotifications } from "~/actions/notification-actions";
 import {
 	DataCardLineGraph,
 	DataCardAreaGraph,
 	DataCardFigure,
 } from "~/components/dashboard/data-card";
-import { Separator } from "~/components/ui/separator";
+import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import RecentTasks from "~/components/page/project/recent-tasks";
+import UserGreeting from "~/components/page/project/user-greeting";
+import { Button } from "~/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 } from "~/components/ui/card";
-import RecentTasks from "~/components/page/project/recent-tasks";
-import { getTasksFromProject } from "~/actions/application/task-actions";
+import { Separator } from "~/components/ui/separator";
 import { type Notification, type Task } from "~/server/db/schema";
-import { getAllNotifications } from "~/actions/notification-actions";
-import { auth } from "@clerk/nextjs/server";
-import { getCurrentSprintForProject } from "~/actions/application/sprint-actions";
 
 type ProjectPageProps = {
 	params: {
@@ -32,7 +35,6 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 	const tasks: Task[] = (await getTasksFromProject(Number(projectId))) ?? [];
 
 	const sprint = await getCurrentSprintForProject(Number(projectId));
-	console.log(sprint);
 
 	const user = auth();
 	if (!user) {
@@ -63,14 +65,17 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 	const today = sprint?.startDate ?? new Date();
 
 	const pastDates = [];
-	for (let i = 0; i < 14; i++) {
+	let i: number;
+	console.log("HERE");
+	for (i = 0; ; i++) {
 		const date = new Date(today);
-		date.setDate(today.getDate() - i);
+		date.setDate(today.getDate() + i);
 		pastDates.push(date.toISOString().split("T")[0]);
+		console.log("hellos");
+		if (date === sprint?.endDate) break;
 	}
-	pastDates.reverse();
 	let counter = 0;
-	const incrementBy = tasksForThisSprint.length / 14;
+	const incrementBy = tasksForThisSprint.length / pastDates.length;
 	const tasksCompletedBeforeDay = pastDates.map((date) => ({
 		name: date ?? "",
 		tasks: tasks.filter(

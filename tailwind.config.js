@@ -2,10 +2,9 @@
 // @ts-check
 const { fontFamily } = require("tailwindcss/defaultTheme");
 const containerQueriesPlugin = require("@tailwindcss/container-queries");
-const { withUt } = require("uploadthing/tw");
 
 /** @type {import('tailwindcss').Config} */
-module.exports = withUt({
+module.exports = {
 	darkMode: ["class"],
 	content: [
 		"./pages/**/*.{ts,tsx}",
@@ -60,6 +59,13 @@ module.exports = withUt({
 					sans: ["var(--font-sans)", ...fontFamily.sans],
 				},
 			},
+			brightness: {
+				75: "0.75",
+				80: "0.8",
+				85: "0.85",
+				90: "0.9",
+				95: "0.95",
+			},
 			borderRadius: {
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",
@@ -98,13 +104,13 @@ module.exports = withUt({
 					},
 				},
 				loadBackground: {
-          "0%": {
-            backgroundPosition: "left"
-          },
-          "100%": {
-            backgroundPosition: "right"
-          }
-        },
+					"0%": {
+						backgroundPosition: "left"
+					},
+					"100%": {
+						backgroundPosition: "right"
+					},
+       			},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
@@ -122,5 +128,5 @@ module.exports = withUt({
 			},
 		},
 	},
-	plugins: [require("tailwindcss-animate"), containerQueriesPlugin],
-});
+	plugins: [require("tailwindcss-animate"), containerQueriesPlugin, require("tailwind-gradient-mask-image")],
+};

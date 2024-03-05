@@ -1,4 +1,5 @@
 import { ClerkLoading, SignUp } from "@clerk/nextjs";
+
 import { Skeleton } from "~/components/ui/skeleton";
 
 export default function SignUpPage() {

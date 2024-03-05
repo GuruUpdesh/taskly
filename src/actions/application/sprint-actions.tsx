@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs";
 import { addWeeks } from "date-fns";
 import { and, asc, desc, eq, gte, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+
 import { db } from "~/server/db";
 import { projects, sprints, usersToProjects } from "~/server/db/schema";
 
@@ -86,6 +87,7 @@ export async function getCurrentSprintForProject(projectId: number) {
 			and(
 				eq(sprints.projectId, projectId),
 				gte(sprints.endDate, new Date()),
+				lt(sprints.startDate, new Date()),
 			),
 		)
 		.orderBy(asc(sprints.endDate))
