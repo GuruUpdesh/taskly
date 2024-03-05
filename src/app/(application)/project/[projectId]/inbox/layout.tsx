@@ -4,14 +4,9 @@ import { currentUser } from "@clerk/nextjs";
 import { cookies } from "next/headers";
 
 import InboxButtons from "~/components/inbox/InboxButtons";
-import {
-	ResizableHandle,
-	ResizablePanel,
-	ResizablePanelGroup,
-} from "~/components/ui/resizable";
 
-import NotificationList from "./notification-list";
 import InboxPanel from "./inbox-panel";
+import NotificationList from "./notification-list";
 
 type Params = {
 	children: React.ReactNode;
@@ -52,6 +47,7 @@ export default async function InboxLayout({ children }: Params) {
 					</section>
 				</div>
 			}
+			defaultLayout={defaultLayout}
 		>
 			{children}
 		</InboxPanel>
