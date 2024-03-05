@@ -70,6 +70,7 @@
 	* {
 		@apply border-border;
 	}
+
 	body {
 		@apply bg-background text-foreground;
 	}
@@ -79,13 +80,16 @@
 	width: 8px;
 	height: 8px;
 }
+
 ::-webkit-scrollbar-track {
 	background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
 	background-color: #2f3b4e;
 	border: transparent;
 }
+
 ::-webkit-scrollbar-corner {
 	background: rgba(0, 0, 0, 0);
-}
+}  
