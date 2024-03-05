@@ -1,16 +1,12 @@
 import React from "react";
 
 import { currentUser } from "@clerk/nextjs";
+import { cookies } from "next/headers";
 
-import { getAllNotifications } from "~/actions/notification-actions";
 import InboxButtons from "~/components/inbox/InboxButtons";
-import {
-	ResizableHandle,
-	ResizablePanel,
-	ResizablePanelGroup,
-} from "~/components/ui/resizable";
 
-import NotificationItem from "./notification-item";
+import InboxPanel from "./inbox-panel";
+import NotificationList from "./notification-list";
 
 type Params = {
 	children: React.ReactNode;
@@ -26,45 +22,34 @@ export default async function InboxLayout({ children }: Params) {
 		return null;
 	}
 
-	const notifications = await getAllNotifications(user.id);
-
-	if (notifications === undefined) {
-		return null;
+	const layout = cookies().get("react-resizable-panels:inbox-layout");
+	let defaultLayout;
+	if (layout) {
+		defaultLayout = JSON.parse(layout.value) as number[] | undefined;
 	}
 
 	return (
-		<ResizablePanelGroup direction="horizontal">
-			<ResizablePanel
-				id="inbox-sidebar"
-				minSize={12}
-				maxSize={25}
-				defaultSize={20}
-			>
-				<div className="min-h-screen">
-					<header className="flex items-center justify-between gap-2 border-b p-4">
+		<InboxPanel
+			sidebarChildren={
+				<div className="flex max-h-screen min-h-screen flex-col">
+					<header className="flex items-center justify-between gap-2 border-b px-4 py-2">
 						<h3 className="scroll-m-20 text-2xl font-bold tracking-tight">
 							Inbox
 						</h3>
-						<div className="flex gap-2">
+						<div className="flex gap-2 pb-1">
 							<InboxButtons user={user.id} />
 						</div>
 					</header>
-					<section className="flex flex-col gap-2 py-2">
-						{notifications.map((notification, i) => (
-							<NotificationItem
-								key={i}
-								id={notification.id.toString()}
-								message={notification.message}
-								date={notification.date.toDateString()}
-								task={notification.task}
-								read={notification.readAt !== null}
-							/>
-						))}
+					<section className="flex flex-col overflow-y-scroll">
+						<div className="flex flex-grow flex-col overflow-y-auto">
+							<NotificationList />
+						</div>
 					</section>
 				</div>
-			</ResizablePanel>
-			<ResizableHandle className="" />
-			<ResizablePanel defaultSize={75}>{children}</ResizablePanel>
-		</ResizablePanelGroup>
+			}
+			defaultLayout={defaultLayout}
+		>
+			{children}
+		</InboxPanel>
 	);
 }

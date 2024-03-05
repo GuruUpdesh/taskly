@@ -273,7 +273,7 @@ async function createTaskUpdateNotification(
 
 	await createNotification({
 		date: new Date(),
-		message: `Task "${task.title}" was updated.`,
+		message: `Task was updated.`,
 		userId: user.id,
 		taskId: taskId,
 		projectId: task.projectId,

@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { find } from "lodash";
 import { useRouter } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 
@@ -12,7 +13,10 @@ import {
 } from "~/actions/application/project-actions";
 import { updateProjectApplicationData } from "~/actions/application/redis-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
-import { getAllNotifications } from "~/actions/notification-actions";
+import {
+	type NotificationWithTask,
+	getAllNotifications,
+} from "~/actions/notification-actions";
 import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
 import { useAppStore } from "~/store/app";
 import { useNavigationStore } from "~/store/navigation";
@@ -51,9 +55,31 @@ const ProjectState = ({ projectId, userId }: Props) => {
 		refetchInterval: 10 * 1000,
 	});
 
+	const queryClient = useQueryClient();
+
+	async function refetchNotifications() {
+		const data = await getAllNotifications(userId);
+		let newNotifications = data;
+		if (newNotifications) {
+			const previousNotifications = queryClient.getQueryData<
+				NotificationWithTask[]
+			>(["notifications", projectId]);
+
+			newNotifications = newNotifications.map((notification) => {
+				const isExistingNotification = find(previousNotifications, {
+					id: notification.id,
+				});
+				return isExistingNotification
+					? notification
+					: { ...notification, options: { isNew: true } };
+			});
+		}
+		return newNotifications;
+	}
+
 	const notificationResults = useQuery({
 		queryKey: ["notifications", projectId],
-		queryFn: () => getAllNotifications(userId),
+		queryFn: () => refetchNotifications(),
 		staleTime: 2 * 1000,
 		refetchInterval: 10 * 1000,
 	});
