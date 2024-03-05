@@ -26,6 +26,7 @@ type Props = {
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 	projectId: string;
+	variant?: "backlog" | "board";
 };
 
 const TaskList = ({
@@ -36,6 +37,7 @@ const TaskList = ({
 	addTaskMutation,
 	deleteTaskMutation,
 	projectId,
+	variant = "backlog",
 }: Props) => {
 	const groupBy = useAppStore((state) => state.groupBy);
 
@@ -55,6 +57,8 @@ const TaskList = ({
 					className={cn("min-h-2", {
 						"bg-accent-foreground/5":
 							snapshot.isDraggingOver && listId !== "tasks",
+						"flex h-full flex-col gap-2 overflow-y-scroll p-1":
+							variant === "board",
 					})}
 				>
 					{taskOrder.map((taskId, idx) => {
@@ -122,6 +126,7 @@ const TaskList = ({
 												deleteTaskMutation
 											}
 											projectId={projectId}
+											variant={variant}
 										/>
 									</div>
 								)}

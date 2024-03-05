@@ -3,12 +3,16 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
-import { Bot } from "lucide-react";
 
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import CreateTask from "~/components/backlog/create-task";
+import Tasks from "~/components/backlog/tasks";
+import CreateTicket from "~/components/create-ticket/ticket";
+import Filters from "~/components/filter/filters";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import { Button } from "~/components/ui/button";
+import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
+import ToggleFilters from "~/components/page/backlog/display-toggles";
 
 type Params = {
 	params: {
@@ -16,30 +20,37 @@ type Params = {
 	};
 };
 
+/**
+ * This is a copy of backlog page until I have a better solution
+ *  */
 export default async function BacklogPage({ params: { projectId } }: Params) {
 	// Prefetch tasks using react-query
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
-		queryKey: ["tasks"],
+		queryKey: ["tasks", projectId],
 		queryFn: () => getTasksFromProject(parseInt(projectId)),
 	});
 
 	return (
-		<div className="max-h-screen overflow-y-scroll pt-2">
-			<header className="container flex items-center justify-between gap-2 border-b pb-2">
-				<BreadCrumbs />
+		<div className="flex max-h-screen min-h-screen flex-col">
+			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b bg-background/75 px-4 pb-2 pt-2 backdrop-blur-xl">
 				<div className="flex items-center gap-2">
-					<Button variant="outline" size="sm">
-						<Bot className="h-4 w-4" />
-					</Button>
+					<ToggleSidebarButton />
+					<BreadCrumbs />
+				</div>
+				<div className="flex items-center gap-2">
+					<ToggleFilters />
+					<AiDialog projectId={projectId} />
 					<CreateTask projectId={projectId} />
 				</div>
 			</header>
-			<section className="container flex flex-col pt-4">
+			<section className="flex h-full flex-col overflow-hidden">
+				<Filters />
 				<HydrationBoundary state={dehydrate(queryClient)}>
-					<p>Not Implemented</p>
+					<Tasks projectId={projectId} variant="board" />
 				</HydrationBoundary>
 			</section>
+			<CreateTicket />
 		</div>
 	);
 }
