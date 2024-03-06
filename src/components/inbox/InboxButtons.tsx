@@ -48,12 +48,7 @@ export default function InboxButtons({ user }: Props) {
 			</SimpleTooltip>
 			<Dialog>
 				<DialogTrigger asChild>
-					<Button
-						variant="outline"
-						onClick={() => deleteNotificationsForUser(user)}
-					>
-						Delete All
-					</Button>
+					<Button variant="outline">Delete All</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-md">
 					<DialogHeader>
