@@ -129,7 +129,7 @@ const TaskList = ({
 										>
 											<div
 												className={cn(
-													"group relative mb-2 bg-background/50 backdrop-blur-xl transition-colors",
+													"group relative bg-background/50 backdrop-blur-xl transition-colors",
 													{
 														"bg-accent-foreground/5":
 															snapshot.isDragging,
@@ -141,6 +141,8 @@ const TaskList = ({
 																.isNew &&
 															!task.options
 																.isPending,
+														"mb-2":
+															variant === "board",
 													},
 												)}
 												{...provided.draggableProps}
