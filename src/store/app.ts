@@ -31,6 +31,8 @@ interface AppState {
 	setGroupByBoard: (groupBy: TaskProperty) => void;
 	hoveredTaskId: number | null;
 	setHoveredTaskId: (id: number | null) => void;
+	totalPoints: Partial<Record<string, number>>;
+	addPoints: (key: string, points: number) => void;
 }
 
 const useAppStore = create<AppState>()(
@@ -69,6 +71,13 @@ const useAppStore = create<AppState>()(
 			setGroupByBoard: (groupBy) => set({ groupByBoard: groupBy }),
 			hoveredTaskId: null,
 			setHoveredTaskId: (id: number | null) => set({ hoveredTaskId: id }),
+			totalPoints: {},
+			addPoints: (key, points) =>
+				set((state) => {
+					const totalPoints = { ...state.totalPoints };
+					totalPoints[key] = (totalPoints[key] || 0) + points;
+					return { totalPoints };
+				}),
 		}),
 		{
 			name: "settings-navigation-storage",

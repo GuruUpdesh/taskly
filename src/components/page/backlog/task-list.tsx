@@ -15,7 +15,7 @@ import { useShallow } from "zustand/react/shallow";
 
 import Task from "~/components/backlog/task/task";
 import { type UpdateTask } from "~/components/backlog/tasks";
-import { type StatefulTask } from "~/config/TaskConfigType";
+import { TaskProperty, type StatefulTask } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
 import { filterTasks } from "~/utils/filter";
@@ -94,7 +94,6 @@ const TaskList = ({
 									return null;
 								}
 							}
-
 							return task ? (
 								<Draggable
 									draggableId={String(task.id)}
@@ -167,6 +166,7 @@ const TaskList = ({
 													}
 													projectId={projectId}
 													variant={variant}
+													listId={listId}
 												/>
 											</div>
 										</motion.div>

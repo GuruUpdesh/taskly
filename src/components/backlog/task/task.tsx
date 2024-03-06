@@ -88,6 +88,7 @@ interface Props extends VariantPropsType {
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 	projectId: string;
+	listId?: string;
 }
 
 const Task = ({
@@ -96,10 +97,25 @@ const Task = ({
 	deleteTaskMutation,
 	projectId,
 	variant = "backlog",
+	listId,
 }: Props) => {
-	const [assignees, sprints] = useAppStore(
-		useShallow((state) => [state.assignees, state.sprints]),
+	const [assignees, sprints, addPoints] = useAppStore(
+		useShallow((state) => [
+			state.assignees,
+			state.sprints,
+			state.addPoints,
+		]),
 	);
+
+	useEffect(() => {
+		console.log("listId", listId);
+		console.log("task.points", task.points);
+		if (!listId) return;
+		addPoints(listId, parseInt(task.points));
+		return () => {
+			addPoints(listId, -parseInt(task.points));
+		};
+	}, [listId, task.points]);
 
 	const defaultValues = useMemo(() => {
 		return {
