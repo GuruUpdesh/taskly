@@ -43,7 +43,7 @@ export default async function InboxLayout({
 								Inbox
 							</h3>
 						</div>
-						<div className="flex gap-2 pb-1">
+						<div className="flex gap-2">
 							<InboxButtons user={user.id} />
 						</div>
 					</header>

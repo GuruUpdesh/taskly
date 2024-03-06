@@ -4,6 +4,8 @@ import React from "react";
 
 import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ChevronRight, Link as LinkIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -72,6 +74,17 @@ const TaskPage = ({
 		toast.success("Task deleted");
 	}
 
+	const handleCopyLinkToClipboard = async () => {
+		const protocol = window.location.protocol;
+		await navigator.clipboard.writeText(
+			protocol +
+				"//" +
+				window.location.host +
+				`/project/${projectId}/task/${taskId}`,
+		);
+		toast.info("Copied to clipboard!");
+	};
+
 	if (!result.data) {
 		return <div>Loading...</div>;
 	}
@@ -108,6 +121,31 @@ const TaskPage = ({
 									</>
 								)}
 								<BreadCrumbs />
+							</div>
+							<div className="flex items-center gap-2">
+								<Button
+									onClick={handleCopyLinkToClipboard}
+									size="sm"
+									variant="outline"
+									className="gap-2"
+								>
+									Copy Link
+									<LinkIcon className="h-4 w-4" />
+								</Button>
+								{context === "inbox" && (
+									<Link
+										href={`/project/${projectId}/task/${taskId}`}
+									>
+										<Button
+											size="sm"
+											variant="outline"
+											className="gap-2"
+										>
+											Open
+											<ChevronRight className="h-4 w-4" />
+										</Button>
+									</Link>
+								)}
 							</div>
 						</header>
 						<PrimaryTaskForm
