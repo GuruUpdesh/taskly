@@ -44,8 +44,8 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<CreateTask projectId={projectId} />
 				</div>
 			</header>
+			<Filters />
 			<section className="flex h-full flex-col overflow-hidden">
-				<Filters />
 				<HydrationBoundary state={dehydrate(queryClient)}>
 					<Tasks projectId={projectId} variant="board" />
 				</HydrationBoundary>
