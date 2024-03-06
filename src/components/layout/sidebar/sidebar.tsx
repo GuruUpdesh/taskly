@@ -11,7 +11,7 @@ import {
 
 import InboxSidebarButton from "~/components/inbox/InboxSidebarButton";
 import { Separator } from "~/components/ui/separator";
-import UserButtonWrapper from "~/components/user-button/user-button-wrapper";
+import UserButton from "~/components/user-button/user-button";
 
 import SelectProject from "./select project/select-project";
 import SidebarBackgroundWrapper from "./sidebar-background";
@@ -37,7 +37,7 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 					orientation="vertical"
 					className="hidden h-[40px] @sidebar:block"
 				/>
-				<UserButtonWrapper />
+				<UserButton variant="application" />
 			</div>
 			<div className="flex h-full flex-col gap-4 px-1 py-4 @sidebar:p-4">
 				<SelectProject projectId={projectId} />

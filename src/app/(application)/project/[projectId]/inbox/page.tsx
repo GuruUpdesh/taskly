@@ -8,7 +8,7 @@ export default function InboxPage() {
 			<div className="flex flex-col items-center justify-center">
 				<EnvelopeClosedIcon className="h-24 w-24" />
 				<h1 className="text-xl tracking-tight">
-					You have no notifications
+					Select a notification
 				</h1>
 			</div>
 		</main>

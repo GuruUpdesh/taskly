@@ -1,27 +1,52 @@
 import React from "react";
 
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs";
+import { ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 
+import { getUser } from "~/actions/user-actions";
 import { Button } from "~/components/ui/button";
 import UserProfilePicture from "~/components/user-profile-picture";
+import { cn } from "~/lib/utils";
 
 import UserMenu from "./user-menu";
 
-const UserButton = async () => {
+type Props = {
+	variant: "landing" | "application";
+};
+
+const UserButton = async ({ variant }: Props) => {
 	const { userId } = auth();
 
 	if (!userId) {
-		toast.error("You must be logged in to view this page");
+		toast.error(
+			"You cannot access this component without being signed in.",
+		);
 		return null;
 	}
 
-	const user = await clerkClient.users.getUser(userId);
+	const user = await getUser(userId);
+	if (!user) {
+		toast.error("Error loading user data");
+		return null;
+	}
 
 	return (
 		<UserMenu>
-			<Button variant="ghost" size="icon" className="min-w-[30px]">
-				<UserProfilePicture src={user?.imageUrl} size={30} />
+			<Button
+				variant="ghost"
+				size="icon"
+				className={cn({
+					"min-w-[30px]": variant === "application",
+				})}
+			>
+				<UserProfilePicture src={user.profilePicture} size={30} />
+				{variant === "landing" ? (
+					<>
+						{user.username}
+						<ChevronDown className="h-4 w-4" />
+					</>
+				) : null}
 			</Button>
 		</UserMenu>
 	);
