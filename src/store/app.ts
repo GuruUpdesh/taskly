@@ -25,8 +25,10 @@ interface AppState {
 	addFilter: (filter: Filter) => void;
 	deleteFilter: (filter: Filter) => void;
 	updateFilter: (oldFilter: Filter, filter: Filter) => void;
-	groupBy: TaskProperty | null;
-	setGroupBy: (groupBy: TaskProperty | null) => void;
+	groupByBacklog: TaskProperty | null;
+	setGroupByBacklog: (groupBy: TaskProperty | null) => void;
+	groupByBoard: TaskProperty;
+	setGroupByBoard: (groupBy: TaskProperty) => void;
 	hoveredTaskId: number | null;
 	setHoveredTaskId: (id: number | null) => void;
 }
@@ -61,8 +63,10 @@ const useAppStore = create<AppState>()(
 
 					return { filters };
 				}),
-			groupBy: null,
-			setGroupBy: (groupBy: TaskProperty | null) => set({ groupBy }),
+			groupByBacklog: null,
+			setGroupByBacklog: (groupBy) => set({ groupByBacklog: groupBy }),
+			groupByBoard: "status",
+			setGroupByBoard: (groupBy) => set({ groupByBoard: groupBy }),
 			hoveredTaskId: null,
 			setHoveredTaskId: (id: number | null) => set({ hoveredTaskId: id }),
 		}),
