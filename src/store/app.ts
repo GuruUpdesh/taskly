@@ -75,7 +75,7 @@ const useAppStore = create<AppState>()(
 			addPoints: (key, points) =>
 				set((state) => {
 					const totalPoints = { ...state.totalPoints };
-					totalPoints[key] = (totalPoints[key] || 0) + points;
+					totalPoints[key] = (totalPoints[key] ?? 0) + points;
 					return { totalPoints };
 				}),
 		}),
