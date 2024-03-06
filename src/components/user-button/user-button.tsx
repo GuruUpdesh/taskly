@@ -38,6 +38,7 @@ const UserButton = async ({ variant }: Props) => {
 				size="icon"
 				className={cn({
 					"min-w-[30px]": variant === "application",
+					"w-fit gap-2 px-2": variant === "landing",
 				})}
 			>
 				<UserProfilePicture src={user.profilePicture} size={30} />
