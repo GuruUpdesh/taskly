@@ -167,6 +167,7 @@ export async function updateTask(
 	data: UpdateTaskData,
 	waitForNotification = false,
 ) {
+	console.time("update task")
 	try {
 		const updatedTaskData = CreateTaskSchema.partial().parse(data);
 		if (Object.keys(updatedTaskData).length === 0) {
@@ -198,6 +199,7 @@ export async function updateTask(
 		}
 		if (error instanceof Error) throwServerError(error.message);
 	}
+	console.timeEnd("update task")
 }
 
 async function createTaskUpdateNotification(
