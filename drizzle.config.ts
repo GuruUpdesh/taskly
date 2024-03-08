@@ -4,9 +4,10 @@ import { env } from "~/env.mjs";
 
 export default {
   schema: "./src/server/db/schema.ts",
-  driver: "mysql2",
+  driver: "pg",
   dbCredentials: {
-    uri: env.DATABASE_URL,
+    connectionString: env.DATABASE_URL,
   },
-  tablesFilter: ["taskly_*"],
+  verbose: true,
+  strict: true,
 } satisfies Config;

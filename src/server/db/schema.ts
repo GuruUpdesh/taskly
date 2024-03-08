@@ -1,68 +1,62 @@
 import { startOfToday, addWeeks } from "date-fns";
 import { relations, type InferSelectModel } from "drizzle-orm";
 import {
-	boolean,
-	datetime,
-	int,
-	mysqlEnum,
-	mysqlTableCreator,
-	primaryKey,
+	pgTable,
+	pgEnum,
+	integer,
 	serial,
 	text,
 	varchar,
-} from "drizzle-orm/mysql-core";
+	boolean,
+	primaryKey,
+	timestamp,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-
-export const mysqlTable = mysqlTableCreator((name) => `taskly_${name}`);
 
 /**
  * Task Schema
  */
-export const tasks = mysqlTable("tasks", {
+const StatusEnum = pgEnum("status", [
+	"backlog",
+	"todo",
+	"inprogress",
+	"inreview",
+	"done",
+]);
+const PointsEnum = pgEnum("points", ["0", "1", "2", "3", "4", "5"]);
+const PriorityEnum = pgEnum("priority", [
+	"none",
+	"low",
+	"medium",
+	"high",
+	"critical",
+]);
+const TypeEnum = pgEnum("type", [
+	"task",
+	"bug",
+	"feature",
+	"improvement",
+	"research",
+	"testing",
+]);
+export const tasks = pgTable("tasks", {
 	id: serial("id").primaryKey(),
 	title: varchar("title", { length: 255 }).notNull(),
 	description: text("description").default("").notNull(),
-	status: mysqlEnum("status", [
-		"backlog",
-		"todo",
-		"inprogress",
-		"inreview",
-		"done",
-	])
-		.default("todo")
-		.notNull(),
-	points: mysqlEnum("points", ["0", "1", "2", "3", "4", "5"])
-		.default("0")
-		.notNull(),
-	priority: mysqlEnum("priority", [
-		"none",
-		"low",
-		"medium",
-		"high",
-		"critical",
-	])
-		.default("low")
-		.notNull(),
-	type: mysqlEnum("type", [
-		"task",
-		"bug",
-		"feature",
-		"improvement",
-		"research",
-		"testing",
-	])
-		.default("task")
-		.notNull(),
-	boardOrder: int("board_order").notNull().default(0),
-	backlogOrder: int("backlog_order").notNull().default(0),
+	status: StatusEnum("status").default("todo").notNull(),
+	points: PointsEnum("points").default("0").notNull(),
+	priority: PriorityEnum("priority").default("low").notNull(),
+	type: TypeEnum("type").default("task").notNull(),
+	boardOrder: integer("board_order").notNull().default(0),
+	backlogOrder: integer("backlog_order").notNull().default(0),
 	assignee: varchar("assignee", { length: 255 }),
-	projectId: int("project_id").notNull(),
-	lastEditedAt: datetime("last_edit", { mode: "date", fsp: 6 }),
-	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
-		.notNull()
-		.default(new Date()),
-	sprintId: int("sprint_id").default(-1).notNull(),
+	projectId: integer("project_id").notNull(),
+	lastEditedAt: timestamp("last_edit", { precision: 6, withTimezone: true }),
+	insertedDate: timestamp("insert_date", { precision: 6, withTimezone: true })
+		.defaultNow()
+		.notNull(),
+	sprintId: integer("sprint_id").default(-1).notNull(),
 });
 
 // validators
@@ -107,11 +101,11 @@ export const taskRelations = relations(tasks, ({ one, many }) => ({
 /**
  * Project Schema
  */
-export const projects = mysqlTable("projects", {
+export const projects = pgTable("projects", {
 	id: serial("id").primaryKey(),
 	name: varchar("name", { length: 255 }).notNull(),
-	sprintDuration: int("sprint_duration").default(2).notNull(),
-	sprintStart: datetime("sprint_start", { mode: "date", fsp: 0 })
+	sprintDuration: integer("sprint_duration").default(2).notNull(),
+	sprintStart: timestamp("sprint_start", { precision: 6, withTimezone: true })
 		.default(startOfToday())
 		.notNull(),
 	description: text("description"),
@@ -138,7 +132,7 @@ export const projectsRelations = relations(projects, ({ many }) => ({
 /**
  * User Schema
  */
-export const users = mysqlTable("users", {
+export const users = pgTable("users", {
 	userId: varchar("user_id", { length: 32 }).primaryKey(),
 	username: varchar("username", { length: 255 }).notNull(),
 	profilePicture: varchar("profile_picture", { length: 255 }).notNull(),
@@ -166,12 +160,13 @@ export const usersRelations = relations(users, ({ many }) => ({
  */
 export const userRoles = ["owner", "admin", "member"] as const;
 
-export const usersToProjects = mysqlTable(
+const UserRolesEnum = pgEnum("user_role", userRoles);
+export const usersToProjects = pgTable(
 	"users_to_projects",
 	{
 		userId: varchar("user_id", { length: 32 }).notNull(),
-		projectId: int("project_id").notNull(),
-		userRole: mysqlEnum("user_role", userRoles).notNull(),
+		projectId: integer("project_id").notNull(),
+		userRole: UserRolesEnum("user_role").notNull(),
 	},
 	(t) => ({
 		pk: primaryKey(t.userId, t.projectId),
@@ -201,12 +196,12 @@ export const usersToProjectsRelations = relations(
 /**
  * Invite Schema
  */
-export const invites = mysqlTable("invites", {
-	id: serial("id").primaryKey(),
-	date: datetime("date", { mode: "date", fsp: 6 }).notNull(),
+export const invites = pgTable("invites", {
+	id: serial("id"),
+	date: timestamp("date", { precision: 6, withTimezone: true }).notNull(),
 	token: varchar("token", { length: 255 }).notNull().unique(),
 	userId: varchar("user_id", { length: 32 }).notNull(),
-	projectId: int("project_id").notNull(),
+	projectId: integer("project_id").notNull(),
 });
 
 // validators
@@ -232,12 +227,15 @@ export const inviteRelations = relations(invites, ({ one }) => ({
 /**
  * Task to Views
  */
-export const tasksToViews = mysqlTable(
+export const tasksToViews = pgTable(
 	"tasks_to_views",
 	{
-		taskId: int("task_id").notNull(),
+		taskId: integer("task_id").notNull(),
 		userId: varchar("user_id", { length: 32 }).notNull(),
-		viewedAt: datetime("viewed_at", { mode: "date", fsp: 6 }).notNull(),
+		viewedAt: timestamp("viewed_at", {
+			precision: 6,
+			withTimezone: true,
+		}).notNull(),
 	},
 	(t) => ({
 		pk: primaryKey(t.userId, t.taskId),
@@ -266,15 +264,15 @@ export const taskToViewRelations = relations(tasksToViews, ({ one }) => ({
  * Sprints
  */
 
-export const sprints = mysqlTable("sprints", {
+export const sprints = pgTable("sprints", {
 	id: serial("id").primaryKey(),
-	startDate: datetime("start_date", { mode: "date", fsp: 0 })
+	startDate: timestamp("start_date", { precision: 6, withTimezone: true })
 		.default(startOfToday())
 		.notNull(),
-	endDate: datetime("end_date", { mode: "date", fsp: 0 })
+	endDate: timestamp("end_date", { precision: 6, withTimezone: true })
 		.default(addWeeks(startOfToday(), 2))
 		.notNull(),
-	projectId: int("project_id").notNull(),
+	projectId: integer("project_id").notNull(),
 });
 
 // types
@@ -295,14 +293,14 @@ export const sprintRelations = relations(sprints, ({ one, many }) => ({
  * Notifications
  */
 
-export const notifications = mysqlTable("notifications", {
+export const notifications = pgTable("notifications", {
 	id: serial("id").primaryKey(),
-	date: datetime("date", { mode: "date", fsp: 6 }).notNull(),
+	date: timestamp("date", { precision: 6, withTimezone: true }).notNull(),
 	message: text("message").notNull(),
 	userId: varchar("user_id", { length: 32 }).notNull(),
-	taskId: int("task_id").notNull(),
-	projectId: int("project_id").notNull(),
-	readAt: datetime("read_at", { mode: "date", fsp: 6 }),
+	taskId: integer("task_id").notNull(),
+	projectId: integer("project_id").notNull(),
+	readAt: timestamp("date", { precision: 6, withTimezone: true }),
 });
 
 // validators
@@ -332,25 +330,28 @@ export const notificationRelations = relations(notifications, ({ one }) => ({
 /**
  * Task History
  */
-
-export const taskHistory = mysqlTable("task_history", {
+const PropertyKeyEnum = pgEnum("property_key", [
+	"status",
+	"priority",
+	"assignee",
+	"sprintId",
+	"type",
+	"points",
+]);
+export const taskHistory = pgTable("task_history", {
 	id: serial("id").primaryKey(),
 	comment: varchar("comment", { length: 255 }),
-	taskId: int("task_id").notNull(),
-	propertyKey: mysqlEnum("property_key", [
-		"status",
-		"priority",
-		"assignee",
-		"sprintId",
-		"type",
-		"points",
-	]),
+	taskId: integer("task_id").notNull(),
+	propertyKey: PropertyKeyEnum("property_key"),
 	propertyValue: varchar("property_value", { length: 255 }),
 	oldPropertyValue: varchar("old_property_value", { length: 255 }),
 	userId: varchar("user_id", { length: 255 }).notNull(),
-	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
+	insertedDate: timestamp("inserted_date", {
+		precision: 6,
+		withTimezone: true,
+	})
 		.notNull()
-		.default(new Date()),
+		.defaultNow(),
 });
 
 // validators
@@ -383,14 +384,17 @@ export const taskHistoryRelations = relations(taskHistory, ({ one }) => ({
  * Comments
  */
 
-export const comments = mysqlTable("comments", {
+export const comments = pgTable("comments", {
 	id: serial("id").primaryKey(),
 	comment: text("comment").notNull(),
-	taskId: int("task_id").notNull(),
+	taskId: integer("task_id").notNull(),
 	userId: varchar("user_id", { length: 255 }).notNull(),
-	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
+	insertedDate: timestamp("inserted_date", {
+		precision: 6,
+		withTimezone: true,
+	})
 		.notNull()
-		.default(new Date()),
+		.defaultNow(),
 });
 
 // types
