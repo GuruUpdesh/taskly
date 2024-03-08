@@ -17,22 +17,22 @@ import { z } from "zod";
 /**
  * Task Schema
  */
-const StatusEnum = pgEnum("status", [
+export const StatusEnum = pgEnum("status", [
 	"backlog",
 	"todo",
 	"inprogress",
 	"inreview",
 	"done",
 ]);
-const PointsEnum = pgEnum("points", ["0", "1", "2", "3", "4", "5"]);
-const PriorityEnum = pgEnum("priority", [
+export const PointsEnum = pgEnum("points", ["0", "1", "2", "3", "4", "5"]);
+export const PriorityEnum = pgEnum("priority", [
 	"none",
 	"low",
 	"medium",
 	"high",
 	"critical",
 ]);
-const TypeEnum = pgEnum("type", [
+export const TypeEnum = pgEnum("type", [
 	"task",
 	"bug",
 	"feature",
@@ -50,13 +50,13 @@ export const tasks = pgTable("tasks", {
 	type: TypeEnum("type").default("task").notNull(),
 	boardOrder: integer("board_order").notNull().default(0),
 	backlogOrder: integer("backlog_order").notNull().default(0),
-	assignee: varchar("assignee", { length: 255 }),
-	projectId: integer("project_id").notNull(),
 	lastEditedAt: timestamp("last_edit", { precision: 6, withTimezone: true }),
 	insertedDate: timestamp("insert_date", { precision: 6, withTimezone: true })
-		.defaultNow()
-		.notNull(),
-	sprintId: integer("sprint_id").default(-1).notNull(),
+	.defaultNow()
+	.notNull(),
+	assignee: varchar("assignee", { length: 255 }).references(() => users.userId),
+	projectId: integer("project_id").notNull().references(() => projects.id),
+	sprintId: integer("sprint_id").default(-1).notNull().references(() => sprints.id),
 });
 
 // validators
@@ -160,16 +160,16 @@ export const usersRelations = relations(users, ({ many }) => ({
  */
 export const userRoles = ["owner", "admin", "member"] as const;
 
-const UserRolesEnum = pgEnum("user_role", userRoles);
+export const UserRolesEnum = pgEnum("user_role", userRoles);
 export const usersToProjects = pgTable(
 	"users_to_projects",
 	{
-		userId: varchar("user_id", { length: 32 }).notNull(),
-		projectId: integer("project_id").notNull(),
+		userId: varchar("user_id", { length: 32 }).notNull().references(() => users.userId),
+		projectId: integer("project_id").notNull().references(() => projects.id),
 		userRole: UserRolesEnum("user_role").notNull(),
 	},
 	(t) => ({
-		pk: primaryKey(t.userId, t.projectId),
+		pk: primaryKey({ columns: [t.userId, t.projectId]}),
 	}),
 );
 
@@ -197,11 +197,11 @@ export const usersToProjectsRelations = relations(
  * Invite Schema
  */
 export const invites = pgTable("invites", {
-	id: serial("id"),
+	id: serial("id").primaryKey(),
 	date: timestamp("date", { precision: 6, withTimezone: true }).notNull(),
 	token: varchar("token", { length: 255 }).notNull().unique(),
-	userId: varchar("user_id", { length: 32 }).notNull(),
-	projectId: integer("project_id").notNull(),
+	userId: varchar("user_id", { length: 32 }).notNull().references(() => users.userId),
+	projectId: integer("project_id").notNull().references(() => projects.id),
 });
 
 // validators
@@ -230,15 +230,15 @@ export const inviteRelations = relations(invites, ({ one }) => ({
 export const tasksToViews = pgTable(
 	"tasks_to_views",
 	{
-		taskId: integer("task_id").notNull(),
-		userId: varchar("user_id", { length: 32 }).notNull(),
+		taskId: integer("task_id").notNull().references(() => tasks.id),
+		userId: varchar("user_id", { length: 32 }).notNull().references(() => users.userId),
 		viewedAt: timestamp("viewed_at", {
 			precision: 6,
 			withTimezone: true,
 		}).notNull(),
 	},
 	(t) => ({
-		pk: primaryKey(t.userId, t.taskId),
+		pk: primaryKey({columns: [t.userId, t.taskId]}),
 	}),
 );
 
@@ -272,7 +272,7 @@ export const sprints = pgTable("sprints", {
 	endDate: timestamp("end_date", { precision: 6, withTimezone: true })
 		.default(addWeeks(startOfToday(), 2))
 		.notNull(),
-	projectId: integer("project_id").notNull(),
+	projectId: integer("project_id").notNull().references(() => projects.id),
 });
 
 // types
@@ -297,9 +297,9 @@ export const notifications = pgTable("notifications", {
 	id: serial("id").primaryKey(),
 	date: timestamp("date", { precision: 6, withTimezone: true }).notNull(),
 	message: text("message").notNull(),
-	userId: varchar("user_id", { length: 32 }).notNull(),
-	taskId: integer("task_id").notNull(),
-	projectId: integer("project_id").notNull(),
+	userId: varchar("user_id", { length: 32 }).notNull().references(() => users.userId),
+	taskId: integer("task_id").notNull().references(() => tasks.id),
+	projectId: integer("project_id").notNull().references(() => projects.id),
 	readAt: timestamp("date", { precision: 6, withTimezone: true }),
 });
 
@@ -330,7 +330,7 @@ export const notificationRelations = relations(notifications, ({ one }) => ({
 /**
  * Task History
  */
-const PropertyKeyEnum = pgEnum("property_key", [
+export const PropertyKeyEnum = pgEnum("property_key", [
 	"status",
 	"priority",
 	"assignee",
@@ -341,11 +341,11 @@ const PropertyKeyEnum = pgEnum("property_key", [
 export const taskHistory = pgTable("task_history", {
 	id: serial("id").primaryKey(),
 	comment: varchar("comment", { length: 255 }),
-	taskId: integer("task_id").notNull(),
+	taskId: integer("task_id").notNull().references(() => tasks.id),
 	propertyKey: PropertyKeyEnum("property_key"),
 	propertyValue: varchar("property_value", { length: 255 }),
 	oldPropertyValue: varchar("old_property_value", { length: 255 }),
-	userId: varchar("user_id", { length: 255 }).notNull(),
+	userId: varchar("user_id", { length: 255 }).notNull().references(() => users.userId),
 	insertedDate: timestamp("inserted_date", {
 		precision: 6,
 		withTimezone: true,
@@ -387,8 +387,8 @@ export const taskHistoryRelations = relations(taskHistory, ({ one }) => ({
 export const comments = pgTable("comments", {
 	id: serial("id").primaryKey(),
 	comment: text("comment").notNull(),
-	taskId: integer("task_id").notNull(),
-	userId: varchar("user_id", { length: 255 }).notNull(),
+	taskId: integer("task_id").notNull().references(() => tasks.id).references(() => tasks.id),
+	userId: varchar("user_id", { length: 255 }).notNull().references(() => users.userId),
 	insertedDate: timestamp("inserted_date", {
 		precision: 6,
 		withTimezone: true,
