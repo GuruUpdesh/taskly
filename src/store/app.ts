@@ -33,6 +33,8 @@ interface AppState {
 	setHoveredTaskId: (id: number | null) => void;
 	totalPoints: Partial<Record<string, number>>;
 	addPoints: (key: string, points: number) => void;
+	hoveredNotificationId: number | null;
+	setHoveredNotificationId: (id: number | null) => void;
 }
 
 const useAppStore = create<AppState>()(
