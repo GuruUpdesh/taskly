@@ -19,6 +19,7 @@ import { type TaskProperty, getPropertyConfig } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
 import { type Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
+import { usePointStore } from "~/store/point";
 
 import Property from "./property/property";
 import TaskDropDownMenu from "./task-dropdown-menu";
@@ -99,13 +100,11 @@ const Task = ({
 	variant = "backlog",
 	listId,
 }: Props) => {
-	const [assignees, sprints, addPoints] = useAppStore(
-		useShallow((state) => [
-			state.assignees,
-			state.sprints,
-			state.addPoints,
-		]),
+	const [assignees, sprints] = useAppStore(
+		useShallow((state) => [state.assignees, state.sprints]),
 	);
+
+	const addPoints = usePointStore((state) => state.addPoints);
 
 	useEffect(() => {
 		console.log("listId", listId);

@@ -5,7 +5,7 @@ import React, { useMemo } from "react";
 import { TbHexagon } from "react-icons/tb";
 
 import { cn } from "~/lib/utils";
-import { useAppStore } from "~/store/app";
+import { usePointStore } from "~/store/point";
 import typography from "~/styles/typography";
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 };
 
 const TotalPoints = ({ listId }: Props) => {
-	const totalPointsObject = useAppStore((state) => state.totalPoints);
+	const totalPointsObject = usePointStore((state) => state.totalPoints);
 
 	const totalPoints = useMemo(() => {
 		return totalPointsObject[listId];
