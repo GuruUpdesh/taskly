@@ -7,21 +7,30 @@ import { type getPropertyConfig } from "~/config/TaskConfigType";
 
 import PropertyStatic from "./property-static";
 import PropertySelect from "./propery-select";
+import { type VariantPropsType } from "../task";
 
-type Props = {
+interface Props extends VariantPropsType {
 	config: ReturnType<typeof getPropertyConfig>;
 	form: UseFormReturn<TaskFormType>;
 	onSubmit: (newTask: TaskFormType) => void;
 	size: "default" | "icon";
 	className?: string;
-};
+}
 
-function Property({ config, form, onSubmit, size, className = "" }: Props) {
+function Property({
+	config,
+	form,
+	onSubmit,
+	size,
+	variant = "backlog",
+	className = "",
+}: Props) {
 	if (config.type === "text") {
 		return (
 			<PropertyStatic
 				form={form}
 				property={config.key}
+				variant={variant}
 				className={className}
 			/>
 		);

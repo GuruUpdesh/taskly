@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import {
 	Draggable,
@@ -10,6 +10,8 @@ import {
 } from "@hello-pangea/dnd";
 import { DragHandleDots2Icon } from "@radix-ui/react-icons";
 import { type UseMutationResult } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
+import { useShallow } from "zustand/react/shallow";
 
 import Task from "~/components/backlog/task/task";
 import { type UpdateTask } from "~/components/backlog/tasks";
@@ -26,6 +28,7 @@ type Props = {
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 	projectId: string;
+	variant?: "backlog" | "board";
 };
 
 const TaskList = ({
@@ -36,8 +39,15 @@ const TaskList = ({
 	addTaskMutation,
 	deleteTaskMutation,
 	projectId,
+	variant = "backlog",
 }: Props) => {
-	const groupBy = useAppStore((state) => state.groupBy);
+	const [groupByBacklog, groupByBoard] = useAppStore(
+		useShallow((state) => [state.groupByBacklog, state.groupByBoard]),
+	);
+
+	const groupBy = useMemo(() => {
+		return variant === "backlog" ? groupByBacklog : groupByBoard;
+	}, [variant, groupByBacklog, groupByBoard]);
 
 	if (!tasks) {
 		return null;
@@ -55,80 +65,117 @@ const TaskList = ({
 					className={cn("min-h-2", {
 						"bg-accent-foreground/5":
 							snapshot.isDraggingOver && listId !== "tasks",
+						"flex h-full flex-col overflow-y-scroll p-1":
+							variant === "board",
 					})}
 				>
-					{taskOrder.map((taskId, idx) => {
-						const task = tasks.find((task) => task.id === taskId);
+					<AnimatePresence initial={false}>
+						{taskOrder.map((taskId, idx) => {
+							const task = tasks.find(
+								(task) => task.id === taskId,
+							);
 
-						if (!task || !filterTasks(task, filters)) {
-							return null;
-						}
-
-						if (listId !== "tasks" && groupBy) {
-							let groupValue = task[groupBy];
-							if (groupBy === "sprintId") {
-								groupValue = String(groupValue);
-							} else if (
-								groupBy === "assignee" &&
-								groupValue === null
-							) {
-								groupValue = "unassigned";
-							}
-
-							if (groupValue !== listId) {
+							if (!task || !filterTasks(task, filters)) {
 								return null;
 							}
-						}
 
-						return task ? (
-							<Draggable
-								draggableId={String(task.id)}
-								index={idx}
-								key={task.id}
-							>
-								{(
-									provided: DraggableProvided,
-									snapshot: DraggableStateSnapshot,
-								) => (
-									<div
-										className={cn(
-											"group relative bg-background/50 backdrop-blur-xl transition-colors",
-											{
-												"bg-accent-foreground/5":
-													snapshot.isDragging,
-												"pointer-events-none opacity-50":
-													task.options.isPending,
-												"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
-													task.options.isNew &&
-													!task.options.isPending,
-											},
-										)}
-										{...provided.draggableProps}
-										{...provided.dragHandleProps}
-										ref={provided.innerRef}
-									>
-										<DragHandleDots2Icon
-											className={cn(
-												"absolute bottom-[50%] left-0 translate-y-[50%] text-foreground opacity-0 group-hover:opacity-50",
-												snapshot.isDragging &&
-													"opacity-100",
-											)}
-										/>
-										<Task
-											key={task.id}
-											task={task}
-											addTaskMutation={addTaskMutation}
-											deleteTaskMutation={
-												deleteTaskMutation
-											}
-											projectId={projectId}
-										/>
-									</div>
-								)}
-							</Draggable>
-						) : null;
-					})}
-					{provided.placeholder}
+							if (listId !== "tasks" && groupBy) {
+								let groupValue = task[groupBy];
+								if (groupBy === "sprintId") {
+									groupValue = String(groupValue);
+								} else if (
+									groupBy === "assignee" &&
+									groupValue === null
+								) {
+									groupValue = "unassigned";
+								}
+
+								if (groupValue !== listId) {
+									return null;
+								}
+							}
+							return task ? (
+								<Draggable
+									draggableId={String(task.id)}
+									index={idx}
+									key={task.id}
+								>
+									{(
+										provided: DraggableProvided,
+										snapshot: DraggableStateSnapshot,
+									) => (
+										<motion.div
+											initial={{ height: 0, opacity: 0 }}
+											animate={{
+												height: "auto",
+												opacity: 1,
+												transition: {
+													type: "spring",
+													bounce: 0.3,
+													opacity: { delay: 0.1 },
+													duration: 0.5,
+												},
+											}}
+											exit={{
+												height: 0,
+												opacity: 0,
+												transition: {
+													duration: 0.5,
+													type: "spring",
+													bounce: 0.3,
+												},
+											}}
+										>
+											<div
+												className={cn(
+													"group relative bg-background/50 backdrop-blur-xl transition-colors",
+													{
+														"bg-accent-foreground/5":
+															snapshot.isDragging,
+														"pointer-events-none opacity-50":
+															task.options
+																.isPending,
+														"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
+															task.options
+																.isNew &&
+															!task.options
+																.isPending,
+														"mb-2":
+															variant === "board",
+													},
+												)}
+												{...provided.draggableProps}
+												{...provided.dragHandleProps}
+												ref={provided.innerRef}
+											>
+												<DragHandleDots2Icon
+													className={cn(
+														"absolute bottom-[50%] left-0 translate-y-[50%] text-foreground opacity-0 group-hover:opacity-50",
+														snapshot.isDragging &&
+															"opacity-100",
+													)}
+												/>
+												<Task
+													key={task.id}
+													task={task}
+													addTaskMutation={
+														addTaskMutation
+													}
+													deleteTaskMutation={
+														deleteTaskMutation
+													}
+													projectId={projectId}
+													variant={variant}
+													listId={listId}
+												/>
+											</div>
+										</motion.div>
+									)}
+								</Draggable>
+							) : null;
+						})}
+						{provided.placeholder}
+					</AnimatePresence>
 				</div>
 			)}
 		</Droppable>

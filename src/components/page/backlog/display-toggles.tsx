@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { ArrowDownNarrowWide, Filter } from "lucide-react";
+import { Filter } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 import GroupButton from "~/components/group/group-button";
@@ -30,16 +30,6 @@ const ToggleFilters = () => {
 			>
 				<Filter className="h-4 w-4" />
 				Filter
-			</Button>
-			<Button
-				variant="outline"
-				size="sm"
-				className={cn(
-					"z-10 flex items-center gap-1 rounded-none border-b-0 border-l-0 border-r border-t-0 px-4 text-muted-foreground",
-				)}
-			>
-				<ArrowDownNarrowWide className="h-4 w-4" />
-				Sort
 			</Button>
 			<GroupButton />
 		</div>

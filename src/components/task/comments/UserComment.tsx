@@ -106,16 +106,6 @@ const UserComment = ({
 	return (
 		<motion.div
 			initial={{ height: 0, opacity: 0 }}
-			animate={{
-				height: "auto",
-				opacity: 1,
-				transition: {
-					type: "spring",
-					bounce: 0.3,
-					opacity: { delay: 0.1 },
-					duration: 0.5,
-				},
-			}}
 			exit={{
 				height: 0,
 				opacity: 0,
