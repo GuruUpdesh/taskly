@@ -26,9 +26,9 @@ export default function SettingsLayout({
 			</ResizablePanel>
 			<ResizableHandle />
 			<ResizablePanel defaultSize={85}>
-				<main className="flex items-center justify-center">
+				<div className="flex items-center justify-center">
 					<div className=" max-w-[1000px]">{children}</div>
-				</main>
+				</div>
 			</ResizablePanel>
 		</ResizablePanelGroup>
 	);
