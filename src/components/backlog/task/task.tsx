@@ -19,6 +19,7 @@ import { type TaskProperty, getPropertyConfig } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
 import { type Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
+import { usePointStore } from "~/store/point";
 
 import Property from "./property/property";
 import TaskDropDownMenu from "./task-dropdown-menu";
@@ -29,6 +30,7 @@ const taskVariants = cva(["flex items-center gap-2"], {
 			backlog:
 				"flex items-center justify-between border-b py-2 hover:bg-accent-foreground/5",
 			list: "",
+			board: "flex flex-col p-2 rounded-md border bg-accent/25 hover:bg-accent/50 transition-color w-full max-w-full overflow-hidden group",
 		},
 	},
 	defaultVariants: {
@@ -36,39 +38,58 @@ const taskVariants = cva(["flex items-center gap-2"], {
 	},
 });
 
-type VariantPropsType = VariantProps<typeof taskVariants>;
+export type VariantPropsType = VariantProps<typeof taskVariants>;
 
-const backlogOrder = [
-	[
-		{ key: "priority", size: "icon" },
-		{ key: "points", size: "icon" },
-		{ key: "status", size: "icon" },
-		{ key: "title", size: "default" },
-		{ key: "description", size: "icon" },
+const orders: Record<
+	Exclude<VariantPropsType["variant"], null | undefined>,
+	{ key: TaskProperty; size: "default" | "icon" }[][]
+> = {
+	backlog: [
+		[
+			{ key: "priority", size: "icon" },
+			{ key: "points", size: "icon" },
+			{ key: "status", size: "icon" },
+			{ key: "title", size: "default" },
+			{ key: "description", size: "icon" },
+		],
+		[
+			{ key: "type", size: "default" },
+			{ key: "assignee", size: "icon" },
+			{ key: "sprintId", size: "icon" },
+		],
 	],
-	[
-		{ key: "type", size: "default" },
-		{ key: "assignee", size: "icon" },
-		{ key: "sprintId", size: "icon" },
+	list: [
+		[
+			{ key: "priority", size: "default" },
+			{ key: "points", size: "default" },
+			{ key: "status", size: "default" },
+			{ key: "type", size: "default" },
+			{ key: "assignee", size: "default" },
+			{ key: "sprintId", size: "default" },
+		],
 	],
-] as { key: TaskProperty; size: "default" | "icon" }[][];
-
-const listOrder = [
-	[
-		{ key: "priority", size: "default" },
-		{ key: "points", size: "default" },
-		{ key: "status", size: "default" },
-		{ key: "type", size: "default" },
-		{ key: "assignee", size: "default" },
-		{ key: "sprintId", size: "default" },
+	board: [
+		[
+			{ key: "title", size: "default" },
+			{ key: "assignee", size: "icon" },
+		],
+		[{ key: "description", size: "icon" }],
+		[
+			{ key: "status", size: "icon" },
+			{ key: "priority", size: "icon" },
+			{ key: "points", size: "icon" },
+			{ key: "sprintId", size: "icon" },
+			{ key: "type", size: "default" },
+		],
 	],
-] as { key: TaskProperty; size: "default" | "icon" }[][];
+};
 
 interface Props extends VariantPropsType {
 	task: TaskType;
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 	projectId: string;
+	listId?: string;
 }
 
 const Task = ({
@@ -77,10 +98,23 @@ const Task = ({
 	deleteTaskMutation,
 	projectId,
 	variant = "backlog",
+	listId,
 }: Props) => {
 	const [assignees, sprints] = useAppStore(
 		useShallow((state) => [state.assignees, state.sprints]),
 	);
+
+	const addPoints = usePointStore((state) => state.addPoints);
+
+	useEffect(() => {
+		console.log("listId", listId);
+		console.log("task.points", task.points);
+		if (!listId) return;
+		addPoints(listId, parseInt(task.points));
+		return () => {
+			addPoints(listId, -parseInt(task.points));
+		};
+	}, [listId, task.points]);
 
 	const defaultValues = useMemo(() => {
 		return {
@@ -130,33 +164,38 @@ const Task = ({
 	}
 
 	const renderProperties = useCallback(() => {
-		return (variant === "backlog" ? backlogOrder : listOrder).map(
-			(group, groupIdx) => (
-				<div
-					key={groupIdx}
-					className={cn({
-						"flex flex-shrink items-center gap-2 text-foreground first:min-w-0 first:flex-grow first:pl-4 last:pr-4":
-							variant === "backlog",
-						"flex w-full flex-col gap-2": variant === "list",
-					})}
-				>
-					{group.map((item, idx) => {
-						const config = getPropertyConfig(
-							item.key,
-							assignees,
-							sprints,
-						);
-						if (variant === "backlog") {
+		if (!variant) return null;
+
+		return orders[variant].map((group, groupIdx) => (
+			<div
+				key={groupIdx}
+				className={cn({
+					"flex flex-shrink items-center gap-2 text-foreground first:min-w-0 first:flex-grow first:pl-4 last:pr-4":
+						variant === "backlog",
+					"flex w-full flex-col gap-2": variant === "list",
+					"flex w-full flex-shrink items-center gap-2 text-foreground first:justify-between last:flex-wrap":
+						variant === "board",
+				})}
+			>
+				{group.map((item, idx) => {
+					const config = getPropertyConfig(
+						item.key,
+						assignees,
+						sprints,
+					);
+					switch (variant) {
+						case "backlog":
 							return (
 								<Property
 									key={idx}
 									config={config}
 									form={form}
 									onSubmit={onSubmit}
+									variant={variant}
 									size={item.size}
 								/>
 							);
-						} else if (variant === "list") {
+						case "list":
 							return (
 								<div
 									className="grid w-full grid-cols-3"
@@ -170,15 +209,28 @@ const Task = ({
 										form={form}
 										onSubmit={onSubmit}
 										size={item.size}
+										variant={variant}
 										className="col-span-2"
 									/>
 								</div>
 							);
-						}
-					})}
-				</div>
-			),
-		);
+						case "board":
+							return (
+								<Property
+									key={idx}
+									config={config}
+									form={form}
+									onSubmit={onSubmit}
+									variant={variant}
+									size={item.size}
+								/>
+							);
+						default:
+							return null;
+					}
+				})}
+			</div>
+		));
 	}, [JSON.stringify(task), variant, assignees, sprints]);
 
 	if (variant === "list") {
@@ -186,6 +238,21 @@ const Task = ({
 			<div className={taskVariants({ variant: variant })}>
 				{renderProperties()}
 			</div>
+		);
+	}
+
+	if (variant === "board") {
+		return (
+			<TaskDropDownMenu
+				deleteTaskMutation={deleteTaskMutation}
+				task={task}
+			>
+				<Link href={`/project/${projectId}/task/${task.id}`}>
+					<div className={taskVariants({ variant: variant })}>
+						{renderProperties()}
+					</div>
+				</Link>
+			</TaskDropDownMenu>
 		);
 	}
 

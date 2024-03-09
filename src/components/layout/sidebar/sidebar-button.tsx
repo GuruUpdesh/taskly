@@ -27,7 +27,13 @@ const SidebarButton = ({
 	hidden = false,
 }: SidebarButtonProps) => {
 	const pathname = usePathname();
-	const active = useMemo(() => pathname === url, [pathname, url]);
+	const active = useMemo(() => {
+		if (pathname.includes("inbox")) {
+			return url.includes("inbox");
+		}
+
+		return pathname === url;
+	}, [pathname, url]);
 	return (
 		<SimpleTooltip label={label} side="right">
 			<Link

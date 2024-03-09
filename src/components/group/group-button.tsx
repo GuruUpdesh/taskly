@@ -3,6 +3,7 @@
 import React, { useMemo } from "react";
 
 import { Group, MinusIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "~/components/ui/button";
@@ -26,23 +27,48 @@ const properties = [
 
 const GroupButton = () => {
 	const [open, setOpen] = React.useState(false);
-	const [groupBy, setGroupBy, assignees, sprints] = useAppStore(
+
+	const pathname = usePathname();
+	const context = useMemo(() => {
+		if (pathname.includes("backlog")) {
+			return "backlog";
+		}
+
+		return "board";
+	}, [pathname]);
+
+	const [
+		groupByBacklog,
+		setGroupByBacklog,
+		groupByBoard,
+		setGroupByBoard,
+		assignees,
+		sprints,
+	] = useAppStore(
 		useShallow((state) => [
-			state.groupBy,
-			state.setGroupBy,
+			state.groupByBacklog,
+			state.setGroupByBacklog,
+			state.groupByBoard,
+			state.setGroupByBoard,
 			state.assignees,
 			state.sprints,
 		]),
 	);
 
+	const groupBy = useMemo(() => {
+		return context === "backlog" ? groupByBacklog : groupByBoard;
+	}, [groupByBacklog, groupByBoard, context]);
+
 	const config = useMemo(() => {
 		if (!groupBy) return null;
 		return getPropertyConfig(groupBy, assignees, sprints);
-	}, [groupBy]);
+	}, [groupBy, assignees, sprints]);
 
 	function handleGroupChange(value: string) {
-		if (value === "none") {
-			setGroupBy(null);
+		const setGroupBy =
+			context === "backlog" ? setGroupByBacklog : setGroupByBoard;
+		if (value === "none" && context === "backlog") {
+			setGroupByBacklog(null);
 		} else if (properties.includes(value as TaskProperty)) {
 			setGroupBy(value as TaskProperty);
 		} else {
@@ -78,17 +104,19 @@ const GroupButton = () => {
 				</Button>
 			</SelectTrigger>
 			<SelectContent>
-				<SelectItem
-					value="none"
-					className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
-				>
-					<div className="flex min-w-[8rem] items-center gap-2">
-						<span className="text-muted-foreground">
-							<MinusIcon />
-						</span>
-						<p>No Grouping</p>
-					</div>
-				</SelectItem>
+				{pathname.includes("backlog") && (
+					<SelectItem
+						value="none"
+						className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
+					>
+						<div className="flex min-w-[8rem] items-center gap-2">
+							<span className="text-muted-foreground">
+								<MinusIcon />
+							</span>
+							<p>No Grouping</p>
+						</div>
+					</SelectItem>
+				)}
 				{properties.map((property) => {
 					const config = getPropertyConfig(
 						property,

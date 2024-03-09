@@ -43,14 +43,18 @@ export async function getNotification(notificationId: number) {
 	}
 }
 
-export type NotificationWithTask = Notification & { task: Task };
+export type NotificationWithTask = Notification & {
+	task: Task;
+	options?: { isNew: boolean };
+};
+
 export async function getAllNotifications(userId: string) {
 	try {
 		const allNotifications = await db.query.notifications.findMany({
 			where: (notification) => eq(notification.userId, userId),
 			orderBy: desc(notifications.date),
 			with: {
-				task: {},
+				task: true,
 			},
 		});
 		return allNotifications;
@@ -65,6 +69,21 @@ export async function readNotification(notificationId: number) {
 			.update(notifications)
 			.set({
 				readAt: new Date(),
+			})
+			.where(eq(notifications.id, notificationId));
+		revalidatePath("/");
+	} catch (error) {
+		console.error(error);
+		if (error instanceof Error) throwServerError(error.message);
+	}
+}
+
+export async function unreadNotification(notificationId: number) {
+	try {
+		await db
+			.update(notifications)
+			.set({
+				readAt: null,
 			})
 			.where(eq(notifications.id, notificationId));
 		revalidatePath("/");

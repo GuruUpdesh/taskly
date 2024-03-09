@@ -31,7 +31,7 @@ export async function TaskWrapper({
 		defaultLayout = JSON.parse(layout.value) as number[] | undefined;
 	}
 
-	console.log("defaultLayout", defaultLayout);
+	console.log("TaskWrapper", defaultLayout);
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
