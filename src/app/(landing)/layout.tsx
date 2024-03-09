@@ -3,11 +3,9 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import AppNavMenu from "~/components/layout/navbar/app-nav-menu";
-import Navbar from "~/components/layout/navbar/navbar";
+import Navbar, { RecentTaskMenuItem } from "~/components/layout/navbar/navbar";
 import ProjectList from "~/components/layout/navbar/project-list";
-import UserNav from "~/components/layout/user-nav";
-import { CurrentProjectNavWrapper } from "~/components/page/project/current-project";
+import UserNav from "~/components/layout/navbar/user-nav";
 import { RecentTasksNavWrapper } from "~/components/page/project/recent-tasks";
 
 export default function LandingLayout({
@@ -28,11 +26,10 @@ export default function LandingLayout({
 						/>
 					</Link>
 					<Navbar>
-						<AppNavMenu>
-							<CurrentProjectNavWrapper />
-							<RecentTasksNavWrapper />
-						</AppNavMenu>
 						<ProjectList />
+						<RecentTaskMenuItem>
+							<RecentTasksNavWrapper />
+						</RecentTaskMenuItem>
 					</Navbar>
 					<UserNav />
 				</div>

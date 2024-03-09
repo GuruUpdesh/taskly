@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { find } from "lodash";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
 import {
@@ -66,12 +66,16 @@ const ProjectState = ({ projectId, userId }: Props) => {
 			>(["notifications", projectId]);
 
 			newNotifications = newNotifications.map((notification) => {
-				const isExistingNotification = find(previousNotifications, {
-					id: notification.id,
-				});
-				return isExistingNotification
-					? notification
-					: { ...notification, options: { isNew: true } };
+				const isExistingNotification = previousNotifications?.find(
+					(prevNotif) => prevNotif.id === notification.id,
+				);
+				if (!isExistingNotification) {
+					toast.info(`New notification`, {
+						description: notification.message,
+					});
+					return { ...notification, options: { isNew: true } };
+				}
+				return notification;
 			});
 		}
 		return newNotifications;
