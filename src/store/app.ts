@@ -78,6 +78,9 @@ const useAppStore = create<AppState>()(
 					totalPoints[key] = (totalPoints[key] ?? 0) + points;
 					return { totalPoints };
 				}),
+			hoveredNotificationId: null,
+			setHoveredNotificationId: (id) =>
+				set({ hoveredNotificationId: id }),
 		}),
 		{
 			name: "settings-navigation-storage",
