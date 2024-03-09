@@ -1,8 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-<<<<<<< Updated upstream
-import { cn } from "~/lib/utils";
-import { BookIcon, Brain, LampDesk, Network, Rabbit } from "lucide-react";
-=======
 import {
 	Bell,
 	BookIcon,
@@ -17,19 +13,13 @@ import { Sora } from "next/font/google";
 import Image from "next/image";
 import "./landing.css";
 
-import Grid from "~/components/page/landing/background-grid";
-import ButtonOptions from "~/components/page/landing/button-options";
->>>>>>> Stashed changes
 import MarketingBlock from "~/components/page/landing/marketing/marketing-block";
 import MarketingTaskChips from "~/components/page/landing/marketing/marketing-task-chips";
-<<<<<<< Updated upstream
 import ButtonOptions from "~/components/page/landing/button-options";
 import Grid from "~/components/page/landing/background-grid";
-=======
 import { TaskStatus } from "~/components/page/project/recent-tasks";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
->>>>>>> Stashed changes
 import typography from "~/styles/typography";
 import MarketingStatuses from "~/components/page/landing/marketing/marketing-statuses";
 
