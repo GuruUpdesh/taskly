@@ -70,7 +70,8 @@ const useAppStore = create<AppState>()(
 			groupByBoard: "status",
 			setGroupByBoard: (groupBy) => set({ groupByBoard: groupBy }),
 			hoveredTaskId: null,
-			setHoveredTaskId: (id) => set({ hoveredTaskId: id }),
+			setHoveredTaskId: (id: number | null) => set({ hoveredTaskId: id }),
+
 			hoveredNotificationId: null,
 			setHoveredNotificationId: (id) =>
 				set({ hoveredNotificationId: id }),
