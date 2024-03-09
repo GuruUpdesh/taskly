@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -39,6 +39,7 @@ export type UpdateTask = {
 
 type Props = {
 	projectId: string;
+	variant?: "backlog" | "board";
 };
 
 type TaskTypeOverride = Omit<TaskType, "sprintId"> & {
@@ -49,18 +50,24 @@ async function updateTaskWrapper({ id, newTask }: UpdateTask) {
 	await updateTask(id, newTask);
 }
 
-export default function Tasks({ projectId }: Props) {
+export default function Tasks({ projectId, variant = "backlog" }: Props) {
 	/**
 	 * Get the assignees and sprints
 	 */
-	const [assignees, sprints, filters, groupBy] = useAppStore(
-		useShallow((state) => [
-			state.assignees,
-			state.sprints,
-			state.filters,
-			state.groupBy,
-		]),
-	);
+	const [assignees, sprints, filters, groupByBacklog, groupByBoard] =
+		useAppStore(
+			useShallow((state) => [
+				state.assignees,
+				state.sprints,
+				state.filters,
+				state.groupByBacklog,
+				state.groupByBoard,
+			]),
+		);
+
+	const groupBy = useMemo(() => {
+		return variant === "backlog" ? groupByBacklog : groupByBoard;
+	}, [variant, groupByBacklog, groupByBoard]);
 
 	/**
 	 * Fetch the tasks from the server and handle optimistic updates
@@ -293,47 +300,73 @@ export default function Tasks({ projectId }: Props) {
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
-			{groupBy && options ? (
-				options.map((option) => (
-					<div
-						key={option.key}
-						className={cn(
-							"",
-							taskVariants({
-								color: option.color,
-								hover: false,
-								context: "menu",
-							}),
-						)}
-					>
-						<div className="flex items-center gap-2 px-4 py-2 pb-0">
-							{option.icon}
-							{option.displayName}
+			<div
+				className={cn({
+					"grid max-w-full flex-1 gap-2 overflow-y-hidden overflow-x-scroll px-4":
+						variant === "board",
+				})}
+				style={
+					variant === "board"
+						? {
+								gridTemplateColumns: `repeat(${options?.length}, minmax(350px, 1fr))`,
+							}
+						: {}
+				}
+			>
+				{groupBy && options ? (
+					options.map((option) => (
+						<div
+							key={option.key}
+							className={cn(
+								{
+									"overflow-y-scroll p-1 pt-0":
+										variant === "board",
+								},
+								taskVariants({
+									color: option.color,
+									hover: false,
+									context: "menu",
+								}),
+							)}
+						>
+							<div
+								className={cn({
+									"flex items-center gap-2 px-4 py-2 pb-0":
+										variant === "backlog",
+									"sticky top-0 z-50 flex items-center gap-2 bg-background/75 px-1 py-2 pt-3 backdrop-blur-lg":
+										variant === "board",
+								})}
+							>
+								{option.icon}
+								{option.displayName}
+							</div>
+							<div className="pb-2">
+								<TaskList
+									listId={option.key}
+									taskOrder={taskOrder}
+									tasks={result.data}
+									filters={filters}
+									addTaskMutation={editTaskMutation}
+									deleteTaskMutation={deleteTaskMutation}
+									projectId={projectId}
+									variant={variant}
+								/>
+							</div>
 						</div>
-						<div className="pb-2">
-							<TaskList
-								listId={option.key}
-								taskOrder={taskOrder}
-								tasks={result.data}
-								filters={filters}
-								addTaskMutation={editTaskMutation}
-								deleteTaskMutation={deleteTaskMutation}
-								projectId={projectId}
-							/>
-						</div>
-					</div>
-				))
-			) : (
-				<TaskList
-					listId="tasks"
-					taskOrder={taskOrder}
-					tasks={result.data}
-					filters={filters}
-					addTaskMutation={editTaskMutation}
-					deleteTaskMutation={deleteTaskMutation}
-					projectId={projectId}
-				/>
-			)}
+					))
+				) : (
+					<TaskList
+						listId="tasks"
+						taskOrder={taskOrder}
+						tasks={result.data}
+						filters={filters}
+						addTaskMutation={editTaskMutation}
+						deleteTaskMutation={deleteTaskMutation}
+						projectId={projectId}
+						variant={variant}
+					/>
+				)}
+			</div>
 		</DragDropContext>
 	);
 }
