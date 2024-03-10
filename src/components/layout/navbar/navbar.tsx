@@ -24,7 +24,7 @@ type NavbarProps = {
 
 const Navbar = ({ children }: NavbarProps) => {
 	return (
-		<NavigationMenu className="flex justify-between">
+		<NavigationMenu className="hidden justify-between md:flex">
 			<NavigationMenuList>
 				<NavigationMenuItem>
 					<NavigationMenuLink
@@ -66,7 +66,7 @@ export const RecentTaskMenuItem = ({ children }: NavbarProps) => {
 
 	return (
 		<NavigationMenuItem>
-			<NavigationMenuTrigger className="text-base">
+			<NavigationMenuTrigger className="bg-transparent text-base">
 				Recent Tasks
 			</NavigationMenuTrigger>
 			<NavigationMenuContent className="flex gap-4 p-2">
@@ -99,7 +99,7 @@ type ProjectsMenuItemProps = {
 export const ProjectsMenuItem = ({ projects }: ProjectsMenuItemProps) => {
 	return (
 		<NavigationMenuItem>
-			<NavigationMenuTrigger className="text-base">
+			<NavigationMenuTrigger className="bg-transparent text-base">
 				Projects
 			</NavigationMenuTrigger>
 			<NavigationMenuContent className="min-w-[300px] p-2">

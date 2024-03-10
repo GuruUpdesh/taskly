@@ -4,17 +4,7 @@ import { authMiddleware } from "@clerk/nextjs";
 // See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
 export default authMiddleware({
 	// "/" will be accessible to all users
-	publicRoutes: [
-		"/",
-		"/api/cron",
-		"/api/clerk",
-		"/sign-in",
-		`/api/project/(.*)`,
-		"/api/project",
-		`/api/task/(.*)`,
-		"/api/task",
-		"/api/uploadthing",
-	],
+	publicRoutes: ["/", "/api/cron", "/api/clerk", "/sign-in"],
 });
 
 export const config = {

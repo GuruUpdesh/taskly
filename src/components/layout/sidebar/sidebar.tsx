@@ -8,8 +8,12 @@ import {
 	LayoutIcon,
 	TableIcon,
 } from "@radix-ui/react-icons";
+import { Plus } from "lucide-react";
 
+import CreateTask from "~/components/backlog/create-task";
+import SimpleTooltip from "~/components/general/simple-tooltip";
 import InboxSidebarButton from "~/components/inbox/InboxSidebarButton";
+import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import UserButton from "~/components/user-button/user-button";
 
@@ -26,18 +30,14 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 	return (
 		<div className="relative h-full @container">
 			<SidebarBackgroundWrapper projectId={projectId} />
-			<div className="flex min-w-0 items-center justify-center gap-1 border-b py-2 @sidebar:justify-between @sidebar:gap-8 @sidebar:px-4 ">
+			<div className="flex min-w-0 items-center justify-center border-b py-2 @sidebar:justify-between @sidebar:px-4 ">
 				<SidebarButton
 					label="Home"
 					icon={<HomeIcon />}
 					url="/"
 					hidden
 				/>
-				<Separator
-					orientation="vertical"
-					className="hidden h-[40px] @sidebar:block"
-				/>
-				<UserButton variant="application" />
+				<UserButton />
 			</div>
 			<div className="flex h-full flex-col gap-4 px-1 py-4 @sidebar:p-4">
 				<SelectProject projectId={projectId} />
@@ -77,6 +77,22 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 					/>
 				</div>
 			</div>
+			<CreateTask projectId={projectId}>
+				<div className="absolute bottom-0 w-full flex-grow p-2">
+					<SimpleTooltip label="Create a Task" side="right">
+						<Button
+							className=" flex w-full justify-center gap-1 font-bold @sidebar:justify-between"
+							variant="outline"
+							size="sm"
+						>
+							<span className="hidden @sidebar:block">
+								New Task
+							</span>
+							<Plus className="m-h-4 h-4 w-4 min-w-4" />
+						</Button>
+					</SimpleTooltip>
+				</div>
+			</CreateTask>
 		</div>
 	);
 };

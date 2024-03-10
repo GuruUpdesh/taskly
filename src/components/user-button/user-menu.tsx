@@ -56,7 +56,7 @@ const UserMenu = ({ children }: Props) => {
 				<DropdownMenuGroup>
 					{project && (
 						<Link
-							href={`/settings/project/${project.id}/invite`}
+							href={`/settings/project/${project.id}/general#invite`}
 							target="_blank"
 						>
 							<DropdownMenuItem>

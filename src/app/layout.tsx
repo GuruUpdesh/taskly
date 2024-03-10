@@ -43,7 +43,9 @@ export default function RootLayout({
 							)}
 						>
 							<ReactQueryProvider>
-								<main>{children}</main>
+								<main className="relative flex min-h-screen flex-col">
+									{children}
+								</main>
 							</ReactQueryProvider>
 							<Toaster richColors />
 						</body>
