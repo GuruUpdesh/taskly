@@ -96,6 +96,7 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 			form.setValue("status", airesponse.status);
 			form.setValue("priority", airesponse.priority);
 			form.setValue("type", airesponse.type);
+			form.setValue("points", airesponse.points);
 			if (userName) {
 				form.setValue("assignee", userName);
 			}
