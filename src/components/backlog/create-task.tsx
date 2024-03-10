@@ -162,6 +162,7 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 					if (config.type === "enum" || config.type === "dynamic")
 						return (
 							<PropertySelect
+								key={property}
 								config={config}
 								form={form}
 								onSubmit={onSubmit}
@@ -173,6 +174,7 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 										? "icon"
 										: "default"
 								}
+								autoFocus={true}
 							/>
 						);
 				})}
