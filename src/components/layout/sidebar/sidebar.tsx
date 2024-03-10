@@ -81,7 +81,7 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 				<div className="absolute bottom-0 w-full flex-grow p-2">
 					<SimpleTooltip label="Create a Task" side="right">
 						<Button
-							className=" flex w-full justify-center gap-1 font-bold @sidebar:justify-between"
+							className=" flex w-full justify-center gap-1 border-white/25 bg-background/50 font-bold @sidebar:justify-between"
 							variant="outline"
 							size="sm"
 						>

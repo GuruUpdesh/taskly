@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { UploadIcon } from "@radix-ui/react-icons";
 import { type PutBlobResult } from "@vercel/blob";
@@ -43,25 +43,8 @@ const ImageUploadArea = ({ urlCallback }: Props) => {
 		setIsLoading(false);
 	}
 
-	const { getRootProps, getInputProps, open } = useDropzone({
+	const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
 		noClick: true,
-		onDrop: (files) => {
-			const file = files[0];
-			if (!file) return;
-			setDynamicClassName("");
-
-			if (file.size > 4500000) {
-				toast.error("File size too large");
-				return;
-			}
-
-			if (!file.type.includes("image")) {
-				toast.error("File type not supported");
-				return;
-			}
-
-			void upload(file);
-		},
 		maxFiles: 1,
 		accept: {
 			"image/jpeg": [],
@@ -73,6 +56,24 @@ const ImageUploadArea = ({ urlCallback }: Props) => {
 		onDragLeave: () => setDynamicClassName(""),
 		disabled: isLoading,
 	});
+
+	useEffect(() => {
+		const file = acceptedFiles[0];
+		if (!file) return;
+		setDynamicClassName("");
+
+		if (file.size > 4500000) {
+			toast.error("File size too large");
+			return;
+		}
+
+		if (!file.type.includes("image")) {
+			toast.error("File type not supported");
+			return;
+		}
+
+		void upload(file);
+	}, [acceptedFiles]);
 
 	return (
 		<div
