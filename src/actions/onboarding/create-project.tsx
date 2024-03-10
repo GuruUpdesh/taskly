@@ -53,6 +53,8 @@ export async function createProject(
 		const result = await db.insert(projects).values(newProject);
 		const insertId = parseInt(result.insertId);
 
+		console.log("🤖 - Project created");
+
 		// add user to project
 		await addUserToProject(userId, insertId, "owner");
 
@@ -94,6 +96,7 @@ export async function generateAndUpdateProjectImage(
 	projectDescription: string | null | undefined,
 ) {
 	try {
+		console.log("🤖 - generateAndUpdateProjectImage");
 		// generate image
 		const image = await generateProjectImage(
 			projectName,
