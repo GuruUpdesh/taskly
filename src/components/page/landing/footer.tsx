@@ -66,18 +66,12 @@ const Footer = () => {
 							</Link>
 						</div>
 						<div className="flex flex-col items-start">
-							<p className="font-semibold">Legal</p>
+							<p className="font-semibold">Other</p>
 							<Link
-								href="/terms-of-service"
+								href="/settings"
 								className="p-0 py-0.5 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
 							>
-								Terms of Service
-							</Link>
-							<Link
-								href="/privacy-policy"
-								className="p-0 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
-							>
-								Privacy Policy
+								Settings
 							</Link>
 						</div>
 					</div>

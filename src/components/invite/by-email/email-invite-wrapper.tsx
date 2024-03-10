@@ -52,7 +52,6 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 	}
 
 	if (!project) {
-		toast.error("Project not found");
 		return null;
 	}
 

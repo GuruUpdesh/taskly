@@ -19,7 +19,7 @@ const UserNav = () => {
 						<Button
 							variant="outline"
 							size="sm"
-							className="whitespace-nowrap"
+							className="whitespace-nowrap rounded-full"
 						>
 							Sign In
 						</Button>
