@@ -37,7 +37,7 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 					orientation="vertical"
 					className="hidden h-[40px] @sidebar:block"
 				/>
-				<UserButton variant="application" />
+				<UserButton />
 			</div>
 			<div className="flex h-full flex-col gap-4 px-1 py-4 @sidebar:p-4">
 				<SelectProject projectId={projectId} />

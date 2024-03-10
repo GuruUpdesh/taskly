@@ -1,21 +1,15 @@
 import React from "react";
 
 import { auth } from "@clerk/nextjs";
-import { ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 
 import { getUser } from "~/actions/user-actions";
 import { Button } from "~/components/ui/button";
 import UserProfilePicture from "~/components/user-profile-picture";
-import { cn } from "~/lib/utils";
 
 import UserMenu from "./user-menu";
 
-type Props = {
-	variant: "landing" | "application";
-};
-
-const UserButton = async ({ variant }: Props) => {
+const UserButton = async () => {
 	const { userId } = auth();
 
 	if (!userId) {
@@ -33,21 +27,8 @@ const UserButton = async ({ variant }: Props) => {
 
 	return (
 		<UserMenu>
-			<Button
-				variant="ghost"
-				size="icon"
-				className={cn({
-					"min-w-[30px]": variant === "application",
-					"w-fit gap-2 px-2": variant === "landing",
-				})}
-			>
+			<Button variant="ghost" size="icon" className="min-w-[30px]">
 				<UserProfilePicture src={user.profilePicture} size={30} />
-				{variant === "landing" ? (
-					<>
-						{user.username}
-						<ChevronDown className="h-4 w-4" />
-					</>
-				) : null}
 			</Button>
 		</UserMenu>
 	);
