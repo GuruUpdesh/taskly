@@ -2,18 +2,18 @@
 
 import React from "react";
 
-import { MenuIcon } from "lucide-react";
+import { AppWindow, Book, MenuIcon, Plus, Video } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "~/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import { Drawer, DrawerContent, DrawerTrigger } from "~/components/ui/drawer";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 
 const MobileNav = () => {
 	return (
-		<Sheet>
-			<SheetTrigger asChild className="block md:hidden">
+		<Drawer>
+			<DrawerTrigger className="block md:hidden">
 				<Button
 					variant="ghost"
 					size="icon"
@@ -21,28 +21,30 @@ const MobileNav = () => {
 				>
 					<MenuIcon className="h-4 w-4" />
 				</Button>
-			</SheetTrigger>
-			<SheetContent>
-				<ul className="flex flex-col gap-1 ">
+			</DrawerTrigger>
+			<DrawerContent>
+				<ul className="flex flex-col gap-1 p-8">
 					<li>
 						<Link
-							href="/application"
+							href="/app"
 							className={cn(
 								typography.headers.h3,
-								"border-none p-0 py-0.5 font-semibold opacity-75 transition-opacity hover:underline hover:opacity-100",
+								"flex w-full items-center gap-1 border-none p-0 py-0.5 font-semibold opacity-75 transition-opacity hover:underline hover:opacity-100",
 							)}
 						>
+							<AppWindow className="h-4 w-4" />
 							Application
 						</Link>
 					</li>
 					<li>
 						<Link
-							href="/application"
+							href="/create-project"
 							className={cn(
 								typography.headers.h3,
-								"border-none p-0 py-0.5 font-semibold opacity-75 transition-opacity hover:underline hover:opacity-100",
+								"flex w-full items-center gap-1 border-none p-0 py-0.5 font-semibold opacity-75 transition-opacity hover:underline hover:opacity-100",
 							)}
 						>
+							<Plus className="h-4 w-4" />
 							Create Project
 						</Link>
 					</li>
@@ -51,26 +53,29 @@ const MobileNav = () => {
 							href="/application"
 							className={cn(
 								typography.headers.h3,
-								"border-none p-0 py-0.5 font-semibold opacity-75 transition-opacity hover:underline hover:opacity-100",
+								"flex w-full items-center gap-1 border-none p-0 py-0.5 font-semibold opacity-75 transition-opacity hover:underline hover:opacity-100",
 							)}
 						>
+							<Video className="h-4 w-4" />
 							Demo
 						</Link>
 					</li>
 					<li>
 						<Link
-							href="/application"
+							href="https://docs.tasklypm.com"
+							target="_blank"
 							className={cn(
 								typography.headers.h3,
-								"border-none p-0 py-0.5 font-semibold opacity-75 transition-opacity hover:underline hover:opacity-100",
+								"flex w-full items-center gap-1 border-none p-0 py-0.5 font-semibold opacity-75 transition-opacity hover:underline hover:opacity-100",
 							)}
 						>
+							<Book className="h-4 w-4" />
 							Documentation
 						</Link>
 					</li>
 				</ul>
-			</SheetContent>
-		</Sheet>
+			</DrawerContent>
+		</Drawer>
 	);
 };
 

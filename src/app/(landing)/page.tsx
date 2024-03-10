@@ -54,6 +54,7 @@ export default function HomePage() {
 								alt="Taskly Taskboard"
 								quality={100}
 								className="aspect-[503/246] w-full"
+								priority
 							/>
 						</div>
 					</div>
