@@ -108,7 +108,7 @@ export async function handleDeleteProject(formData: FormData) {
 		await tx.delete(invites).where(eq(invites.projectId, projectData.id));
 		await tx
 			.delete(tasksToViews)
-			.where(inArray(comments.taskId, tasksToDeleteIds));
+			.where(inArray(tasksToViews.taskId, tasksToDeleteIds));
 	});
 	redirect("/");
 }
