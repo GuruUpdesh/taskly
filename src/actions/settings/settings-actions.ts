@@ -1,7 +1,7 @@
 "use server";
 
 import chroma from "chroma-js";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { getAverageColor } from "fast-average-color-node";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -17,6 +17,9 @@ import {
 	sprints,
 	invites,
 	notifications,
+	comments,
+	taskHistory,
+	tasksToViews,
 } from "~/server/db/schema";
 
 export async function handleProjectInfo(
@@ -82,6 +85,11 @@ export async function handleDeleteProject(formData: FormData) {
 		return { success: false, message: "Project not found" };
 	}
 	await db.transaction(async (tx) => {
+		const tasksToDelete = await tx
+			.select({ id: tasks.id })
+			.from(tasks)
+			.where(eq(tasks.projectId, projectData.id));
+		const tasksToDeleteIds: number[] = tasksToDelete.map((task) => task.id);
 		await tx
 			.delete(notifications)
 			.where(eq(notifications.projectId, projectData.id));
@@ -90,8 +98,17 @@ export async function handleDeleteProject(formData: FormData) {
 			.delete(usersToProjects)
 			.where(eq(usersToProjects.projectId, projectData.id));
 		await tx.delete(tasks).where(eq(tasks.projectId, projectData.id));
+		await tx
+			.delete(comments)
+			.where(inArray(comments.taskId, tasksToDeleteIds));
+		await tx
+			.delete(taskHistory)
+			.where(inArray(taskHistory.taskId, tasksToDeleteIds));
 		await tx.delete(sprints).where(eq(sprints.projectId, projectData.id));
 		await tx.delete(invites).where(eq(invites.projectId, projectData.id));
+		await tx
+			.delete(tasksToViews)
+			.where(inArray(comments.taskId, tasksToDeleteIds));
 	});
 	redirect("/");
 }

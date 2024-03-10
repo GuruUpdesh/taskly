@@ -11,10 +11,12 @@ import { type TaskFormType as CreateTaskData } from "~/components/backlog/create
 import { type StatefulTask, CreateTaskSchema } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
 import {
+	comments,
 	insertTaskHistorySchema,
 	notifications,
 	taskHistory,
 	tasks,
+	tasksToViews,
 	users,
 } from "~/server/db/schema";
 import { type Task } from "~/server/db/schema";
@@ -150,6 +152,9 @@ export async function deleteTask(id: number) {
 						ne(tasks.id, id),
 					),
 				);
+			await tx.delete(comments).where(eq(comments.taskId, id));
+			await tx.delete(taskHistory).where(eq(taskHistory.taskId, id));
+			await tx.delete(tasksToViews).where(eq(tasksToViews.taskId, id));
 		});
 
 		await db.delete(tasks).where(eq(tasks.id, id));
