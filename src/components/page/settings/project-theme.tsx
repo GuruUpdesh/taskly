@@ -211,45 +211,37 @@ const ProjectTheme = ({ project }: Props) => {
 										<SparkleIcon className="h-4 w-4" />
 									)}
 								</Button>
-								<div
-									className="aspect-square h-[30px] rounded border"
-									style={{
-										backgroundColor: form.formState.isValid
-											? form.getValues("color")
-											: project.color,
-									}}
-								></div>
-
+								<Popover>
+									<PopoverTrigger asChild>
+										<button
+											className="aspect-square h-[30px] rounded border"
+											style={{
+												backgroundColor: form.formState
+													.isValid
+													? form.getValues("color")
+													: project.color,
+											}}
+										></button>
+									</PopoverTrigger>
+									<PopoverContent className="max-w-min border-none bg-transparent">
+										<HexColorPicker
+											color={form.watch("color")}
+											onChange={(color) =>
+												form.setValue("color", color, {
+													shouldValidate: true,
+													shouldDirty: true,
+												})
+											}
+										/>
+									</PopoverContent>
+								</Popover>
 								<FormControl>
-									<Popover>
-										<PopoverTrigger asChild>
-											<Input
-												disabled={
-													!form.formState.isValid
-												}
-												type="text"
-												id="projectName"
-												className="text-md w-24 bg-accent/25"
-												{...field}
-											/>
-										</PopoverTrigger>
-										<PopoverContent className="max-w-min border-none bg-transparent">
-											<HexColorPicker
-												color={form.watch("color")}
-												onChange={(color) =>
-													form.setValue(
-														"color",
-														color,
-														{
-															shouldValidate:
-																true,
-															shouldDirty: true,
-														},
-													)
-												}
-											/>
-										</PopoverContent>
-									</Popover>
+									<Input
+										type="text"
+										id="projectName"
+										className="text-md w-24 bg-accent/25"
+										{...field}
+									/>
 								</FormControl>
 							</div>
 						</FormItem>
@@ -257,6 +249,12 @@ const ProjectTheme = ({ project }: Props) => {
 				/>
 				<Separator className="my-3" />
 				<div className="ml-auto flex items-center gap-4">
+					{!form.watch("image") && (
+						<p className="flex-grow text-sm">
+							Your project icon is generating
+						</p>
+					)}
+
 					<Button
 						size="sm"
 						variant="outline"
