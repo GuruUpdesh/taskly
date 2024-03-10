@@ -3,6 +3,7 @@
 import { put } from "@vercel/blob";
 import { addMinutes, startOfDay } from "date-fns";
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import OpenAI from "openai";
 
 import { createSprintForProject } from "~/actions/application/sprint-actions";
@@ -109,6 +110,8 @@ export async function generateAndUpdateProjectImage(
 			.update(projects)
 			.set({ image: image, color: color })
 			.where(eq(projects.id, projectId));
+
+		revalidatePath("/");
 	} catch (error) {
 		console.error("Error generating or updating project image:", error);
 	}

@@ -3,17 +3,25 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronRight, Loader2Icon, SparkleIcon } from "lucide-react";
+import {
+	ChevronRight,
+	Loader2Icon,
+	RefreshCw,
+	SparkleIcon,
+} from "lucide-react";
 import Image from "next/image";
+import { HexColorPicker } from "react-colorful";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { generateAndUpdateProjectImage } from "~/actions/onboarding/create-project";
 import {
 	autoColor,
 	handleProjectTheme,
 } from "~/actions/settings/settings-actions";
 import ImageUploadArea from "~/components/general/image-upload-area";
+import SimpleTooltip from "~/components/general/simple-tooltip";
 import { Button } from "~/components/ui/button";
 import {
 	Form,
@@ -32,7 +40,9 @@ import {
 	PopoverTrigger,
 } from "~/components/ui/popover";
 import { Separator } from "~/components/ui/separator";
+import { Skeleton } from "~/components/ui/skeleton";
 import safeAsync from "~/lib/safe-action";
+import { cn } from "~/lib/utils";
 import { type Project } from "~/server/db/schema";
 import typography from "~/styles/typography";
 
@@ -45,19 +55,6 @@ const formSchema = z.object({
 	image: z.string().url(),
 	color: z.string().regex(hexColorRegex, "Invalid hex color"),
 });
-
-const colors = [
-	"#ff7f50",
-	"#87cefa",
-	"#da70d6",
-	"#32cd32",
-	"#6495ed",
-	"#ff69b4",
-	"#ba55d3",
-	"#cd5c5c",
-	"#ffa500",
-	"#40e0d0",
-];
 
 const ProjectTheme = ({ project }: Props) => {
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -101,29 +98,67 @@ const ProjectTheme = ({ project }: Props) => {
 		setIsLoading(false);
 	}
 
+	const [isRegenerating, setIsRegenerating] = useState(false);
+
+	async function handleAIGenerate() {
+		setIsRegenerating(true);
+		await generateAndUpdateProjectImage(
+			project.id,
+			project.name,
+			project.description,
+		);
+		setIsRegenerating(false);
+	}
+
+	useEffect(() => {
+		if (form.watch("image") && form.formState.isDirty) {
+			void handleAutoColor();
+		}
+	}, [form.watch("image")]);
+
 	return (
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="grid w-full items-center gap-1.5"
 			>
-				<Label>Project Icon</Label>
+				<div className="flex items-center justify-between">
+					<Label>Project Icon</Label>
+					<SimpleTooltip label="Re-generate Project Icon">
+						<Button
+							disabled={!form.formState.isValid || isRegenerating}
+							type="button"
+							variant="outline"
+							size="icon"
+							className="h-[30px] w-[30px] rounded-sm"
+							onClick={handleAIGenerate}
+						>
+							<RefreshCw
+								className={cn("h-4 w-4", {
+									"animate-spin": isRegenerating,
+								})}
+							/>
+						</Button>
+					</SimpleTooltip>
+				</div>
 				<p className={typography.paragraph.p_muted}>
 					You can upload a custom icon for your project. Or we can
 					generate one for you.
 				</p>
 				<div className="mt-2 grid grid-cols-3 gap-4">
 					<div className="relative flex aspect-video items-center justify-center overflow-hidden rounded border bg-accent/25">
-						<Image
-							src={
-								form.watch("image") ?? "/static/img-missing.jpg"
-							}
-							alt="Project Icon"
-							width={85}
-							height={85}
-							className="z-10 rounded-full"
-							quality={100}
-						/>
+						{form.watch("image") ? (
+							<Image
+								src={form.watch("image")}
+								alt="Project Icon"
+								width={85}
+								height={85}
+								className="z-10 rounded-full"
+								quality={100}
+							/>
+						) : (
+							<Skeleton className="h-[85px] w-[85px] rounded-full" />
+						)}
 						<Image
 							src={
 								form.watch("image") ?? "/static/img-missing.jpg"
@@ -165,44 +200,56 @@ const ProjectTheme = ({ project }: Props) => {
 									size="icon"
 									className="h-[30px] w-[30px] rounded-sm"
 									disabled={
-										form.formState.isSubmitting || isLoading
+										form.formState.isSubmitting ||
+										isLoading ||
+										!form.formState.isValid
 									}
 								>
-									<SparkleIcon className="h-4 w-4" />
+									{isLoading ? (
+										<Loader2Icon className="h-4 w-4 animate-spin" />
+									) : (
+										<SparkleIcon className="h-4 w-4" />
+									)}
 								</Button>
-								<Popover>
-									<PopoverTrigger asChild>
-										<button
-											className="aspect-square h-[30px] rounded border"
-											style={{
-												backgroundColor: form.formState
-													.isValid
-													? form.getValues("color")
-													: project.color,
-											}}
-										></button>
-									</PopoverTrigger>
-									<PopoverContent className="grid w-[200px] grid-cols-5 gap-1">
-										{colors.map((c) => (
-											<button
-												type="button"
-												key={c}
-												style={{ backgroundColor: c }}
-												onClick={() => {
-													field.onChange(c);
-												}}
-												className="aspect-square h-[30px] rounded border"
-											></button>
-										))}
-									</PopoverContent>
-								</Popover>
+								<div
+									className="aspect-square h-[30px] rounded border"
+									style={{
+										backgroundColor: form.formState.isValid
+											? form.getValues("color")
+											: project.color,
+									}}
+								></div>
+
 								<FormControl>
-									<Input
-										type="text"
-										id="projectName"
-										className="text-md w-24 bg-accent/25"
-										{...field}
-									/>
+									<Popover>
+										<PopoverTrigger asChild>
+											<Input
+												disabled={
+													!form.formState.isValid
+												}
+												type="text"
+												id="projectName"
+												className="text-md w-24 bg-accent/25"
+												{...field}
+											/>
+										</PopoverTrigger>
+										<PopoverContent className="max-w-min border-none bg-transparent">
+											<HexColorPicker
+												color={form.watch("color")}
+												onChange={(color) =>
+													form.setValue(
+														"color",
+														color,
+														{
+															shouldValidate:
+																true,
+															shouldDirty: true,
+														},
+													)
+												}
+											/>
+										</PopoverContent>
+									</Popover>
 								</FormControl>
 							</div>
 						</FormItem>
