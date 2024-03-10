@@ -183,9 +183,10 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 
 type Props = {
 	projectId: string;
+	children: React.ReactNode;
 };
 
-const CreateTask = ({ projectId }: Props) => {
+const CreateTask = ({ projectId, children }: Props) => {
 	const [assignees, sprints] = useAppStore(
 		useShallow((state) => [state.assignees, state.sprints]),
 	);
@@ -295,11 +296,7 @@ const CreateTask = ({ projectId }: Props) => {
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogTrigger asChild>
-				<Button className="gap-1 font-bold" size="sm">
-					New
-				</Button>
-			</DialogTrigger>
+			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className="min-w-[600px] max-w-fit p-0">
 				<DialogHeader className="px-4 pt-4">
 					<DialogTitle className="flex items-center gap-[0.5ch]">

@@ -1,12 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import {
-	Bell,
-	BookIcon,
-	Brain,
-	Check,
-	LampDesk,
-	Rabbit,
-} from "lucide-react";
+import { Bell, BookIcon, Brain, Check, LampDesk, Rabbit } from "lucide-react";
 import { Sora } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";

@@ -57,7 +57,7 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 
 	return (
 		<div
-			className="flex max-h-screen flex-col gap-8 overflow-hidden overflow-y-scroll p-6"
+			className="flex flex-col gap-8 p-6"
 			style={{
 				scrollBehavior: "smooth",
 			}}
@@ -86,7 +86,6 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 					</Permission>
 				);
 			})}
-			<div className="min-h-[1000px]" />
 		</div>
 	);
 }

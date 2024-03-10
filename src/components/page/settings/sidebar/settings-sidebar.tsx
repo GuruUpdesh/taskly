@@ -15,7 +15,7 @@ const ProjectSettings = dynamic(() => import("./project-settings"), {
 
 const SettingsSidebar = () => {
 	return (
-		<div className="flex h-screen flex-col gap-4 bg-accent/25 @container">
+		<div className="flex flex-col gap-4 @container">
 			<Link href="/app" prefetch>
 				<Button
 					variant="ghost"
@@ -37,7 +37,7 @@ const SettingsSidebar = () => {
 					url="/settings/profile"
 				/>
 			</div>
-			<div className="px-4">
+			<div className="sticky top-0 px-4">
 				<Separator className="mb-4" />
 				<ProjectSettings />
 			</div>

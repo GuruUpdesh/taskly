@@ -13,6 +13,7 @@ import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
 import ToggleFilters from "~/components/page/backlog/display-toggles";
+import { Button } from "~/components/ui/button";
 
 type Params = {
 	params: {
@@ -38,7 +39,11 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 				<div className="flex items-center gap-2">
 					<ToggleFilters />
 					<AiDialog projectId={projectId} />
-					<CreateTask projectId={projectId} />
+					<CreateTask projectId={projectId}>
+						<Button className="gap-1 font-bold" size="sm">
+							New Task
+						</Button>
+					</CreateTask>
 				</div>
 			</header>
 			<section className="flex flex-col">
