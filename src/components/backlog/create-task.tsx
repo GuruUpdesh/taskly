@@ -64,6 +64,7 @@ export const taskFormSchema = buildValidator([
 	"sprintId",
 	"backlogOrder",
 	"boardOrder",
+	"branchName",
 ])
 	.refine((data) => !(data.status === "backlog" && data.sprintId !== "-1"), {
 		message: "If the status is backlog, there cannot be a sprint.",
@@ -255,6 +256,7 @@ const CreateTask = ({ projectId, children }: Props) => {
 			projectId: parseInt(projectId),
 			backlogOrder: 1000000,
 			boardOrder: 1000000,
+			branchName: null,
 		},
 		mode: "onChange",
 	});
@@ -294,6 +296,7 @@ const CreateTask = ({ projectId, children }: Props) => {
 	useValidationErrors(form.formState.errors);
 
 	function handleSubmit(newTask: TaskFormType) {
+		console.log(newTask);
 		addTaskMutation.mutate({ data: newTask });
 	}
 
