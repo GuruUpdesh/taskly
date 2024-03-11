@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import { useSearchParams } from "next/navigation";
 
-import { resolvePendingIntegration } from "~/actions/application/project-actions";
+import { resolvePendingIntegration } from "~/actions/application/github-actions";
 
 const Page = () => {
 	const searchParams = useSearchParams();

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 import { Loader2 } from "lucide-react";
 
-import { addPendingIntegration } from "~/actions/application/project-actions";
+import { addPendingIntegration } from "~/actions/application/github-actions";
 import { Button } from "~/components/ui/button";
 
 type Props = {

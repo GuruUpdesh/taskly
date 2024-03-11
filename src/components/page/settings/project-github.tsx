@@ -4,7 +4,7 @@ import { currentUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
-import { getConnectedGithubRepo } from "~/actions/application/project-actions";
+import { getConnectedGithubRepo } from "~/actions/application/github-actions";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { type Project } from "~/server/db/schema";
