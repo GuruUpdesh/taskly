@@ -15,7 +15,6 @@ type Props = {
 	project: Project;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ProjectGithub = async ({ project }: Props) => {
 	const user = await currentUser();
 	const githubAccount = user?.externalAccounts.find(
@@ -73,7 +72,7 @@ const ProjectGithub = async ({ project }: Props) => {
 				<p className={cn(typography.paragraph.p_muted)}>
 					Connected Repositories
 				</p>
-				<GithubAppConnect />
+				<GithubAppConnect projectId={project.id} />
 			</div>
 			<div className="rounded border bg-accent/25 p-2 px-4"></div>
 		</div>

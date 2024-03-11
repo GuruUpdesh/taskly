@@ -10,9 +10,13 @@ import {
 	insertProjectSchema,
 	type User,
 	type UserRole,
+	projectToIntegrations,
+	projectToIntegrationsSchema,
 } from "~/server/db/schema";
 import { type NewProject } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
+
+import { authenticate } from "../security/authenticate";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -131,4 +135,37 @@ export async function getAllUsersInProject(projectId: number) {
 		if (error instanceof Error) throwServerError(error.message);
 		return [];
 	}
+}
+
+export async function addPendingIntegration(
+	projectId: number,
+	integrationId: string,
+) {
+	const userId = authenticate();
+	const data = { projectId, integrationId, userId };
+	const validData = projectToIntegrationsSchema
+		.pick({ projectId: true, integrationId: true, userId: true })
+		.parse(data);
+	await db.insert(projectToIntegrations).values(validData);
+}
+
+export async function resolvePendingIntegration(installationId: number) {
+	const userId = authenticate();
+	const pendingIntegration = await db.query.projectToIntegrations.findFirst({
+		where: (projectToIntegrations) =>
+			eq(projectToIntegrations.userId, userId) &&
+			eq(projectToIntegrations.integrationId, "github"),
+	});
+
+	if (!pendingIntegration) {
+		return;
+	}
+
+	await db
+		.update(projects)
+		.set({ githubIntegrationId: installationId })
+		.where(eq(projects.id, pendingIntegration.projectId));
+	await db
+		.delete(projectToIntegrations)
+		.where(eq(projectToIntegrations.userId, userId));
 }
