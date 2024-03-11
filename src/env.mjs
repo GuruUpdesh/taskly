@@ -32,6 +32,7 @@ export const env = createEnv({
 		BLOB_READ_WRITE_TOKEN: z.string(),
 		GH_WEBHOOK_SECRET: z.string(),
 		GH_CLIENT_SECRET:  z.string(),
+		GH_APP_PRIVATE_KEY_BASE_64: z.string(),
 	},
 
 	/**
@@ -71,6 +72,7 @@ export const env = createEnv({
 		BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
 		GH_WEBHOOK_SECRET: process.env.GH_WEBHOOK_SECRET,
 		GH_CLIENT_SECRET: process.env.GH_CLIENT_SECRET,
+		GH_APP_PRIVATE_KEY_BASE_64: process.env.GH_APP_PRIVATE_KEY_BASE_64,
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

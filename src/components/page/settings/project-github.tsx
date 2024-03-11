@@ -4,6 +4,7 @@ import { currentUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
+import { getConnectedGithubRepo } from "~/actions/application/project-actions";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { type Project } from "~/server/db/schema";
@@ -20,6 +21,7 @@ const ProjectGithub = async ({ project }: Props) => {
 	const githubAccount = user?.externalAccounts.find(
 		(account) => account.provider === "oauth_github",
 	);
+	const repos = await getConnectedGithubRepo(project.githubIntegrationId);
 	return (
 		<div>
 			<p className={cn(typography.paragraph.p_muted)}>
@@ -29,7 +31,7 @@ const ProjectGithub = async ({ project }: Props) => {
 			<div className="rounded border bg-accent/25 p-2 px-4">
 				{githubAccount ? (
 					<div className="flex items-center justify-between">
-						<div className="flex items-center justify-start gap-2">
+						<div className="flex items-center justify-start gap-1">
 							<Image
 								src={githubAccount.imageUrl}
 								alt="GitHub account"
@@ -37,7 +39,14 @@ const ProjectGithub = async ({ project }: Props) => {
 								height={30}
 								className="rounded-full"
 							/>
-							<p>{githubAccount.username}</p>
+							<Link
+								href={`https://github.com/${githubAccount.username}`}
+								target="_blank"
+							>
+								<Button variant="link">
+									{githubAccount.username}
+								</Button>
+							</Link>
 						</div>
 						<div className="flex items-center gap-2">
 							<p className="text-sm text-emerald-500">
@@ -74,7 +83,24 @@ const ProjectGithub = async ({ project }: Props) => {
 				</p>
 				<GithubAppConnect projectId={project.id} />
 			</div>
-			<div className="rounded border bg-accent/25 p-2 px-4"></div>
+			{repos && repos.length > 0 ? (
+				<div className="mt-2 rounded border bg-accent/25 p-2 px-4">
+					{repos.map((repo, idx) => (
+						<div key={idx} className="flex items-center">
+							<Image
+								src={repo.owner.avatar_url}
+								alt="Repository owner"
+								width={30}
+								height={30}
+								className="rounded-full"
+							/>
+							<Link href={repo.html_url} target="_blank">
+								<Button variant="link">{repo.full_name}</Button>
+							</Link>
+						</div>
+					))}
+				</div>
+			) : null}
 		</div>
 	);
 };
