@@ -23,6 +23,7 @@ import {
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
 import { Separator } from "~/components/ui/separator";
+import { taskNameToBranchName } from "~/utils/task-name-branch-converters";
 
 import Comments from "./comments/Comments";
 import PrimaryTaskForm from "./PrimaryTaskForm";
@@ -171,6 +172,14 @@ const TaskPage = ({
 									size="icon"
 									variant="outline"
 									className="flex-1"
+									onClick={() => {
+										if (!result?.data?.task) {
+											return;
+										}
+										toast.info(
+											`Branch Name: ${taskNameToBranchName(result.data.task.title)}`,
+										);
+									}}
 								>
 									<GitHubLogoIcon />
 								</Button>

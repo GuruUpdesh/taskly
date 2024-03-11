@@ -92,7 +92,7 @@ const ProjectGithub = async ({ project }: Props) => {
 								alt="Repository owner"
 								width={30}
 								height={30}
-								className="rounded-full"
+								className="rounded-md"
 							/>
 							<Link href={repo.html_url} target="_blank">
 								<Button variant="link">{repo.full_name}</Button>

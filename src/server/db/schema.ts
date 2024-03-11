@@ -63,6 +63,7 @@ export const tasks = mysqlTable("tasks", {
 		.notNull()
 		.default(new Date()),
 	sprintId: int("sprint_id").default(-1).notNull(),
+	branchName: varchar("branch_name", { length: 255 }),
 });
 
 // validators
