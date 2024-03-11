@@ -23,7 +23,6 @@ import {
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
 import { Separator } from "~/components/ui/separator";
-import { taskNameToBranchName } from "~/utils/task-name-branch-converters";
 
 import Comments from "./comments/Comments";
 import PrimaryTaskForm from "./PrimaryTaskForm";
@@ -172,12 +171,15 @@ const TaskPage = ({
 									size="icon"
 									variant="outline"
 									className="flex-1"
-									onClick={() => {
-										if (!result?.data?.task) {
+									onClick={async () => {
+										if (!result?.data?.task?.branchName) {
 											return;
 										}
+										await navigator.clipboard.writeText(
+											result.data.task.branchName,
+										);
 										toast.info(
-											`Branch Name: ${taskNameToBranchName(result.data.task.title)}`,
+											`Copied Branch Name: ${result.data.task.branchName}`,
 										);
 									}}
 								>
