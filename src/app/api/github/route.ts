@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export async function POST(request: Request) {
+	console.log("Received a request", request);
 	try {
-		console.log("Received a request", request);
 		const body = (await request.json()) as unknown;
 
 		const schema = z.object({
