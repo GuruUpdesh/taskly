@@ -18,5 +18,5 @@ export default async function ProjectSettingsLayout({
 		return <div>{result?.message}</div>;
 	}
 
-	return <>{children}</>;
+	return <div>{children}</div>;
 }

@@ -12,11 +12,11 @@ const MarketingTaskChips = () => {
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			void controls1.start({ flexGrow: Math.random() * 4 });
-			void controls2.start({ flexGrow: Math.random() * 4 });
-			void controls3.start({ flexGrow: Math.random() * 4 });
-			void controls4.start({ flexGrow: Math.random() * 4 });
-		}, 2000);
+			void controls1.start({ flexGrow: Math.random() * 3.8 + 0.2 });
+			void controls2.start({ flexGrow: Math.random() * 3.8 + 0.2 });
+			void controls3.start({ flexGrow: Math.random() * 3.8 + 0.2 });
+			void controls4.start({ flexGrow: Math.random() * 3.8 + 0.2 });
+		}, 2500);
 
 		return () => clearInterval(interval);
 	}, [controls1, controls2, controls3, controls4]);
@@ -26,22 +26,22 @@ const MarketingTaskChips = () => {
 			<motion.div
 				className="h-[10px] flex-1 rounded-full bg-indigo-800"
 				animate={controls1}
-				transition={{ duration: 1.75, ease: [0.075, 0.82, 0.165, 1] }}
+				transition={{ duration: 3.5, ease: [0.075, 0.82, 0.165, 1] }}
 			/>
 			<motion.div
 				className="h-[10px] flex-1 rounded-full bg-red-800"
 				animate={controls2}
-				transition={{ duration: 1.75, ease: [0.075, 0.82, 0.165, 1] }}
+				transition={{ duration: 3.5, ease: [0.075, 0.82, 0.165, 1] }}
 			/>
 			<motion.div
 				className="h-[10px] flex-1 rounded-full bg-yellow-600"
 				animate={controls3}
-				transition={{ duration: 1.75, ease: [0.075, 0.82, 0.165, 1] }}
+				transition={{ duration: 3.5, ease: [0.075, 0.82, 0.165, 1] }}
 			/>
 			<motion.div
 				className="h-[10px] flex-1 rounded-full bg-green-600"
 				animate={controls4}
-				transition={{ duration: 1.75, ease: [0.075, 0.82, 0.165, 1] }}
+				transition={{ duration: 3.5, ease: [0.075, 0.82, 0.165, 1] }}
 			/>
 		</div>
 	);

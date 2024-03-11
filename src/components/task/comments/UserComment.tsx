@@ -115,6 +115,7 @@ const UserComment = ({
 					bounce: 0.3,
 				},
 			}}
+			animate={{ height: "auto", opacity: 1 }}
 		>
 			<div
 				className={cn(

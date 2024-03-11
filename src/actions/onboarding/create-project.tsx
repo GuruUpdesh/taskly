@@ -3,6 +3,7 @@
 import { put } from "@vercel/blob";
 import { addMinutes, startOfDay } from "date-fns";
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import OpenAI from "openai";
 
 import { createSprintForProject } from "~/actions/application/sprint-actions";
@@ -52,6 +53,8 @@ export async function createProject(
 		const result = await db.insert(projects).values(newProject);
 		const insertId = parseInt(result.insertId);
 
+		console.log("🤖 - Project created");
+
 		// add user to project
 		await addUserToProject(userId, insertId, "owner");
 
@@ -93,6 +96,7 @@ export async function generateAndUpdateProjectImage(
 	projectDescription: string | null | undefined,
 ) {
 	try {
+		console.log("🤖 - generateAndUpdateProjectImage");
 		// generate image
 		const image = await generateProjectImage(
 			projectName,
@@ -109,6 +113,8 @@ export async function generateAndUpdateProjectImage(
 			.update(projects)
 			.set({ image: image, color: color })
 			.where(eq(projects.id, projectId));
+
+		revalidatePath("/");
 	} catch (error) {
 		console.error("Error generating or updating project image:", error);
 	}
