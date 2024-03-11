@@ -17,6 +17,9 @@ export async function POST(request: Request) {
 				state: z.string(),
 				title: z.string(),
 				merged: z.boolean(),
+				head: z.object({
+					ref: z.string(),
+				})
 			}),
 		});
 		const result = schema.parse(body);
@@ -31,7 +34,7 @@ export async function POST(request: Request) {
 		}
 
 		const task = await db.query.tasks.findFirst({
-			where: (task) => eq(task.branchName, result.pull_request.title),
+			where: (task) => eq(task.branchName, result.pull_request.head.ref),
 		});
 
 		if (!task) {
