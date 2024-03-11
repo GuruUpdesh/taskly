@@ -1,6 +1,6 @@
-export async function POST(request: Request) {
+export function POST(request: Request) {
 	try {
-        console.log("Received a request", request);
+		console.log("Received a request", request);
 
 		return Response.json({ message: "Received" });
 	} catch (e) {

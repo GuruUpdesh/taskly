@@ -10,6 +10,7 @@ import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { authenticate } from "~/actions/security/authenticate";
 import Permission from "~/components/auth/Permission";
 import ProjectDangerZone from "~/components/page/settings/project-danger-zone";
+import ProjectGithub from "~/components/page/settings/project-github";
 import ProjectInfo from "~/components/page/settings/project-info";
 import ProjectInvite from "~/components/page/settings/project-invite";
 import ProjectSprints from "~/components/page/settings/project-sprints";
@@ -18,7 +19,6 @@ import SettingsSection from "~/components/page/settings/settings-section";
 import UsersTable from "~/components/projects/users-table";
 import { generalSettings } from "~/config/settings-config";
 import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
-import ProjectGithub from "~/components/page/settings/project-github";
 
 type Params = {
 	params: {

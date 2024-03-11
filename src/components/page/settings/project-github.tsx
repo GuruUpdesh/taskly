@@ -2,18 +2,20 @@ import React from "react";
 
 import { currentUser } from "@clerk/nextjs";
 import Image from "next/image";
+import Link from "next/link";
 
+import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { type Project } from "~/server/db/schema";
 import typography from "~/styles/typography";
-import { Button } from "~/components/ui/button";
-import Link from "next/link";
+
 import GithubAppConnect from "./github-app-connect";
 
 type Props = {
 	project: Project;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ProjectGithub = async ({ project }: Props) => {
 	const user = await currentUser();
 	const githubAccount = user?.externalAccounts.find(
@@ -67,11 +69,11 @@ const ProjectGithub = async ({ project }: Props) => {
 					</div>
 				)}
 			</div>
-			<div className="flex items-center justify-between mt-4">
+			<div className="mt-4 flex items-center justify-between">
 				<p className={cn(typography.paragraph.p_muted)}>
 					Connected Repositories
 				</p>
-                <GithubAppConnect />
+				<GithubAppConnect />
 			</div>
 			<div className="rounded border bg-accent/25 p-2 px-4"></div>
 		</div>
