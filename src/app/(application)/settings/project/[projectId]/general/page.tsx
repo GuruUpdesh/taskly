@@ -18,6 +18,7 @@ import SettingsSection from "~/components/page/settings/settings-section";
 import UsersTable from "~/components/projects/users-table";
 import { generalSettings } from "~/config/settings-config";
 import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
+import ProjectGithub from "~/components/page/settings/project-github";
 
 type Params = {
 	params: {
@@ -52,6 +53,7 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 			/>
 		),
 		sprints: <ProjectSprints sprints={sprints ?? []} project={project} />,
+		github: <ProjectGithub project={project} />,
 		"danger-zone": <ProjectDangerZone project={project} />,
 	} as const;
 

@@ -23,7 +23,7 @@ const config = {
 			},
 			{
 				protocol: "https",
-				hostname: "utfs.io",
+				hostname: "img.clerk.com",
 				port: "",
 				pathname: "/**",
 			}
