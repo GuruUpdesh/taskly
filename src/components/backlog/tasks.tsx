@@ -238,12 +238,16 @@ export default function Tasks({ projectId, variant = "backlog" }: Props) {
 							: currentTask,
 					) ?? [],
 			);
+			let transformedValue: string = destination.droppableId;
+			if (groupBy === "assignee" && destination.droppableId === null) {
+				transformedValue = "unassigned";
+			}
+
 			editTaskMutation.mutate({
 				id: task.id,
 				newTask: {
-					...task,
+					[groupBy]: transformedValue,
 					sprintId: String(task.sprintId),
-					[groupBy]: destination.droppableId,
 					backlogOrder: destination.index,
 				},
 			});

@@ -6,10 +6,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { createComment } from "~/actions/application/comment-actions";
+import { useAppStore } from "~/store/app";
 
+import TextAreaWithMentions from "./TextAreaWithMentions";
 import { Button } from "../../ui/button";
 import { Form, FormControl, FormField, FormItem } from "../../ui/form";
-import { Textarea } from "../../ui/textarea";
 
 type Props = {
 	taskId: number;
@@ -20,6 +21,8 @@ const formSchema = z.object({
 });
 
 const CommentForm = ({ taskId }: Props) => {
+	const assignees = useAppStore((state) => state.assignees);
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -36,7 +39,7 @@ const CommentForm = ({ taskId }: Props) => {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="sticky bottom-0 grid w-full items-center gap-1.5"
+				className="sticky bottom-0 w-full"
 			>
 				<div className="pointer-events-none absolute -bottom-1 left-0 -z-10 h-[135%] w-full bg-gradient-to-b from-transparent to-[#081020] to-25%" />
 				<FormField
@@ -45,11 +48,9 @@ const CommentForm = ({ taskId }: Props) => {
 					render={({ field }) => (
 						<FormItem>
 							<FormControl>
-								<Textarea
-									placeholder="Add a comment..."
-									className="resize-none bg-accent/25"
-									rows={2}
-									{...field}
+								<TextAreaWithMentions
+									assignees={assignees}
+									field={field}
 								/>
 							</FormControl>
 						</FormItem>

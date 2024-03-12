@@ -24,7 +24,7 @@ const Comments = ({ taskComments, taskId }: Props) => {
 	}, [taskComments]);
 
 	return (
-		<section className="comments-container mb-3 flex flex-grow flex-col gap-4 overflow-scroll px-6 pb-1 pt-4">
+		<section className="comments-container mb-3 flex max-w-full flex-grow flex-col gap-4 overflow-scroll px-6 pb-1 pt-4">
 			<div className="flex flex-col">
 				<AnimatePresence initial={false}>
 					{comments.map((comment, index) => {

@@ -26,7 +26,9 @@ const Crumb = ({ name, link, last }: CrumbProps) => {
 				<Link
 					aria-disabled={last}
 					href={link}
-					className={cn("flex items-center gap-1 text-sm capitalize")}
+					className={cn(
+						"flex items-center gap-1 whitespace-nowrap text-sm capitalize",
+					)}
 				>
 					{name === "Home" ? <HomeIcon /> : null}
 					{name}

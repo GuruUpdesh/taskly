@@ -24,6 +24,7 @@ import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Textarea } from "~/components/ui/textarea";
 import { schemaValidators } from "~/config/TaskConfigType";
 import { useNavigationStore } from "~/store/navigation";
+import { taskNameToBranchName } from "~/utils/task-name-branch-converters";
 
 type Props = {
 	projectId: string;
@@ -81,6 +82,7 @@ const AiDialog = ({ projectId }: Props) => {
 				backlogOrder: 1000000,
 				insertedDate: new Date(),
 				lastEditedAt: null,
+				branchName: taskNameToBranchName(task.title),
 			}),
 		);
 
