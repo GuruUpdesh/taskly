@@ -14,7 +14,7 @@ const ErrorPage = () => {
 	useEffect(() => {
 		const interval = setInterval(() => {
 			location.reload();
-		}, 250);
+		}, 2000);
 
 		return () => clearInterval(interval);
 	}, [router]);
