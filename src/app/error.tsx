@@ -2,14 +2,12 @@
 
 import React from "react";
 
-import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { PiWarning } from "react-icons/pi";
 
 import { Button } from "~/components/ui/button";
 
 const ErrorPage = () => {
-	const { signOut } = useClerk();
 	const router = useRouter();
 	return (
 		<div className="min-w-screen flex min-h-screen items-center justify-center">
@@ -20,7 +18,16 @@ const ErrorPage = () => {
 				</p>
 				<Button
 					size="sm"
-					onClick={() => signOut(() => router.push("/"))}
+					onClick={() => {
+						document.cookie.split(";").forEach(function (c) {
+							document.cookie =
+								c.trim().split("=")[0] +
+								"=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+						});
+						sessionStorage.clear();
+						localStorage.clear();
+						router.push("/");
+					}}
 				>
 					Sign Out
 				</Button>
