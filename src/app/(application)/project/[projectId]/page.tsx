@@ -1,26 +1,53 @@
 import React from "react";
 
-import { Calendar } from "lucide-react";
+import { auth } from "@clerk/nextjs/server";
 
-import {
-	DataCardLineGraph,
-	DataCardAreaGraph,
-	DataCardFigure,
-} from "~/components/dashboard/data-card";
+import { getTasksFromProject } from "~/actions/application/task-actions";
+import { getAllNotifications } from "~/actions/notification-actions";
+import { DataCardFigure } from "~/components/dashboard/data-card";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import RecentTasks from "~/components/page/project/recent-tasks";
 import UserGreeting from "~/components/page/project/user-greeting";
-import { Button } from "~/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 } from "~/components/ui/card";
-import { Separator } from "~/components/ui/separator";
+import { type Notification, type Task } from "~/server/db/schema";
 
-function ProjectPage() {
+type ProjectPageProps = {
+	params: {
+		projectId: string;
+	};
+};
+
+async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
+	const tasks: Task[] = (await getTasksFromProject(Number(projectId))) ?? [];
+
+	const user = auth();
+	if (!user) {
+		return;
+	}
+
+	const notifications: Notification[] =
+		(await getAllNotifications(user.userId ?? "")) ?? [];
+
+	const backlogTaskCount: number = tasks.filter(
+		(task: Task) => task.status === "backlog",
+	).length;
+
+	const activeTaskCount: number = tasks.filter(
+		(task: Task) => task.status === "inprogress",
+	).length;
+
+	const completedTaskCount: number = tasks.filter(
+		(task: Task) => task.status === "done",
+	).length;
+
+	const totalTaskCount: number = tasks.length;
+
 	return (
 		<div className="max-h-screen overflow-y-scroll pt-2">
 			<header className="flex items-center justify-between gap-2 border-b px-4 pb-2">
@@ -47,24 +74,43 @@ function ProjectPage() {
 								Recent Notifications
 							</CardDescription>
 						</CardHeader>
-						<CardContent></CardContent>
+						<CardContent>
+							<div className="flex flex-col gap-2">
+								{notifications.map((notification) => (
+									<div key={notification.id}>
+										<a
+											href={`/project/${projectId}/inbox/notification/${notification.id}`}
+											className="cursor-pointer hover:underline"
+										>
+											{notification.message}
+										</a>
+									</div>
+								))}
+							</div>
+						</CardContent>
 					</Card>
 				</section>
-				<Separator />
-				<header className="my-4 flex items-center justify-between gap-2">
-					<Button variant="outline">
-						<Calendar className="mr-2 h-4 w-4" />
-						Jan 1, 2024 - Jan 31, 2024
-					</Button>
-					<Button>Download</Button>
-				</header>
 				<section className="grid grid-cols-4 gap-4">
-					<DataCardFigure />
-					<DataCardFigure />
-					<DataCardFigure />
-					<DataCardFigure />
-					<DataCardAreaGraph />
-					<DataCardLineGraph />
+					<DataCardFigure
+						cardTitle={backlogTaskCount.toString()}
+						cardDescriptionUp="Backlog Tasks"
+						cardDescriptionDown=""
+					/>
+					<DataCardFigure
+						cardTitle={activeTaskCount.toString()}
+						cardDescriptionUp="Active Tasks"
+						cardDescriptionDown=""
+					/>
+					<DataCardFigure
+						cardTitle={completedTaskCount.toString()}
+						cardDescriptionUp="Completed Tasks"
+						cardDescriptionDown=""
+					/>
+					<DataCardFigure
+						cardTitle={totalTaskCount.toString()}
+						cardDescriptionUp="Total Tasks"
+						cardDescriptionDown=""
+					/>
 				</section>
 			</section>
 		</div>
