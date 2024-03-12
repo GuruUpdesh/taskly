@@ -35,7 +35,7 @@ const Navbar = ({ children }: NavbarProps) => {
 					</NavigationMenuLink>
 				</NavigationMenuItem>
 				{children}
-				<NavigationMenuItem>
+				{/* <NavigationMenuItem>
 					<NavigationMenuLink
 						className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
 						href="/"
@@ -51,7 +51,7 @@ const Navbar = ({ children }: NavbarProps) => {
 					>
 						Documentation
 					</NavigationMenuLink>
-				</NavigationMenuItem>
+				</NavigationMenuItem> */}
 			</NavigationMenuList>
 		</NavigationMenu>
 	);
@@ -121,6 +121,7 @@ export const ProjectsMenuItem = ({ projects }: ProjectsMenuItemProps) => {
 									},
 								)}
 							>
+								<span className="mx-1">{project.name}</span>
 								<div className="absolute left-0 aspect-square w-full opacity-50 transition-opacity gradient-mask-l-50 group-hover:opacity-75  group-focus:opacity-75">
 									{project.image ? (
 										<Image
@@ -132,7 +133,6 @@ export const ProjectsMenuItem = ({ projects }: ProjectsMenuItemProps) => {
 										/>
 									) : null}
 								</div>
-								<span className="mx-1">{project.name}</span>
 								<span className="group-focus-opacity-100 absolute right-2 opacity-0 transition-opacity group-hover:opacity-100">
 									<ArrowRight className="h-4 w-4" />
 								</span>
