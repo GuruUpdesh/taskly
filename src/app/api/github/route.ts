@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "~/server/db";
-import { tasks } from "~/server/db/schema";
+import { taskHistory, tasks } from "~/server/db/schema";
 
 export async function POST(request: Request) {
 	try {
@@ -48,6 +48,14 @@ export async function POST(request: Request) {
 					.update(tasks)
 					.set({ status: "inprogress" })
 					.where(eq(tasks.id, task.id));
+				await db.insert(taskHistory).values({
+					taskId: task.id,
+					propertyKey: "status",
+					oldPropertyValue: task.status,
+					propertyValue: "inprogress",
+					userId: "github",
+					insertedDate: new Date(),
+				});
 				return Response.json({ message: "Received and updated" });
 			}
 		}
@@ -58,6 +66,14 @@ export async function POST(request: Request) {
 					.update(tasks)
 					.set({ status: "done" })
 					.where(eq(tasks.id, task.id));
+				await db.insert(taskHistory).values({
+					taskId: task.id,
+					propertyKey: "status",
+					oldPropertyValue: task.status,
+					propertyValue: "done",
+					userId: "github",
+					insertedDate: new Date(),
+				});
 			}
 			return Response.json({ message: "Received and updated" });
 		} else if (result.action === "closed") {
@@ -66,6 +82,14 @@ export async function POST(request: Request) {
 					.update(tasks)
 					.set({ status: "todo" })
 					.where(eq(tasks.id, task.id));
+				await db.insert(taskHistory).values({
+					taskId: task.id,
+					propertyKey: "status",
+					oldPropertyValue: task.status,
+					propertyValue: "todo",
+					userId: "github",
+					insertedDate: new Date(),
+				});
 				return Response.json({ message: "Received and updated" });
 			}
 		}
@@ -82,6 +106,14 @@ export async function POST(request: Request) {
 					.update(tasks)
 					.set({ status: "inreview" })
 					.where(eq(tasks.id, task.id));
+				await db.insert(taskHistory).values({
+					taskId: task.id,
+					propertyKey: "status",
+					oldPropertyValue: task.status,
+					propertyValue: "inreview",
+					userId: "github",
+					insertedDate: new Date(),
+				});
 				return Response.json({ message: "Received and updated" });
 			}
 		}
@@ -92,6 +124,14 @@ export async function POST(request: Request) {
 					.update(tasks)
 					.set({ status: "inprogress" })
 					.where(eq(tasks.id, task.id));
+				await db.insert(taskHistory).values({
+					taskId: task.id,
+					propertyKey: "status",
+					oldPropertyValue: task.status,
+					propertyValue: "inprogress",
+					userId: "github",
+					insertedDate: new Date(),
+				});
 				return Response.json({ message: "Received and updated" });
 			}
 		}
