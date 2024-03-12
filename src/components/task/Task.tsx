@@ -171,6 +171,17 @@ const TaskPage = ({
 									size="icon"
 									variant="outline"
 									className="flex-1"
+									onClick={async () => {
+										if (!result?.data?.task?.branchName) {
+											return;
+										}
+										await navigator.clipboard.writeText(
+											result.data.task.branchName,
+										);
+										toast.info(
+											`Copied Branch Name: ${result.data.task.branchName}`,
+										);
+									}}
 								>
 									<GitHubLogoIcon />
 								</Button>

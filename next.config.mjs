@@ -13,7 +13,7 @@ const config = {
 				protocol: "https",
 				hostname: "img.clerk.com",
 				port: "",
-				pathname: "/*",
+				pathname: "/**",
 			},
 			{
 				protocol: "https",
@@ -23,10 +23,10 @@ const config = {
 			},
 			{
 				protocol: "https",
-				hostname: "utfs.io",
+				hostname: "avatars.githubusercontent.com",
 				port: "",
 				pathname: "/**",
-			}
+			},
 		],
 	},
 	experimental: {

@@ -107,8 +107,6 @@ const Task = ({
 	const addPoints = usePointStore((state) => state.addPoints);
 
 	useEffect(() => {
-		console.log("listId", listId);
-		console.log("task.points", task.points);
 		if (!listId) return;
 		addPoints(listId, parseInt(task.points));
 		return () => {

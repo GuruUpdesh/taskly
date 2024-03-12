@@ -63,6 +63,7 @@ export const tasks = mysqlTable("tasks", {
 		.notNull()
 		.default(new Date()),
 	sprintId: int("sprint_id").default(-1).notNull(),
+	branchName: varchar("branch_name", { length: 255 }),
 });
 
 // validators
@@ -118,6 +119,7 @@ export const projects = mysqlTable("projects", {
 	image: varchar("image", { length: 1000 }),
 	color: varchar("color", { length: 7 }).default("#000000").notNull(),
 	isAiEnabled: boolean("is_ai_enabled").default(false).notNull(),
+	githubIntegrationId: int("github_integration_id"),
 });
 
 // validators
@@ -134,6 +136,32 @@ export const projectsRelations = relations(projects, ({ many }) => ({
 	usersToProjects: many(usersToProjects),
 	sprints: many(sprints),
 }));
+
+/**
+ * Project to Integration Schema
+ */
+export const projectToIntegrations = mysqlTable("project_to_integrations", {
+	id: serial("id").primaryKey(),
+	projectId: int("project_id").notNull(),
+	integrationId: mysqlEnum("integration_id", ["github"]).notNull(),
+	userId: varchar("user_id", { length: 32 }).notNull(),
+});
+
+// validators
+export const projectToIntegrationsSchema = createSelectSchema(
+	projectToIntegrations,
+);
+
+// relations
+export const projectToIntegrationsRelations = relations(
+	projectToIntegrations,
+	({ one }) => ({
+		user: one(users, {
+			fields: [projectToIntegrations.userId],
+			references: [users.userId],
+		}),
+	}),
+);
 
 /**
  * User Schema
@@ -159,6 +187,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 	views: many(tasksToViews),
 	taskHistory: many(taskHistory),
 	comments: many(comments),
+	pendingIntegrations: many(projectToIntegrations),
 }));
 
 /**

@@ -5,6 +5,7 @@ import {
 	CheckCircledIcon,
 	Component1Icon,
 	EyeOpenIcon,
+	GitHubLogoIcon,
 	PersonIcon,
 	PieChartIcon,
 	RadiobuttonIcon,
@@ -55,6 +56,7 @@ type StaticProperty = Extract<
 	| "projectId"
 	| "boardOrder"
 	| "backlogOrder"
+	| "branchName"
 >;
 type EnumProperty = Extract<
 	TaskProperty,
@@ -78,6 +80,7 @@ export const taskProperties: TaskProperty[] = [
 	"projectId",
 	"boardOrder",
 	"backlogOrder",
+	"branchName",
 ] as const;
 
 export const taskVariants = cva([], {
@@ -547,6 +550,12 @@ export const taskConfig: TaskConfig = {
 		icon: <Dot className="h-4 w-4" />,
 		type: "static",
 	},
+	branchName: {
+		key: "branchName",
+		displayName: "Branch Name",
+		icon: <GitHubLogoIcon className="h-4 w-4" />,
+		type: "static",
+	},
 };
 
 function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
@@ -647,6 +656,7 @@ export const schemaValidators = {
 	backlogOrder: z.number().min(0),
 	lastEditedAt: selectTaskSchema.shape.lastEditedAt,
 	insertedDate: selectTaskSchema.shape.insertedDate,
+	branchName: z.string().nullable(),
 };
 
 export function buildValidator(keys: TaskProperty[]) {
@@ -699,4 +709,5 @@ export const CreateTaskSchema = z.object({
 	sprintId: schemaValidators.sprintId.transform((val) => parseInt(val)),
 	backlogOrder: schemaValidators.backlogOrder,
 	boardOrder: schemaValidators.boardOrder,
+	branchName: schemaValidators.branchName,
 });

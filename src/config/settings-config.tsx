@@ -1,4 +1,5 @@
 import {
+	GitHubLogoIcon,
 	InfoCircledIcon,
 	MarginIcon,
 	PaperPlaneIcon,
@@ -39,6 +40,12 @@ export const generalSettings: SettingsConfig[] = [
 		title: "Members",
 		icon: <AiOutlineTeam />,
 		allowedRoles: ["owner", "admin"],
+	},
+	{
+		anchor: "github",
+		title: "GitHub",
+		icon: <GitHubLogoIcon />,
+		allowedRoles: ["owner"],
 	},
 	{
 		anchor: "sprints",

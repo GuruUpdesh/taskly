@@ -2,6 +2,7 @@
 
 import React, { useMemo } from "react";
 
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { formatDistanceToNow } from "date-fns";
 import { Dot } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
@@ -70,12 +71,26 @@ const TaskHistoryItem = ({ history }: Props) => {
 			</div>
 			{!oldOption || history.comment ? (
 				<p className="ml-3">
-					<b>{history.user.username}</b> {history.comment}
+					{history.userId === "github" ? (
+						<b className="inline-flex items-center gap-1">
+							<GitHubLogoIcon className="h-4 w-4" /> GitHub
+						</b>
+					) : (
+						<b>{history.user.username}</b>
+					)}
+					{history.comment}
 				</p>
 			) : (
 				<p className="ml-3">
-					<b>{history.user.username}</b> changed {config.displayName}{" "}
-					from <b>{oldOption.displayName}</b> to{" "}
+					{history.userId === "github" ? (
+						<b className="inline-flex  items-center gap-1">
+							<GitHubLogoIcon className="h-4 w-4" /> GitHub
+						</b>
+					) : (
+						<b>{history.user.username}</b>
+					)}{" "}
+					changed {config.displayName} from{" "}
+					<b>{oldOption.displayName}</b> to{" "}
 					<b>{newOption.displayName}</b>
 				</p>
 			)}
