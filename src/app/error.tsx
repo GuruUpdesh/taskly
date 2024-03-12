@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 import { PiWarning } from "react-icons/pi";
@@ -9,6 +9,14 @@ import { Button } from "~/components/ui/button";
 
 const ErrorPage = () => {
 	const router = useRouter();
+	useEffect(() => {
+		const interval = setInterval(() => {
+			router.refresh();
+		}, 250);
+
+		return () => clearInterval(interval);
+	}, [router]);
+
 	return (
 		<div className="min-w-screen flex min-h-screen items-center justify-center">
 			<div className="p- flex flex-col items-center gap-2 rounded border bg-accent/25 p-4">
