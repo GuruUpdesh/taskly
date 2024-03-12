@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 				merged: z.boolean(),
 				head: z.object({
 					ref: z.string(),
-				})
+				}),
 			}),
 		});
 		const result = schema.parse(body);
