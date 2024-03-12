@@ -1,19 +1,30 @@
 import React from "react";
 
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
+import { getUser } from "~/actions/user-actions";
 import MobileNav from "~/components/layout/navbar/mobile-nav";
 import Navbar, { RecentTaskMenuItem } from "~/components/layout/navbar/navbar";
 import ProjectList from "~/components/layout/navbar/project-list";
 import UserNav from "~/components/layout/navbar/user-nav";
 import { RecentTasksNavWrapper } from "~/components/page/project/recent-tasks";
 
-export default function LandingLayout({
+export default async function LandingLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+	const { userId } = auth();
+	if (userId) {
+		const user = await getUser(userId);
+		if (!user) {
+			redirect("/waiting-room");
+		}
+	}
+
 	return (
 		<>
 			<header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-lg @container">
