@@ -3,7 +3,6 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronRight, Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { type SuggestionDataItem } from "react-mentions";
 import { z } from "zod";
 
 import { createComment } from "~/actions/application/comment-actions";
@@ -24,12 +23,6 @@ const formSchema = z.object({
 const CommentForm = ({ taskId }: Props) => {
 	const assignees = useAppStore((state) => state.assignees);
 
-	const mentions: SuggestionDataItem[] = assignees.map((assignee) => ({
-		id: assignee.userId,
-		display: assignee.username,
-		profileUrl: assignee.profilePicture,
-	}));
-
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -46,17 +39,17 @@ const CommentForm = ({ taskId }: Props) => {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="sticky bottom-0 grid w-full items-center gap-1.5"
+				className="sticky bottom-0 w-full"
 			>
 				<div className="pointer-events-none absolute -bottom-1 left-0 -z-10 h-[135%] w-full bg-gradient-to-b from-transparent to-[#081020] to-25%" />
 				<FormField
 					control={form.control}
 					name="comment"
 					render={({ field }) => (
-						<FormItem className="absolute w-full">
+						<FormItem>
 							<FormControl>
 								<TextAreaWithMentions
-									mentions={mentions}
+									assignees={assignees}
 									field={field}
 								/>
 							</FormControl>
@@ -65,10 +58,6 @@ const CommentForm = ({ taskId }: Props) => {
 				/>
 				<Button
 					className="absolute bottom-1.5 right-1.5 text-xs"
-					style={{
-						marginTop: "32px",
-						transform: "translateY(100px);",
-					}}
 					size="sm"
 					disabled={
 						!form.formState.isDirty || form.formState.isSubmitting

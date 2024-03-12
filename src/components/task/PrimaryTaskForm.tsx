@@ -92,6 +92,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 				{...form.register("title")}
 				onChangeCapture={debouncedHandleChange}
 			/>
+
 			<Editor
 				editorRef={editorRef}
 				markdown={form.watch("description")}
@@ -100,14 +101,6 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 					debouncedHandleChange();
 				}}
 			/>
-			{/* <Separator />
-			<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-				Subtasks
-			</h3>
-			<Button variant="outline" className="w-fit gap-2">
-				Add Subtask
-				<ArrowTopRightIcon />
-			</Button> */}
 			<Separator className="my-4" />
 			<div className="pb-4">
 				<div className="flex flex-col gap-4 overflow-hidden">
