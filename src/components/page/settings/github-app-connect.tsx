@@ -31,7 +31,7 @@ const GithubAppConnect = ({ projectId }: Props) => {
 			size="sm"
 			disabled={loading}
 		>
-			Connected Repository
+			Connect Repository
 			{loading && <Loader2 className="h-4 w-4 animate-spin" />}
 		</Button>
 	);

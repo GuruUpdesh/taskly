@@ -4,6 +4,7 @@ import crypto from "crypto";
 
 import { eq } from "drizzle-orm";
 import { SignJWT } from "jose";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { env } from "~/env.mjs";
@@ -42,6 +43,8 @@ export async function addPendingIntegration(
 	}
 
 	await db.insert(projectToIntegrations).values(validData);
+
+	revalidatePath("/");
 }
 
 export async function resolvePendingIntegration(installationId: number) {
