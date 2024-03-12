@@ -21,6 +21,7 @@ import {
 } from "~/server/db/schema";
 import { type Task } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
+import { taskNameToBranchName } from "~/utils/task-name-branch-converters";
 
 import {
 	deleteViewsForTask,
@@ -47,6 +48,8 @@ export async function createTask(data: CreateTaskData) {
 			newTask.backlogOrder = 0;
 			newTask.boardOrder = 0;
 		}
+
+		newTask.branchName = taskNameToBranchName(newTask.title);
 
 		const task = await db.insert(tasks).values(newTask);
 
