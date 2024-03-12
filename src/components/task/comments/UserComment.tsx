@@ -14,7 +14,6 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { cn } from "~/lib/utils";
@@ -70,6 +69,39 @@ const UserComment = ({
 		await deleteComment(comment.id);
 	}
 
+	function parseCommentForMentions(comment: string) {
+		const words = comment.split(" ");
+		const new_words = words.map((word) => {
+			if (word.startsWith("@[")) {
+				return {
+					word: "@" + word.slice(2).split("]", 1)[0] + " ",
+					isMention: true,
+				};
+			}
+			return { word: word + " ", isMention: false };
+		});
+
+		return new_words.map((word, index) => {
+			if (word.isMention) {
+				return (
+					<span
+						key={index}
+						className="font-bold text-accent"
+						style={{ color: "white" }}
+						suppressHydrationWarning
+					>
+						{word.word}
+					</span>
+				);
+			}
+			return (
+				<span key={index} suppressHydrationWarning>
+					{word.word}
+				</span>
+			);
+		});
+	}
+
 	return (
 		<motion.div
 			initial={{ height: 0, opacity: 0 }}
@@ -86,14 +118,14 @@ const UserComment = ({
 		>
 			<div
 				className={cn(
-					"relative mb-4 rounded-lg border bg-accent/25 p-4 hover:bg-accent/35",
+					"relative mb-4 overflow-hidden text-wrap rounded-lg border bg-accent/25 p-4 py-2 hover:bg-accent/35",
 					{
 						"mb-0": isLastComment,
 					},
 				)}
 				ref={commentRef}
 			>
-				<div className="flex items-center justify-between gap-2 border-b pb-2 text-sm">
+				<div className="flex items-center justify-between gap-2 border-b pb-1 text-sm">
 					<div className="flex items-center gap-2">
 						<UserProfilePicture
 							src={comment.user.profilePicture}
@@ -125,16 +157,15 @@ const UserComment = ({
 									<DropdownMenuItem onClick={handleDelete}>
 										<Trash2Icon className="mr-2 h-4 w-4" />
 										Delete
-										<DropdownMenuShortcut>
-											d
-										</DropdownMenuShortcut>
 									</DropdownMenuItem>
 								</DropdownMenuContent>
 							</DropdownMenu>
 						) : null}
 					</div>
 				</div>
-				<p className="mt-2 text-sm leading-6">{comment.comment}</p>
+				<p className="mt-2 break-words text-sm leading-6">
+					{parseCommentForMentions(comment.comment)}
+				</p>
 			</div>
 		</motion.div>
 	);
