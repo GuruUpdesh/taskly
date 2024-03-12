@@ -31,7 +31,6 @@ const Page = () => {
 					);
 				});
 		}
-		setError(true);
 	}, [searchParams]);
 
 	if (error) {
