@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
+import SimpleTooltip from "~/components/general/simple-tooltip";
 import { Button } from "~/components/ui/button";
 
 const ButtonOptions = () => {
@@ -35,17 +36,20 @@ const ButtonOptions = () => {
 				<Button
 					variant="outline"
 					className="white rounded-full bg-transparent backdrop-blur-lg"
+					disabled={true}
 				>
 					Watch a Demo
 				</Button>
 			</motion.div>
 			<motion.div variants={variants} className="hidden sm:block">
-				<Button
-					variant="outline"
-					className="rounded-full bg-transparent backdrop-blur-lg"
-				>
-					Documentation
-				</Button>
+				<SimpleTooltip label="Coming Soon">
+					<Button
+						variant="outline"
+						className="rounded-full bg-transparent backdrop-blur-lg"
+					>
+						Documentation
+					</Button>
+				</SimpleTooltip>
 			</motion.div>
 			<motion.div variants={variants}>
 				<Link href="/app">
