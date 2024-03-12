@@ -1,28 +1,20 @@
 import React from "react";
 
 import { auth } from "@clerk/nextjs/server";
-import { Calendar } from "lucide-react";
 
-import { getCurrentSprintForProject } from "~/actions/application/sprint-actions";
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import { getAllNotifications } from "~/actions/notification-actions";
-import {
-	DataCardLineGraph,
-	DataCardAreaGraph,
-	DataCardFigure,
-} from "~/components/dashboard/data-card";
+import { DataCardFigure } from "~/components/dashboard/data-card";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import RecentTasks from "~/components/page/project/recent-tasks";
 import UserGreeting from "~/components/page/project/user-greeting";
-import { Button } from "~/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 } from "~/components/ui/card";
-import { Separator } from "~/components/ui/separator";
 import { type Notification, type Task } from "~/server/db/schema";
 
 type ProjectPageProps = {
@@ -33,8 +25,6 @@ type ProjectPageProps = {
 
 async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 	const tasks: Task[] = (await getTasksFromProject(Number(projectId))) ?? [];
-
-	const sprint = await getCurrentSprintForProject(Number(projectId));
 
 	const user = auth();
 	if (!user) {
@@ -57,38 +47,6 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 	).length;
 
 	const totalTaskCount: number = tasks.length;
-
-	const tasksForThisSprint = tasks.filter(
-		(task: Task) => task.sprintId === sprint?.id,
-	);
-
-	const today = sprint?.startDate ?? new Date();
-
-	const pastDates = [];
-	let i: number;
-	console.log("HERE");
-	for (i = 0; ; i++) {
-		const date = new Date(today);
-		date.setDate(today.getDate() + i);
-		pastDates.push(date.toISOString().split("T")[0]);
-		console.log("hellos");
-		if (date === sprint?.endDate) break;
-	}
-	let counter = 0;
-	const incrementBy = tasksForThisSprint.length / pastDates.length;
-	const tasksCompletedBeforeDay = pastDates.map((date) => ({
-		name: date ?? "",
-		tasks: tasks.filter(
-			(task: Task) =>
-				task &&
-				task.status === "done" &&
-				task.sprintId === sprint?.id &&
-				task.completedAt !== null &&
-				task.completedAt.toISOString()?.split("T")[0] === date,
-		).length,
-		target: (counter += incrementBy),
-		amt: 2400,
-	}));
 
 	return (
 		<div className="max-h-screen overflow-y-scroll pt-2">
@@ -132,7 +90,6 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 						</CardContent>
 					</Card>
 				</section>
-				<Separator />
 				<section className="grid grid-cols-4 gap-4">
 					<DataCardFigure
 						cardTitle={backlogTaskCount.toString()}
@@ -153,14 +110,6 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 						cardTitle={totalTaskCount.toString()}
 						cardDescriptionUp="Total Tasks"
 						cardDescriptionDown=""
-					/>
-					{/* <DataCardAreaGraph
-						title={"Tasks Completed (Past 2 Weeks)"}
-						data={tasksCompletedPerDay}
-					/> */}
-					<DataCardLineGraph
-						title={"Sprint Progress"}
-						data={tasksCompletedBeforeDay}
 					/>
 				</section>
 			</section>

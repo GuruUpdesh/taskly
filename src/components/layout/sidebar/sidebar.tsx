@@ -3,7 +3,6 @@ import React from "react";
 import {
 	HomeIcon,
 	GearIcon,
-	ReaderIcon,
 	DashboardIcon,
 	LayoutIcon,
 	TableIcon,
@@ -50,12 +49,12 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 						url={`/project/${projectId}`}
 					/>
 					<InboxSidebarButton projectId={projectId} />
-					<SidebarButton
+					{/* <SidebarButton
 						label="Docs"
 						icon={<ReaderIcon className="min-w-4" />}
 						url="https://docs.tasklypm.com"
 						openInNewTab
-					/>
+					/> */}
 				</div>
 				<div className="border-b pb-4">
 					<SidebarButton

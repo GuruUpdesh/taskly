@@ -53,7 +53,6 @@ type StaticProperty = Extract<
 	| "id"
 	| "insertedDate"
 	| "lastEditedAt"
-	| "completedAt"
 	| "projectId"
 	| "boardOrder"
 	| "backlogOrder"
@@ -77,7 +76,6 @@ export const taskProperties: TaskProperty[] = [
 	"assignee",
 	"sprintId",
 	"lastEditedAt",
-	"completedAt",
 	"insertedDate",
 	"projectId",
 	"boardOrder",
@@ -528,12 +526,6 @@ export const taskConfig: TaskConfig = {
 		icon: <Clock className="h-4 w-4" />,
 		type: "static",
 	},
-	completedAt: {
-		key: "completedAt",
-		displayName: "Completed",
-		icon: <CheckCircledIcon className="h-4 w-4" />,
-		type: "static",
-	},
 	insertedDate: {
 		key: "insertedDate",
 		displayName: "Inserted",
@@ -663,7 +655,6 @@ export const schemaValidators = {
 	boardOrder: z.number().min(0),
 	backlogOrder: z.number().min(0),
 	lastEditedAt: selectTaskSchema.shape.lastEditedAt,
-	completedAt: selectTaskSchema.shape.completedAt,
 	insertedDate: selectTaskSchema.shape.insertedDate,
 	branchName: z.string().nullable(),
 };
@@ -717,7 +708,6 @@ export const CreateTaskSchema = z.object({
 	projectId: schemaValidators.projectId,
 	sprintId: schemaValidators.sprintId.transform((val) => parseInt(val)),
 	backlogOrder: schemaValidators.backlogOrder,
-	completedAt: schemaValidators.completedAt.optional(),
 	boardOrder: schemaValidators.boardOrder,
 	branchName: schemaValidators.branchName,
 });

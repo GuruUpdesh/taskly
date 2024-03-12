@@ -59,7 +59,6 @@ export const tasks = mysqlTable("tasks", {
 	assignee: varchar("assignee", { length: 255 }),
 	projectId: int("project_id").notNull(),
 	lastEditedAt: datetime("last_edit", { mode: "date", fsp: 6 }),
-	completedAt: datetime("completed_at", { mode: "date", fsp: 6 }),
 	insertedDate: datetime("insert_date", { mode: "date", fsp: 6 })
 		.notNull()
 		.default(new Date()),

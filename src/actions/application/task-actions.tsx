@@ -207,13 +207,6 @@ export async function updateTask(
 			lastEditedAt: new Date(),
 		};
 
-		if (taskData.status === "done") {
-			console.log("Task is done");
-			taskData.completedAt = new Date();
-		} else {
-			taskData.completedAt = null;
-		}
-
 		if (
 			updatedTaskData.status === "backlog" &&
 			updatedTaskData.sprintId !== -1
@@ -278,7 +271,6 @@ async function createTaskUpdateNotification(
 			const value = taskData[key as keyof typeof taskData];
 			const excludedKeys = [
 				"lastEditedAt",
-				"completedAt",
 				"insertedDate",
 				"boardOrder",
 				"backlogOrder",
