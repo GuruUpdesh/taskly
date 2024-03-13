@@ -1,29 +1,57 @@
-# Create T3 App
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+# Taskly
+Taskly is an opinionated agile project managment website that provides a simplified and user focused project managment experience.
+<div align="center">
 
-## What's next? How do I make an app with this?
+[![Open - TasklyPM.com](https://img.shields.io/badge/Open-TasklyPM.com-09d897?style=for-the-badge)](https://www.tasklypm.com/)
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+</div>
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Features
+![Screenshot 2024-03-13 121651](https://github.com/GuruUpdesh/taskly/assets/62634868/50042f27-d237-4988-9249-4a930d36bd9b)
+1. **AI Features**: Enhance your workflow with cutting-edge AI. Our machine learning algorithms adapt to your project needs, streamlining tasks and boosting productivity.
+2. **Fast & Realtime**: Speed up your work with our seamless user experience. Gain a competitive edge with instant a task management system thats easy for everyone.
+3. **Simple**: Intuitive for all skill levels. Navigate your projects with an interface designed for simplicity, backed by powerful technology.
+4. **Stay Notified**: Taskly provides seamless notification integration and a UI which helps you catch up quickly.
+5. **Documentation** (Coming Soon): Get started quickly with comprehensive guides. Our detailed documentation provides all you need to harness the power of simplified project management.
+![Screenshot 2024-03-13 131326](https://github.com/GuruUpdesh/track-it/assets/62634868/d474efba-e258-47c5-96ad-195b4a9f5046)
 
--   [Next.js](https://nextjs.org)
--   [NextAuth.js](https://next-auth.js.org)
--   [Prisma](https://prisma.io)
--   [Tailwind CSS](https://tailwindcss.com)
--   [tRPC](https://trpc.io)
+## Installation
 
-## Learn More
+**Prerequisites**
+```bash
+  Install node (at least version 18.17)
+  Create an account on TasklyPM.com
+```
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+**.env**
 
--   [Documentation](https://create.t3.gg/)
--   [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials!
+The environment is needed for the project to function properly in local development. If you are recreating the environment with your own keys please see the `.env.example` file.
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+**Install**
+```bash
+  Git pull https://github.com/GuruUpdesh/taskly.git
+  cd taskly
+  npm install
+```
+## Usage
+**Development**
+```bash
+  npm run dev
+```
+**Demo**
+```bash
+  npm run build
+  npm start
+```
 
-## How do I deploy this?
+## The Vision
+It's a perfect solution for small teams or startups that need a tool which enables success, but doesn't require a large learning curve. With a focused featureset and simplified options Taskly's "opinionated" approach, emphasizing the belief that a tool's effectiveness is enhanced when it's straightforward and devoid of unnecessary complexities. This philosophy underpins our design choices, ensuring that users encounter minimal friction while maximizing their efficiency.
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Agile project management tools often suffer from high complexity and difficult learning curves, causing inefficiency, onboarding challenges, and wasted investment. Project planning is critical to a successful business, as poor planning and undefined goals contribute to a significant number of project failures.
 
+## Contributors
+
+- [Guru Updesh Singh](https://github.com/GuruUpdesh)
+- [Cameron Hollis](https://github.com/cameronhollis4)
+- [Yash Sankanagouda](https://github.com/sankanay)
