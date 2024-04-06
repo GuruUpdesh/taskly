@@ -11,14 +11,17 @@ import { type TaskFormType as CreateTaskData } from "~/components/backlog/create
 import { type StatefulTask, CreateTaskSchema } from "~/config/TaskConfigType";
 import { db } from "~/server/db";
 import {
+	comments,
 	insertTaskHistorySchema,
 	notifications,
 	taskHistory,
 	tasks,
+	tasksToViews,
 	users,
 } from "~/server/db/schema";
 import { type Task } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
+import { taskNameToBranchName } from "~/utils/task-name-branch-converters";
 
 import {
 	deleteViewsForTask,
@@ -45,6 +48,8 @@ export async function createTask(data: CreateTaskData) {
 			newTask.backlogOrder = 0;
 			newTask.boardOrder = 0;
 		}
+
+		newTask.branchName = taskNameToBranchName(newTask.title);
 
 		const task = await db.insert(tasks).values(newTask);
 
@@ -119,6 +124,26 @@ export async function getTasksFromProject(projectId: number) {
 	}
 }
 
+export async function getAllActiveTasksForProject(projectId: number) {
+	try {
+		const allTasks: Task[] = await db
+			.select()
+			.from(tasks)
+			.where(
+				and(
+					eq(tasks.projectId, projectId),
+					ne(tasks.status, "todo"),
+					ne(tasks.status, "inprogress"),
+					ne(tasks.status, "done"),
+				),
+			);
+
+		return allTasks;
+	} catch (error) {
+		if (error instanceof Error) throwServerError(error.message);
+	}
+}
+
 export async function deleteTask(id: number) {
 	try {
 		// get all the tasks from the project that who's order is greater than the task being deleted
@@ -150,6 +175,9 @@ export async function deleteTask(id: number) {
 						ne(tasks.id, id),
 					),
 				);
+			await tx.delete(comments).where(eq(comments.taskId, id));
+			await tx.delete(taskHistory).where(eq(taskHistory.taskId, id));
+			await tx.delete(tasksToViews).where(eq(tasksToViews.taskId, id));
 		});
 
 		await db.delete(tasks).where(eq(tasks.id, id));
@@ -179,6 +207,18 @@ export async function updateTask(
 			...updatedTaskData,
 			lastEditedAt: new Date(),
 		};
+
+		if (
+			updatedTaskData.status === "backlog" &&
+			updatedTaskData.sprintId !== -1
+		) {
+			updatedTaskData.sprintId = -1;
+		} else if (
+			updatedTaskData.sprintId !== -1 &&
+			updatedTaskData.status === "backlog"
+		) {
+			updatedTaskData.status = "todo";
+		}
 
 		if (!taskData) return;
 		const existingTask = await db.query.tasks.findFirst({

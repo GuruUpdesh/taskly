@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
 
 import KBar from "~/components/general/kbar";
@@ -42,10 +43,13 @@ export default function RootLayout({
 							)}
 						>
 							<ReactQueryProvider>
-								<main>{children}</main>
+								<main className="relative flex min-h-screen flex-col">
+									{children}
+								</main>
 							</ReactQueryProvider>
 							<Toaster richColors />
 						</body>
+						<Analytics />
 					</html>
 				</GlobalToastHandler>
 			</KBarProvider>

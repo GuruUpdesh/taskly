@@ -19,6 +19,7 @@ import { type TaskProperty, getPropertyConfig } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
 import { type Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
+import { usePointStore } from "~/store/point";
 
 import Property from "./property/property";
 import TaskDropDownMenu from "./task-dropdown-menu";
@@ -88,6 +89,7 @@ interface Props extends VariantPropsType {
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 	projectId: string;
+	listId?: string;
 }
 
 const Task = ({
@@ -96,10 +98,21 @@ const Task = ({
 	deleteTaskMutation,
 	projectId,
 	variant = "backlog",
+	listId,
 }: Props) => {
 	const [assignees, sprints] = useAppStore(
 		useShallow((state) => [state.assignees, state.sprints]),
 	);
+
+	const addPoints = usePointStore((state) => state.addPoints);
+
+	useEffect(() => {
+		if (!listId) return;
+		addPoints(listId, parseInt(task.points));
+		return () => {
+			addPoints(listId, -parseInt(task.points));
+		};
+	}, [listId, task.points]);
 
 	const defaultValues = useMemo(() => {
 		return {

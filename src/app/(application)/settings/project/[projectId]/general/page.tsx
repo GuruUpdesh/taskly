@@ -10,6 +10,7 @@ import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { authenticate } from "~/actions/security/authenticate";
 import Permission from "~/components/auth/Permission";
 import ProjectDangerZone from "~/components/page/settings/project-danger-zone";
+import ProjectGithub from "~/components/page/settings/project-github";
 import ProjectInfo from "~/components/page/settings/project-info";
 import ProjectInvite from "~/components/page/settings/project-invite";
 import ProjectSprints from "~/components/page/settings/project-sprints";
@@ -52,12 +53,13 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 			/>
 		),
 		sprints: <ProjectSprints sprints={sprints ?? []} project={project} />,
+		github: <ProjectGithub project={project} />,
 		"danger-zone": <ProjectDangerZone project={project} />,
 	} as const;
 
 	return (
 		<div
-			className="flex max-h-screen flex-col gap-8 overflow-hidden overflow-y-scroll p-6"
+			className="flex flex-col gap-8 p-6"
 			style={{
 				scrollBehavior: "smooth",
 			}}
@@ -86,7 +88,6 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 					</Permission>
 				);
 			})}
-			<div className="min-h-[1000px]" />
 		</div>
 	);
 }

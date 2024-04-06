@@ -31,6 +31,8 @@ interface AppState {
 	setGroupByBoard: (groupBy: TaskProperty) => void;
 	hoveredTaskId: number | null;
 	setHoveredTaskId: (id: number | null) => void;
+	hoveredNotificationId: number | null;
+	setHoveredNotificationId: (id: number | null) => void;
 }
 
 const useAppStore = create<AppState>()(
@@ -69,6 +71,10 @@ const useAppStore = create<AppState>()(
 			setGroupByBoard: (groupBy) => set({ groupByBoard: groupBy }),
 			hoveredTaskId: null,
 			setHoveredTaskId: (id: number | null) => set({ hoveredTaskId: id }),
+
+			hoveredNotificationId: null,
+			setHoveredNotificationId: (id) =>
+				set({ hoveredNotificationId: id }),
 		}),
 		{
 			name: "settings-navigation-storage",

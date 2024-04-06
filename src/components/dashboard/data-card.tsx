@@ -7,8 +7,10 @@ import {
 	Line,
 	ResponsiveContainer,
 	AreaChart,
-	Tooltip,
 	Area,
+	XAxis,
+	YAxis,
+	Legend,
 } from "recharts";
 
 import {
@@ -19,27 +21,35 @@ import {
 	CardTitle,
 } from "~/components/ui/card";
 
-import GraphTooltip from "./graph-tooltip";
-
-const DataCardLineGraph: React.FC = () => {
-	const data = [
-		{ name: "Page A", uv: 400, pv: 2400, amt: 2400 },
-		{ name: "Page B", uv: 800, pv: 2300, amt: 2100 },
-		{ name: "Page C", uv: 600, pv: 2200, amt: 2000 },
-		{ name: "Page D", uv: 700, pv: 2100, amt: 1900 },
-		{ name: "Page E", uv: 500, pv: 2000, amt: 1800 },
-		{ name: "Page F", uv: 900, pv: 1900, amt: 1700 },
-		{ name: "Page G", uv: 300, pv: 1800, amt: 1600 },
-	];
+const DataCardLineGraph: React.FC<{
+	data: { name: string; tasks: number; target: number; amt: number }[];
+	title: string;
+}> = (data) => {
 	return (
-		<Card className="col-span-2">
+		<Card className="col-span-4">
 			<CardHeader className="pb-2">
-				<CardDescription>Card Description</CardDescription>
+				<CardDescription>{data.title}</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<ResponsiveContainer width="100%" height={200}>
-					<LineChart data={data}>
-						<Line type="monotone" dataKey="uv" stroke="#8884d8" />
+					<LineChart data={data.data}>
+						<XAxis dataKey="name" />
+						<YAxis />
+						<Legend />
+						<Line
+							type="monotone"
+							dataKey="tasks"
+							name="Tasks Completed"
+							stroke="#8884d8"
+							dot={false}
+						/>
+						<Line
+							type="monotone"
+							dataKey="target"
+							name="Sprint Target"
+							stroke="#992200"
+							dot={false}
+						/>
 					</LineChart>
 				</ResponsiveContainer>
 			</CardContent>
@@ -47,27 +57,26 @@ const DataCardLineGraph: React.FC = () => {
 	);
 };
 
-const DataCardAreaGraph: React.FC = () => {
-	const data = [
-		{ name: "Page A", uv: 400, pv: 2400, amt: 2400 },
-		{ name: "Page B", uv: 800, pv: 2300, amt: 2100 },
-		{ name: "Page C", uv: 600, pv: 2200, amt: 2000 },
-		{ name: "Page D", uv: 700, pv: 2100, amt: 1900 },
-		{ name: "Page E", uv: 500, pv: 2000, amt: 1800 },
-		{ name: "Page F", uv: 900, pv: 1900, amt: 1700 },
-		{ name: "Page G", uv: 300, pv: 1800, amt: 1600 },
-	];
+const DataCardAreaGraph: React.FC<{
+	title: string;
+	data: {
+		name: string;
+		uv: number;
+		pv: number;
+		amt: number;
+	}[];
+}> = (props) => {
 	return (
 		<Card className="col-span-2">
 			<CardHeader className="pb-2">
-				<CardDescription>Card Description</CardDescription>
+				<CardDescription>{props.title}</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<ResponsiveContainer width="100%" height={200}>
 					<AreaChart
 						width={500}
 						height={400}
-						data={data}
+						data={props.data}
 						margin={{
 							top: 10,
 							right: 30,
@@ -95,11 +104,8 @@ const DataCardAreaGraph: React.FC = () => {
 								/>
 							</linearGradient>
 						</defs>
-						<Tooltip
-							content={<GraphTooltip />}
-							position={{ y: 0 }}
-							animationDuration={0}
-						/>
+						<XAxis dataKey="name" />
+						<YAxis />
 						<Area
 							type="monotone"
 							dataKey="uv"
@@ -113,15 +119,19 @@ const DataCardAreaGraph: React.FC = () => {
 	);
 };
 
-const DataCardFigure: React.FC = () => {
+const DataCardFigure: React.FC<{
+	cardTitle: string;
+	cardDescriptionUp: string;
+	cardDescriptionDown: string;
+}> = ({ cardTitle, cardDescriptionUp, cardDescriptionDown }) => {
 	return (
 		<Card>
 			<CardHeader className="pb-2">
-				<CardDescription>Total Tasks</CardDescription>
+				<CardDescription>{cardDescriptionUp}</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<CardTitle>12</CardTitle>
-				<CardDescription>+20.1% from last month</CardDescription>
+				<CardTitle>{cardTitle}</CardTitle>
+				<CardDescription>{cardDescriptionDown}</CardDescription>
 			</CardContent>
 		</Card>
 	);

@@ -57,6 +57,7 @@ export const tasks = pgTable("tasks", {
 	assignee: varchar("assignee", { length: 255 }),
 	projectId: integer("project_id").notNull(),
 	sprintId: integer("sprint_id").default(-1).notNull(),
+	branchName: varchar("branch_name", { length: 255 }),
 });
 
 // validators
@@ -112,6 +113,7 @@ export const projects = pgTable("projects", {
 	image: varchar("image", { length: 1000 }),
 	color: varchar("color", { length: 7 }).default("#000000").notNull(),
 	isAiEnabled: boolean("is_ai_enabled").default(false).notNull(),
+	githubIntegrationId: integer("github_integration_id"),
 });
 
 // validators
@@ -128,6 +130,33 @@ export const projectsRelations = relations(projects, ({ many }) => ({
 	usersToProjects: many(usersToProjects),
 	sprints: many(sprints),
 }));
+
+/**
+ * Project to Integration Schema
+ */
+export const IntegrationEnum = pgEnum("integration", ["github"]);
+export const projectToIntegrations = pgTable("project_to_integrations", {
+	id: serial("id").primaryKey(),
+	projectId: integer("project_id").notNull(),
+	integrationId: IntegrationEnum("type").default("github").notNull(),
+	userId: varchar("user_id", { length: 32 }).notNull(),
+});
+
+// validators
+export const projectToIntegrationsSchema = createSelectSchema(
+	projectToIntegrations,
+);
+
+// relations
+export const projectToIntegrationsRelations = relations(
+	projectToIntegrations,
+	({ one }) => ({
+		user: one(users, {
+			fields: [projectToIntegrations.userId],
+			references: [users.userId],
+		}),
+	}),
+);
 
 /**
  * User Schema
@@ -153,6 +182,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 	views: many(tasksToViews),
 	taskHistory: many(taskHistory),
 	comments: many(comments),
+	pendingIntegrations: many(projectToIntegrations),
 }));
 
 /**

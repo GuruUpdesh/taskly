@@ -20,7 +20,7 @@ const InboxPanel = ({
 	defaultLayout = [20, 80],
 }: Props) => {
 	const onLayout = (sizes: number[]) => {
-		document.cookie = `react-resizable-panels:task-layout=${JSON.stringify(sizes)}`;
+		document.cookie = `react-resizable-panels:inbox-layout=${JSON.stringify(sizes)}`;
 	};
 	return (
 		<ResizablePanelGroup

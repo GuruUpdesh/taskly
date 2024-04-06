@@ -5,6 +5,7 @@ import {
 	CheckCircledIcon,
 	Component1Icon,
 	EyeOpenIcon,
+	GitHubLogoIcon,
 	PersonIcon,
 	PieChartIcon,
 	RadiobuttonIcon,
@@ -28,12 +29,12 @@ import {
 	Text,
 } from "lucide-react";
 import {
-	TbHexagon1Filled,
-	TbHexagon2Filled,
-	TbHexagon3Filled,
-	TbHexagon4Filled,
-	TbHexagon5Filled,
-	TbHexagonFilled,
+	TbHexagonNumber1,
+	TbHexagonNumber2,
+	TbHexagonNumber3,
+	TbHexagonNumber4,
+	TbHexagonNumber5,
+	TbHexagon,
 } from "react-icons/tb";
 import { z } from "zod";
 
@@ -55,6 +56,7 @@ type StaticProperty = Extract<
 	| "projectId"
 	| "boardOrder"
 	| "backlogOrder"
+	| "branchName"
 >;
 type EnumProperty = Extract<
 	TaskProperty,
@@ -78,6 +80,7 @@ export const taskProperties: TaskProperty[] = [
 	"projectId",
 	"boardOrder",
 	"backlogOrder",
+	"branchName",
 ] as const;
 
 export const taskVariants = cva([], {
@@ -366,43 +369,43 @@ export const taskConfig: TaskConfig = {
 	points: {
 		key: "points",
 		displayName: "Points",
-		icon: <TbHexagonFilled className="h-4 w-4" />,
+		icon: <TbHexagon className="h-4 w-4" />,
 		type: "enum",
 		options: [
 			{
 				key: "0",
 				displayName: "No Estimate",
-				icon: <TbHexagonFilled className="h-4 w-4" />,
+				icon: <TbHexagon className="h-4 w-4" />,
 				color: "null",
 			},
 			{
 				key: "1",
 				displayName: "1 Point",
-				icon: <TbHexagon1Filled className="h-4 w-4" />,
+				icon: <TbHexagonNumber1 className="h-4 w-4" />,
 				color: "null",
 			},
 			{
 				key: "2",
 				displayName: "2 Points",
-				icon: <TbHexagon2Filled className="h-4 w-4" />,
+				icon: <TbHexagonNumber2 className="h-4 w-4" />,
 				color: "null",
 			},
 			{
 				key: "3",
 				displayName: "3 Points",
-				icon: <TbHexagon3Filled className="h-4 w-4" />,
+				icon: <TbHexagonNumber3 className="h-4 w-4" />,
 				color: "null",
 			},
 			{
 				key: "4",
 				displayName: "4 Points",
-				icon: <TbHexagon4Filled className="h-4 w-4" />,
+				icon: <TbHexagonNumber4 className="h-4 w-4" />,
 				color: "null",
 			},
 			{
 				key: "5",
 				displayName: "5 Points",
-				icon: <TbHexagon5Filled className="h-4 w-4" />,
+				icon: <TbHexagonNumber5 className="h-4 w-4" />,
 				color: "null",
 			},
 		],
@@ -547,6 +550,12 @@ export const taskConfig: TaskConfig = {
 		icon: <Dot className="h-4 w-4" />,
 		type: "static",
 	},
+	branchName: {
+		key: "branchName",
+		displayName: "Branch Name",
+		icon: <GitHubLogoIcon className="h-4 w-4" />,
+		type: "static",
+	},
 };
 
 function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
@@ -647,6 +656,7 @@ export const schemaValidators = {
 	backlogOrder: z.number().min(0),
 	lastEditedAt: selectTaskSchema.shape.lastEditedAt,
 	insertedDate: selectTaskSchema.shape.insertedDate,
+	branchName: z.string().nullable(),
 };
 
 export function buildValidator(keys: TaskProperty[]) {
@@ -699,4 +709,5 @@ export const CreateTaskSchema = z.object({
 	sprintId: schemaValidators.sprintId.transform((val) => parseInt(val)),
 	backlogOrder: schemaValidators.backlogOrder,
 	boardOrder: schemaValidators.boardOrder,
+	branchName: schemaValidators.branchName,
 });

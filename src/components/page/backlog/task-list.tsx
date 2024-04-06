@@ -94,7 +94,6 @@ const TaskList = ({
 									return null;
 								}
 							}
-
 							return task ? (
 								<Draggable
 									draggableId={String(task.id)}
@@ -167,6 +166,7 @@ const TaskList = ({
 													}
 													projectId={projectId}
 													variant={variant}
+													listId={listId}
 												/>
 											</div>
 										</motion.div>

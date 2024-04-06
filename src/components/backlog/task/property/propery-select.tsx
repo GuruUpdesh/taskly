@@ -25,6 +25,7 @@ type DataCellProps = {
 	size?: "default" | "icon";
 	autoSubmit?: boolean;
 	className?: string;
+	autoFocus?: boolean;
 };
 
 function PropertySelect({
@@ -34,6 +35,7 @@ function PropertySelect({
 	size = "default",
 	autoSubmit = true,
 	className = "",
+	autoFocus = false,
 }: DataCellProps) {
 	// Ensures any value is returned as a string
 	const stringifyValue = (value: string | number | null): string => {
@@ -109,7 +111,11 @@ function PropertySelect({
 								)}
 							</SelectTrigger>
 							<SelectContent
-								onCloseAutoFocus={(e) => e.preventDefault()}
+								onCloseAutoFocus={(e) => {
+									if (!autoFocus) {
+										e.preventDefault();
+									}
+								}}
 							>
 								{config.options.map((option) => (
 									<SelectItem

@@ -4,6 +4,8 @@ import React from "react";
 
 import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ChevronRight, Link as LinkIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -72,6 +74,17 @@ const TaskPage = ({
 		toast.success("Task deleted");
 	}
 
+	const handleCopyLinkToClipboard = async () => {
+		const protocol = window.location.protocol;
+		await navigator.clipboard.writeText(
+			protocol +
+				"//" +
+				window.location.host +
+				`/project/${projectId}/task/${taskId}`,
+		);
+		toast.info("Copied to clipboard!");
+	};
+
 	if (!result.data) {
 		return <div>Loading...</div>;
 	}
@@ -101,9 +114,38 @@ const TaskPage = ({
 					<div className="flex max-h-screen flex-col overflow-y-scroll">
 						<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b bg-background/75 px-4 py-2 pb-2 pt-2 backdrop-blur-xl">
 							<div className="flex items-center gap-2">
-								<ToggleSidebarButton />
-								{context === "page" && <BackButtonRelative />}
+								{context === "page" && (
+									<>
+										<ToggleSidebarButton />
+										<BackButtonRelative />
+									</>
+								)}
 								<BreadCrumbs />
+							</div>
+							<div className="flex items-center gap-2">
+								<Button
+									onClick={handleCopyLinkToClipboard}
+									size="sm"
+									variant="outline"
+									className="gap-2"
+								>
+									Copy Link
+									<LinkIcon className="h-4 w-4" />
+								</Button>
+								{context === "inbox" && (
+									<Link
+										href={`/project/${projectId}/task/${taskId}`}
+									>
+										<Button
+											size="sm"
+											variant="outline"
+											className="gap-2"
+										>
+											Open
+											<ChevronRight className="h-4 w-4" />
+										</Button>
+									</Link>
+								)}
 							</div>
 						</header>
 						<PrimaryTaskForm
@@ -129,6 +171,17 @@ const TaskPage = ({
 									size="icon"
 									variant="outline"
 									className="flex-1"
+									onClick={async () => {
+										if (!result?.data?.task?.branchName) {
+											return;
+										}
+										await navigator.clipboard.writeText(
+											result.data.task.branchName,
+										);
+										toast.info(
+											`Copied Branch Name: ${result.data.task.branchName}`,
+										);
+									}}
 								>
 									<GitHubLogoIcon />
 								</Button>

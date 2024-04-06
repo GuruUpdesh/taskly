@@ -8,7 +8,7 @@ export default function SignInPage() {
 			<ClerkLoading>
 				<Skeleton className="h-[459px] w-[400px] rounded-sm bg-background" />
 			</ClerkLoading>
-			<SignIn path="/sign-in" routing="path" />
+			<SignIn />
 		</div>
 	);
 }

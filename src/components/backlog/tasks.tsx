@@ -32,6 +32,8 @@ import type { Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
 import { updateOrder } from "~/utils/order";
 
+import TotalPoints from "./total-points";
+
 export type UpdateTask = {
 	id: number;
 	newTask: UpdateTaskData;
@@ -236,12 +238,16 @@ export default function Tasks({ projectId, variant = "backlog" }: Props) {
 							: currentTask,
 					) ?? [],
 			);
+			let transformedValue: string = destination.droppableId;
+			if (groupBy === "assignee" && destination.droppableId === null) {
+				transformedValue = "unassigned";
+			}
+
 			editTaskMutation.mutate({
 				id: task.id,
 				newTask: {
-					...task,
+					[groupBy]: transformedValue,
 					sprintId: String(task.sprintId),
-					[groupBy]: destination.droppableId,
 					backlogOrder: destination.index,
 				},
 			});
@@ -330,7 +336,7 @@ export default function Tasks({ projectId, variant = "backlog" }: Props) {
 							)}
 						>
 							<div
-								className={cn({
+								className={cn("w-full", {
 									"flex items-center gap-2 px-4 py-2 pb-0":
 										variant === "backlog",
 									"sticky top-0 z-50 flex items-center gap-2 bg-background/75 px-1 py-2 pt-3 backdrop-blur-lg":
@@ -339,6 +345,7 @@ export default function Tasks({ projectId, variant = "backlog" }: Props) {
 							>
 								{option.icon}
 								{option.displayName}
+								<TotalPoints listId={option.key} />
 							</div>
 							<div className="pb-2">
 								<TaskList

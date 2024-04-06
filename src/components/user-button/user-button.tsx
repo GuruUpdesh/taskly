@@ -1,8 +1,9 @@
 import React from "react";
 
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs";
 import { toast } from "sonner";
 
+import { getUser } from "~/actions/user-actions";
 import { Button } from "~/components/ui/button";
 import UserProfilePicture from "~/components/user-profile-picture";
 
@@ -12,16 +13,22 @@ const UserButton = async () => {
 	const { userId } = auth();
 
 	if (!userId) {
-		toast.error("You must be logged in to view this page");
+		toast.error(
+			"You cannot access this component without being signed in.",
+		);
 		return null;
 	}
 
-	const user = await clerkClient.users.getUser(userId);
+	const user = await getUser(userId);
+	if (!user) {
+		toast.error("Error loading user data");
+		return null;
+	}
 
 	return (
 		<UserMenu>
 			<Button variant="ghost" size="icon" className="min-w-[30px]">
-				<UserProfilePicture src={user?.imageUrl} size={30} />
+				<UserProfilePicture src={user.profilePicture} size={30} />
 			</Button>
 		</UserMenu>
 	);
