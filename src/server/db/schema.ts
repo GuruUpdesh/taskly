@@ -52,8 +52,8 @@ export const tasks = pgTable("tasks", {
 	backlogOrder: integer("backlog_order").notNull().default(0),
 	lastEditedAt: timestamp("last_edit", { precision: 6, withTimezone: true }),
 	insertedDate: timestamp("insert_date", { precision: 6, withTimezone: true })
-	.defaultNow()
-	.notNull(),
+		.defaultNow()
+		.notNull(),
 	assignee: varchar("assignee", { length: 255 }),
 	projectId: integer("project_id").notNull(),
 	sprintId: integer("sprint_id").default(-1).notNull(),
@@ -199,7 +199,7 @@ export const usersToProjects = pgTable(
 		userRole: UserRolesEnum("user_role").notNull(),
 	},
 	(t) => ({
-		pk: primaryKey({ columns: [t.userId, t.projectId]}),
+		pk: primaryKey({ columns: [t.userId, t.projectId] }),
 	}),
 );
 
@@ -268,7 +268,7 @@ export const tasksToViews = pgTable(
 		}).notNull(),
 	},
 	(t) => ({
-		pk: primaryKey({columns: [t.userId, t.taskId]}),
+		pk: primaryKey({ columns: [t.userId, t.taskId] }),
 	}),
 );
 
