@@ -50,8 +50,17 @@ export async function createProject(
 
 		// insert project
 		const newProject: NewProject = insertProjectSchema.parse(data);
-		const result = await db.insert(projects).values(newProject);
-		const insertId = parseInt(result.insertId);
+		const result = await db.insert(projects).values(newProject).returning();
+		console.log("🚀 - Project created:", result);
+		const insertId = result[0]?.id;
+		if (!insertId) {
+			return {
+				newProjectId: -1,
+				inviteToken: null,
+				status: false,
+				message: "Error creating project",
+			};
+		}
 
 		console.log("🤖 - Project created");
 

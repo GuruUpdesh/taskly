@@ -51,9 +51,11 @@ export async function createTask(data: CreateTaskData) {
 
 		newTask.branchName = taskNameToBranchName(newTask.title);
 
-		const task = await db.insert(tasks).values(newTask);
+		const task = await db.insert(tasks).values(newTask).returning();
 
-		void createTaskCreateNotification(parseInt(task.insertId), newTask);
+		if (task[0]) {
+			void createTaskCreateNotification(task[0].id, newTask);
+		}
 
 		revalidatePath("/");
 	} catch (error) {
@@ -195,6 +197,7 @@ export async function updateTask(
 	data: UpdateTaskData,
 	waitForNotification = false,
 ) {
+	console.time("update task");
 	try {
 		const updatedTaskData = CreateTaskSchema.partial().parse(data);
 		if (Object.keys(updatedTaskData).length === 0) {
@@ -238,6 +241,7 @@ export async function updateTask(
 		}
 		if (error instanceof Error) throwServerError(error.message);
 	}
+	console.timeEnd("update task");
 }
 
 async function createTaskUpdateNotification(
