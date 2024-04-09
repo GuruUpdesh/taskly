@@ -12,11 +12,11 @@ const panelVariants = cva(
 	{
 		variants: {
 			color: {
-				indigo: "border-indigo-400/15 hover:bg-indigo-400/15",
-				red: "border-red-400/15 bg-red-800/10 hover:bg-red-400/15",
-				green: "border-green-400/15 bg-green-800/10 hover:bg-green-400/15",
-				blue: "border-blue-400/15 bg-blue-800/10 hover:bg-blue-400/15",
-				yellow: "border-yellow-400/15 bg-yellow-800/10 hover:bg-yellow-400/15",
+				indigo: "border-indigo-400/25 bg-indigo-800/5 hover:bg-indigo-400/15",
+				red: "border-red-400/25 bg-red-800/5 hover:bg-red-400/15",
+				green: "border-green-400/25 bg-green-800/5 hover:bg-green-400/15",
+				blue: "border-blue-400/25 bg-blue-800/5 hover:bg-blue-400/15",
+				yellow: "border-yellow-400/25 bg-yellow-800/5 hover:bg-yellow-400/15",
 			},
 		},
 		defaultVariants: {
@@ -53,11 +53,11 @@ interface Props extends VariantProps<typeof panelVariants> {
 const Panel = ({ title, icon, description, color, className }: Props) => {
 	return (
 		<div className={cn(panelVariants({ color: color }), className)}>
-			<div className="flex h-full w-full flex-col gap-4 rounded-md p-4">
+			<div className="flex h-full w-full flex-col rounded-md px-4 py-[12px]">
 				<h3
 					className={cn(
 						typography.headers.h2,
-						"border-none pb-0 text-2xl font-semibold lg:text-3xl",
+						"mb-2 border-none pb-0 text-2xl font-semibold lg:text-3xl",
 					)}
 				>
 					{title}
@@ -65,7 +65,7 @@ const Panel = ({ title, icon, description, color, className }: Props) => {
 				<p
 					className={cn(
 						typography.paragraph.p_muted,
-						"!m-0 text-foreground",
+						"mb-8 text-foreground opacity-80",
 					)}
 				>
 					{description}

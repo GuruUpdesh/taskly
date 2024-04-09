@@ -27,24 +27,24 @@ export default function HomePage() {
 				<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent to-background" />
 			</div>
 			<div className="flex-1">
-				<section className="z-10 mt-4 flex flex-col items-center justify-center px-4 md:px-12 lg:px-16">
-					<div className="mb-4 mt-4 flex whitespace-nowrap rounded-full border px-3 py-1 text-sm backdrop-blur-lg lg:text-lg">
+				<section className="z-10 mt-16 flex flex-col items-center justify-center px-4 md:px-12 lg:px-16">
+					<div className="mb-4 flex whitespace-nowrap rounded-full border px-3 py-1 text-sm backdrop-blur-lg lg:text-lg">
 						Opinionated Project Management
 					</div>
-					<div className=" animate-fade-down">
+					<div className="mb-4">
 						<h1 className="-translate-y-1 scroll-m-20 text-center text-4xl font-semibold tracking-tight drop-shadow-md lg:text-6xl xl:text-7xl">
 							Making Your Projects Simple
 						</h1>
 						<MarketingTaskChips />
 					</div>
-					<p className="mt-6 max-w-[800px] animate-fade-down text-center text-sm leading-7 opacity-0 lg:text-xl">
+					<p className="mb-8 max-w-[800px] text-center text-sm leading-7 opacity-90 lg:text-xl">
 						Streamline your work, perfect for small teams and
 						startups. Simplify success and confidently finish your
 						projects.
 					</p>
 					<ButtonOptions />
 				</section>
-				<section className="flex flex-col items-center justify-center p-4 md:p-12 lg:p-16">
+				{/* <section className="flex flex-col items-center justify-center p-4 md:p-12 lg:p-16">
 					<div className="relative w-full max-w-[1400px] rounded-lg">
 						<div className="absolute left-0 top-0 h-full w-full backdrop-blur-xl" />
 						<div className="animated-border relative aspect-[503/246] w-full overflow-hidden rounded-lg border mix-blend-lighten">
@@ -58,8 +58,8 @@ export default function HomePage() {
 							/>
 						</div>
 					</div>
-				</section>
-				<section className="z-10 mb-16 flex flex-col items-center justify-center px-4 pb-0 md:px-12 lg:px-16">
+				</section> */}
+				<section className="z-10 mb-16 mt-16 flex flex-col items-center justify-center px-4 pb-0 md:px-12 lg:px-16">
 					<div className="grid max-w-[1400px] gap-4 px-2 pb-8 md:grid-cols-2 lg:px-0 xl:grid-cols-4 xl:grid-rows-2">
 						<Panel
 							title="AI Features"
@@ -106,11 +106,8 @@ export default function HomePage() {
 						/>
 					</div>
 				</section>
-				<section className="z-10 mb-16 flex flex-col items-center justify-center px-4 pb-0 md:px-12 lg:px-16">
-					<h2 className="text-3xl font-semibold">
-						Get Started Today
-					</h2>
-					<div className="z-10 mt-4 grid min-w-[900px] grid-cols-3 gap-4">
+				{/* <section className="z-10 mb-32 flex flex-col items-center justify-center px-4 pb-0 md:px-12 lg:px-16">
+					<div className="z-10 grid min-w-[900px] grid-cols-3 gap-4">
 						<div />
 						<div className="flex flex-col gap-3">
 							<div className="rounded-lg border bg-background p-4 shadow-xl shadow-emerald-600/25">
@@ -169,11 +166,7 @@ export default function HomePage() {
 						</div>
 						<div />
 					</div>
-					<p className="text-sm">
-						Taskly is <b>FREE</b> for everyone while in{" "}
-						<b className="text-emerald-400">Alpha</b>!
-					</p>
-				</section>
+				</section> */}
 			</div>
 			<Footer />
 		</div>

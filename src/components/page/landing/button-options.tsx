@@ -22,7 +22,7 @@ const ButtonOptions = () => {
 	};
 	return (
 		<motion.div
-			className="flex items-center justify-center gap-4 py-3 md:py-4 lg:gap-12 lg:py-6"
+			className="flex items-center justify-center gap-4 lg:gap-12"
 			variants={variants}
 			initial="start"
 			animate="end"
