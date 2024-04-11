@@ -27,7 +27,7 @@ interface SidebarProps {
 
 const Sidebar = ({ projectId }: SidebarProps) => {
 	return (
-		<div className="relative h-full @container">
+		<div className="relative h-full bg-foreground/5 @container">
 			<SidebarBackgroundWrapper projectId={projectId} />
 			<div className="flex min-w-0 items-center justify-center border-b py-2 @sidebar:justify-between @sidebar:px-4 ">
 				<SidebarButton

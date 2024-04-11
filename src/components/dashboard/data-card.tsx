@@ -26,7 +26,7 @@ const DataCardLineGraph: React.FC<{
 	title: string;
 }> = (data) => {
 	return (
-		<Card className="col-span-4">
+		<Card className="col-span-4 bg-foreground/5">
 			<CardHeader className="pb-2">
 				<CardDescription>{data.title}</CardDescription>
 			</CardHeader>
@@ -67,7 +67,7 @@ const DataCardAreaGraph: React.FC<{
 	}[];
 }> = (props) => {
 	return (
-		<Card className="col-span-2">
+		<Card className="col-span-2 bg-foreground/5">
 			<CardHeader className="pb-2">
 				<CardDescription>{props.title}</CardDescription>
 			</CardHeader>
@@ -125,7 +125,7 @@ const DataCardFigure: React.FC<{
 	cardDescriptionDown: string;
 }> = ({ cardTitle, cardDescriptionUp, cardDescriptionDown }) => {
 	return (
-		<Card>
+		<Card className="bg-foreground/5">
 			<CardHeader className="pb-2">
 				<CardDescription>{cardDescriptionUp}</CardDescription>
 			</CardHeader>

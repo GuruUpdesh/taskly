@@ -31,7 +31,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 
 	return (
 		<div className="max-h-screen overflow-y-scroll">
-			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b bg-background/75 px-4 pb-2 pt-2 backdrop-blur-xl">
+			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b bg-background px-4 pb-2 pt-2 backdrop-blur-xl">
 				<div className="flex items-center gap-2">
 					<ToggleSidebarButton />
 					<BreadCrumbs />

@@ -1,15 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
-import { Bell, BookIcon, Brain, Check, LampDesk, Rabbit } from "lucide-react";
+import { ChatBubbleIcon } from "@radix-ui/react-icons";
+import {
+	Activity,
+	Bell,
+	BookIcon,
+	Brain,
+	Check,
+	LampDesk,
+	Rabbit,
+} from "lucide-react";
 import { Sora } from "next/font/google";
-import Image from "next/image";
-import Link from "next/link";
 
 import Grid from "~/components/page/landing/background-grid";
 import ButtonOptions from "~/components/page/landing/button-options";
 import Footer from "~/components/page/landing/footer";
 import MarketingTaskChips from "~/components/page/landing/marketing/marketing-task-chips";
 import Panel from "~/components/page/landing/marketing/panel";
-import { Button } from "~/components/ui/button";
+import ActivityPanel from "~/components/page/landing/marketing/panels/activity-panel";
+import AiPanel from "~/components/page/landing/marketing/panels/ai-panel";
+import CommunicationPanel from "~/components/page/landing/marketing/panels/communication-panel";
+import NotificationPanel from "~/components/page/landing/marketing/panels/notification-panel";
 import { cn } from "~/lib/utils";
 
 const sora = Sora({ subsets: ["latin"] });
@@ -28,19 +38,22 @@ export default function HomePage() {
 			</div>
 			<div className="flex-1">
 				<section className="z-10 mt-16 flex flex-col items-center justify-center px-4 md:px-12 lg:px-16">
-					<div className="mb-4 flex whitespace-nowrap rounded-full border px-3 py-1 text-sm backdrop-blur-lg lg:text-lg">
-						Opinionated Project Management
+					<div className="lg:text-md before::content-none gradient-border relative mb-4 flex overflow-hidden rounded-full px-3 py-1 text-sm backdrop-blur-lg before:pointer-events-none before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-r before:from-indigo-600/50 before:via-yellow-600/50 before:to-indigo-600/50 before:p-[1px]">
+						<span className="whitespace-nowrap">
+							Opinionated Project Management
+						</span>
 					</div>
 					<div className="mb-4">
-						<h1 className="-translate-y-1 scroll-m-20 text-center text-4xl font-semibold tracking-tight drop-shadow-md lg:text-6xl xl:text-7xl">
-							Making Your Projects Simple
+						<h1 className="-translate-y-1 scroll-m-20 text-center text-4xl font-semibold tracking-tight drop-shadow-md lg:text-5xl xl:text-6xl xl:leading-[1.15]">
+							<span className="bg-gradient-to-b from-gray-300 to-gray-50 bg-clip-text text-transparent">
+								Making Your Projects Simple
+							</span>
 						</h1>
-						<MarketingTaskChips />
+						{/* <MarketingTaskChips /> */}
 					</div>
-					<p className="mb-8 max-w-[800px] text-center text-sm leading-7 opacity-90 lg:text-xl">
-						Streamline your work, perfect for small teams and
-						startups. Simplify success and confidently finish your
-						projects.
+					<p className="mb-8 max-w-[800px] text-center text-sm leading-7 opacity-80 lg:text-xl">
+						Simplify success and finish your projects with
+						confidence.
 					</p>
 					<ButtonOptions />
 				</section>
@@ -59,8 +72,8 @@ export default function HomePage() {
 						</div>
 					</div>
 				</section> */}
-				<section className="z-10 mb-16 mt-16 flex flex-col items-center justify-center px-4 pb-0 md:px-12 lg:px-16">
-					<div className="grid max-w-[1400px] gap-4 px-2 pb-8 md:grid-cols-2 lg:px-0 xl:grid-cols-4 xl:grid-rows-2">
+				<section className="z-10 mb-32 mt-16 flex flex-col items-center justify-center px-4 pb-0 md:px-12 lg:px-16">
+					<div className="grid max-h-[667px] max-w-[1400px] gap-4 px-2 pb-8 md:grid-cols-2 lg:px-0 xl:grid-cols-4 xl:grid-rows-2">
 						<Panel
 							title="AI Features"
 							description="Enhance your workflow with cutting-edge AI. Our
@@ -69,41 +82,43 @@ export default function HomePage() {
 							productivity."
 							icon={<Brain size={24} />}
 							className="md:col-span-2 xl:col-span-1 xl:row-span-2"
-						/>
+						>
+							<AiPanel />
+						</Panel>
 						<Panel
 							title="Fast & Realtime"
-							description="Speed up your work with our seamless user
-							experience. Gain a competitive edge with instant
-							a task management system thats easy for
-							everyone."
+							description="Seamless, instant task management."
 							icon={<Rabbit size={24} />}
 							className="xl:col-span-2"
 							color="red"
 						/>
 						<Panel
-							title="Simple"
-							description="Intuitive for all skill levels. Navigate your
-						projects with an interface designed for
-						simplicity, backed by powerful technology."
-							icon={<LampDesk size={24} />}
+							title="Communication"
+							description="Intuitive, powerful interface."
+							icon={
+								<ChatBubbleIcon className="h-[24px] w-[24px]" />
+							}
 							className="xl:row-span-2"
 							color="yellow"
-						/>
+						>
+							<CommunicationPanel />
+						</Panel>
 						<Panel
 							title="Stay Notified"
 							description="Taskly provides seamless notification integration and a UI which helps you catch up quickly."
-							icon={<Bell size={24} />}
+							icon={<Bell size={18} />}
 							color="green"
-						/>
+						>
+							<NotificationPanel />
+						</Panel>
 						<Panel
-							title="Documentation"
-							description="Get started quickly with comprehensive guides.
-						Our detailed documentation provides all you need
-						to harness the power of simplified project
-						management."
-							icon={<BookIcon size={24} />}
+							title="Activity"
+							description="Comprehensive guides."
+							icon={<Activity size={24} />}
 							color="blue"
-						/>
+						>
+							<ActivityPanel />
+						</Panel>
 					</div>
 				</section>
 				{/* <section className="z-10 mb-32 flex flex-col items-center justify-center px-4 pb-0 md:px-12 lg:px-16">

@@ -17,7 +17,7 @@ const ToggleSidebarButton = () => {
 		<SimpleTooltip
 			label={(isSideBarCollapsed ? "Open" : "Closed") + " Sidebar"}
 		>
-			<Button onClick={expandSideBar} variant="outline" size="icon">
+			<Button onClick={expandSideBar} variant="ghost" size="iconSm">
 				{isSideBarCollapsed ? (
 					<PanelLeftOpen className="h-4 w-4" />
 				) : (

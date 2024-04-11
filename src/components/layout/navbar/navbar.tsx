@@ -26,23 +26,7 @@ const Navbar = ({ children }: NavbarProps) => {
 	return (
 		<NavigationMenu className="hidden justify-between md:flex">
 			<NavigationMenuList>
-				<NavigationMenuItem>
-					<NavigationMenuLink
-						className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-						href="/app"
-					>
-						Application
-					</NavigationMenuLink>
-				</NavigationMenuItem>
 				{children}
-				{/* <NavigationMenuItem>
-					<NavigationMenuLink
-						className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-						href="/"
-					>
-						Demo
-					</NavigationMenuLink>
-				</NavigationMenuItem>
 				<NavigationMenuItem>
 					<NavigationMenuLink
 						className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
@@ -51,7 +35,7 @@ const Navbar = ({ children }: NavbarProps) => {
 					>
 						Documentation
 					</NavigationMenuLink>
-				</NavigationMenuItem> */}
+				</NavigationMenuItem>
 			</NavigationMenuList>
 		</NavigationMenu>
 	);
@@ -66,7 +50,7 @@ export const RecentTaskMenuItem = ({ children }: NavbarProps) => {
 
 	return (
 		<NavigationMenuItem>
-			<NavigationMenuTrigger className="bg-transparent text-base">
+			<NavigationMenuTrigger className="bg-transparent text-base font-normal">
 				Recent Tasks
 			</NavigationMenuTrigger>
 			<NavigationMenuContent className="flex gap-4 p-2">
@@ -99,7 +83,7 @@ type ProjectsMenuItemProps = {
 export const ProjectsMenuItem = ({ projects }: ProjectsMenuItemProps) => {
 	return (
 		<NavigationMenuItem>
-			<NavigationMenuTrigger className="bg-transparent text-base">
+			<NavigationMenuTrigger className="bg-transparent text-base font-normal">
 				Projects
 			</NavigationMenuTrigger>
 			<NavigationMenuContent className="min-w-[300px] p-2">

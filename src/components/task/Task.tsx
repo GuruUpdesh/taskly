@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import { createComment } from "~/actions/application/comment-actions";
 import {
 	deleteTask,
 	getTask,
@@ -161,16 +162,15 @@ const TaskPage = ({
 					minSize={20}
 					order={1}
 				>
-					<div className="flex h-screen max-h-screen flex-col bg-[#081020]">
-						<header className="flex items-center justify-between gap-2 border-b px-6 py-2 pb-2 pt-2">
-							<div className="flex w-full items-center justify-between gap-2">
-								<Button size="icon" variant="outline">
+					<div className="flex h-screen max-h-screen flex-col bg-foreground/5">
+						<header className="flex items-center justify-between gap-2 border-b px-4 py-2 pb-2 pt-2">
+							<div className="flex w-full items-center gap-2">
+								<Button size="icon" variant="ghost">
 									<BellIcon />
 								</Button>
 								<Button
 									size="icon"
-									variant="outline"
-									className="flex-1"
+									variant="ghost"
 									onClick={async () => {
 										if (!result?.data?.task?.branchName) {
 											return;
@@ -186,14 +186,14 @@ const TaskPage = ({
 									<GitHubLogoIcon />
 								</Button>
 								<Button
-									variant="outline"
+									variant="destructive"
 									onClick={handleDelete}
 								>
 									<TrashIcon />
 								</Button>
 							</div>
 						</header>
-						<section className="flex flex-col gap-2 px-6 pt-8">
+						<section className="flex flex-col gap-2 px-4 pt-8">
 							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 								Attributes
 							</h3>
@@ -207,15 +207,18 @@ const TaskPage = ({
 						</section>
 						<Separator className="my-4" />
 						<div className="relative z-10">
-							<h3 className="scroll-m-20 px-6 pb-2 text-xl font-semibold tracking-tight">
+							<h3 className="scroll-m-20 px-4 pb-2 text-xl font-semibold tracking-tight">
 								Comments
 							</h3>
-							<div className="pointer-events-none absolute left-0 top-0 -z-10 h-[135%] w-full bg-gradient-to-t from-transparent to-[#081020] to-25%" />
+							<div className="pointer-events-none absolute left-0 top-0 -z-10 h-[135%] w-full bg-gradient-to-t from-transparent to-[#181818] to-25%" />
 						</div>
-						<Comments
-							taskComments={result.data.task.comments}
-							taskId={result.data.task.id}
-						/>
+						<section className="comments-container mb-3 flex max-w-full flex-grow flex-col gap-4 overflow-scroll px-4 pb-1 pt-4">
+							<Comments
+								taskComments={result.data.task.comments}
+								taskId={result.data.task.id}
+								createComment={createComment}
+							/>
+						</section>
 					</div>
 				</ResizablePanel>
 			</ResizablePanelGroup>

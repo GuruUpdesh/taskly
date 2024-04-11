@@ -108,12 +108,20 @@ const ProjectState = ({ projectId, userId }: Props) => {
 
 	useEffect(() => {
 		if (assigneeSprintResult.data?.assignees) {
+			console.log(
+				"assigneeSprintResult.data?.assignees",
+				assigneeSprintResult.data?.assignees,
+			);
 			updateAssignees(assigneeSprintResult.data.assignees);
 		}
 	}, [assigneeSprintResult.data?.assignees]);
 
 	useEffect(() => {
 		if (assigneeSprintResult.data?.sprints) {
+			console.log(
+				"assigneeSprintResult.data?.sprints",
+				assigneeSprintResult.data?.sprints,
+			);
 			updateSprints(assigneeSprintResult.data?.sprints);
 		}
 	}, [assigneeSprintResult.data?.sprints]);

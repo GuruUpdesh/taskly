@@ -270,7 +270,7 @@ export const taskVariants = cva([], {
 
 export type VariantPropsType = VariantProps<typeof taskVariants>;
 
-type Color = Exclude<VariantPropsType["color"], null | undefined>;
+export type Color = Exclude<VariantPropsType["color"], null | undefined>;
 
 export type Option<T> = {
 	key: T;

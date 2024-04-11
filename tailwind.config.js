@@ -59,6 +59,9 @@ module.exports = {
 					sans: ["var(--font-sans)", ...fontFamily.sans],
 				},
 			},
+			ease: {
+				slow: "cubic-bezier(0.6, 0.6, 0, 1)"
+			},
 			brightness: {
 				75: "0.75",
 				80: "0.8",

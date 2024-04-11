@@ -5,7 +5,6 @@ import { ChevronRight, Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { createComment } from "~/actions/application/comment-actions";
 import { useAppStore } from "~/store/app";
 
 import TextAreaWithMentions from "./TextAreaWithMentions";
@@ -14,13 +13,14 @@ import { Form, FormControl, FormField, FormItem } from "../../ui/form";
 
 type Props = {
 	taskId: number;
+	createComment: (comment: string, taskId: number) => Promise<void>;
 };
 
 const formSchema = z.object({
 	comment: z.string().min(1).max(3000),
 });
 
-const CommentForm = ({ taskId }: Props) => {
+const CommentForm = ({ taskId, createComment }: Props) => {
 	const assignees = useAppStore((state) => state.assignees);
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -41,7 +41,7 @@ const CommentForm = ({ taskId }: Props) => {
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="sticky bottom-0 w-full"
 			>
-				<div className="pointer-events-none absolute -bottom-1 left-0 -z-10 h-[135%] w-full bg-gradient-to-b from-transparent to-[#081020] to-25%" />
+				<div className="pointer-events-none absolute -bottom-1 left-0 -z-10 h-[135%] w-full bg-gradient-to-b from-transparent to-[#181818] to-25%" />
 				<FormField
 					control={form.control}
 					name="comment"

@@ -53,10 +53,12 @@ const UserComment = ({
 				// Directly scroll to the bottom of the container
 				const scrollPosition = scrollableContainer.scrollHeight;
 
-				scrollableContainer.scrollTo({
-					top: scrollPosition,
-					behavior: "smooth",
-				});
+				setTimeout(() => {
+					scrollableContainer.scrollTo({
+						top: scrollPosition,
+						behavior: "smooth",
+					});
+				}, 600);
 			}
 		}
 	}, [isLastComment, commentRef.current]);

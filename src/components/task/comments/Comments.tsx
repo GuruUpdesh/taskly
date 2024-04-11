@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect } from "react";
 
 import { AnimatePresence } from "framer-motion";
@@ -8,9 +10,11 @@ import UserComment, { type CommentWithUser } from "./UserComment";
 type Props = {
 	taskComments: CommentWithUser[];
 	taskId: number;
+	createComment: (comment: string, taskId: number) => Promise<void>;
 };
 
-const Comments = ({ taskComments, taskId }: Props) => {
+const Comments = ({ taskComments, taskId, createComment }: Props) => {
+	console.log(taskComments);
 	const [comments, setComments] = React.useState(taskComments);
 
 	const deleteComment = (commentId: number) => {
@@ -24,7 +28,7 @@ const Comments = ({ taskComments, taskId }: Props) => {
 	}, [taskComments]);
 
 	return (
-		<section className="comments-container mb-3 flex max-w-full flex-grow flex-col gap-4 overflow-scroll px-6 pb-1 pt-4">
+		<>
 			<div className="flex flex-col">
 				<AnimatePresence initial={false}>
 					{comments.map((comment, index) => {
@@ -40,8 +44,8 @@ const Comments = ({ taskComments, taskId }: Props) => {
 					})}
 				</AnimatePresence>
 			</div>
-			<CommentForm taskId={taskId} />
-		</section>
+			<CommentForm taskId={taskId} createComment={createComment} />
+		</>
 	);
 };
 

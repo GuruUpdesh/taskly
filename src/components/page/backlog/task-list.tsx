@@ -128,7 +128,7 @@ const TaskList = ({
 										>
 											<div
 												className={cn(
-													"group relative bg-background/50 backdrop-blur-xl transition-colors",
+													"group relative backdrop-blur-xl transition-colors",
 													{
 														"bg-accent-foreground/5":
 															snapshot.isDragging,
