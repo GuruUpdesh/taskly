@@ -39,7 +39,7 @@ export default function RootLayout({
 							)}
 						>
 							<ReactQueryProvider>
-								<main className="relative flex min-h-screen flex-col bg-accent/10">
+								<main className="relative flex min-h-screen flex-col bg-foreground/5">
 									{children}
 								</main>
 							</ReactQueryProvider>

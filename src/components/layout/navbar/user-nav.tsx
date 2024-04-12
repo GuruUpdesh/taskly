@@ -36,7 +36,7 @@ const UserNav = () => {
 					<Link href="/sign-up">
 						<Button
 							size="sm"
-							className="items-center gap-1 whitespace-nowrap rounded-full bg-emerald-600 font-bold text-foreground hover:bg-emerald-500"
+							className="items-center gap-1 whitespace-nowrap rounded-full bg-gradient-to-r hover:from-green-600 hover:to-green-400 hover:text-foreground"
 						>
 							Sign Up
 							<ChevronRight className="h-4 w-4" />

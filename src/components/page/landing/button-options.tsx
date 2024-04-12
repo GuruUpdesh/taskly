@@ -35,26 +35,25 @@ const ButtonOptions = () => {
 			<motion.div variants={variants} className="hidden md:block">
 				<Button
 					variant="outline"
-					className="white rounded-full bg-transparent backdrop-blur-lg"
-					disabled={true}
+					className="rounded-full bg-transparent backdrop-blur-lg"
 				>
 					Watch a Demo
 				</Button>
 			</motion.div>
 			<motion.div variants={variants} className="hidden sm:block">
-				<SimpleTooltip label="Coming Soon">
-					<Button
-						variant="outline"
-						className="rounded-full bg-transparent backdrop-blur-lg"
-					>
-						Documentation
-					</Button>
-				</SimpleTooltip>
+				<Button
+					variant="outline"
+					className="rounded-full bg-transparent backdrop-blur-lg"
+				>
+					Documentation
+				</Button>
 			</motion.div>
 			<motion.div variants={variants}>
 				<Link href="/app">
-					<Button className="gap-2 rounded-full font-bold hover:bg-green-500 hover:text-foreground">
-						Get Started <ChevronRight className="h-4 w-4" />
+					<Button className="group rounded-full bg-gradient-to-r font-bold hover:from-green-600 hover:to-green-400 hover:text-foreground">
+						<span className="flex items-center">
+							Get Started <ChevronRight className="h-4 w-4" />
+						</span>
 					</Button>
 				</Link>
 			</motion.div>

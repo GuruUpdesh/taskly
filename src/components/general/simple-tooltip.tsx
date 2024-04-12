@@ -13,18 +13,12 @@ type Props = {
 	children: React.ReactNode;
 	label: string;
 	side?: TooltipContentProps["side"];
-	open?: boolean;
 };
 
-const SimpleTooltip = ({
-	children,
-	label,
-	side = "bottom",
-	open = false,
-}: Props) => {
+const SimpleTooltip = ({ children, label, side = "bottom" }: Props) => {
 	return (
 		<TooltipProvider delayDuration={250} disableHoverableContent>
-			<Tooltip open={open}>
+			<Tooltip>
 				<TooltipTrigger asChild>{children}</TooltipTrigger>
 				<TooltipContent side={side}>{label}</TooltipContent>
 			</Tooltip>

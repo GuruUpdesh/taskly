@@ -47,6 +47,12 @@ const Footer = () => {
 							>
 								Create Project
 							</Link>
+							<Link
+								href="/settings"
+								className="p-0 py-0.5 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
+							>
+								Settings
+							</Link>
 						</div>
 						<div className="flex flex-col items-start">
 							<p className="font-semibold">Support</p>
@@ -66,12 +72,18 @@ const Footer = () => {
 							</Link>
 						</div>
 						<div className="flex flex-col items-start">
-							<p className="font-semibold">Other</p>
+							<p className="font-semibold">Authentication</p>
 							<Link
-								href="/settings"
+								href="/sign-in"
 								className="p-0 py-0.5 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
 							>
-								Settings
+								Sign In
+							</Link>
+							<Link
+								href="/sign-up"
+								className="p-0 py-0.5 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
+							>
+								Sign Up
 							</Link>
 						</div>
 					</div>

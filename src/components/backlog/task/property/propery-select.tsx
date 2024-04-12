@@ -86,9 +86,10 @@ function PropertySelect({
 							<SelectTrigger
 								className={cn(
 									"h-min",
-									size === "icon"
-										? "aspect-square max-h-[30px] w-[30px] justify-center !p-1.5"
-										: "",
+									{
+										"aspect-square max-h-[30px] w-[30px] justify-center !p-1.5":
+											size === "icon",
+									},
 									taskVariants({
 										color: option?.color,
 										hover: true,

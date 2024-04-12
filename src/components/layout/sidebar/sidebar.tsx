@@ -1,19 +1,20 @@
 import React from "react";
 
 import {
-	HomeIcon,
 	GearIcon,
 	DashboardIcon,
 	LayoutIcon,
 	TableIcon,
+	ReaderIcon,
 } from "@radix-ui/react-icons";
 import { Plus } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 import CreateTask from "~/components/backlog/create-task";
 import SimpleTooltip from "~/components/general/simple-tooltip";
 import InboxSidebarButton from "~/components/inbox/InboxSidebarButton";
 import { Button } from "~/components/ui/button";
-import { Separator } from "~/components/ui/separator";
 import UserButton from "~/components/user-button/user-button";
 
 import SelectProject from "./select project/select-project";
@@ -27,36 +28,53 @@ interface SidebarProps {
 
 const Sidebar = ({ projectId }: SidebarProps) => {
 	return (
-		<div className="relative h-full bg-foreground/5 @container">
+		<div className="relative h-full bg-background @container">
 			<SidebarBackgroundWrapper projectId={projectId} />
-			<div className="flex min-w-0 items-center justify-center border-b py-2 @sidebar:justify-between @sidebar:px-4 ">
-				<SidebarButton
-					label="Home"
-					icon={<HomeIcon />}
-					url="/"
-					hidden
-				/>
-				<UserButton />
-			</div>
-			<div className="flex h-full flex-col gap-4 px-1 py-4 @sidebar:p-4">
-				<SelectProject projectId={projectId} />
-				<SidebarSearch />
-				<Separator />
-				<div className="border-b pb-4">
+			<div className="flex h-full flex-col px-1.5 pb-2 @sidebar:px-4">
+				<div className="flex min-h-[57px] items-center justify-center @sidebar:justify-start">
+					<Link href="/">
+						<Image
+							src="/static/taskly-logo.png"
+							alt="logo"
+							height="38"
+							width="100"
+							className="hidden @sidebar:block"
+						/>
+						<Image
+							src="/favicon.ico"
+							alt="logo"
+							height="30"
+							width="30"
+							className="block @sidebar:hidden"
+						/>
+					</Link>
+				</div>
+				<div className="mb-2">
+					<SelectProject projectId={projectId} />
+				</div>
+				<div className="mb-2 flex items-center gap-2">
+					<SidebarSearch />
+					<div className="hidden @sidebar:block">
+						<CreateTask projectId={projectId}>
+							<SimpleTooltip label="Create a Task" side="right">
+								<Button
+									className="aspect-square h-[36px] w-[36px] bg-foreground/5 font-bold"
+									variant="outline"
+									size="iconSm"
+								>
+									<Plus className="m-h-4 h-4 w-4 min-w-4" />
+								</Button>
+							</SimpleTooltip>
+						</CreateTask>
+					</div>
+				</div>
+				<div>
 					<SidebarButton
 						label="Dashboard"
 						icon={<DashboardIcon className="min-w-4" />}
 						url={`/project/${projectId}`}
 					/>
 					<InboxSidebarButton projectId={projectId} />
-					{/* <SidebarButton
-						label="Docs"
-						icon={<ReaderIcon className="min-w-4" />}
-						url="https://docs.tasklypm.com"
-						openInNewTab
-					/> */}
-				</div>
-				<div className="border-b pb-4">
 					<SidebarButton
 						label="Backlog"
 						icon={<TableIcon className="min-w-4" />}
@@ -68,30 +86,29 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 						url={`/project/${projectId}/board`}
 					/>
 				</div>
-				<div>
+				<div className="flex-1" />
+				<div className="mb-2">
+					<SidebarButton
+						label="Docs"
+						icon={
+							<ReaderIcon className="min-w-4 fill-foreground" />
+						}
+						url="https://docs.tasklypm.com"
+						openInNewTab
+					/>
 					<SidebarButton
 						label="Settings"
 						icon={<GearIcon className="min-w-4" />}
 						url={`/settings/project/${projectId}/general`}
 					/>
 				</div>
-			</div>
-			<CreateTask projectId={projectId}>
-				<div className="absolute bottom-0 w-full flex-grow p-2">
-					<SimpleTooltip label="Create a Task" side="right">
-						<Button
-							className=" flex w-full justify-center gap-1 border-white/25 bg-background/50 font-bold @sidebar:justify-between"
-							variant="outline"
-							size="sm"
-						>
-							<span className="hidden @sidebar:block">
-								New Task
-							</span>
-							<Plus className="m-h-4 h-4 w-4 min-w-4" />
-						</Button>
-					</SimpleTooltip>
+				<div className="hidden @sidebar:block">
+					<UserButton size="large" />
 				</div>
-			</CreateTask>
+				<div className="block @sidebar:hidden">
+					<UserButton />
+				</div>
+			</div>
 		</div>
 	);
 };

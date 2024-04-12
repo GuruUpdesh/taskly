@@ -18,11 +18,11 @@ const SidebarSearch = () => {
 	return (
 		<>
 			<SimpleTooltip label="Search / Actions" side="right">
-				<div className="relative hidden @sidebar:block">
+				<div className="relative hidden w-full @sidebar:block">
 					<MagnifyingGlassIcon className="absolute left-2 top-[50%] h-4 w-4 translate-y-[-50%] text-muted-foreground" />
 					<Input
 						placeholder="Search"
-						className="h-9 bg-background/75 pl-8"
+						className="h-9 bg-foreground/5 pl-8"
 						onClick={query.toggle}
 					/>
 				</div>
@@ -32,7 +32,7 @@ const SidebarSearch = () => {
 					variant="outline"
 					size="icon"
 					className={cn(
-						"z-10 h-9 bg-background/75 text-muted-foreground @sidebar:hidden",
+						"z-10 h-[36px] w-[36px] bg-foreground/5 @sidebar:hidden",
 						{
 							"bg-accent":
 								visualState === VisualState.showing ||

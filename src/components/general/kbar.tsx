@@ -28,7 +28,7 @@ const animatorStyle = {
 function KBar() {
 	return (
 		<KBarPortal>
-			<KBarPositioner>
+			<KBarPositioner className="z-50">
 				<KBarAnimator
 					style={animatorStyle}
 					className="rounded-lg bg-background/75 ring-1 ring-border backdrop-blur-xl"

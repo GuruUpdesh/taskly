@@ -13,7 +13,7 @@ import typography from "~/styles/typography";
 const MobileNav = () => {
 	return (
 		<Drawer>
-			<DrawerTrigger className="block md:hidden">
+			<DrawerTrigger className="block md:invisible">
 				<Button
 					variant="ghost"
 					size="icon"

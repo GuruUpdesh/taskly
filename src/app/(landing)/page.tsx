@@ -1,15 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
-import {
-	Activity,
-	Bell,
-	BookIcon,
-	Brain,
-	Check,
-	LampDesk,
-	Rabbit,
-} from "lucide-react";
-import { Sora } from "next/font/google";
+import { Activity, Bell, Brain, Rabbit } from "lucide-react";
 
 import Grid from "~/components/page/landing/background-grid";
 import ButtonOptions from "~/components/page/landing/button-options";
@@ -20,13 +11,11 @@ import ActivityPanel from "~/components/page/landing/marketing/panels/activity-p
 import AiPanel from "~/components/page/landing/marketing/panels/ai-panel";
 import CommunicationPanel from "~/components/page/landing/marketing/panels/communication-panel";
 import NotificationPanel from "~/components/page/landing/marketing/panels/notification-panel";
-import { cn } from "~/lib/utils";
-
-const sora = Sora({ subsets: ["latin"] });
+import "~/styles/homepage.css";
 
 export default function HomePage() {
 	return (
-		<div className={cn(sora.className, "relative flex flex-1 flex-col")}>
+		<div className={"relative flex flex-1 flex-col"}>
 			<div className="fixed z-[-1] h-full w-full fade-in-5">
 				<Grid />
 				<img
@@ -72,7 +61,7 @@ export default function HomePage() {
 						</div>
 					</div>
 				</section> */}
-				<section className="z-10 mb-32 mt-16 flex flex-col items-center justify-center px-4 pb-0 md:px-12 lg:px-16">
+				<section className="mb-32 mt-16 flex flex-col items-center justify-center px-4 pb-0 md:px-12 lg:px-16">
 					<div className="grid max-h-[667px] max-w-[1400px] gap-4 px-2 pb-8 md:grid-cols-2 lg:px-0 xl:grid-cols-4 xl:grid-rows-2">
 						<Panel
 							title="AI Features"

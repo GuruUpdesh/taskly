@@ -6,7 +6,7 @@ import { subMinutes } from "date-fns";
 
 import Comments from "~/components/task/comments/Comments";
 
-const initialcomments = [
+const initialComments = [
 	{
 		id: 1,
 		comment:
@@ -62,7 +62,7 @@ const addedComment = {
 };
 
 const CommunicationPanel = () => {
-	const [comments, setComments] = React.useState(initialcomments);
+	const [comments, setComments] = React.useState(initialComments);
 	const [added, setAdded] = React.useState(false);
 
 	async function createComment(comment: string, taskId: number) {
@@ -96,10 +96,16 @@ const CommunicationPanel = () => {
 		setAdded(true);
 	}
 
+	function onLeave() {
+		setComments(initialComments);
+		setAdded(false);
+	}
+
 	return (
 		<div
-			className="comments-container flex max-w-full flex-grow flex-col gap-4 overflow-scroll mix-blend-overlay"
+			className="comments-container flex max-w-full flex-grow flex-col gap-4 overflow-hidden mix-blend-overlay"
 			onMouseEnter={onHover}
+			onMouseLeave={onLeave}
 		>
 			<Comments
 				taskComments={comments}
