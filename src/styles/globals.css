@@ -73,6 +73,16 @@
 	}
 }
 
+@layer components {
+	.menu {
+		overflow: "hidden";
+		border-radius: var(--radius);
+		background: hsl(var(--background) / 0.75);
+		padding: 0;
+		backdrop-filter: blur(24px);
+	}
+  }
+
 ::-webkit-scrollbar {
 	width: 8px;
 	height: 8px;

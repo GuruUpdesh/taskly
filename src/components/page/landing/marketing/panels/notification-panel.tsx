@@ -37,7 +37,7 @@ const NotificationPanel = () => {
 				<div
 					key={index}
 					className={cn(
-						`ease-sharp flex items-center gap-4 transition-transform duration-1000`,
+						`ease-slow flex items-center gap-4 transition-transform duration-1000`,
 						{
 							"group-hover:translate-x-[-72%]": index === 0,
 							"group-hover:translate-x-[-150%]": index === 1,

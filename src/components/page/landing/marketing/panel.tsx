@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 import { type VariantProps, cva } from "class-variance-authority";
-import { ChevronRight } from "lucide-react";
 
-import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 
@@ -14,7 +12,7 @@ const panelVariants = cva(
 	{
 		variants: {
 			color: {
-				indigo: "border-indigo-400/25 bg-indigo-800/5 hover:bg-indigo-400/10",
+				indigo: "border-indigo-400/25 bg-indigo-800/5 hover:bg-indigo-800/20",
 				red: "border-red-400/25 bg-red-800/5 hover:bg-red-400/10",
 				green: "border-green-400/25 bg-green-800/5 hover:bg-green-400/10",
 				blue: "border-blue-400/25 bg-blue-800/5 hover:bg-blue-400/10",

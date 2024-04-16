@@ -24,7 +24,7 @@ const Grid = () => {
 			return (
 				<div
 					key={index}
-					className="m-[1px] aspect-square bg-background opacity-75"
+					className="m-[1px] aspect-square bg-[#020817] opacity-75"
 				/>
 			);
 		});

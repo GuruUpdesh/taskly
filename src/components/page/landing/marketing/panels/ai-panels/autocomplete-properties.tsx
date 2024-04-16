@@ -4,7 +4,6 @@ import {
 	ArrowUpIcon,
 	CheckIcon,
 	Component1Icon,
-	CursorArrowIcon,
 	PersonIcon,
 	PieChartIcon,
 } from "@radix-ui/react-icons";

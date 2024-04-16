@@ -26,6 +26,9 @@ export default function RootLayout({
 		<ClerkProvider
 			appearance={{
 				baseTheme: dark,
+				variables: {
+					colorBackground: "#000000",
+				},
 			}}
 		>
 			<KBarProvider>
@@ -39,7 +42,7 @@ export default function RootLayout({
 							)}
 						>
 							<ReactQueryProvider>
-								<main className="relative flex min-h-screen flex-col bg-foreground/5">
+								<main className="relative flex min-h-screen flex-col">
 									{children}
 								</main>
 							</ReactQueryProvider>

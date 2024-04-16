@@ -12,6 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import CreateTask from "~/components/backlog/create-task";
+import Logo from "~/components/general/logo";
 import SimpleTooltip from "~/components/general/simple-tooltip";
 import InboxSidebarButton from "~/components/inbox/InboxSidebarButton";
 import { Button } from "~/components/ui/button";
@@ -33,13 +34,9 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 			<div className="flex h-full flex-col px-1.5 pb-2 @sidebar:px-4">
 				<div className="flex min-h-[57px] items-center justify-center @sidebar:justify-start">
 					<Link href="/">
-						<Image
-							src="/static/taskly-logo.png"
-							alt="logo"
-							height="38"
-							width="100"
-							className="hidden @sidebar:block"
-						/>
+						<div className="hidden @sidebar:block">
+							<Logo />
+						</div>
 						<Image
 							src="/favicon.ico"
 							alt="logo"

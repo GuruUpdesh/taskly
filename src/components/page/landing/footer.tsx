@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import Logo from "~/components/general/logo";
 import SimpleTooltip from "~/components/general/simple-tooltip";
 import { Separator } from "~/components/ui/separator";
 import { cn } from "~/lib/utils";
@@ -10,18 +11,15 @@ import typography from "~/styles/typography";
 
 const Footer = () => {
 	return (
-		<footer className="flex justify-center border-t bg-background py-8">
+		<footer
+			className={cn(
+				"flex justify-center border-t border-foreground/5 bg-background/5 py-8 backdrop-blur-xl",
+			)}
+		>
 			<div className="w-[1400px] max-w-[1400px] px-4">
 				<section className="grid grid-rows-2 lg:grid-cols-5 lg:gap-8">
 					<div className="col-span-2">
-						<Link href="/">
-							<Image
-								src="/static/taskly-logo.png"
-								alt="logo"
-								height="38"
-								width="100"
-							/>
-						</Link>
+						<Logo />
 						<p
 							className={cn(
 								typography.paragraph.p_muted,

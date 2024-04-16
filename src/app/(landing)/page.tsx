@@ -5,7 +5,6 @@ import { Activity, Bell, Brain, Rabbit } from "lucide-react";
 import Grid from "~/components/page/landing/background-grid";
 import ButtonOptions from "~/components/page/landing/button-options";
 import Footer from "~/components/page/landing/footer";
-import MarketingTaskChips from "~/components/page/landing/marketing/marketing-task-chips";
 import Panel from "~/components/page/landing/marketing/panel";
 import ActivityPanel from "~/components/page/landing/marketing/panels/activity-panel";
 import AiPanel from "~/components/page/landing/marketing/panels/ai-panel";
@@ -16,7 +15,7 @@ import "~/styles/homepage.css";
 export default function HomePage() {
 	return (
 		<div className={"relative flex flex-1 flex-col"}>
-			<div className="fixed z-[-1] h-full w-full fade-in-5">
+			<div className="fixed top-0 z-[-1] h-full w-full bg-[#020817] fade-in-5">
 				<Grid />
 				<img
 					className="absolute h-full w-full opacity-75"

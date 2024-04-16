@@ -7,14 +7,15 @@ import { toast } from "sonner";
 import { getUser } from "~/actions/user-actions";
 import { Button } from "~/components/ui/button";
 import UserProfilePicture from "~/components/user-profile-picture";
+import { cn } from "~/lib/utils";
 
 import UserMenu from "./user-menu";
 
 type Props = {
-	size?: "icon" | "large";
+	size?: "icon" | "large" | "default";
 };
 
-const UserButton = async ({ size = "icon" }: Props) => {
+const UserButton = async ({ size = "default" }: Props) => {
 	const { userId } = auth();
 
 	if (!userId) {
@@ -52,7 +53,13 @@ const UserButton = async ({ size = "icon" }: Props) => {
 
 	return (
 		<UserMenu>
-			<Button variant="ghost" size="icon" className="min-w-[30px]">
+			<Button
+				variant="ghost"
+				size="icon"
+				className={cn("min-w-[30px]", {
+					"rounded-full": size === "icon",
+				})}
+			>
 				<UserProfilePicture src={user.profilePicture} size={30} />
 			</Button>
 		</UserMenu>

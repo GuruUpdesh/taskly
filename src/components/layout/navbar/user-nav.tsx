@@ -15,12 +15,12 @@ const UserNav = () => {
 					<Button
 						variant="outline"
 						size="sm"
-						className="whitespace-nowrap rounded-full"
+						className="whitespace-nowrap rounded-full bg-foreground/5"
 					>
 						Application
 					</Button>
 				</Link>
-				<UserButton />
+				<UserButton size="icon" />
 			</SignedIn>
 			<SignedOut>
 				<div className="flex items-center gap-4">
@@ -28,7 +28,7 @@ const UserNav = () => {
 						<Button
 							variant="outline"
 							size="sm"
-							className="whitespace-nowrap rounded-full"
+							className="whitespace-nowrap rounded-full bg-foreground/5"
 						>
 							Sign In
 						</Button>
