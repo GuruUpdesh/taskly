@@ -31,7 +31,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 
 	return (
 		<div className="relative flex max-h-screen flex-1 flex-col overflow-y-scroll">
-			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 bg-background px-4 pb-2 pt-2 backdrop-blur-xl">
+			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b px-4 pb-2 pt-2 backdrop-blur-xl">
 				<div className="flex items-center gap-2">
 					<ToggleSidebarButton />
 					<BreadCrumbs />
@@ -46,7 +46,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					</CreateTask>
 				</div>
 			</header>
-			<section className="flex flex-1 flex-col overflow-hidden rounded-tl-lg border-l border-t bg-foreground/5">
+			<section className="flex flex-1 flex-col">
 				<Filters />
 				<HydrationBoundary state={dehydrate(queryClient)}>
 					<Tasks projectId={projectId} />

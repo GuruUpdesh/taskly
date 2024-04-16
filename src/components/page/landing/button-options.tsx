@@ -21,7 +21,7 @@ const ButtonOptions = () => {
 	};
 	return (
 		<motion.div
-			className="flex items-center justify-center gap-4 lg:gap-12"
+			className="flex items-center justify-center gap-4"
 			variants={variants}
 			initial="start"
 			animate="end"
@@ -37,14 +37,6 @@ const ButtonOptions = () => {
 					className="rounded-full bg-transparent backdrop-blur-lg"
 				>
 					Watch a Demo
-				</Button>
-			</motion.div>
-			<motion.div variants={variants} className="hidden sm:block">
-				<Button
-					variant="outline"
-					className="rounded-full bg-transparent backdrop-blur-lg"
-				>
-					Documentation
 				</Button>
 			</motion.div>
 			<motion.div variants={variants}>

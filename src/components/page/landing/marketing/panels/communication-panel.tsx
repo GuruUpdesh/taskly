@@ -5,6 +5,8 @@ import React from "react";
 import { subMinutes } from "date-fns";
 
 import Comments from "~/components/task/comments/Comments";
+import { AnimatePresence } from "framer-motion";
+import UserComment from "~/components/task/comments/UserComment";
 
 const initialComments = [
 	{
@@ -65,27 +67,6 @@ const CommunicationPanel = () => {
 	const [comments, setComments] = React.useState(initialComments);
 	const [added, setAdded] = React.useState(false);
 
-	async function createComment(comment: string, taskId: number) {
-		await new Promise((resolve) => setTimeout(resolve, 200));
-
-		const newComment = {
-			id: comments.length + 1,
-			comment,
-			taskId,
-			userId: "1",
-			insertedDate: new Date(),
-			user: {
-				userId: "1",
-				username: "Jordan Lee",
-				profilePicture: "/static/profiles/p3.png",
-			},
-		};
-
-		setComments((prevComments) => {
-			return [...prevComments, newComment];
-		});
-	}
-
 	function onHover() {
 		if (added) {
 			return;
@@ -103,15 +84,24 @@ const CommunicationPanel = () => {
 
 	return (
 		<div
-			className="comments-container flex max-w-full flex-grow flex-col gap-4 overflow-hidden mix-blend-overlay"
+			className="comments-container flex max-h-[564px] max-w-full flex-grow flex-col gap-4 overflow-hidden mix-blend-overlay"
 			onMouseEnter={onHover}
 			onMouseLeave={onLeave}
 		>
-			<Comments
-				taskComments={comments}
-				taskId={1}
-				createComment={createComment}
-			/>
+			<div className="flex flex-col">
+				<AnimatePresence initial={false}>
+					{comments.map((comment, index) => {
+						return (
+							<UserComment
+								key={comment.id}
+								comment={comment}
+								isLastComment={index === comments.length - 1}
+								taskId={1}
+							/>
+						);
+					})}
+				</AnimatePresence>
+			</div>
 		</div>
 	);
 };
