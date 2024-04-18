@@ -85,10 +85,16 @@ function PropertySelect({
 						>
 							<SelectTrigger
 								className={cn(
-									"h-min",
+									"h-min overflow-hidden",
 									{
-										"aspect-square max-h-[30px] w-[30px] justify-center !p-1.5":
+										"aspect-square max-h-[30px] w-[30px] justify-center":
 											size === "icon",
+										"!p-1.5":
+											size === "icon" &&
+											config.key !== "assignee",
+										"!p-0":
+											size === "icon" &&
+											config.key === "assignee",
 									},
 									taskVariants({
 										color: option?.color,

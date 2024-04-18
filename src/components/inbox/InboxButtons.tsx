@@ -42,13 +42,16 @@ export default function InboxButtons({ user }: Props) {
 					variant="outline"
 					onClick={() => markAllAsRead(user)}
 					size="icon"
+					className="bg-transparent"
 				>
 					<MailCheck className="h-4 w-4" />
 				</Button>
 			</SimpleTooltip>
 			<Dialog>
 				<DialogTrigger asChild>
-					<Button variant="outline">Delete All</Button>
+					<Button variant="outline" className="bg-transparent">
+						Delete All
+					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-md">
 					<DialogHeader>

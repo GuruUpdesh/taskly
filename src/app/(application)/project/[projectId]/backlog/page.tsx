@@ -1,3 +1,4 @@
+import { PlusCircledIcon } from "@radix-ui/react-icons";
 import {
 	dehydrate,
 	HydrationBoundary,
@@ -40,7 +41,12 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<ToggleFilters />
 					<AiDialog projectId={projectId} />
 					<CreateTask projectId={projectId}>
-						<Button className="gap-1 font-bold" size="sm">
+						<Button
+							className="gap-1 font-bold"
+							size="sm"
+							variant="secondary"
+						>
+							<PlusCircledIcon />
 							New Task
 						</Button>
 					</CreateTask>

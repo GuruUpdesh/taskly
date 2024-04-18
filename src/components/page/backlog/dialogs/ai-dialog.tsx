@@ -119,7 +119,11 @@ const AiDialog = ({ projectId }: Props) => {
 			>
 				<SimpleTooltip label="AI Task Creation">
 					<DialogTrigger asChild>
-						<Button variant="outline" size="sm">
+						<Button
+							variant="outline"
+							size="sm"
+							className="bg-transparent"
+						>
 							<SparklesIcon className="h-4 w-4" />
 						</Button>
 					</DialogTrigger>
@@ -140,7 +144,7 @@ const AiDialog = ({ projectId }: Props) => {
 									<FormItem>
 										<Textarea
 											placeholder="Describe the task you would like to create, and our AI model will create it for you..."
-											className="h-[200px] max-h-[350px]"
+											className="h-[200px] max-h-[180px] bg-transparent"
 											{...field}
 										/>
 										<FormMessage />
@@ -153,8 +157,9 @@ const AiDialog = ({ projectId }: Props) => {
 						<DialogClose asChild>
 							<Button
 								type="button"
-								variant="secondary"
+								variant="outline"
 								onClick={resetForm}
+								className="bg-transparent"
 							>
 								Close
 							</Button>
@@ -167,6 +172,7 @@ const AiDialog = ({ projectId }: Props) => {
 								!form.formState.isDirty ||
 								form.formState.isSubmitting
 							}
+							variant="secondary"
 						>
 							{form.formState.isSubmitting
 								? "Submitting"

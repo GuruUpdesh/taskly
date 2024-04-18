@@ -18,13 +18,11 @@ const Navbar = () => {
 		<header
 			className={cn(
 				sora.className,
-				"sticky top-0 z-40 flex justify-center",
+				"sticky top-0 z-40 flex justify-center border border-foreground/5 py-2 shadow-lg backdrop-blur-2xl",
 			)}
 		>
-			<div className="container mt-4 flex h-12 max-w-[1400px] items-center justify-between rounded-full border border-foreground/10 px-2 shadow-lg backdrop-blur-2xl @container">
-				<div className="px-2">
-					<Logo />
-				</div>
+			<div className="container flex h-12 max-w-[1400px] items-center justify-between  @container">
+				<Logo />
 				<NavbarMenu>
 					<ProjectList />
 					<RecentTaskMenuItem>

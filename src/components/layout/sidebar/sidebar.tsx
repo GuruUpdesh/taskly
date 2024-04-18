@@ -6,8 +6,8 @@ import {
 	LayoutIcon,
 	TableIcon,
 	ReaderIcon,
+	PlusCircledIcon,
 } from "@radix-ui/react-icons";
-import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -33,10 +33,10 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 			<SidebarBackgroundWrapper projectId={projectId} />
 			<div className="flex h-full flex-col px-1.5 pb-2 @sidebar:px-4">
 				<div className="flex min-h-[57px] items-center justify-center @sidebar:justify-start">
+					<div className="hidden @sidebar:block">
+						<Logo />
+					</div>
 					<Link href="/">
-						<div className="hidden @sidebar:block">
-							<Logo />
-						</div>
 						<Image
 							src="/favicon.ico"
 							alt="logo"
@@ -59,7 +59,7 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 									variant="outline"
 									size="iconSm"
 								>
-									<Plus className="m-h-4 h-4 w-4 min-w-4" />
+									<PlusCircledIcon />
 								</Button>
 							</SimpleTooltip>
 						</CreateTask>

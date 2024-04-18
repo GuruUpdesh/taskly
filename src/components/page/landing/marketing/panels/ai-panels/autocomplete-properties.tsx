@@ -2,7 +2,6 @@ import React from "react";
 
 import {
 	ArrowUpIcon,
-	CheckIcon,
 	Component1Icon,
 	PersonIcon,
 	PieChartIcon,
@@ -20,10 +19,10 @@ import { TbHexagon, TbHexagonNumber3 } from "react-icons/tb";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Textarea } from "~/components/ui/textarea";
 import UserProfilePicture from "~/components/user-profile-picture";
 import { type Color, taskVariants } from "~/config/TaskConfigType";
 import { cn } from "~/lib/utils";
-import { Textarea } from "~/components/ui/textarea";
 
 type ButtonType = {
 	icon: React.ReactNode;

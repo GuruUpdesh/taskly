@@ -1,12 +1,9 @@
-"use client";
-
 import React from "react";
 
-import { subMinutes } from "date-fns";
+import { formatDistanceToNow, subMinutes } from "date-fns";
 
-import Comments from "~/components/task/comments/Comments";
-import { AnimatePresence } from "framer-motion";
-import UserComment from "~/components/task/comments/UserComment";
+import UserProfilePicture from "~/components/user-profile-picture";
+import { cn } from "~/lib/utils";
 
 const initialComments = [
 	{
@@ -48,59 +45,68 @@ const initialComments = [
 			profilePicture: "/static/profiles/p2.png",
 		},
 	},
+	{
+		id: 4,
+		comment: "Thanks, Casey! I'll keep you updated on my progress.",
+		taskId: 1,
+		userId: "2",
+		insertedDate: new Date(),
+		user: {
+			userId: "2",
+			username: "Alex Smith",
+			profilePicture: "/static/profiles/p1.png",
+		},
+	},
 ];
 
-const addedComment = {
-	id: 4,
-	comment: "Thanks, Casey! I'll keep you updated on my progress.",
-	taskId: 1,
-	userId: "2",
-	insertedDate: new Date(),
-	user: {
-		userId: "2",
-		username: "Alex Smith",
-		profilePicture: "/static/profiles/p1.png",
-	},
-};
-
 const CommunicationPanel = () => {
-	const [comments, setComments] = React.useState(initialComments);
-	const [added, setAdded] = React.useState(false);
-
-	function onHover() {
-		if (added) {
-			return;
-		}
-		setComments((prevComments) => {
-			return [...prevComments, addedComment];
-		});
-		setAdded(true);
-	}
-
-	function onLeave() {
-		setComments(initialComments);
-		setAdded(false);
-	}
-
 	return (
-		<div
-			className="comments-container flex max-h-[564px] max-w-full flex-grow flex-col gap-4 overflow-hidden mix-blend-overlay"
-			onMouseEnter={onHover}
-			onMouseLeave={onLeave}
-		>
+		<div className="comments-container ease-slow flex max-w-full flex-grow flex-col gap-4 overflow-hidden mix-blend-overlay transition-transform duration-500 group-hover:translate-y-[-104px]">
 			<div className="flex flex-col">
-				<AnimatePresence initial={false}>
-					{comments.map((comment, index) => {
-						return (
-							<UserComment
-								key={comment.id}
-								comment={comment}
-								isLastComment={index === comments.length - 1}
-								taskId={1}
-							/>
-						);
-					})}
-				</AnimatePresence>
+				{initialComments.map((comment, index) => {
+					const firstComment = index === 0;
+					const lastComment = index === initialComments.length - 1;
+
+					return (
+						<div
+							key={index}
+							className={cn(
+								"ease-slow relative mb-4 overflow-hidden text-wrap rounded-lg border bg-accent/50 p-4 py-2 transition-all duration-500 hover:bg-accent",
+								{
+									"scale-100 opacity-100 group-hover:scale-0 group-hover:opacity-0":
+										firstComment,
+									"scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100":
+										lastComment,
+								},
+							)}
+						>
+							<div className="flex items-center justify-between gap-2 border-b pb-1 text-sm">
+								<div className="flex items-center gap-2">
+									<UserProfilePicture
+										src={comment.user.profilePicture}
+										size={25}
+									/>
+									<p className="pb-1 font-bold">
+										{comment.user.username}
+									</p>
+								</div>
+								<div className="flex items-center gap-2">
+									<p
+										className="whitespace-nowrap"
+										suppressHydrationWarning
+									>
+										{formatDistanceToNow(
+											comment.insertedDate,
+										)}
+									</p>
+								</div>
+							</div>
+							<p className="mt-2 break-words text-sm leading-6">
+								{comment.comment}
+							</p>
+						</div>
+					);
+				})}
 			</div>
 		</div>
 	);

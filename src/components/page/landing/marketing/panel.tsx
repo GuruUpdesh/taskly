@@ -12,10 +12,10 @@ const panelVariants = cva(
 	{
 		variants: {
 			color: {
-				indigo: "border-indigo-400/15 hover:bg-indigo-400/15",
+				indigo: "border-indigo-400/15 bg-indigo-800/10 hover:bg-indigo-400/15",
 				red: "border-red-400/15 bg-red-800/10 hover:bg-red-400/15",
 				green: "border-green-400/15 bg-green-800/10 hover:bg-green-400/15",
-				blue: "border-blue-400/15 bg-blue-800/10 hover:bg-blue-400/15",
+				blue: "border-sky-400/15 bg-sky-800/10 hover:bg-sky-400/15",
 				yellow: "border-yellow-400/15 bg-yellow-800/10 hover:bg-yellow-400/15",
 			},
 		},

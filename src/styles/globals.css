@@ -58,10 +58,7 @@
 	}
 }
 
-.gradient-border::before {
-	mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-	mask-composite: exclude;
-}
+
 
 @layer base {
 	* {
@@ -72,16 +69,6 @@
 		@apply bg-background text-foreground;
 	}
 }
-
-@layer components {
-	.menu {
-		overflow: "hidden";
-		border-radius: var(--radius);
-		background: hsl(var(--background) / 0.75);
-		padding: 0;
-		backdrop-filter: blur(24px);
-	}
-  }
 
 ::-webkit-scrollbar {
 	width: 8px;
@@ -99,4 +86,4 @@
 
 ::-webkit-scrollbar-corner {
 	background: rgba(0, 0, 0, 0);
-} 
+}

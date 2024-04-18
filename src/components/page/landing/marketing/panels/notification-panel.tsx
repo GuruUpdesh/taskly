@@ -73,12 +73,18 @@ const NotificationPanel = () => {
 						{
 							"group-hover:translate-x-[-72%]": index === 0,
 							"group-hover:translate-x-[-150%]": index === 1,
-							"group-hover:translate-x-[-105%]": index === 2,
-							"group-hover:translate-x-[-180%]": index === 3,
-							"group-hover:translate-x-[-71%]": index === 4,
-							"group-hover:translate-x-[-151%]": index === 5,
-							"group-hover:translate-x-[-106%]": index === 6,
-							"group-hover:translate-x-[-181%]": index === 7,
+							"translate-x-[-25%] group-hover:translate-x-[-105%]":
+								index === 2,
+							"translate-x-[-25%] group-hover:translate-x-[-180%]":
+								index === 3,
+							"translate-x-[-50%] group-hover:translate-x-[-71%]":
+								index === 4,
+							"translate-x-[-35%] group-hover:translate-x-[-151%]":
+								index === 5,
+							"translate-x-[-25%] group-hover:translate-x-[-106%]":
+								index === 6,
+							"translate-x-[-25%] group-hover:translate-x-[-181%]":
+								index === 7,
 						},
 					)}
 				>

@@ -9,14 +9,18 @@ type Props = {
 
 const UserProfilePicture = ({ src, size = 20 }: Props) => {
 	return (
-		<Image
-			src={src}
-			width={size}
-			height={size}
+		<div
 			style={{ minWidth: `${size}px`, minHeight: `${size}px` }}
-			className={`rounded-full`}
-			alt=""
-		/>
+			className="relative aspect-square"
+		>
+			<Image
+				src={src}
+				fill
+				style={{ objectFit: "cover" }}
+				className="rounded-full"
+				alt=""
+			/>
+		</div>
 	);
 };
 

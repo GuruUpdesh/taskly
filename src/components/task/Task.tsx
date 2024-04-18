@@ -210,7 +210,7 @@ const TaskPage = ({
 							<h3 className="scroll-m-20 px-4 pb-2 text-xl font-semibold tracking-tight">
 								Comments
 							</h3>
-							<div className="pointer-events-none absolute left-0 top-0 -z-10 h-[135%] w-full bg-gradient-to-t from-transparent to-[#181818] to-25%" />
+							<div className="pointer-events-none absolute left-0 top-0 -z-10 h-[135%] w-full bg-gradient-to-t from-transparent to-[#1b1b1b] to-25%" />
 						</div>
 						<section className="comments-container mb-3 flex max-w-full flex-grow flex-col gap-4 overflow-scroll px-4 pb-1 pt-4">
 							<Comments

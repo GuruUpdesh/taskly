@@ -22,7 +22,7 @@ const ToggleFilters = () => {
 				onClick={toggleFilters}
 				size="sm"
 				className={cn(
-					"flex items-center gap-1 rounded-none border-b-0 border-l-0 border-r border-t-0 px-4",
+					"flex items-center gap-1 rounded-none border-b-0 border-l-0 border-r border-t-0 bg-transparent px-4",
 					isFiltersOpen
 						? "bg-accent hover:bg-accent/75"
 						: "text-muted-foreground",

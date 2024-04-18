@@ -112,11 +112,7 @@ const exampleSprints = [
 	},
 ];
 
-type Props = {
-	setShowAutoComplete: (state: boolean) => void;
-};
-
-const TaskCreation = ({ setShowAutoComplete }: Props) => {
+const TaskCreation = () => {
 	const [tasks, setTasks] = useState<StatefulTask[]>(exampleTasks);
 	const [value, setValue] = useState("");
 	const [isHovered, setIsHovered] = useState(false);
@@ -193,110 +189,107 @@ const TaskCreation = ({ setShowAutoComplete }: Props) => {
 		},
 	});
 
-	useEffect(() => {
-		setShowAutoComplete(!showResults);
-	}, [showResults]);
-
 	return (
-		<div
-			onMouseEnter={() => setIsHovered(true)}
-			onMouseLeave={() => {
-				setIsHovered(false);
-				setValue("");
-				setTypingComplete(false);
-				// setShowResults(false);
-			}}
-		>
-			{!showResults ? (
-				<Card className="fadeInUp border-foreground/10 bg-accent/50 p-2 shadow-lg">
-					<CardContent className="px-2 py-1">
-						<CardHeader className="mb-4 p-0">
-							<div className="flex items-center justify-between">
-								<CardTitle className="text-md flex items-center gap-2">
-									<SparklesIcon className="h-4 w-4" />
-									Create Tasks
-								</CardTitle>
-								<Cross2Icon className="h-4 w-4 opacity-25" />
-							</div>
-						</CardHeader>
-						<CardContent className="mb-4 p-0">
-							<Textarea
-								value={
-									isHovered
-										? `${value}${showCursor ? cursorSymbol : ""}`
-										: value
-								}
-								placeholder="Describe the task you would like to create..."
-								className="pointer-events-none h-[80px] resize-none border-foreground/25 !bg-transparent"
-								readOnly
-							/>
+		<div>
+			<div
+				onMouseEnter={() => setIsHovered(true)}
+				onMouseLeave={() => {
+					setIsHovered(false);
+					setValue("");
+					setTypingComplete(false);
+					setShowResults(false);
+				}}
+				className="group absolute z-10 flex h-full w-full flex-col items-center justify-center bg-background/75 opacity-0 backdrop-blur-xl transition-opacity hover:opacity-100"
+			>
+				{!showResults ? (
+					<Card className="fadeInUp hidden w-[400px] border-foreground/10 bg-accent/50 p-2 shadow-lg group-hover:block">
+						<CardContent className="px-2 py-1">
+							<CardHeader className="mb-4 p-0">
+								<div className="flex items-center justify-between">
+									<CardTitle className="text-md flex items-center gap-2">
+										<SparklesIcon className="h-4 w-4" />
+										Create Tasks
+									</CardTitle>
+									<Cross2Icon className="h-4 w-4 opacity-25" />
+								</div>
+							</CardHeader>
+							<CardContent className="mb-4 p-0">
+								<Textarea
+									value={
+										isHovered
+											? `${value}${showCursor ? cursorSymbol : ""}`
+											: value
+									}
+									placeholder="Describe the task you would like to create..."
+									className="pointer-events-none h-[80px] resize-none border-foreground/25 !bg-transparent"
+									readOnly
+								/>
+							</CardContent>
+							<CardFooter className="gap-2 p-0">
+								<div className="flex-1" />
+								<Button
+									size="sm"
+									type="button"
+									variant="outline"
+									className="bg-transparent text-xs"
+								>
+									Close
+								</Button>
+								<Button
+									size="sm"
+									variant="secondary"
+									className="flex items-center gap-2 text-xs"
+								>
+									{typingComplete ? "Submitting" : "Submit"}
+									{typingComplete ? (
+										<Loader2 className="h-4 w-4 animate-spin" />
+									) : (
+										<ChevronRight className="h-4 w-4" />
+									)}
+								</Button>
+							</CardFooter>
 						</CardContent>
-						<CardFooter className="gap-2 p-0">
-							<div className="flex-1" />
-							<Button
-								size="sm"
-								type="button"
-								variant="outline"
-								className="bg-transparent text-xs"
+					</Card>
+				) : (
+					<div className="staggered-children flex w-[400px] flex-col gap-2">
+						{tasks.map((task, index) => (
+							<div
+								key={index}
+								className="shadow-lg"
+								style={
+									{
+										"--child-index": index,
+									} as React.CSSProperties
+								}
 							>
-								Close
-							</Button>
+								<Task
+									task={task}
+									addTaskMutation={editTaskMutation}
+									deleteTaskMutation={deleteTaskMutation}
+									variant="board"
+									projectId="1"
+									disableNavigation
+								/>
+							</div>
+						))}
+						<SimpleTooltip label="Reset">
 							<Button
-								size="sm"
 								variant="secondary"
-								className="flex items-center gap-2 text-xs"
+								size="icon"
+								className="my-1"
+								onClick={() => {
+									setIsHovered(false);
+									setValue("");
+									setTypingComplete(false);
+									setShowResults(false);
+								}}
 							>
-								{typingComplete ? "Submitting" : "Submit"}
-								{typingComplete ? (
-									<Loader2 className="h-4 w-4 animate-spin" />
-								) : (
-									<ChevronRight className="h-4 w-4" />
-								)}
+								<ReloadIcon className="transition-all" />
 							</Button>
-						</CardFooter>
-					</CardContent>
-				</Card>
-			) : (
-				<div className="staggered-children flex flex-col gap-2">
-					{tasks.map((task, index) => (
-						<div
-							key={index}
-							className="shadow-lg"
-							style={
-								{
-									"--child-index": index,
-								} as React.CSSProperties
-							}
-						>
-							<Task
-								task={task}
-								addTaskMutation={editTaskMutation}
-								deleteTaskMutation={deleteTaskMutation}
-								variant="board"
-								projectId="1"
-								disableNavigation
-							/>
-						</div>
-					))}
-				</div>
-			)}
-			{showResults && (
-				<SimpleTooltip label="Reset">
-					<Button
-						variant="secondary"
-						size="icon"
-						className="my-1"
-						onClick={() => {
-							setIsHovered(false);
-							setValue("");
-							setTypingComplete(false);
-							setShowResults(false);
-						}}
-					>
-						<ReloadIcon className="transition-all" />
-					</Button>
-				</SimpleTooltip>
-			)}
+						</SimpleTooltip>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

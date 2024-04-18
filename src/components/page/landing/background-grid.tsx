@@ -7,16 +7,30 @@ const Grid = () => {
 	const [rows, setRows] = useState(0);
 
 	useEffect(() => {
-		function handleResize() {
-			const size = 130;
-			setCols(Math.floor(document.body.clientWidth / size));
-			setRows(Math.floor(document.body.clientHeight / size));
+		const main = document.querySelector("main");
+
+		const handleResize = () => {
+			if (main) {
+				const size = 130; // Your size calculation base
+				setCols(Math.floor(main.clientWidth / size));
+				setRows(Math.floor(main.clientHeight / size));
+			}
+		};
+
+		const resizeObserver = new ResizeObserver(handleResize);
+		if (main) {
+			resizeObserver.observe(main);
 		}
 
-		handleResize();
-
 		window.addEventListener("resize", handleResize);
-		return () => window.removeEventListener("resize", handleResize);
+
+		return () => {
+			if (main) {
+				resizeObserver.unobserve(main);
+			}
+			resizeObserver.disconnect();
+			window.removeEventListener("resize", handleResize);
+		};
 	}, []);
 
 	function renderTiles(quantity: number) {
@@ -36,6 +50,7 @@ const Grid = () => {
 			style={{
 				gridTemplateColumns: `repeat(${cols}, 1fr)`,
 				gridTemplateRows: `repeat(${rows}, 1fr)`,
+				gridGap: "1fr",
 			}}
 		>
 			{renderTiles(cols * rows)}

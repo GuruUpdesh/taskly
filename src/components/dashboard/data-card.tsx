@@ -26,7 +26,7 @@ const DataCardLineGraph: React.FC<{
 	title: string;
 }> = (data) => {
 	return (
-		<Card className="col-span-4 bg-foreground/5">
+		<Card className="col-span-4 bg-accent/50">
 			<CardHeader className="pb-2">
 				<CardDescription>{data.title}</CardDescription>
 			</CardHeader>
@@ -125,7 +125,7 @@ const DataCardFigure: React.FC<{
 	cardDescriptionDown: string;
 }> = ({ cardTitle, cardDescriptionUp, cardDescriptionDown }) => {
 	return (
-		<Card className="bg-foreground/5">
+		<Card className="bg-accent/50">
 			<CardHeader className="pb-2">
 				<CardDescription>{cardDescriptionUp}</CardDescription>
 			</CardHeader>

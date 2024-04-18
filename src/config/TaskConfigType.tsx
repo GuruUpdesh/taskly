@@ -86,16 +86,16 @@ export const taskProperties: TaskProperty[] = [
 export const taskVariants = cva([], {
 	variants: {
 		color: {
-			null: "text-slate-500 bg-stone-700/20",
-			grey: "text-neutral-300 bg-neutral-700/20",
-			orange: "text-orange-300 bg-orange-800/20",
-			yellow: "text-yellow-400 bg-yellow-800/20",
-			red: "text-red-400 bg-red-800/20",
-			blue: "text-blue-300 bg-blue-800/20",
-			green: "text-green-400 bg-green-800/20",
-			purple: "text-violet-400 bg-violet-800/20",
-			teal: "text-teal-400 bg-teal-800/20",
-			fuchsia: "text-fuchsia-400 bg-fuchsia-800/20",
+			null: "text-neutral-400 bg-neutral-900/50",
+			grey: "text-neutral-200 bg-neutral-800/50",
+			orange: "text-orange-200 bg-orange-800/50",
+			yellow: "text-yellow-200 bg-yellow-800/50",
+			red: "text-red-200 bg-red-800/50",
+			blue: "text-blue-200 bg-blue-800/50",
+			green: "text-green-200 bg-green-800/50",
+			purple: "text-violet-200 bg-violet-800/50",
+			teal: "text-teal-200 bg-teal-800/50",
+			fuchsia: "text-fuchsia-200 bg-fuchsia-800/50",
 		},
 		hover: {
 			true: "",
@@ -567,7 +567,7 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 			key: assignee.username,
 			displayName: assignee.username,
 			icon: (
-				<UserProfilePicture size={16} src={assignee.profilePicture} />
+				<UserProfilePicture size={18} src={assignee.profilePicture} />
 			),
 			color: "grey" as Color,
 		})),
