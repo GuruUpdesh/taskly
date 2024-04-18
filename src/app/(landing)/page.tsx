@@ -34,7 +34,7 @@ export default function HomePage() {
 			<div className="absolute top-0 z-[-1] h-full w-full fade-in-5">
 				<Grid />
 				<img
-					className="absolute h-full w-full opacity-50"
+					className="absolute h-full w-full opacity-100"
 					src="/static/auth.gif"
 					alt="backdrop"
 				/>
