@@ -53,10 +53,12 @@ const UserComment = ({
 				// Directly scroll to the bottom of the container
 				const scrollPosition = scrollableContainer.scrollHeight;
 
-				scrollableContainer.scrollTo({
-					top: scrollPosition,
-					behavior: "smooth",
-				});
+				setTimeout(() => {
+					scrollableContainer.scrollTo({
+						top: scrollPosition,
+						behavior: "smooth",
+					});
+				}, 600);
 			}
 		}
 	}, [isLastComment, commentRef.current]);
@@ -118,7 +120,7 @@ const UserComment = ({
 		>
 			<div
 				className={cn(
-					"relative mb-4 overflow-hidden text-wrap rounded-lg border bg-accent/25 p-4 py-2 hover:bg-accent/35",
+					"relative mb-4 overflow-hidden text-wrap rounded-lg border bg-accent/50 p-4 py-2 hover:bg-accent",
 					{
 						"mb-0": isLastComment,
 					},

@@ -92,7 +92,7 @@ const GroupButton = () => {
 					variant="outline"
 					size="sm"
 					className={cn(
-						"flex items-center gap-1 rounded-none border-none px-4 text-muted-foreground",
+						"flex items-center gap-1 rounded-none border-none bg-transparent px-4 text-muted-foreground",
 						{
 							"bg-accent text-white": open,
 							"bg-accent text-white hover:bg-accent/75": groupBy,

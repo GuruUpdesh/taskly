@@ -28,7 +28,7 @@ const taskVariants = cva(["flex items-center gap-2"], {
 	variants: {
 		variant: {
 			backlog:
-				"flex items-center justify-between border-b py-2 hover:bg-accent-foreground/5",
+				"flex items-center justify-between border-b border-border/50 py-2 hover:bg-accent-foreground/5",
 			list: "",
 			board: "flex flex-col p-2 rounded-md border bg-accent/25 hover:bg-accent/50 transition-color w-full max-w-full overflow-hidden group",
 		},
@@ -90,6 +90,7 @@ interface Props extends VariantPropsType {
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 	projectId: string;
 	listId?: string;
+	disableNavigation?: boolean;
 }
 
 const Task = ({
@@ -99,6 +100,7 @@ const Task = ({
 	projectId,
 	variant = "backlog",
 	listId,
+	disableNavigation = false,
 }: Props) => {
 	const [assignees, sprints] = useAppStore(
 		useShallow((state) => [state.assignees, state.sprints]),
@@ -245,7 +247,13 @@ const Task = ({
 				deleteTaskMutation={deleteTaskMutation}
 				task={task}
 			>
-				<Link href={`/project/${projectId}/task/${task.id}`}>
+				<Link
+					href={
+						disableNavigation
+							? ""
+							: `/project/${projectId}/task/${task.id}`
+					}
+				>
 					<div className={taskVariants({ variant: variant })}>
 						{renderProperties()}
 					</div>
@@ -256,7 +264,13 @@ const Task = ({
 
 	return (
 		<TaskDropDownMenu deleteTaskMutation={deleteTaskMutation} task={task}>
-			<Link href={`/project/${projectId}/task/${task.id}`}>
+			<Link
+				href={
+					disableNavigation
+						? ""
+						: `/project/${projectId}/task/${task.id}`
+				}
+			>
 				<div className={taskVariants({ variant: variant })}>
 					{renderProperties()}
 				</div>

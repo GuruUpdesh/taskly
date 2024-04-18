@@ -64,7 +64,9 @@ export default async function ApplicationLayout({
 				sidebarComponent={<Sidebar projectId={projectId} />}
 				defaultLayout={defaultLayout}
 			>
-				<main>{children}</main>
+				<main className="flex h-full w-full flex-1 flex-col bg-accent/25">
+					{children}
+				</main>
 			</SidebarPanel>
 		</HydrationBoundary>
 	);

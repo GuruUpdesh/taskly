@@ -85,7 +85,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 		>
 			<Input
 				type="text"
-				className="m-0 border-none p-0 py-2 text-2xl focus-visible:ring-transparent"
+				className="m-0 border-none bg-transparent p-0 py-2 text-2xl focus-visible:ring-transparent"
 				placeholder="Task Title"
 				autoFocus
 				autoComplete="off"

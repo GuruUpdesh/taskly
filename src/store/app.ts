@@ -38,7 +38,7 @@ interface AppState {
 const useAppStore = create<AppState>()(
 	persist(
 		(set) => ({
-			isFiltersOpen: false,
+			isFiltersOpen: true,
 			toggleFilters: () =>
 				set((state) => ({ isFiltersOpen: !state.isFiltersOpen })),
 			assignees: [],

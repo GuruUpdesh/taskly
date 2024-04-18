@@ -60,7 +60,7 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 			<section className="container flex flex-col pt-8">
 				<UserGreeting />
 				<section className="my-4 grid grid-cols-2 gap-4">
-					<Card>
+					<Card className="bg-foreground/5">
 						<CardHeader className="pb-2">
 							<CardDescription>Recent Tasks</CardDescription>
 						</CardHeader>
@@ -68,7 +68,7 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 							<RecentTasks number={10} />
 						</CardContent>
 					</Card>
-					<Card>
+					<Card className="bg-foreground/5">
 						<CardHeader className="pb-2">
 							<CardDescription>
 								Recent Notifications

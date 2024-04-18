@@ -45,8 +45,9 @@ const SidebarButton = ({
 					variant="ghost"
 					size="sm"
 					className={cn(
-						"w-full justify-center gap-2 p-0 font-semibold  @sidebar:justify-start @sidebar:px-4",
-						active && "bg-accent",
+						"relative w-full justify-center gap-2 p-0  font-semibold opacity-75 @sidebar:justify-start @sidebar:px-4",
+						active &&
+							"border-b border-foreground/15 bg-foreground/5 opacity-100",
 					)}
 				>
 					{icon ? icon : null}

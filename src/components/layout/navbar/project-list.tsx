@@ -6,7 +6,7 @@ import { auth } from "@clerk/nextjs";
 
 import { getAllProjects } from "~/actions/application/project-actions";
 
-import { CreateProjectMenuItem, ProjectsMenuItem } from "./navbar";
+import { CreateProjectMenuItem, ProjectsMenuItem } from "./navbar-menu";
 
 async function ProjectList() {
 	const { userId }: { userId: string | null } = auth();

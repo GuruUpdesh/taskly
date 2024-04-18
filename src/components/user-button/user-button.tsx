@@ -1,15 +1,21 @@
 import React from "react";
 
 import { auth } from "@clerk/nextjs";
+import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 
 import { getUser } from "~/actions/user-actions";
 import { Button } from "~/components/ui/button";
 import UserProfilePicture from "~/components/user-profile-picture";
+import { cn } from "~/lib/utils";
 
 import UserMenu from "./user-menu";
 
-const UserButton = async () => {
+type Props = {
+	size?: "icon" | "large" | "default";
+};
+
+const UserButton = async ({ size = "default" }: Props) => {
 	const { userId } = auth();
 
 	if (!userId) {
@@ -25,9 +31,35 @@ const UserButton = async () => {
 		return null;
 	}
 
+	if (size === "large") {
+		return (
+			<div className="flex items-center justify-between rounded-md bg-accent/25 px-2 py-2">
+				<div className="flex items-center gap-2">
+					<UserProfilePicture src={user.profilePicture} size={30} />
+					<h4 className={"text-lg font-semibold"}>{user.username}</h4>
+				</div>
+				<UserMenu>
+					<Button
+						variant="ghost"
+						size="iconSm"
+						className="h-[30px] w-[30px]"
+					>
+						<DotsVerticalIcon />
+					</Button>
+				</UserMenu>
+			</div>
+		);
+	}
+
 	return (
 		<UserMenu>
-			<Button variant="ghost" size="icon" className="min-w-[30px]">
+			<Button
+				variant="ghost"
+				size="icon"
+				className={cn("min-w-[30px]", {
+					"rounded-full": size === "icon",
+				})}
+			>
 				<UserProfilePicture src={user.profilePicture} size={30} />
 			</Button>
 		</UserMenu>

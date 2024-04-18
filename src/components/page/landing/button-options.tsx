@@ -1,64 +1,35 @@
-"use client";
-
 import React from "react";
 
-import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-import SimpleTooltip from "~/components/general/simple-tooltip";
 import { Button } from "~/components/ui/button";
 
 const ButtonOptions = () => {
-	const variants = {
-		start: {
-			opacity: 0,
-			y: 20,
-		},
-		end: {
-			opacity: 1,
-			y: 0,
-		},
-	};
 	return (
-		<motion.div
-			className="flex items-center justify-center gap-4 py-3 md:py-4 lg:gap-12 lg:py-6"
-			variants={variants}
-			initial="start"
-			animate="end"
-			transition={{
-				staggerChildren: 0.1,
-				duration: 0.1,
-				ease: [0.175, 0.885, 0.32, 1.275],
-			}}
-		>
-			<motion.div variants={variants} className="hidden md:block">
+		<div className="flex w-full items-center justify-between gap-4">
+			<div>
 				<Button
 					variant="outline"
-					className="white rounded-full bg-transparent backdrop-blur-lg"
-					disabled={true}
+					className="mr-4 rounded-full bg-transparent backdrop-blur-lg"
 				>
 					Watch a Demo
 				</Button>
-			</motion.div>
-			<motion.div variants={variants} className="hidden sm:block">
-				<SimpleTooltip label="Coming Soon">
-					<Button
-						variant="outline"
-						className="rounded-full bg-transparent backdrop-blur-lg"
-					>
-						Documentation
-					</Button>
-				</SimpleTooltip>
-			</motion.div>
-			<motion.div variants={variants}>
-				<Link href="/app">
-					<Button className="gap-2 rounded-full font-bold hover:bg-green-500 hover:text-foreground">
+				<Button
+					variant="outline"
+					className="rounded-full bg-transparent backdrop-blur-lg"
+				>
+					Documentation
+				</Button>
+			</div>
+			<Link href="/app">
+				<Button className="group rounded-full bg-gradient-to-r font-bold hover:from-green-600 hover:to-green-400 hover:text-foreground">
+					<span className="flex items-center">
 						Get Started <ChevronRight className="h-4 w-4" />
-					</Button>
-				</Link>
-			</motion.div>
-		</motion.div>
+					</span>
+				</Button>
+			</Link>
+		</div>
 	);
 };
 

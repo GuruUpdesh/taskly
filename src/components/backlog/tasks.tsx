@@ -339,7 +339,7 @@ export default function Tasks({ projectId, variant = "backlog" }: Props) {
 								className={cn("w-full", {
 									"flex items-center gap-2 px-4 py-2 pb-0":
 										variant === "backlog",
-									"sticky top-0 z-50 flex items-center gap-2 bg-background/75 px-1 py-2 pt-3 backdrop-blur-lg":
+									"sticky top-0 z-50 flex items-center gap-2 px-1 py-2 pt-3 backdrop-blur-lg":
 										variant === "board",
 								})}
 							>

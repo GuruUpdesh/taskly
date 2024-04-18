@@ -54,7 +54,7 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 			>
 				{children}
 			</ContextMenuTrigger>
-			<ContextMenuContent className="bg-accent/50 backdrop-blur-sm">
+			<ContextMenuContent className="border-foreground/10 bg-background/75 backdrop-blur-xl">
 				{actions.map((action) => (
 					<ContextMenuItem
 						key={action.id}

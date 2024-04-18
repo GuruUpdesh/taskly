@@ -3,6 +3,7 @@ import React from "react";
 
 import BackButton from "~/components/layout/navbar/back-button";
 import Grid from "~/components/page/landing/background-grid";
+import Footer from "~/components/page/landing/footer";
 
 export default function LandingLayout({
 	children,
@@ -16,7 +17,7 @@ export default function LandingLayout({
 					<BackButton />
 				</div>
 			</header>
-			<div className="relative flex flex-grow justify-center">
+			<div className="relative mb-32 flex flex-grow justify-center">
 				<div className="absolute z-[-1] h-full w-full fade-in-5">
 					<Grid />
 					<img
@@ -28,6 +29,7 @@ export default function LandingLayout({
 				</div>
 				<div className="mt-24">{children}</div>
 			</div>
+			<Footer />
 		</div>
 	);
 }

@@ -12,10 +12,10 @@ const panelVariants = cva(
 	{
 		variants: {
 			color: {
-				indigo: "border-indigo-400/15 hover:bg-indigo-400/15",
+				indigo: "border-indigo-400/15 bg-indigo-800/10 hover:bg-indigo-400/15",
 				red: "border-red-400/15 bg-red-800/10 hover:bg-red-400/15",
 				green: "border-green-400/15 bg-green-800/10 hover:bg-green-400/15",
-				blue: "border-blue-400/15 bg-blue-800/10 hover:bg-blue-400/15",
+				blue: "border-sky-400/15 bg-sky-800/10 hover:bg-sky-400/15",
 				yellow: "border-yellow-400/15 bg-yellow-800/10 hover:bg-yellow-400/15",
 			},
 		},
@@ -53,7 +53,7 @@ interface Props extends VariantProps<typeof panelVariants> {
 const Panel = ({ title, icon, description, color, className }: Props) => {
 	return (
 		<div className={cn(panelVariants({ color: color }), className)}>
-			<div className="flex h-full w-full flex-col gap-4 rounded-md p-4">
+			<div className="flex h-full w-full flex-col gap-4 rounded-md px-4 py-[12px]">
 				<h3
 					className={cn(
 						typography.headers.h2,

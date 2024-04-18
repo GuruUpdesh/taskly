@@ -27,8 +27,7 @@ export default function RootLayout({
 			appearance={{
 				baseTheme: dark,
 				variables: {
-					colorBackground: "#020817",
-					colorInputBackground: "#020817",
+					colorBackground: "#000000",
 				},
 			}}
 		>
@@ -38,7 +37,7 @@ export default function RootLayout({
 					<html lang="en" suppressHydrationWarning>
 						<body
 							className={cn(
-								"!m-0 min-h-screen bg-background bg-gradient-to-b from-[#02091a] to-[#010714] font-sans antialiased",
+								"!m-0 min-h-screen bg-background bg-gradient-to-b font-sans antialiased",
 								GeistSans.className,
 							)}
 						>

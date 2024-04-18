@@ -109,14 +109,14 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 			<input type="hidden" {...form.register("projectId")} />
 			<Input
 				type="text"
-				className="m-0 border-none p-0 text-lg focus-visible:ring-transparent"
+				className="m-0 border-none bg-transparent p-0 text-lg ring-offset-transparent focus-visible:ring-transparent"
 				placeholder="Task Title"
 				{...form.register("title")}
 				autoFocus
 				autoComplete="off"
 			/>
 			<Textarea
-				className="m-0 resize-none border-none p-0 focus-visible:ring-transparent"
+				className="m-0 resize-none border-none bg-transparent p-0 ring-offset-transparent focus-visible:ring-transparent"
 				placeholder="Add a description..."
 				rows={2}
 				{...form.register("description")}
@@ -328,6 +328,7 @@ const CreateTask = ({ projectId, children }: Props) => {
 						size="sm"
 						onClick={() => form.handleSubmit(handleSubmit)()}
 						disabled={!form.formState.isValid}
+						variant="secondary"
 					>
 						Create Task
 					</Button>

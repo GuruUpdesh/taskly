@@ -9,9 +9,18 @@ import UserButton from "~/components/user-button/user-button";
 
 const UserNav = () => {
 	return (
-		<div>
+		<div className="flex items-center gap-2">
 			<SignedIn>
-				<UserButton />
+				<Link href="/app">
+					<Button
+						variant="outline"
+						size="sm"
+						className="whitespace-nowrap rounded-full bg-foreground/5"
+					>
+						Application
+					</Button>
+				</Link>
+				<UserButton size="icon" />
 			</SignedIn>
 			<SignedOut>
 				<div className="flex items-center gap-4">
@@ -19,13 +28,16 @@ const UserNav = () => {
 						<Button
 							variant="outline"
 							size="sm"
-							className="whitespace-nowrap rounded-full"
+							className="whitespace-nowrap rounded-full bg-foreground/5"
 						>
 							Sign In
 						</Button>
 					</Link>
 					<Link href="/sign-up">
-						<Button className="items-center gap-1 whitespace-nowrap rounded-full bg-emerald-500 font-bold text-foreground hover:bg-emerald-400">
+						<Button
+							size="sm"
+							className="items-center gap-1 whitespace-nowrap rounded-full bg-gradient-to-r hover:from-green-600 hover:to-green-400 hover:text-foreground"
+						>
 							Sign Up
 							<ChevronRight className="h-4 w-4" />
 						</Button>

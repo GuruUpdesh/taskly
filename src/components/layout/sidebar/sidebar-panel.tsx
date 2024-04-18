@@ -75,7 +75,7 @@ const SidebarPanel = ({
 				<SettingsNavigationState />
 				{sidebarComponent}
 			</ResizablePanel>
-			<ResizableHandle className="" />
+			<ResizableHandle />
 			<ResizablePanel defaultSize={defaultLayout?.[1]} order={1}>
 				{children}
 			</ResizablePanel>

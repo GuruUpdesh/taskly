@@ -1,3 +1,4 @@
+import { PlusCircledIcon } from "@radix-ui/react-icons";
 import {
 	dehydrate,
 	HydrationBoundary,
@@ -30,8 +31,8 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 	});
 
 	return (
-		<div className="max-h-screen overflow-y-scroll">
-			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b bg-background/75 px-4 pb-2 pt-2 backdrop-blur-xl">
+		<div className="relative flex max-h-screen flex-1 flex-col overflow-y-scroll">
+			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b px-4 pb-2 pt-2 backdrop-blur-xl">
 				<div className="flex items-center gap-2">
 					<ToggleSidebarButton />
 					<BreadCrumbs />
@@ -40,13 +41,18 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<ToggleFilters />
 					<AiDialog projectId={projectId} />
 					<CreateTask projectId={projectId}>
-						<Button className="gap-1 font-bold" size="sm">
+						<Button
+							className="gap-1 font-bold"
+							size="sm"
+							variant="secondary"
+						>
+							<PlusCircledIcon />
 							New Task
 						</Button>
 					</CreateTask>
 				</div>
 			</header>
-			<section className="flex flex-col">
+			<section className="flex flex-1 flex-col">
 				<Filters />
 				<HydrationBoundary state={dehydrate(queryClient)}>
 					<Tasks projectId={projectId} />
