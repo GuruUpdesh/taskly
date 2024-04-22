@@ -2,10 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import {
-	clerkClient,
-	type WebhookEvent
-} from "@clerk/nextjs/server";
+import { clerkClient, type WebhookEvent } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { Webhook as svixWebhook } from "svix";
@@ -41,13 +38,13 @@ async function validateRequest(request: Request) {
  * Now we can handle the webhook events with our own logic
  */
 async function onUserCreated(payload: WebhookEvent) {
-	const data = payload.data;
-	if (!data.id || !data.username || !data.image_url) {
-		throwServerError("Required data not found in webhook payload");
-		return;
-	}
+	// const data = payload.data;
+	// if (!data.id || !data.username || !data.image_url) {
+	// 	throwServerError("Required data not found in webhook payload");
+	// 	return;
+	// }
 
-	await helperCreateUser(data.id, data.username, data.image_url);
+	// await helperCreateUser(data.id, data.username, data.image_url);
 }
 
 async function helperCreateUser(
@@ -55,51 +52,56 @@ async function helperCreateUser(
 	username: string,
 	profilePicture: string,
 ) {
-	const data: NewUser = {
-		userId,
-		username,
-		profilePicture,
-	};
+	// const data: NewUser = {
+	// 	userId,
+	// 	username,
+	// 	profilePicture,
+	// };
 
-	const newUser = insertUserSchema.parse(data);
-	await db.insert(users).values(newUser);
+	// const newUser = insertUserSchema.parse(data);
+	// await db.insert(users).values(newUser);
 }
 
 async function onUserDeleted(payload: WebhookEvent) {
-	const userId = payload.data.id;
-	if (!userId) {
-		throwServerError("No user ID provided");
-		return;
-	}
-	await db.delete(users).where(eq(users.userId, userId));
+	// const userId = payload.data.id;
+	// if (!userId) {
+	// 	throwServerError("No user ID provided");
+	// 	return;
+	// }
+	// await db.delete(users).where(eq(users.userId, userId));
 }
 
 async function onSessionCreated(payload: WebhookEvent) {
-	const userId = payload.data.user_id;
+	// const userId = payload.data.id;
 
-	// check if the user exists in our database
-	const user = await db
-		.selectDistinct()
-		.from(users)
-		.where(eq(users.userId, userId));
+	// if (!userId) {
+	// 	throwServerError("No user ID provided");
+	// 	return;
+	// }
 
-	// if not, create a new user
-	if (user.length === 0) {
-		const user = await clerkClient.users.getUser(userId);
-		if (!user) {
-			throwServerError("User not found");
-			return;
-		}
-		if (!user.username) {
-			throwServerError("User does not have a username");
-			return;
-		}
-		if (!user.imageUrl) {
-			throwServerError("User does not have a profile picture");
-			return;
-		}
-		await helperCreateUser(userId, user.username, user.imageUrl);
-	}
+	// // check if the user exists in our database
+	// const user = await db
+	// 	.selectDistinct()
+	// 	.from(users)
+	// 	.where(eq(users.userId, userId));
+
+	// // if not, create a new user
+	// if (user.length === 0) {
+	// 	const user = await clerkClient.users.getUser(userId);
+	// 	if (!user) {
+	// 		throwServerError("User not found");
+	// 		return;
+	// 	}
+	// 	if (!user.username) {
+	// 		throwServerError("User does not have a username");
+	// 		return;
+	// 	}
+	// 	if (!user.imageUrl) {
+	// 		throwServerError("User does not have a profile picture");
+	// 		return;
+	// 	}
+	// 	await helperCreateUser(userId, user.username, user.imageUrl);
+	// }
 }
 
 export async function POST(request: Request) {
