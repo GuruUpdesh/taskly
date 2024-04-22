@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function SignUpPage() {
 	return (
 		<div>
-			<SignUp />
+			<SignUp path="/sign-up" />
 		</div>
 	);
 }

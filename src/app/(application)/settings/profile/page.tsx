@@ -4,7 +4,7 @@ import { UserProfile } from "@clerk/nextjs";
 
 const UserProfilePage = () => (
 	<div className="flex items-center justify-center bg-[#020713]">
-		<UserProfile />
+		<UserProfile path="/settings/profile" />
 	</div>
 );
 

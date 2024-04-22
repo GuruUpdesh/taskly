@@ -28,12 +28,13 @@ export default function RootLayout({
 }) {
 	return (
 		<ClerkProvider
-		// appearance={{
-		// 	baseTheme: dark,
-		// 	variables: {
-		// 		colorBackground: "#000000",
-		// 	},
-		// }}
+			appearance={{
+				baseTheme: dark,
+				variables: {
+					colorBackground: "#000000",
+					colorInputBackground: "#1b1b1b",
+				},
+			}}
 		>
 			<KBarProvider>
 				<KBar />
