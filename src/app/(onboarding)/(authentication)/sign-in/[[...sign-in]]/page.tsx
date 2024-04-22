@@ -1,6 +1,11 @@
 import { ClerkLoading, SignIn } from "@clerk/nextjs";
+import { type Metadata } from "next";
 
 import { Skeleton } from "~/components/ui/skeleton";
+
+export const metadata: Metadata = {
+	title: "Sign In",
+};
 
 export default function SignInPage() {
 	return (

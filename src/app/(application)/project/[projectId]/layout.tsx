@@ -5,6 +5,7 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
+import { type Metadata } from "next";
 import { cookies } from "next/headers";
 
 import {
@@ -25,6 +26,28 @@ type Params = {
 		projectId: string;
 	};
 };
+
+export async function generateMetadata({
+	params: { projectId },
+}: Params): Promise<Metadata> {
+	const projectResults = await getProject(Number(projectId));
+	if (!projectResults || !projectResults.success || !projectResults.project) {
+		return {
+			title: {
+				default: "Project",
+				template: "%s | Taskly",
+			}
+			
+		};
+	}
+
+	return {
+		title: {
+			default: projectResults.project.name,
+			template: `%s > ${projectResults.project.name} | Taskly`
+		}
+	};
+}
 
 export default async function ApplicationLayout({
 	children,

@@ -1,6 +1,7 @@
 import React from "react";
 
 import { auth } from "@clerk/nextjs/server";
+import { type Metadata } from "next";
 
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import { getAllNotifications } from "~/actions/notification-actions";
@@ -16,6 +17,10 @@ import {
 	CardHeader,
 } from "~/components/ui/card";
 import { type Notification, type Task } from "~/server/db/schema";
+
+export const metadata: Metadata = {
+	title: "Dashboard",
+};
 
 type ProjectPageProps = {
 	params: {

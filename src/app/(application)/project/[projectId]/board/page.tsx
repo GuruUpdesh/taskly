@@ -4,6 +4,7 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
+import { type Metadata } from "next";
 
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import CreateTask from "~/components/backlog/create-task";
@@ -15,6 +16,10 @@ import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-butt
 import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
 import ToggleFilters from "~/components/page/backlog/display-toggles";
 import { Button } from "~/components/ui/button";
+
+export const metadata: Metadata = {
+	title: "Board",
+};
 
 type Params = {
 	params: {
