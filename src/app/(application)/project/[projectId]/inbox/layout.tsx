@@ -1,6 +1,6 @@
 import React from "react";
 
-import { currentUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 import { cookies } from "next/headers";
 
 import InboxButtons from "~/components/inbox/InboxButtons";

@@ -36,16 +36,15 @@ export async function generateMetadata({
 			title: {
 				default: "Project",
 				template: "%s | Taskly",
-			}
-			
+			},
 		};
 	}
 
 	return {
 		title: {
 			default: projectResults.project.name,
-			template: `%s > ${projectResults.project.name} | Taskly`
-		}
+			template: `%s > ${projectResults.project.name} | Taskly`,
+		},
 	};
 }
 

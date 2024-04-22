@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, currentUser } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { and, eq, gt, max, ne, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";

@@ -12,13 +12,13 @@ import ReactQueryProvider from "~/lib/react-query-provider";
 import { cn } from "~/lib/utils";
 
 export const metadata = {
+	metadataBase: new URL("https://tasklypm.com"),
 	title: {
 		default: "Taskly",
 		template: "%s | Taskly",
 	},
 	description: "Simplified project management tool",
 	icons: [{ rel: "icon", url: "/favicon.ico" }],
-	
 };
 
 export default function RootLayout({
@@ -28,12 +28,12 @@ export default function RootLayout({
 }) {
 	return (
 		<ClerkProvider
-			appearance={{
-				baseTheme: dark,
-				variables: {
-					colorBackground: "#000000",
-				},
-			}}
+		// appearance={{
+		// 	baseTheme: dark,
+		// 	variables: {
+		// 		colorBackground: "#000000",
+		// 	},
+		// }}
 		>
 			<KBarProvider>
 				<KBar />

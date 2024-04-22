@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { addWeeks } from "date-fns";
 import { and, asc, desc, eq, gte, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";

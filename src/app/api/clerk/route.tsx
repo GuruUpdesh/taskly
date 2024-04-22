@@ -1,12 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { clerkClient } from "@clerk/nextjs";
-import type {
-	SessionWebhookEvent,
-	UserJSON,
-	UserWebhookEvent,
-	WebhookEvent,
-} from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs/server";
+import type { WebhookEvent } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { Webhook as svixWebhook } from "svix";
@@ -41,8 +39,12 @@ async function validateRequest(request: Request) {
 /**
  * Now we can handle the webhook events with our own logic
  */
-async function onUserCreated(payload: UserWebhookEvent) {
-	const data = payload.data as UserJSON;
+async function onUserCreated(payload: {
+	type?: "user.created" | "user.updated";
+	object?: "event";
+	data: any;
+}) {
+	const data = payload.data;
 	if (!data.id || !data.username || !data.image_url) {
 		throwServerError("Required data not found in webhook payload");
 		return;
@@ -66,7 +68,11 @@ async function helperCreateUser(
 	await db.insert(users).values(newUser);
 }
 
-async function onUserDeleted(payload: UserWebhookEvent) {
+async function onUserDeleted(payload: {
+	type?: "user.deleted";
+	object?: "event";
+	data: any;
+}) {
 	const userId = payload.data.id;
 	if (!userId) {
 		throwServerError("No user ID provided");
@@ -75,7 +81,15 @@ async function onUserDeleted(payload: UserWebhookEvent) {
 	await db.delete(users).where(eq(users.userId, userId));
 }
 
-async function onSessionCreated(payload: SessionWebhookEvent) {
+async function onSessionCreated(payload: {
+	type?:
+		| "session.created"
+		| "session.ended"
+		| "session.removed"
+		| "session.revoked";
+	object?: "event";
+	data: any;
+}) {
 	const userId = payload.data.user_id;
 
 	// check if the user exists in our database

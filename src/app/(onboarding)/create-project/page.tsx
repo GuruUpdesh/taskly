@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { type Metadata } from "next";
 import { redirect } from "next/navigation";
 

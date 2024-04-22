@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 

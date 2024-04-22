@@ -1,6 +1,6 @@
 import React from "react";
 
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 

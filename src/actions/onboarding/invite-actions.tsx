@@ -2,7 +2,7 @@
 
 import crypto from "crypto";
 
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { render } from "@react-email/render";
 import { differenceInDays } from "date-fns";
 import { and, eq } from "drizzle-orm";

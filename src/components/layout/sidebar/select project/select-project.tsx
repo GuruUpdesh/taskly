@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 import { getAllProjects } from "~/actions/application/project-actions";
 import { throwServerError } from "~/utils/errors";
