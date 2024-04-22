@@ -1,6 +1,6 @@
 import { type Metadata } from "next";
 
-import { getTask } from "~/actions/application/task-actions";
+import { getAllTasks, getTask } from "~/actions/application/task-actions";
 import { TaskWrapper } from "~/components/task/TaskWrapper";
 
 type Params = {
@@ -23,8 +23,22 @@ export async function generateMetadata({
 	return {
 		title: task.task.title,
 	};
+};
+
+export async function generateStaticParams() {
+	const tasks = await getAllTasks();
+	if (!tasks) {
+		return []
+	};
+
+	return tasks.map((task) => ({
+		params: {
+			taskId: task.id.toString(),
+			projectId: task.projectId.toString(),
+		},
+	}));
 }
 
 export default function TaskPage({ params: { taskId, projectId } }: Params) {
 	return <TaskWrapper taskId={taskId} projectId={projectId} />;
-}
+};
