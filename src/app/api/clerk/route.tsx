@@ -43,7 +43,6 @@ async function onUserCreated(payload: WebhookEvent) {
 	// 	throwServerError("Required data not found in webhook payload");
 	// 	return;
 	// }
-
 	// await helperCreateUser(data.id, data.username, data.image_url);
 }
 
@@ -57,7 +56,6 @@ async function helperCreateUser(
 	// 	username,
 	// 	profilePicture,
 	// };
-
 	// const newUser = insertUserSchema.parse(data);
 	// await db.insert(users).values(newUser);
 }
@@ -73,18 +71,15 @@ async function onUserDeleted(payload: WebhookEvent) {
 
 async function onSessionCreated(payload: WebhookEvent) {
 	// const userId = payload.data.id;
-
 	// if (!userId) {
 	// 	throwServerError("No user ID provided");
 	// 	return;
 	// }
-
 	// // check if the user exists in our database
 	// const user = await db
 	// 	.selectDistinct()
 	// 	.from(users)
 	// 	.where(eq(users.userId, userId));
-
 	// // if not, create a new user
 	// if (user.length === 0) {
 	// 	const user = await clerkClient.users.getUser(userId);
