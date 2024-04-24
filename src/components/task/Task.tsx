@@ -113,7 +113,7 @@ const TaskPage = ({
 					order={0}
 				>
 					<div className="flex max-h-screen flex-col overflow-y-scroll">
-						<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b bg-background/75 px-4 py-2 pb-2 pt-2 backdrop-blur-xl">
+						<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b px-4 py-2 pb-2 pt-2 backdrop-blur-xl">
 							<div className="flex items-center gap-2">
 								{context === "page" && (
 									<>
@@ -128,7 +128,7 @@ const TaskPage = ({
 									onClick={handleCopyLinkToClipboard}
 									size="sm"
 									variant="outline"
-									className="gap-2"
+									className="gap-2 bg-transparent"
 								>
 									Copy Link
 									<LinkIcon className="h-4 w-4" />
@@ -140,7 +140,7 @@ const TaskPage = ({
 										<Button
 											size="sm"
 											variant="outline"
-											className="gap-2"
+											className="gap-2 bg-transparent"
 										>
 											Open
 											<ChevronRight className="h-4 w-4" />

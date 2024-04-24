@@ -13,7 +13,6 @@ import Link from "next/link";
 
 import CreateTask from "~/components/backlog/create-task";
 import Logo from "~/components/general/logo";
-import SimpleTooltip from "~/components/general/simple-tooltip";
 import InboxSidebarButton from "~/components/inbox/InboxSidebarButton";
 import { Button } from "~/components/ui/button";
 import UserButton from "~/components/user-button/user-button";
@@ -51,19 +50,17 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 				</div>
 				<div className="mb-2 flex items-center gap-2">
 					<SidebarSearch />
-					<SimpleTooltip label="Create a Task" side="right">
-						<div className="hidden @sidebar:block">
-							<CreateTask projectId={projectId}>
-								<Button
-									className="aspect-square h-[36px] w-[36px] bg-foreground/5 font-bold"
-									variant="outline"
-									size="iconSm"
-								>
-									<PlusCircledIcon />
-								</Button>
-							</CreateTask>
-						</div>
-					</SimpleTooltip>
+					<div className="hidden @sidebar:block">
+						<CreateTask projectId={projectId}>
+							<Button
+								className="aspect-square h-[36px] w-[36px] bg-foreground/5 font-bold"
+								variant="outline"
+								size="iconSm"
+							>
+								<PlusCircledIcon />
+							</Button>
+						</CreateTask>
+					</div>
 				</div>
 				<div>
 					<SidebarButton

@@ -13,7 +13,7 @@ const BackButtonRelative = () => {
 			onClick={() => router.back()}
 			variant="outline"
 			size="sm"
-			className="gap-2 font-semibold"
+			className="gap-2 bg-transparent font-semibold"
 		>
 			<ArrowLeftIcon />
 			Back
