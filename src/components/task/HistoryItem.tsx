@@ -10,7 +10,7 @@ import { useShallow } from "zustand/react/shallow";
 import {
 	type TaskProperty as TaskPropertyType,
 	getPropertyConfig,
-} from "~/config/TaskConfigType";
+} from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { type TaskHistory, type User } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";

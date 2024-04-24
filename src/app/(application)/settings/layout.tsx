@@ -1,10 +1,15 @@
 import React from "react";
 
+import { type Metadata } from "next";
 import { cookies } from "next/headers";
 
 import SettingsSidebar from "~/components/page/settings/sidebar/settings-sidebar";
 
 import SettingsPanel from "./settings-panel";
+
+export const metadata: Metadata = {
+	title: "Settings",
+};
 
 export default function SettingsLayout({
 	children,

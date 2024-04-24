@@ -87,3 +87,13 @@
 ::-webkit-scrollbar-corner {
 	background: rgba(0, 0, 0, 0);
 }
+
+
+.cl-socialButtonsBlockButton {
+	background-color: #1b1b1b;
+	border: hsl(var(--accent));
+}
+
+.cl-socialButtonsBlockButton:hover {
+	background-color: hsl(var(--accent));
+}

@@ -3,7 +3,7 @@ import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 
 import { type TaskFormType } from "~/components/backlog/create-task";
-import { type getPropertyConfig } from "~/config/TaskConfigType";
+import { type getPropertyConfig } from "~/config/taskConfigType";
 
 import PropertyStatic from "./property-static";
 import PropertySelect from "./propery-select";

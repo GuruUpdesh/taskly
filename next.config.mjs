@@ -29,9 +29,12 @@ const config = {
 			},
 		],
 	},
+	devIndicators: {
+		buildActivityPosition: 'bottom-right',
+	},
 	experimental: {
 		instrumentationHook: true,
-	}
+	},
 };
 
 export default config;

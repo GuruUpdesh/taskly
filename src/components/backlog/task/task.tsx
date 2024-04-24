@@ -15,7 +15,7 @@ import {
 	type TaskFormType,
 } from "~/components/backlog/create-task";
 import type { UpdateTask } from "~/components/backlog/tasks";
-import { type TaskProperty, getPropertyConfig } from "~/config/TaskConfigType";
+import { type TaskProperty, getPropertyConfig } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { type Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";

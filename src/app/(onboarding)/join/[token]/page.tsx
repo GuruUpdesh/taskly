@@ -1,7 +1,12 @@
+import { type Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { joinProject } from "~/actions/onboarding/invite-actions";
 import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
+
+export const metadata: Metadata = {
+	title: "Join Project",
+};
 
 type Params = {
 	params: {

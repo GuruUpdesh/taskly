@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, currentUser } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { and, eq, gt, max, ne, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -8,7 +8,7 @@ import { fromZodError } from "zod-validation-error";
 
 import { createNotification } from "~/actions/notification-actions";
 import { type TaskFormType as CreateTaskData } from "~/components/backlog/create-task";
-import { type StatefulTask, CreateTaskSchema } from "~/config/TaskConfigType";
+import { type StatefulTask, CreateTaskSchema } from "~/config/taskConfigType";
 import { db } from "~/server/db";
 import {
 	comments,

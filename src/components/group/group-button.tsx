@@ -13,7 +13,7 @@ import {
 	SelectItem,
 	SelectTrigger,
 } from "~/components/ui/select";
-import { type TaskProperty, getPropertyConfig } from "~/config/TaskConfigType";
+import { type TaskProperty, getPropertyConfig } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
 

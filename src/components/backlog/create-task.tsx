@@ -30,7 +30,7 @@ import {
 	defaultValues,
 	getPropertyConfig,
 	taskProperties,
-} from "~/config/TaskConfigType";
+} from "~/config/taskConfigType";
 import useValidationErrors from "~/hooks/useValidationErrors";
 import { cn } from "~/lib/utils";
 import {

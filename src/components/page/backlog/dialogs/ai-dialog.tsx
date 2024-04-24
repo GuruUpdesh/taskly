@@ -22,7 +22,7 @@ import {
 } from "~/components/ui/dialog";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Textarea } from "~/components/ui/textarea";
-import { schemaValidators } from "~/config/TaskConfigType";
+import { schemaValidators } from "~/config/taskConfigType";
 import { useNavigationStore } from "~/store/navigation";
 import { taskNameToBranchName } from "~/utils/task-name-branch-converters";
 

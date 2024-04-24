@@ -1,12 +1,19 @@
-import { authMiddleware } from "@clerk/nextjs";
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
-export default authMiddleware({
-	// "/" will be accessible to all users
-	publicRoutes: ["/", "/api/cron", "/api/clerk", "/sign-in", "/api/github"],
+const isProtectedRoute = createRouteMatcher([
+	"/app",
+	"/create-project",
+	"/project/(.*)",
+	"/settings/(.*)",
+]);
+
+export default clerkMiddleware((auth, req) => {
+	if (isProtectedRoute(req)) auth().protect();
 });
 
 export const config = {
-	matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+	matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };

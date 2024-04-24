@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import dynamic from "next/dynamic";
 
 import { createInvite } from "~/actions/onboarding/invite-actions";

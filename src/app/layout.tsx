@@ -12,7 +12,11 @@ import ReactQueryProvider from "~/lib/react-query-provider";
 import { cn } from "~/lib/utils";
 
 export const metadata = {
-	title: "Taskly",
+	metadataBase: new URL("https://tasklypm.com"),
+	title: {
+		default: "Taskly",
+		template: "%s | Taskly",
+	},
 	description: "Simplified project management tool",
 	icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
@@ -28,6 +32,7 @@ export default function RootLayout({
 				baseTheme: dark,
 				variables: {
 					colorBackground: "#000000",
+					colorInputBackground: "#1b1b1b",
 				},
 			}}
 		>

@@ -26,7 +26,7 @@ import {
 	type StatefulTask,
 	getPropertyConfig,
 	taskVariants,
-} from "~/config/TaskConfigType";
+} from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import type { Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";

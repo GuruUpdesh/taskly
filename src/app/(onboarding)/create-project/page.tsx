@@ -1,4 +1,5 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import { type Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import {
@@ -6,6 +7,10 @@ import {
 	initAction,
 } from "~/actions/application/project-actions";
 import ProjectCreateForm from "~/components/page/onboarding/create-project-form";
+
+export const metadata: Metadata = {
+	title: "Create Project",
+};
 
 export default async function createProjectPage() {
 	await initAction();

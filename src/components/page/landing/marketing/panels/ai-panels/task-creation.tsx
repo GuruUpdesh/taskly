@@ -20,7 +20,7 @@ import {
 	CardTitle,
 } from "~/components/ui/card";
 import { Textarea } from "~/components/ui/textarea";
-import { type StatefulTask } from "~/config/TaskConfigType";
+import { type StatefulTask } from "~/config/taskConfigType";
 import { type User } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
 

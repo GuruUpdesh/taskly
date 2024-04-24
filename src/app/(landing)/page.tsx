@@ -182,67 +182,6 @@ export default function HomePage() {
 						</div>
 					</div>
 				</section>
-				{/* <section className="z-10 mb-32 flex flex-col items-center justify-center px-4 pb-0 md:px-12 lg:px-16">
-					<div className="z-10 grid min-w-[900px] grid-cols-3 gap-4">
-						<div />
-						<div className="flex flex-col gap-3">
-							<div className="rounded-lg border bg-background p-4 shadow-xl shadow-emerald-600/25">
-								<p className="text-lg">The Only Plan</p>
-								<h3 className="text-5xl font-semibold text-emerald-400">
-									Free
-								</h3>
-								<ul className="relative flex flex-col gap-1 py-2">
-									<li className="flex items-center gap-1">
-										<Check className="h-4 w-4" />
-										<span className="ml-2">
-											Unlimited Projects
-										</span>
-									</li>
-									<li className="flex items-center gap-1">
-										<Check className="h-4 w-4" />
-										<span className="ml-2">
-											Unlimited Tasks
-										</span>
-									</li>
-									<li className="flex items-center gap-1">
-										<Check className="h-4 w-4" />
-										<span className="ml-2">
-											Unlimited Team Members
-										</span>
-									</li>
-									<li className="flex items-center gap-1">
-										<Check className="h-4 w-4" />
-										<span className="ml-2">Dashboard</span>
-									</li>
-									<li className="flex items-center gap-1">
-										<Check className="h-4 w-4" />
-										<span className="ml-2">
-											Project Customization
-										</span>
-									</li>
-									<li className="flex items-center gap-1">
-										<Check className="h-4 w-4" />
-										<span className="ml-2">
-											Realtime Collaboration
-										</span>
-									</li>
-									<li className="flex items-center gap-1">
-										<Check className="h-4 w-4" />
-										<span className="ml-2">
-											AI Workflows
-										</span>
-									</li>
-								</ul>
-								<Link href="/sign-up">
-									<Button className="mt-4 w-full bg-emerald-500 text-foreground hover:bg-emerald-600">
-										Join the Alpha
-									</Button>
-								</Link>
-							</div>
-						</div>
-						<div />
-					</div>
-				</section> */}
 			</div>
 			<Footer />
 		</div>

@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { getAssigneesForProject } from "~/actions/application/project-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
-import { schemaValidators } from "~/config/TaskConfigType";
+import { schemaValidators } from "~/config/taskConfigType";
 import { env } from "~/env.mjs";
 import { type User } from "~/server/db/schema";
 import { getTaskAiSchema } from "~/utils/ai-context";

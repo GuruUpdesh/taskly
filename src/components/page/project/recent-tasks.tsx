@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { getMostRecentTasks } from "~/actions/application/task-views-actions";
 import TaskProperty from "~/components/task/TaskProperty";
-import { getEnumOptionByKey } from "~/config/TaskConfigType";
+import { getEnumOptionByKey } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { type Task as TaskType } from "~/server/db/schema";
 
@@ -18,8 +18,15 @@ type RecentTasksProps = {
 };
 
 const RecentTasks = async ({ number }: RecentTasksProps) => {
-	const mostRecentTasks = await getMostRecentTasks(number);
-	if (mostRecentTasks.length === 0) return null;
+	let mostRecentTasks = [];
+	try {
+		mostRecentTasks = await getMostRecentTasks(number);
+	} catch (error) {
+		console.error("Error fetching most recent tasks", error);
+		return <p>You have no tasks yet!</p>;
+	}
+
+	if (mostRecentTasks.length === 0) return <p>You have no tasks yet!</p>;
 
 	return (
 		<ul>

@@ -11,7 +11,7 @@ import { cn } from "~/lib/utils";
 
 export type SidebarButtonProps = {
 	label: string;
-	url: string;
+	url: string | string[];
 	icon?: React.ReactNode;
 	openInNewTab?: boolean;
 	children?: React.ReactNode;
@@ -29,15 +29,17 @@ const SidebarButton = ({
 	const pathname = usePathname();
 	const active = useMemo(() => {
 		if (pathname.includes("inbox")) {
-			return url.includes("inbox");
+			return Array.isArray(url)
+				? url.some((u) => u.includes("inbox"))
+				: url.includes("inbox");
 		}
 
-		return pathname === url;
+		return Array.isArray(url) ? url.includes(pathname) : pathname === url;
 	}, [pathname, url]);
 	return (
 		<SimpleTooltip label={label} side="right">
 			<Link
-				href={url}
+				href={Array.isArray(url) ? url[0]! : url}
 				target={openInNewTab ? "_blank" : ""}
 				className={cn("flex-1 @sidebar:block", hidden && "hidden")}
 			>
