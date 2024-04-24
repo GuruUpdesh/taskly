@@ -1,4 +1,4 @@
-import { getPropertyConfig, taskProperties } from "~/config/TaskConfigType";
+import { getPropertyConfig, taskProperties } from "~/config/taskConfigType";
 import { type Sprint, type User } from "~/server/db/schema";
 
 export function getTaskAiSchema(assignees: User[], sprints: Sprint[]): string {

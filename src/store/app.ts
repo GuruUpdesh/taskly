@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { type NotificationWithTask } from "~/actions/notification-actions";
-import { type TaskProperty } from "~/config/TaskConfigType";
+import { type TaskProperty } from "~/config/taskConfigType";
 import { type Sprint, type User } from "~/server/db/schema";
 
 export type Filter = {

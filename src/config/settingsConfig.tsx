@@ -10,7 +10,7 @@ import { PiPersonSimpleRun } from "react-icons/pi";
 
 import type { UserRole } from "~/server/db/schema";
 
-export type SettingsConfig = {
+export type settingsConfig = {
 	anchor: string;
 	title: string;
 	icon: JSX.Element;
@@ -18,7 +18,7 @@ export type SettingsConfig = {
 	className?: string;
 };
 
-export const generalSettings: SettingsConfig[] = [
+export const generalSettings: settingsConfig[] = [
 	{
 		anchor: "project-info",
 		title: "Project Information",

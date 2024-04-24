@@ -6,7 +6,6 @@ import Link from "next/link";
 
 import SidebarButton from "~/components/layout/sidebar/sidebar-button";
 import { Button } from "~/components/ui/button";
-import { Separator } from "~/components/ui/separator";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 const ProjectSettings = dynamic(() => import("./project-settings"), {
@@ -33,12 +32,11 @@ const SettingsSidebar = () => {
 			<div className="px-4">
 				<SidebarButton
 					icon={<PersonIcon />}
-					label="User Settings"
-					url="/settings/profile"
+					label="Account"
+					url={["/settings/account", "/settings/account/security"]}
 				/>
 			</div>
 			<div className="sticky top-0 px-4">
-				<Separator className="mb-4" />
 				<ProjectSettings />
 			</div>
 		</div>

@@ -6,7 +6,7 @@ import {
 	type Option,
 	taskVariants,
 	type VariantPropsType as TaskVariantsProps,
-} from "~/config/TaskConfigType";
+} from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 
 import SimpleTooltip from "../general/simple-tooltip";

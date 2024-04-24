@@ -34,7 +34,7 @@ const SettingsPanel = ({
 				maxSize={25}
 				defaultSize={defaultLayout?.[0]}
 				order={0}
-				className="min-w-100px relative !overflow-visible bg-accent/25"
+				className="min-w-100px relative min-h-screen !overflow-visible bg-accent/25"
 			>
 				{sidebarChildren}
 			</ResizablePanel>
@@ -43,6 +43,7 @@ const SettingsPanel = ({
 				id="settings-content"
 				defaultSize={defaultLayout?.[1]}
 				order={1}
+				className="min-h-screen"
 			>
 				{children}
 			</ResizablePanel>

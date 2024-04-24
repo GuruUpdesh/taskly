@@ -4,7 +4,7 @@ import React, { useCallback, useMemo } from "react";
 
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 
-import { getPropertyConfig } from "~/config/TaskConfigType";
+import { getPropertyConfig } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
 import { renderFilterValues } from "~/utils/filter-values";

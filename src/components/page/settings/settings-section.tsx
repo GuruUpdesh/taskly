@@ -4,14 +4,14 @@ import React, { useEffect, useRef } from "react";
 
 import { useInView } from "framer-motion";
 
-import { type SettingsConfig } from "~/config/settings-config";
+import { type settingsConfig } from "~/config/settingsConfig";
 import { cn } from "~/lib/utils";
 import { useNavigationStore } from "~/store/navigation";
 import typography from "~/styles/typography";
 
 type Props = {
 	anchor: string;
-	title: SettingsConfig["title"];
+	title: settingsConfig["title"];
 	icon: JSX.Element;
 	children: React.ReactNode;
 	className?: string;

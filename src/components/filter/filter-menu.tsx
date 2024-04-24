@@ -29,7 +29,7 @@ import {
 	type TaskProperty,
 	getPropertyConfig,
 	taskVariants,
-} from "~/config/TaskConfigType";
+} from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
 import { renderFilterValues } from "~/utils/filter-values";

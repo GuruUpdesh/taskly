@@ -1,5 +1,5 @@
 import { Skeleton } from "~/components/ui/skeleton";
-import { generalSettings } from "~/config/settings-config";
+import { generalSettings } from "~/config/settingsConfig";
 
 export default function Loading() {
 	return (
