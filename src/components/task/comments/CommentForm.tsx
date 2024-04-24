@@ -58,6 +58,7 @@ const CommentForm = ({ taskId, createComment }: Props) => {
 				/>
 				<Button
 					className="absolute bottom-1.5 right-1.5 text-xs"
+					variant="secondary"
 					size="sm"
 					disabled={
 						!form.formState.isDirty || form.formState.isSubmitting

@@ -19,6 +19,15 @@ import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import BackButtonRelative from "~/components/layout/navbar/back-button-relative";
 import { Button } from "~/components/ui/button";
 import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogTitle,
+	DialogTrigger,
+} from "~/components/ui/dialog";
+import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
@@ -30,6 +39,7 @@ import PrimaryTaskForm from "./PrimaryTaskForm";
 import TaskState from "./task-state";
 import Task from "../backlog/task/task";
 import { type UpdateTask } from "../backlog/tasks";
+import SimpleTooltip from "../general/simple-tooltip";
 import ToggleSidebarButton from "../layout/sidebar/toggle-sidebar-button";
 
 type Props = {
@@ -155,7 +165,7 @@ const TaskPage = ({
 						/>
 					</div>
 				</ResizablePanel>
-				<ResizableHandle className="" />
+				<ResizableHandle className="bg-foreground/15" />
 				<ResizablePanel
 					id="task-info"
 					defaultSize={defaultLayout?.[1]}
@@ -163,38 +173,81 @@ const TaskPage = ({
 					order={1}
 				>
 					<div className="flex h-screen max-h-screen flex-col bg-foreground/5">
-						<header className="flex items-center justify-between gap-2 border-b px-4 py-2 pb-2 pt-2">
+						<header className="flex items-center justify-between gap-2 border-b border-foreground/10 px-4 py-2 pb-2 pt-2">
 							<div className="flex w-full items-center gap-2">
-								<Button size="icon" variant="ghost">
-									<BellIcon />
-								</Button>
-								<Button
-									size="icon"
-									variant="ghost"
-									onClick={async () => {
-										if (!result?.data?.task?.branchName) {
-											return;
-										}
-										await navigator.clipboard.writeText(
-											result.data.task.branchName,
-										);
-										toast.info(
-											`Copied Branch Name: ${result.data.task.branchName}`,
-										);
-									}}
-								>
-									<GitHubLogoIcon />
-								</Button>
-								<Button
-									variant="destructive"
-									onClick={handleDelete}
-								>
-									<TrashIcon />
-								</Button>
+								<SimpleTooltip label="Toggle Notifications">
+									<Button
+										size="icon"
+										variant="outline"
+										className="border-foreground/10 bg-transparent"
+									>
+										<BellIcon />
+									</Button>
+								</SimpleTooltip>
+								<SimpleTooltip label="Copy Git Branch Name">
+									<Button
+										size="icon"
+										variant="outline"
+										className="border-foreground/10 bg-transparent"
+										onClick={async () => {
+											if (
+												!result?.data?.task?.branchName
+											) {
+												return;
+											}
+											await navigator.clipboard.writeText(
+												result.data.task.branchName,
+											);
+											toast.info(
+												`Copied Branch Name: ${result.data.task.branchName}`,
+											);
+										}}
+									>
+										<GitHubLogoIcon />
+									</Button>
+								</SimpleTooltip>
+								<div className="flex-1" />
+								<Dialog>
+									<DialogTrigger asChild>
+										<Button
+											size="icon"
+											variant="outline"
+											className="border-foreground/10 bg-transparent"
+										>
+											<TrashIcon />
+										</Button>
+									</DialogTrigger>
+									<DialogContent>
+										<DialogTitle>Delete Task?</DialogTitle>
+										<DialogDescription>
+											This can not be undone. Are you sure
+											you want to delete this task?
+										</DialogDescription>
+										<DialogFooter className="sm:justify-start">
+											<div className="flex-1" />
+											<DialogClose asChild>
+												<Button
+													type="button"
+													variant="secondary"
+												>
+													Cancel
+												</Button>
+											</DialogClose>
+											<DialogClose asChild>
+												<Button
+													variant="destructive"
+													onClick={handleDelete}
+												>
+													Delete
+												</Button>
+											</DialogClose>
+										</DialogFooter>
+									</DialogContent>
+								</Dialog>
 							</div>
 						</header>
-						<section className="flex flex-col gap-2 px-4 pt-8">
-							<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+						<section className="flex flex-col gap-2 p-4">
+							<h3 className="mb-4 scroll-m-20 text-xl font-semibold tracking-tight">
 								Attributes
 							</h3>
 							<Task
@@ -205,14 +258,11 @@ const TaskPage = ({
 								projectId={projectId}
 							/>
 						</section>
-						<Separator className="my-4" />
-						<div className="relative z-10">
-							<h3 className="scroll-m-20 px-4 pb-2 text-xl font-semibold tracking-tight">
-								Comments
-							</h3>
-							<div className="pointer-events-none absolute left-0 top-0 -z-10 h-[135%] w-full bg-gradient-to-t from-transparent to-[#1b1b1b] to-25%" />
-						</div>
-						<section className="comments-container mb-3 flex max-w-full flex-grow flex-col gap-4 overflow-scroll px-4 pb-1 pt-4">
+						<Separator className="my-4 bg-foreground/10" />
+						<h3 className="scroll-m-20 px-4 text-xl font-semibold tracking-tight">
+							Comments
+						</h3>
+						<section className="comments-container mb-3 mt-4 flex max-w-full flex-grow flex-col gap-4 overflow-scroll px-4 pb-1">
 							<Comments
 								taskComments={result.data.task.comments}
 								taskId={result.data.task.id}

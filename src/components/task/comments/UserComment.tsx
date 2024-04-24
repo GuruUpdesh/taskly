@@ -58,7 +58,7 @@ const UserComment = ({
 						top: scrollPosition,
 						behavior: "smooth",
 					});
-				}, 600);
+				}, 300);
 			}
 		}
 	}, [isLastComment, commentRef.current]);
@@ -120,7 +120,7 @@ const UserComment = ({
 		>
 			<div
 				className={cn(
-					"relative mb-4 overflow-hidden text-wrap rounded-lg border bg-accent/50 p-4 py-2 hover:bg-accent",
+					"relative mb-4 overflow-hidden text-wrap rounded-lg border bg-background/50 p-4 py-2",
 					{
 						"mb-0": isLastComment,
 					},
