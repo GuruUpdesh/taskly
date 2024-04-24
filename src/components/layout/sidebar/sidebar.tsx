@@ -51,9 +51,9 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 				</div>
 				<div className="mb-2 flex items-center gap-2">
 					<SidebarSearch />
-					<div className="hidden @sidebar:block">
-						<CreateTask projectId={projectId}>
-							<SimpleTooltip label="Create a Task" side="right">
+					<SimpleTooltip label="Create a Task" side="right">
+						<div className="hidden @sidebar:block">
+							<CreateTask projectId={projectId}>
 								<Button
 									className="aspect-square h-[36px] w-[36px] bg-foreground/5 font-bold"
 									variant="outline"
@@ -61,9 +61,9 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 								>
 									<PlusCircledIcon />
 								</Button>
-							</SimpleTooltip>
-						</CreateTask>
-					</div>
+							</CreateTask>
+						</div>
+					</SimpleTooltip>
 				</div>
 				<div>
 					<SidebarButton
