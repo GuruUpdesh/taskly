@@ -15,12 +15,14 @@ const ButtonOptions = () => {
 				>
 					Watch a Demo
 				</Button>
-				<Button
-					variant="outline"
-					className="rounded-full bg-transparent backdrop-blur-lg"
-				>
-					Documentation
-				</Button>
+				<Link href="https://docs.tasklypm.com" target="_blank">
+					<Button
+						variant="outline"
+						className="rounded-full bg-transparent backdrop-blur-lg"
+					>
+						Documentation
+					</Button>
+				</Link>
 			</div>
 			<Link href="/app">
 				<Button className="group rounded-full bg-gradient-to-r font-bold hover:from-green-600 hover:to-green-400 hover:text-foreground">

@@ -46,8 +46,6 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 			form.reset({
 				invitees: [],
 			});
-		} else {
-			toast.error(result.message);
 		}
 	}
 

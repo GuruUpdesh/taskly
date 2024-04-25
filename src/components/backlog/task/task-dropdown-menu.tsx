@@ -2,9 +2,11 @@
 
 import React from "react";
 
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { Priority } from "kbar";
-import { Trash2Icon } from "lucide-react";
+import { Expand, Trash, Trash2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import {
@@ -28,8 +30,38 @@ const TaskKBarUpdaterMemoized = React.memo(TaskKBarUpdater);
 
 const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 	const setHoveredTaskId = useAppStore((state) => state.setHoveredTaskId);
+	const router = useRouter();
 
 	const actions = [
+		{
+			id: "open",
+			name: "Open",
+			icon: <Expand className="h-4 w-4" />,
+			shortcut: ["o"],
+			perform: () => {
+				router.push(`/project/${task.projectId}/task/${task.id}`);
+			},
+			priority: Priority.HIGH,
+			section: `Actions - ${task.title}`,
+		},
+		{
+			id: "gitbranch",
+			name: "Copy Branch Name",
+			icon: <GitHubLogoIcon className="h-4 w-4" />,
+			shortcut: ["b"],
+			perform: () => {
+				if (!task.branchName) return;
+
+				void navigator.clipboard.writeText(task.branchName);
+
+				toast.info(`Copied branch name to clipboard`, {
+					description: `Branch name: ${task.branchName}`,
+					icon: <GitHubLogoIcon className="h-4 w-4" />,
+				});
+			},
+			priority: Priority.HIGH,
+			section: `Actions - ${task.title}`,
+		},
 		{
 			id: "delete",
 			name: "Delete",
@@ -38,7 +70,9 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 			perform: () => {
 				if (!deleteTaskMutation) return;
 				deleteTaskMutation.mutate(task.id);
-				toast.warning("Task deleted");
+				toast.error("Task deleted", {
+					icon: <Trash className="h-4 w-4" />,
+				});
 			},
 			priority: Priority.HIGH,
 			section: `Actions - ${task.title}`,

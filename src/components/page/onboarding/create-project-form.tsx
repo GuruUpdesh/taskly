@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PersonIcon } from "@radix-ui/react-icons";
 import { endOfYesterday, isMonday, nextMonday } from "date-fns";
 import {
 	ChevronLeft,
@@ -114,7 +115,10 @@ const CreateProjectForm = () => {
 			formData.invitees,
 		);
 		if (!inviteResult.status) {
-			toast.error(inviteResult.message);
+			toast.warning(inviteResult.message, {
+				icon: <PersonIcon className="h-4 w-4" />,
+				duration: 350,
+			});
 		} else {
 			toast.success(inviteResult.message);
 		}

@@ -49,7 +49,10 @@ export default function InboxButtons({ user }: Props) {
 			</SimpleTooltip>
 			<Dialog>
 				<DialogTrigger asChild>
-					<Button variant="outline" className="bg-transparent">
+					<Button
+						variant="outline"
+						className="whitespace-nowrap bg-transparent"
+					>
 						Delete All
 					</Button>
 				</DialogTrigger>

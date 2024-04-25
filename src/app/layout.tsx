@@ -6,9 +6,9 @@ import { GeistSans } from "geist/font/sans";
 
 import KBar from "~/components/general/kbar";
 import { Toaster } from "~/components/ui/sonner";
-import GlobalToastHandler from "~/lib/global-toast/global-toast-handler";
 import KBarProvider from "~/lib/kbar-provider";
 import ReactQueryProvider from "~/lib/react-query-provider";
+import GlobalToastHandler from "~/lib/toast/global-toast-handler";
 import { cn } from "~/lib/utils";
 
 export const metadata = {

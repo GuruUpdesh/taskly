@@ -92,7 +92,7 @@ export async function createProject(
 			newProjectId: insertId,
 			inviteToken: token,
 			status: true,
-			message: "Project created successfully",
+			message: `Project "${newProject.name}" created`,
 		};
 	} catch (error) {
 		return handleCreateProjectError(error);

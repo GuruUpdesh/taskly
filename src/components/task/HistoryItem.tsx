@@ -77,7 +77,7 @@ const TaskHistoryItem = ({ history }: Props) => {
 						</b>
 					) : (
 						<b>{history.user.username}</b>
-					)}
+					)}{" "}
 					{history.comment}
 				</p>
 			) : (

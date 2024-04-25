@@ -7,7 +7,8 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
-import { Trash2Icon } from "lucide-react";
+import { Trash, Trash2Icon } from "lucide-react";
+import { toast } from "sonner";
 
 import { deleteComment } from "~/actions/application/comment-actions";
 import {
@@ -58,7 +59,7 @@ const UserComment = ({
 						top: scrollPosition,
 						behavior: "smooth",
 					});
-				}, 600);
+				}, 300);
 			}
 		}
 	}, [isLastComment, commentRef.current]);
@@ -69,6 +70,9 @@ const UserComment = ({
 		if (comment.userId !== user?.id) return;
 		optimisticDeleteComment(comment.id);
 		await deleteComment(comment.id);
+		toast.error("Comment deleted", {
+			icon: <Trash className="h-4 w-4" />,
+		});
 	}
 
 	function parseCommentForMentions(comment: string) {
@@ -120,7 +124,7 @@ const UserComment = ({
 		>
 			<div
 				className={cn(
-					"relative mb-4 overflow-hidden text-wrap rounded-lg border bg-accent/50 p-4 py-2 hover:bg-accent",
+					"relative mb-4 overflow-hidden text-wrap rounded-lg border bg-background/50 p-4 py-2",
 					{
 						"mb-0": isLastComment,
 					},

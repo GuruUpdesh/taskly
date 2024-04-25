@@ -65,6 +65,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	}
 
 	async function handleChange() {
+		console.log("triggered");
 		const isValid = await form.trigger();
 		if (isValid) {
 			await form.handleSubmit(onSubmit)();
@@ -85,7 +86,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 		>
 			<Input
 				type="text"
-				className="m-0 border-none bg-transparent p-0 py-2 text-2xl focus-visible:ring-transparent"
+				className="m-0 border-none bg-transparent p-0 py-2 text-2xl ring-offset-transparent focus-visible:ring-transparent"
 				placeholder="Task Title"
 				autoFocus
 				autoComplete="off"
@@ -97,6 +98,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 				editorRef={editorRef}
 				markdown={form.watch("description")}
 				onChange={(content) => {
+					console.log(content);
 					form.setValue("description", content);
 					debouncedHandleChange();
 				}}

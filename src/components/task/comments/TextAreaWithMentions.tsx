@@ -73,7 +73,7 @@ function TextAreaWithMentions({
 			<div className="relative">
 				<Textarea
 					placeholder="Add a comment..."
-					className="resize-none bg-accent/25"
+					className="resize-none bg-background/50"
 					rows={2}
 					ref={textareaRef}
 					onKeyDown={handleKeyDown}
