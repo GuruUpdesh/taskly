@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
@@ -10,8 +11,9 @@ import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 
-const Page = () => {
+const GitHubIntegration = () => {
 	const searchParams = useSearchParams();
+
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	useEffect(() => {
@@ -84,4 +86,4 @@ const Page = () => {
 	}
 };
 
-export default Page;
+export default GitHubIntegration;
