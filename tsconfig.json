@@ -39,5 +39,5 @@
     "**/*.mjs",
     ".next/types/**/*.ts"
 , "src/components/Posts.disable"  ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "__tests__", ".next", "cypress"]
 }
