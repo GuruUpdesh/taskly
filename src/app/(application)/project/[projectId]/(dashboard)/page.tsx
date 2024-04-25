@@ -5,9 +5,9 @@ import { type Metadata } from "next";
 
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import { getAllNotifications } from "~/actions/notification-actions";
-import RecentTasks from "~/app/components/RecentTasks";
 import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
+import RecentTasks from "~/app/components/RecentTasks";
 import {
 	Card,
 	CardContent,

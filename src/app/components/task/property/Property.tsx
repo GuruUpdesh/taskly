@@ -5,8 +5,8 @@ import type { UseFormReturn } from "react-hook-form";
 import { type TaskFormType } from "~/app/components/CreateTask";
 import { type getPropertyConfig } from "~/config/taskConfigType";
 
-import PropertyStatic from "./PropertyStatic";
 import PropertySelect from "./PropertySelect";
+import PropertyStatic from "./PropertyStatic";
 import { type VariantPropsType } from "../Task";
 
 interface Props extends VariantPropsType {

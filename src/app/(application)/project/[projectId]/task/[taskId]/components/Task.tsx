@@ -15,11 +15,11 @@ import {
 	getTask,
 	updateTask,
 } from "~/actions/application/task-actions";
-import SimpleTooltip from "~/app/components/SimpleTooltip";
-import Task from "~/app/components/task/Task";
 import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
 import BackButtonRelative from "~/app/components/layout/navbar/back-button-relative";
 import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
+import SimpleTooltip from "~/app/components/SimpleTooltip";
+import Task from "~/app/components/task/Task";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,

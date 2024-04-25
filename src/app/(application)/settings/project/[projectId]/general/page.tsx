@@ -15,8 +15,8 @@ import ProjectInvite from "~/app/(application)/settings/components/ProjectInvite
 import ProjectSprints from "~/app/(application)/settings/components/ProjectSprints";
 import ProjectTheme from "~/app/(application)/settings/components/ProjectTheme";
 import SettingsSection from "~/app/(application)/settings/components/SettingsSection";
-import Permission from "~/app/components/Permission";
 import UsersTable from "~/app/(application)/settings/components/users-table";
+import Permission from "~/app/components/Permission";
 import { generalSettings } from "~/config/settingsConfig";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 

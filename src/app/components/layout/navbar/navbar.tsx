@@ -2,13 +2,13 @@ import React from "react";
 
 import { Sora } from "next/font/google";
 
-import Logo from "~/app/components/Logo";
-import { RecentTasksNavWrapper } from "~/app/components/RecentTasks";
 import NavbarMenu, {
 	RecentTaskMenuItem,
 } from "~/app/components/layout/navbar/navbar-menu";
 import ProjectList from "~/app/components/layout/navbar/project-list";
 import UserNav from "~/app/components/layout/navbar/user-nav";
+import Logo from "~/app/components/Logo";
+import { RecentTasksNavWrapper } from "~/app/components/RecentTasks";
 import { cn } from "~/lib/utils";
 
 const sora = Sora({ subsets: ["latin"] });
