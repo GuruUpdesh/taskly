@@ -330,7 +330,7 @@ export const notifications = pgTable("notifications", {
 	userId: varchar("user_id", { length: 32 }).notNull(),
 	taskId: integer("task_id").notNull(),
 	projectId: integer("project_id").notNull(),
-	readAt: timestamp("date", { precision: 6, withTimezone: true }),
+	readAt: timestamp("read_at", { precision: 6, withTimezone: true }),
 });
 
 // validators
