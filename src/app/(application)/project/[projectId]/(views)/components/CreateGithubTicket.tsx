@@ -36,7 +36,7 @@ const formSchema = z.object({
 	description: z.string().max(1000),
 });
 
-export function CreateTicket() {
+export function CreateGithubTicket() {
 	const [open, setOpen] = useState(false);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -153,4 +153,4 @@ export function CreateTicket() {
 	);
 }
 
-export default CreateTicket;
+export default CreateGithubTicket;

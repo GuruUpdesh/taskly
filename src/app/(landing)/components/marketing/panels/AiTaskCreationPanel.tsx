@@ -112,7 +112,7 @@ const exampleSprints = [
 	},
 ];
 
-const TaskCreation = () => {
+const AiTaskCreationPanel = () => {
 	const [tasks, setTasks] = useState<StatefulTask[]>(exampleTasks);
 	const [value, setValue] = useState("");
 	const [isHovered, setIsHovered] = useState(false);
@@ -294,4 +294,4 @@ const TaskCreation = () => {
 	);
 };
 
-export default TaskCreation;
+export default AiTaskCreationPanel;

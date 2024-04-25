@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { cn } from "~/lib/utils";
 
-import MarketingTaskChips from "../page/landing/marketing/marketing-task-chips";
+import MarketingTaskChips from "../../app/(landing)/components/AnimatedLogoChips";
 
 const sora = Sora({ subsets: ["latin"] });
 

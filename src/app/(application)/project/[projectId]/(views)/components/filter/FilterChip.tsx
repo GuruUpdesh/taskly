@@ -9,7 +9,7 @@ import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
 import { renderFilterValues } from "~/utils/filter-values";
 
-import FilterMenu from "./filter-menu";
+import FilterMenu from "./FilterMenu";
 
 type Props = {
 	filter: Filter;

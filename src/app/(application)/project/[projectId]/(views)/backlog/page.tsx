@@ -8,13 +8,13 @@ import { type Metadata } from "next";
 
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import CreateTask from "~/components/backlog/create-task";
-import CreateTicket from "~/components/create-ticket/ticket";
-import Filters from "~/components/filter/filters";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import { Button } from "~/components/ui/button";
 
 import AiDialog from "../components/AiDialog";
+import CreateGithubTicket from "../components/CreateGithubTicket";
+import Filters from "../components/filter/Filters";
 import FilterAndGroupToggles from "../components/FilterAndGroupToggles";
 import TasksContainer from "../components/TasksContainer";
 
@@ -64,7 +64,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<TasksContainer projectId={projectId} />
 				</HydrationBoundary>
 			</section>
-			<CreateTicket />
+			<CreateGithubTicket />
 		</div>
 	);
 }

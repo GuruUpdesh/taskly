@@ -74,7 +74,7 @@ const buttons: ButtonType[] = [
 	},
 ];
 
-const AutocompleteProperties = () => {
+const AiAutocompletePropertiesPanel = () => {
 	return (
 		<Card
 			className="group/card fadeInUp autocomplete-properties relative overflow-hidden border-foreground/10 bg-accent/50 p-2 shadow-lg"
@@ -150,4 +150,4 @@ const AutocompleteProperties = () => {
 	);
 };
 
-export default AutocompleteProperties;
+export default AiAutocompletePropertiesPanel;

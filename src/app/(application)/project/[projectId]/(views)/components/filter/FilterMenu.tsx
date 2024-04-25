@@ -13,6 +13,7 @@ import {
 	DropdownMenuContent,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { Form, FormField, FormItem } from "~/components/ui/form";
 import {
 	Popover,
 	PopoverContent,
@@ -34,7 +35,6 @@ import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
 import { renderFilterValues } from "~/utils/filter-values";
 
-import { Form, FormField, FormItem } from "../ui/form";
 
 type Props = {
 	children: (menuOpen: boolean) => React.ReactNode;

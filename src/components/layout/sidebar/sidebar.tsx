@@ -13,10 +13,10 @@ import Link from "next/link";
 
 import CreateTask from "~/components/backlog/create-task";
 import Logo from "~/components/general/logo";
-import InboxSidebarButton from "~/components/inbox/InboxSidebarButton";
 import { Button } from "~/components/ui/button";
 import UserButton from "~/components/user-button/user-button";
 
+import InboxSidebarButton from "./InboxSidebarButton";
 import SelectProject from "./select project/select-project";
 import SidebarBackgroundWrapper from "./sidebar-background";
 import SidebarButton from "./sidebar-button";

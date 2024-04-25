@@ -6,12 +6,12 @@ import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
+import SimpleTooltip from "~/components/general/simple-tooltip";
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
 
-import FilterChip from "./filter-chip";
-import FilterMenu from "./filter-menu";
-import SimpleTooltip from "../general/simple-tooltip";
+import FilterChip from "./FilterChip";
+import FilterMenu from "./FilterMenu";
 
 const filterContainer =
 	"rounded-full border bg-accent/25 p-1 transition-all hover:bg-accent";

@@ -29,7 +29,7 @@ import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
 import typography from "~/styles/typography";
 
-import NotificationKBarUpdater from "./notification-kbar-updater";
+import NotificationKBarUpdater from "./NotificationKBarUpdater";
 
 type Props = {
 	notification: NotificationWithTask;

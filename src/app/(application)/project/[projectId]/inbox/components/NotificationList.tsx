@@ -10,7 +10,7 @@ import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
 import typography from "~/styles/typography";
 
-import NotificationItem from "./notification-item";
+import NotificationItem from "./NotificationItem";
 
 type Group = Record<string, NotificationWithTask[]>;
 
