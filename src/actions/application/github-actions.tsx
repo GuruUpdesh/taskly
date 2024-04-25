@@ -23,7 +23,6 @@ export async function addPendingIntegration(
 ) {
 	const userId = authenticate();
 	const data = { projectId, integrationId, userId };
-	console.log("GitHub Integration: addPendingIntegration", data);
 	const validData = projectToIntegrationsSchema
 		.pick({ projectId: true, integrationId: true, userId: true })
 		.parse(data);
@@ -49,20 +48,12 @@ export async function addPendingIntegration(
 }
 
 export async function resolvePendingIntegration(installationId: number) {
-	console.log(
-		"GitHub Integration: resolvePendingIntegration",
-		installationId,
-	);
 	const userId = authenticate();
 	const pendingIntegration = await db.query.projectToIntegrations.findFirst({
 		where: (projectToIntegrations) =>
 			eq(projectToIntegrations.userId, userId) &&
 			eq(projectToIntegrations.integrationId, "github"),
 	});
-	console.log(
-		"GitHub Integration: resolvePendingIntegration",
-		pendingIntegration,
-	);
 
 	if (!pendingIntegration) {
 		return;
@@ -77,7 +68,9 @@ export async function resolvePendingIntegration(installationId: number) {
 		.where(eq(projectToIntegrations.userId, userId));
 }
 
-async function getAccessToken(installationId: number) {
+export async function getConnectedGithubRepo(installationId: number | null) {
+	if (!installationId) return null;
+
 	const privateKey = Buffer.from(
 		env.GH_APP_PRIVATE_KEY_BASE_64,
 		"base64",
@@ -94,104 +87,55 @@ async function getAccessToken(installationId: number) {
 		.sign(secret);
 
 	const url = `https://api.github.com/app/installations/${installationId}/access_tokens`;
-	const response = await fetch(url, {
-		method: "POST",
-		headers: {
-			Authorization: `Bearer ${jwtToken}`,
-			Accept: "application/vnd.github.v3+json",
-		},
-	});
-
-	const data = (await response.json()) as unknown;
-
-	if (!response.ok) {
-		throw new Error(`GitHub API responded with status ${response.status}`);
-	}
-
-	const resultSchema = z.object({
-		token: z.string(),
-	});
-	const result = resultSchema.parse(data);
-	console.log("GitHub Integration: successful got access token");
-	return result.token;
-}
-
-async function getRepos(accessToken: string) {
-	const url = `https://api.github.com/installation/repositories`;
-	const response = await fetch(url, {
-		method: "GET",
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-			Accept: "application/vnd.github.v3+json",
-		},
-	});
-
-	const data = (await response.json()) as unknown;
-	const resultSchema = z.object({
-		repositories: z.array(
-			z.object({
-				full_name: z.string(),
-				html_url: z.string(),
-				owner: z.object({
-					login: z.string(),
-					avatar_url: z.string(),
-				}),
-			}),
-		),
-	});
-	const result = resultSchema.parse(data);
-
-	console.log(
-		"GitHub Integration: successful got repos",
-		result.repositories,
-	);
-	return result.repositories;
-}
-
-export async function getConnectedGithubRepo(installationId: number | null) {
-	if (!installationId) return null;
 	try {
-		const accessToken = await getAccessToken(installationId);
-		return await getRepos(accessToken);
+		const response = await fetch(url, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${jwtToken}`,
+				Accept: "application/vnd.github.v3+json",
+			},
+		});
+
+		const data = (await response.json()) as unknown;
+
+		if (!response.ok) {
+			throw new Error(
+				`GitHub API responded with status ${response.status}`,
+			);
+		}
+
+		const resultSchema = z.object({
+			token: z.string(),
+		});
+		const result = resultSchema.parse(data);
+		const accessToken = result.token;
+
+		const url2 = `https://api.github.com/installation/repositories`;
+		const response2 = await fetch(url2, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				Accept: "application/vnd.github.v3+json",
+			},
+		});
+		const data2 = (await response2.json()) as unknown;
+		const result2Schema = z.object({
+			repositories: z.array(
+				z.object({
+					full_name: z.string(),
+					html_url: z.string(),
+					owner: z.object({
+						avatar_url: z.string(),
+					}),
+				}),
+			),
+		});
+
+		const result2 = result2Schema.parse(data2);
+
+		return result2.repositories;
 	} catch (error) {
 		console.error("Failed to get GitHub installation access token:", error);
-		return null;
-	}
-}
-
-export async function getPRStatusFromGithubRepo(
-	installationId: number | null,
-	branchName: string,
-) {
-	if (!installationId) return null;
-	try {
-		const accessToken = await getAccessToken(installationId);
-		const repos = await getRepos(accessToken);
-
-		for (const repo of repos) {
-			const url = `https://api.github.com/repos/${repo.full_name}/pulls?head=${repo.owner.login}:${branchName}`;
-			const response = await fetch(url, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-					Accept: "application/vnd.github.v3+json",
-				},
-			});
-
-			const data = (await response.json()) as unknown;
-			const resultSchema = z.array(
-				z.object({
-					state: z.string(),
-				}),
-			);
-			const result = resultSchema.parse(data);
-			// if (result.length > 0) {
-			// 	return result[0].state;
-			// }
-			console.log("PR\n", result);
-		}
-	} catch (error) {
-		console.error("Failed to get GitHub PR from branch name:", error);
 		return null;
 	}
 }
