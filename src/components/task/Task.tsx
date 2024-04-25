@@ -2,11 +2,7 @@
 
 import React from "react";
 
-import {
-	BellIcon,
-	GitHubLogoIcon,
-	TrashIcon,
-} from "@radix-ui/react-icons";
+import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, ClipboardCopy, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
@@ -210,7 +206,9 @@ const TaskPage = ({
 											toast.info(
 												`Copied branch name to clipboard`,
 												{
-													description: result.data.task.branchName,
+													description:
+														result.data.task
+															.branchName,
 													icon: (
 														<GitHubLogoIcon className="h-4 w-4" />
 													),

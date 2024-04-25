@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PersonIcon } from "@radix-ui/react-icons";
 import { endOfYesterday, isMonday, nextMonday } from "date-fns";
 import {
 	ChevronLeft,
@@ -45,7 +46,6 @@ import { cn } from "~/lib/utils";
 import Step from "./multi-step-form/step";
 import StepButton from "./multi-step-form/step-button";
 import StepHeader from "./multi-step-form/step-header";
-import { PersonIcon } from "@radix-ui/react-icons";
 
 const CreateProjectSchema = z.object({
 	name: z.string().min(3).max(25),
@@ -116,7 +116,7 @@ const CreateProjectForm = () => {
 		);
 		if (!inviteResult.status) {
 			toast.warning(inviteResult.message, {
-				icon: <PersonIcon className="w-4 h-4" />,
+				icon: <PersonIcon className="h-4 w-4" />,
 				duration: 350,
 			});
 		} else {

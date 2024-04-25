@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { BellIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
@@ -20,7 +21,6 @@ import {
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 import { useAppStore } from "~/store/app";
 import { useNavigationStore } from "~/store/navigation";
-import { BellIcon } from "lucide-react";
 
 type Props = {
 	projectId: string;
@@ -73,12 +73,12 @@ const ProjectState = ({ projectId, userId }: Props) => {
 				if (!isExistingNotification) {
 					toast(`New notification`, {
 						description: notification.message,
-						icon: <BellIcon className="w-4 h-4" />,
-						cancel : {
+						icon: <BellIcon className="h-4 w-4" />,
+						cancel: {
 							label: "Dismiss",
 							onClick: () => {
 								console.log("dismissed");
-							}
+							},
 						},
 						cancelButtonStyle: {
 							backgroundColor: "transparent",

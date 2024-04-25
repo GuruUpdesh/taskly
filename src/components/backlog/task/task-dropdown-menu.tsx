@@ -5,7 +5,8 @@ import React from "react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { Priority } from "kbar";
-import { Copy, Expand, Trash, Trash2Icon } from "lucide-react";
+import { Expand, Trash, Trash2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import {
@@ -19,7 +20,6 @@ import type { Task } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
 
 import TaskKBarUpdater from "./task-kbar-updater";
-import { useRouter } from "next/navigation";
 
 type Props = {
 	task: Task;
@@ -39,7 +39,7 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 			icon: <Expand className="h-4 w-4" />,
 			shortcut: ["o"],
 			perform: () => {
-				router.push(`/project/${task.projectId}/task/${task.id}`)
+				router.push(`/project/${task.projectId}/task/${task.id}`);
 			},
 			priority: Priority.HIGH,
 			section: `Actions - ${task.title}`,
@@ -52,19 +52,12 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 			perform: () => {
 				if (!task.branchName) return;
 
-				void navigator.clipboard.writeText(
-					task.branchName,
-				);
-				
-				toast.info(
-					`Copied branch name to clipboard`,
-					{
-						description: `Branch name: ${task.branchName}`,
-						icon: (
-							<GitHubLogoIcon className="h-4 w-4" />
-						),
-					},
-				);
+				void navigator.clipboard.writeText(task.branchName);
+
+				toast.info(`Copied branch name to clipboard`, {
+					description: `Branch name: ${task.branchName}`,
+					icon: <GitHubLogoIcon className="h-4 w-4" />,
+				});
 			},
 			priority: Priority.HIGH,
 			section: `Actions - ${task.title}`,

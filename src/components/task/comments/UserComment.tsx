@@ -8,6 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
 import { Trash, Trash2Icon } from "lucide-react";
+import { toast } from "sonner";
 
 import { deleteComment } from "~/actions/application/comment-actions";
 import {
@@ -21,7 +22,6 @@ import { type Comment, type User } from "~/server/db/schema";
 
 import { Button } from "../../ui/button";
 import UserProfilePicture from "../../user-profile-picture";
-import { toast } from "sonner";
 
 export interface CommentWithUser extends Comment {
 	user: User;
