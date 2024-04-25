@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Loader2 } from "lucide-react";
+import { stringifyError } from "next/dist/shared/lib/utils";
 import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 import { resolvePendingIntegration } from "~/actions/application/github-actions";
 import { Button } from "~/components/ui/button";
@@ -29,6 +31,9 @@ const Page = () => {
 						"Failed to resolve pending integration:",
 						error,
 					);
+					toast.error("Failed to resolve pending integration", {
+						description: stringifyError(error as Error),
+					});
 				});
 		}
 	}, [searchParams]);
