@@ -1,0 +1,119 @@
+@import "../../../../../../../../node_modules/@mdxeditor/editor/dist/style.css";
+
+.mdxeditor {
+	/* Common styles for both MDXEditor and Textarea */
+	outline: none;
+	border-width: 1px;
+	border-radius: calc(var(--radius) - 2px);
+	border-color: hsl(var(--input));
+	min-height: 80px;
+	--tw-ring-color: transparent;
+}
+
+.mdxeditor:focus-visible {
+	outline: none;
+	border-color: hsl(var(--ring));
+}
+
+/* Headers */
+.mdxeditor h1 {
+	font-size: 2.25rem;
+	font-weight: 800;
+	letter-spacing: -0.025em;
+	line-height: 1.2;
+}
+
+.mdxeditor h2 {
+	font-size: 1.875rem;
+	font-weight: 600;
+	letter-spacing: -0.0125em;
+}
+
+.mdxeditor h3 {
+	font-size: 1.5rem;
+	font-weight: 600;
+	letter-spacing: -0.0125em;
+}
+
+.mdxeditor h4 {
+	font-size: 1.25rem;
+	font-weight: 600;
+	letter-spacing: -0.0125em;
+}
+
+/* Paragraphs */
+.mdxeditor p {
+	line-height: 1.75;
+}
+
+.mdxeditor p:not(:first-child) {
+	margin-top: 1.5rem;
+}
+
+.mdxeditor p.large {
+	font-size: 1.125rem;
+	font-weight: 600;
+}
+
+.mdxeditor p.lead {
+	font-size: 1.25rem;
+	color: #6b7280;
+}
+
+.mdxeditor p.muted {
+	color: #6b7280;
+}
+.mdxeditor p a {
+	color: #2563eb;
+	text-decoration: underline;
+}
+
+.mdxeditor p.code {
+	position: relative;
+	border-radius: 0.25rem;
+	background-color: #f3f4f6;
+	padding: 0.125rem 0.25rem;
+	font-family: "Menlo", "Monaco", "Courier New", monospace;
+	font-size: 0.875rem;
+	font-weight: 600;
+}
+
+/* Lists */
+.mdxeditor ul,
+.mdxeditor ol {
+	margin-top: 1.5rem;
+	margin-left: 1.5rem;
+	list-style-type: disc;
+}
+
+.mdxeditor ul ul,
+.mdxeditor ul ol,
+.mdxeditor ol ul,
+.mdxeditor ol ol {
+	margin-top: 0; /* Remove margin-top for nested lists */
+}
+
+.mdxeditor ul > li,
+.mdxeditor ol > li {
+	margin-top: 0.5rem;
+}
+
+.mdxeditor-popup-container div {
+	background-color: hsl(var(--popover));
+	color: hsl(var(--popover-foreground));
+}
+
+.mdxeditor-popup-container div span svg {
+	fill: hsl(var(--border));
+}
+
+.mdxeditor-popup-container form button[type="submit"] {
+	background-color: hsl(var(--primary));
+	color: hsl(var(--primary-foreground));
+}
+
+.mdxeditor .mdxeditor-toolbar {
+	background-color: hsl(var(--accent));
+	border-radius: 0;
+	top: 57px;
+}

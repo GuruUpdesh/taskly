@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import Message from "~/components/general/message";
+import Message from "~/app/components/Message";
 import { Button } from "~/components/ui/button";
 
 export default function Error({

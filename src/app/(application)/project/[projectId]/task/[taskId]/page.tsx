@@ -1,7 +1,7 @@
 import { type Metadata } from "next";
 
 import { getTask } from "~/actions/application/task-actions";
-import { TaskWrapper } from "~/components/task/TaskWrapper";
+import { TaskWrapper } from "~/app/(application)/project/[projectId]/task/[taskId]/components/TaskWrapper";
 
 type Params = {
 	params: {

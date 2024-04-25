@@ -5,10 +5,9 @@ import { type Metadata } from "next";
 
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import { getAllNotifications } from "~/actions/notification-actions";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
-import RecentTasks from "~/components/page/project/recent-tasks";
-import UserGreeting from "~/components/page/project/user-greeting";
+import RecentTasks from "~/app/components/RecentTasks";
+import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
+import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
 import {
 	Card,
 	CardContent,
@@ -18,6 +17,7 @@ import {
 import { type Notification, type Task } from "~/server/db/schema";
 
 import { DataCardFigure } from "./components/DataCard";
+import UserGreeting from "./components/UserGreeting";
 
 export const metadata: Metadata = {
 	title: "Dashboard",

@@ -14,7 +14,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useShallow } from "zustand/react/shallow";
 
 import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)/components/TasksContainer";
-import Task from "~/components/backlog/task/task";
+import Task from "~/app/components/task/Task";
 import { type StatefulTask } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";

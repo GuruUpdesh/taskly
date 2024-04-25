@@ -4,7 +4,7 @@ import { dark } from "@clerk/themes";
 import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
 
-import KBar from "~/components/general/kbar";
+import KBar from "~/app/components/Kbar";
 import { Toaster } from "~/components/ui/sonner";
 import KBarProvider from "~/lib/kbar-provider";
 import ReactQueryProvider from "~/lib/react-query-provider";

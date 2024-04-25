@@ -3,7 +3,7 @@ import React from "react";
 
 import Grid from "~/app/(landing)/components/BackgroundGrid";
 import Footer from "~/app/components/Footer";
-import BackButton from "~/components/layout/navbar/back-button";
+import BackButton from "~/app/components/layout/navbar/back-button";
 
 export default function LandingLayout({
 	children,

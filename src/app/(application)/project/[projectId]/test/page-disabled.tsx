@@ -3,7 +3,7 @@ import React from "react";
 import { getAssigneesForProject } from "~/actions/application/project-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { getTasksFromProject } from "~/actions/application/task-actions";
-import TaskProperty from "~/components/task/TaskProperty";
+import TaskProperty from "~/app/(application)/project/[projectId]/task/[taskId]/components/TaskProperty";
 import { getPropertyConfig, taskProperties } from "~/config/taskConfigType";
 
 type Params = {

@@ -3,8 +3,8 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import Logo from "~/components/general/logo";
-import SimpleTooltip from "~/components/general/simple-tooltip";
+import Logo from "~/app/components/Logo";
+import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { Separator } from "~/components/ui/separator";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";

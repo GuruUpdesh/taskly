@@ -3,7 +3,7 @@ import React from "react";
 import { currentUser } from "@clerk/nextjs/server";
 import { cookies } from "next/headers";
 
-import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
 
 import InboxButtons from "./components/InboxButtons";
 import InboxPanel from "./components/InboxPanel";

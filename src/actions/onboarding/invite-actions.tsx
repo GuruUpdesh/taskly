@@ -11,7 +11,7 @@ import { z } from "zod";
 
 import { authenticate } from "~/actions/security/authenticate";
 import { checkPermissions } from "~/actions/security/permissions";
-import ProjectInviteEmail from "~/components/email/project-invite";
+import ProjectInviteEmail from "~/email/project-invite";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { invites, usersToProjects } from "~/server/db/schema";

@@ -10,7 +10,7 @@ import { z } from "zod";
 
 import { aiGenerateTask } from "~/actions/ai/ai-action";
 import { createTask } from "~/actions/application/task-actions";
-import SimpleTooltip from "~/components/general/simple-tooltip";
+import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,

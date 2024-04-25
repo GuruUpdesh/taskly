@@ -35,7 +35,6 @@ import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
 import { renderFilterValues } from "~/utils/filter-values";
 
-
 type Props = {
 	children: (menuOpen: boolean) => React.ReactNode;
 	defaultValues?: Filter;

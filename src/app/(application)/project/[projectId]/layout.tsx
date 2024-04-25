@@ -15,8 +15,8 @@ import {
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { getAllNotifications } from "~/actions/notification-actions";
 import { authenticate } from "~/actions/security/authenticate";
-import Sidebar from "~/components/layout/sidebar/sidebar";
-import SidebarPanel from "~/components/layout/sidebar/sidebar-panel";
+import Sidebar from "~/app/components/layout/sidebar/sidebar";
+import SidebarPanel from "~/app/components/layout/sidebar/sidebar-panel";
 
 import ProjectState from "./project-state";
 

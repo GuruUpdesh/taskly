@@ -7,9 +7,9 @@ import {
 import { type Metadata } from "next";
 
 import { getTasksFromProject } from "~/actions/application/task-actions";
-import CreateTask from "~/components/backlog/create-task";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import CreateTask from "~/app/components/CreateTask";
+import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
+import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
 import { Button } from "~/components/ui/button";
 
 import AiDialog from "../components/AiDialog";

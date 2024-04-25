@@ -16,8 +16,8 @@ import {
 	getTasksFromProject,
 	updateTask,
 } from "~/actions/application/task-actions";
-import Message from "~/components/general/message";
-import { TaskStatus } from "~/components/page/project/recent-tasks";
+import Message from "~/app/components/Message";
+import { TaskStatus } from "~/app/components/RecentTasks";
 import {
 	type StatefulTask,
 	getPropertyConfig,

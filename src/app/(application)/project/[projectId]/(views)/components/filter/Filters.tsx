@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
-import SimpleTooltip from "~/components/general/simple-tooltip";
+import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
 

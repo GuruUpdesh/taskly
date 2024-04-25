@@ -17,7 +17,7 @@ import {
 	unreadNotification,
 	deleteNotification,
 } from "~/actions/notification-actions";
-import { TaskStatus } from "~/components/page/project/recent-tasks";
+import { TaskStatus } from "~/app/components/RecentTasks";
 import {
 	ContextMenu,
 	ContextMenuContent,

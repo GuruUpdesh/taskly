@@ -20,7 +20,7 @@ import {
 	DialogTrigger,
 } from "~/components/ui/dialog";
 
-import SimpleTooltip from "../../../../../../components/general/simple-tooltip";
+import SimpleTooltip from "../../../../../components/SimpleTooltip";
 
 type Props = {
 	user: string;
