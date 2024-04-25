@@ -1,8 +1,9 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronRight, Loader2Icon } from "lucide-react";
+import { ChevronRight, Loader2Icon, MessageSquareIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { useAppStore } from "~/store/app";
@@ -33,6 +34,9 @@ const CommentForm = ({ taskId, createComment }: Props) => {
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		await createComment(values.comment, taskId);
 		form.reset();
+		toast.success("Comment added", {
+			icon: <MessageSquareIcon className="h-4 w-4" />,
+		});
 	}
 
 	return (

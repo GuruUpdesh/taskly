@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 import { getNotification } from "~/actions/notification-actions";
 import { TaskWrapper } from "~/components/task/TaskWrapper";
-import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
+import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 type Params = {
 	params: {

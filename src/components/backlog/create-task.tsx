@@ -232,7 +232,7 @@ const CreateTask = ({ projectId, children }: Props) => {
 			await queryClient.invalidateQueries({
 				queryKey: ["tasks", projectId],
 			});
-			toast.success("Task created successfully!");
+			toast.success("Task added");
 			setOpen(false);
 			form.reset();
 		},

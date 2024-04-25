@@ -7,7 +7,7 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
-import { Trash2Icon } from "lucide-react";
+import { Trash, Trash2Icon } from "lucide-react";
 
 import { deleteComment } from "~/actions/application/comment-actions";
 import {
@@ -21,6 +21,7 @@ import { type Comment, type User } from "~/server/db/schema";
 
 import { Button } from "../../ui/button";
 import UserProfilePicture from "../../user-profile-picture";
+import { toast } from "sonner";
 
 export interface CommentWithUser extends Comment {
 	user: User;
@@ -69,6 +70,9 @@ const UserComment = ({
 		if (comment.userId !== user?.id) return;
 		optimisticDeleteComment(comment.id);
 		await deleteComment(comment.id);
+		toast.error("Comment deleted", {
+			icon: <Trash className="h-4 w-4" />,
+		});
 	}
 
 	function parseCommentForMentions(comment: string) {

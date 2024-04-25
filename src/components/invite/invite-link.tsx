@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { CopyIcon } from "lucide-react";
+import { ClipboardCopy, CopyIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "~/components/ui/button";
@@ -18,7 +18,9 @@ function InviteLink({ token }: Props) {
 		// get protocol
 		const protocol = window.location.protocol;
 		await navigator.clipboard.writeText(protocol + "//" + link);
-		toast.info("Copied to clipboard!");
+		toast.info("Copied to clipboard!", {
+			icon: <ClipboardCopy className="h-4 w-4" />,
+		});
 	};
 	return (
 		<div className="flex items-center">

@@ -2,9 +2,13 @@
 
 import React from "react";
 
-import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
+import {
+	BellIcon,
+	GitHubLogoIcon,
+	TrashIcon,
+} from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ChevronRight, Link as LinkIcon } from "lucide-react";
+import { ChevronRight, ClipboardCopy, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -82,7 +86,9 @@ const TaskPage = ({
 	function handleDelete() {
 		router.push(`/project/${projectId}/backlog`);
 		deleteTaskMutation.mutate(parseInt(taskId));
-		toast.success("Task deleted");
+		toast.error("Task deleted", {
+			icon: <TrashIcon className="h-4 w-4" />,
+		});
 	}
 
 	const handleCopyLinkToClipboard = async () => {
@@ -93,7 +99,9 @@ const TaskPage = ({
 				window.location.host +
 				`/project/${projectId}/task/${taskId}`,
 		);
-		toast.info("Copied to clipboard!");
+		toast.info("Task link copied to clipboard", {
+			icon: <ClipboardCopy className="h-4 w-4" />,
+		});
 	};
 
 	if (!result.data) {
@@ -140,8 +148,8 @@ const TaskPage = ({
 									variant="outline"
 									className="gap-2 bg-transparent"
 								>
-									Copy Link
 									<LinkIcon className="h-4 w-4" />
+									Copy Link
 								</Button>
 								{context === "inbox" && (
 									<Link
@@ -180,6 +188,7 @@ const TaskPage = ({
 										size="icon"
 										variant="outline"
 										className="border-foreground/10 bg-transparent"
+										disabled
 									>
 										<BellIcon />
 									</Button>
@@ -199,7 +208,13 @@ const TaskPage = ({
 												result.data.task.branchName,
 											);
 											toast.info(
-												`Copied Branch Name: ${result.data.task.branchName}`,
+												`Copied branch name to clipboard`,
+												{
+													description: result.data.task.branchName,
+													icon: (
+														<GitHubLogoIcon className="h-4 w-4" />
+													),
+												},
 											);
 										}}
 									>

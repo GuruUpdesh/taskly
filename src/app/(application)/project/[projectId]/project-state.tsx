@@ -17,7 +17,7 @@ import {
 	type NotificationWithTask,
 	getAllNotifications,
 } from "~/actions/notification-actions";
-import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
+import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 import { useAppStore } from "~/store/app";
 import { useNavigationStore } from "~/store/navigation";
 

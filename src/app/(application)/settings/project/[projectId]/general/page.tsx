@@ -18,7 +18,7 @@ import ProjectTheme from "~/components/page/settings/project-theme";
 import SettingsSection from "~/components/page/settings/settings-section";
 import UsersTable from "~/components/projects/users-table";
 import { generalSettings } from "~/config/settingsConfig";
-import constructToastURL from "~/lib/global-toast/global-toast-url-constructor";
+import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 type Params = {
 	params: {
