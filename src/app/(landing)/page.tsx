@@ -48,6 +48,7 @@ export default function HomePage() {
 								poppins.className,
 								"-mb-5 -translate-y-1 scroll-m-20 text-center text-7xl font-bold leading-[1.1] drop-shadow-md",
 							)}
+							data-testid="marketing-title"
 						>
 							Taskly simplifies
 							<TextCycle />

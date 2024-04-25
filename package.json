@@ -15,7 +15,8 @@
 		"style:lint": "next lint",
 		"style:prettier": "prettier --check 'src/**/*.{js,jsx,ts,tsx}'",
 		"style:fix": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
-		"test": "jest --watch"
+		"test": "jest --watch",
+		"cypress:open": "cypress open"
 	},
 	"dependencies": {
 		"@clerk/nextjs": "^5.0.1",
@@ -105,6 +106,7 @@
 		"@typescript-eslint/eslint-plugin": "^6.3.0",
 		"@typescript-eslint/parser": "^6.3.0",
 		"autoprefixer": "^10.4.14",
+		"cypress": "^13.8.1",
 		"dotenv-cli": "^7.3.0",
 		"drizzle-kit": "^0.20.17",
 		"eslint": "^8.47.0",
