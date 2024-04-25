@@ -19,6 +19,7 @@ import type { Task } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
 
 import TaskKBarUpdater from "./task-kbar-updater";
+import { useRouter } from "next/navigation";
 
 type Props = {
 	task: Task;
@@ -29,6 +30,7 @@ const TaskKBarUpdaterMemoized = React.memo(TaskKBarUpdater);
 
 const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 	const setHoveredTaskId = useAppStore((state) => state.setHoveredTaskId);
+	const router = useRouter();
 
 	const actions = [
 		{
@@ -37,7 +39,7 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 			icon: <Expand className="h-4 w-4" />,
 			shortcut: ["o"],
 			perform: () => {
-				
+				router.push(`/project/${task.projectId}/task/${task.id}`)
 			},
 			priority: Priority.HIGH,
 			section: `Actions - ${task.title}`,
@@ -57,23 +59,12 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 				toast.info(
 					`Copied branch name to clipboard`,
 					{
-						description: task.branchName,
+						description: `Branch name: ${task.branchName}`,
 						icon: (
 							<GitHubLogoIcon className="h-4 w-4" />
 						),
 					},
 				);
-			},
-			priority: Priority.HIGH,
-			section: `Actions - ${task.title}`,
-		},
-		{
-			id: "copy",
-			name: "Copy",
-			icon: <Copy className="h-4 w-4" />,
-			shortcut: ["c"],
-			perform: () => {
-				
 			},
 			priority: Priority.HIGH,
 			section: `Actions - ${task.title}`,

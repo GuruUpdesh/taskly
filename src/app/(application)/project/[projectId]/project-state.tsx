@@ -20,6 +20,7 @@ import {
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 import { useAppStore } from "~/store/app";
 import { useNavigationStore } from "~/store/navigation";
+import { BellIcon } from "lucide-react";
 
 type Props = {
 	projectId: string;
@@ -70,8 +71,20 @@ const ProjectState = ({ projectId, userId }: Props) => {
 					(prevNotif) => prevNotif.id === notification.id,
 				);
 				if (!isExistingNotification) {
-					toast.info(`New notification`, {
+					toast(`New notification`, {
 						description: notification.message,
+						icon: <BellIcon className="w-4 h-4" />,
+						cancel : {
+							label: "Dismiss",
+							onClick: () => {
+								console.log("dismissed");
+							}
+						},
+						cancelButtonStyle: {
+							backgroundColor: "transparent",
+							color: "hsl(var(--foreground))",
+						},
+						duration: 5000,
 					});
 					return { ...notification, options: { isNew: true } };
 				}
