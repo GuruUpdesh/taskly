@@ -5,7 +5,6 @@ import { type Metadata } from "next";
 
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import { getAllNotifications } from "~/actions/notification-actions";
-import { DataCardFigure } from "~/components/dashboard/data-card";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import RecentTasks from "~/components/page/project/recent-tasks";
@@ -17,6 +16,8 @@ import {
 	CardHeader,
 } from "~/components/ui/card";
 import { type Notification, type Task } from "~/server/db/schema";
+
+import { DataCardFigure } from "./components/DataCard";
 
 export const metadata: Metadata = {
 	title: "Dashboard",

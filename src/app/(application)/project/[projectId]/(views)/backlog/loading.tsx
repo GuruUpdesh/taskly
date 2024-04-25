@@ -1,5 +1,6 @@
-import LoadingTaskList from "~/components/page/backlog/loading-task-list";
 import { Skeleton } from "~/components/ui/skeleton";
+
+import LoadingTaskList from "../components/LoadingTaskList";
 
 export default function Loading() {
 	return (

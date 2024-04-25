@@ -4,10 +4,8 @@ import React, { useEffect, useMemo } from "react";
 
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import { useRegisterActions } from "kbar";
 import { useRegisterActions } from "kbar";
 import { find } from "lodash";
-// import { useRouter } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
@@ -19,8 +17,6 @@ import {
 	updateTask,
 } from "~/actions/application/task-actions";
 import Message from "~/components/general/message";
-import LoadingTaskList from "~/components/page/backlog/loading-task-list";
-import TaskList from "~/components/page/backlog/task-list";
 import { TaskStatus } from "~/components/page/project/recent-tasks";
 import {
 	type StatefulTask,
@@ -32,7 +28,9 @@ import type { Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
 import { updateOrder } from "~/utils/order";
 
-import TotalPoints from "./total-points";
+import LoadingTaskList from "./LoadingTaskList";
+import TaskList from "./TaskList";
+import TotalTaskListPoints from "./TotalTaskListPoints";
 
 export type UpdateTask = {
 	id: number;
@@ -52,7 +50,10 @@ async function updateTaskWrapper({ id, newTask }: UpdateTask) {
 	await updateTask(id, newTask);
 }
 
-export default function Tasks({ projectId, variant = "backlog" }: Props) {
+export default function TasksContainer({
+	projectId,
+	variant = "backlog",
+}: Props) {
 	/**
 	 * Get the assignees and sprints
 	 */
@@ -345,7 +346,7 @@ export default function Tasks({ projectId, variant = "backlog" }: Props) {
 							>
 								{option.icon}
 								{option.displayName}
-								<TotalPoints listId={option.key} />
+								<TotalTaskListPoints listId={option.key} />
 							</div>
 							<div className="pb-2">
 								<TaskList

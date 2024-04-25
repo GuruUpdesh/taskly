@@ -13,8 +13,8 @@ import { type UseMutationResult } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { useShallow } from "zustand/react/shallow";
 
+import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)/components/TasksContainer";
 import Task from "~/components/backlog/task/task";
-import { type UpdateTask } from "~/components/backlog/tasks";
 import { type StatefulTask } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";

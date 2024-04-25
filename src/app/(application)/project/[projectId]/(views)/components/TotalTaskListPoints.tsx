@@ -12,7 +12,7 @@ type Props = {
 	listId: string;
 };
 
-const TotalPoints = ({ listId }: Props) => {
+const TotalTaskListPoints = ({ listId }: Props) => {
 	const totalPointsObject = usePointStore((state) => state.totalPoints);
 
 	const totalPoints = useMemo(() => {
@@ -39,4 +39,4 @@ const TotalPoints = ({ listId }: Props) => {
 	);
 };
 
-export default TotalPoints;
+export default TotalTaskListPoints;

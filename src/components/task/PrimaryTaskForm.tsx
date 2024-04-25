@@ -10,7 +10,7 @@ import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { type UpdateTask } from "~/components/backlog/tasks";
+import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)/components/TasksContainer";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import type { NewTask, Task } from "~/server/db/schema";

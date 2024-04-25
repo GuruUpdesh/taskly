@@ -38,7 +38,7 @@ import Comments from "./comments/Comments";
 import PrimaryTaskForm from "./PrimaryTaskForm";
 import TaskState from "./task-state";
 import Task from "../backlog/task/task";
-import { type UpdateTask } from "../backlog/tasks";
+import { type UpdateTask } from "../../app/(application)/project/[projectId]/(views)/components/TasksContainer";
 import SimpleTooltip from "../general/simple-tooltip";
 import ToggleSidebarButton from "../layout/sidebar/toggle-sidebar-button";
 

@@ -8,8 +8,8 @@ import { endOfDay, startOfDay } from "date-fns";
 import { ChevronRight, Loader2, SparklesIcon } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
+import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)/components/TasksContainer";
 import Task from "~/components/backlog/task/task";
-import { type UpdateTask } from "~/components/backlog/tasks";
 import SimpleTooltip from "~/components/general/simple-tooltip";
 import { Button } from "~/components/ui/button";
 import {

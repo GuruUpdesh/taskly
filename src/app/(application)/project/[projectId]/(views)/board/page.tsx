@@ -8,14 +8,15 @@ import { type Metadata } from "next";
 
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import CreateTask from "~/components/backlog/create-task";
-import Tasks from "~/components/backlog/tasks";
 import CreateTicket from "~/components/create-ticket/ticket";
 import Filters from "~/components/filter/filters";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
-import AiDialog from "~/components/page/backlog/dialogs/ai-dialog";
-import ToggleFilters from "~/components/page/backlog/display-toggles";
 import { Button } from "~/components/ui/button";
+
+import AiDialog from "../components/AiDialog";
+import FilterAndGroupToggles from "../components/FilterAndGroupToggles";
+import TasksContainer from "../components/TasksContainer";
 
 export const metadata: Metadata = {
 	title: "Board",
@@ -46,7 +47,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<BreadCrumbs />
 				</div>
 				<div className="flex items-center gap-2">
-					<ToggleFilters />
+					<FilterAndGroupToggles />
 					<AiDialog projectId={projectId} />
 					<CreateTask projectId={projectId}>
 						<Button
@@ -63,7 +64,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 			<Filters />
 			<section className="flex h-full flex-col overflow-hidden">
 				<HydrationBoundary state={dehydrate(queryClient)}>
-					<Tasks projectId={projectId} variant="board" />
+					<TasksContainer projectId={projectId} variant="board" />
 				</HydrationBoundary>
 			</section>
 			<CreateTicket />

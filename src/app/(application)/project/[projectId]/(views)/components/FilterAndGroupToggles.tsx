@@ -2,10 +2,12 @@
 
 import React, { useMemo } from "react";
 
+import { Filter } from "lucide-react";
 import { Group, MinusIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 
+// import GroupButton from "~/components/group/group-button";
 import { Button } from "~/components/ui/button";
 import {
 	Select,
@@ -16,6 +18,32 @@ import {
 import { type TaskProperty, getPropertyConfig } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
+
+const FilterAndGroupToggles = () => {
+	const [toggleFilters, isFiltersOpen] = useAppStore(
+		useShallow((state) => [state.toggleFilters, state.isFiltersOpen]),
+	);
+
+	return (
+		<div className="flex overflow-hidden rounded-lg border">
+			<Button
+				variant="outline"
+				onClick={toggleFilters}
+				size="sm"
+				className={cn(
+					"flex items-center gap-1 rounded-none border-b-0 border-l-0 border-r border-t-0 bg-transparent px-4",
+					isFiltersOpen
+						? "bg-accent hover:bg-accent/75"
+						: "text-muted-foreground",
+				)}
+			>
+				<Filter className="h-4 w-4" />
+				Filter
+			</Button>
+			<GroupButton />
+		</div>
+	);
+};
 
 const properties = [
 	"status",
@@ -151,4 +179,4 @@ const GroupButton = () => {
 	);
 };
 
-export default GroupButton;
+export default FilterAndGroupToggles;
