@@ -3,11 +3,11 @@ import React from "react";
 import { currentUser } from "@clerk/nextjs/server";
 import { cookies } from "next/headers";
 
-import InboxButtons from "~/components/inbox/InboxButtons";
-import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
 
-import InboxPanel from "./inbox-panel";
-import NotificationList from "./notification-list";
+import InboxButtons from "./components/InboxButtons";
+import InboxPanel from "./components/InboxPanel";
+import NotificationList from "./components/NotificationList";
 
 type Params = {
 	children: React.ReactNode;

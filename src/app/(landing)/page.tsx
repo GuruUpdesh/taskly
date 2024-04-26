@@ -13,17 +13,18 @@ import { Poppins } from "next/font/google";
 import { Sora } from "next/font/google";
 import Image from "next/image";
 
-import Grid from "~/components/page/landing/background-grid";
-import ButtonOptions from "~/components/page/landing/button-options";
-import Footer from "~/components/page/landing/footer";
-import Panel from "~/components/page/landing/marketing/panel";
-import AutocompleteProperties from "~/components/page/landing/marketing/panels/ai-panels/autocomplete-properties";
-import TaskCreation from "~/components/page/landing/marketing/panels/ai-panels/task-creation";
-import CommunicationPanel from "~/components/page/landing/marketing/panels/communication-panel";
-import NotificationPanel from "~/components/page/landing/marketing/panels/notification-panel";
-import "~/styles/homepage.css";
-import TextCycle from "~/components/page/landing/text-cycle";
+import Footer from "~/app/components/Footer";
 import { cn } from "~/lib/utils";
+
+import Grid from "./components/BackgroundGrid";
+import ButtonOptions from "./components/ButtonOptions";
+import Panel from "./components/marketing/Panel";
+import AiAutocompletePropertiesPanel from "./components/marketing/panels/AiAutocompletePropertiesPanel";
+import AiTaskCreationPanel from "./components/marketing/panels/AiTaskCreationPanel";
+import CommunicationPanel from "./components/marketing/panels/CommunicationPanel";
+import NotificationPanel from "./components/marketing/panels/NotificationPanel";
+import "~/styles/homepage.css";
+import TextCycle from "./components/TextCycle";
 
 const poppins = Poppins({ weight: "600", subsets: ["latin"] });
 const sora = Sora({ subsets: ["latin"] });
@@ -116,7 +117,7 @@ export default function HomePage() {
 						</div>
 						<div className="absolute left-0 top-0 h-full w-full rounded-lg backdrop-blur-xl"></div>
 						<div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
-							<TaskCreation />
+							<AiTaskCreationPanel />
 							<Image
 								src="/static/marketing/taskboard.webp"
 								fill
@@ -131,7 +132,7 @@ export default function HomePage() {
 					<div className="grid w-full max-w-[1400px] grid-cols-12 gap-4">
 						<div className="group z-10 col-span-4 flex flex-col overflow-hidden rounded-lg border bg-background/25 p-1 backdrop-blur-xl">
 							<div className="radial-gradient-mask flex flex-1 items-center justify-center overflow-hidden">
-								<AutocompleteProperties />
+								<AiAutocompletePropertiesPanel />
 							</div>
 							<div className="flex flex-col items-center rounded-lg border bg-accent/25 p-2 backdrop-blur-xl">
 								<div className="flex items-center gap-1">

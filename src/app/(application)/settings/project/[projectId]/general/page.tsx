@@ -8,15 +8,15 @@ import {
 } from "~/actions/application/project-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { authenticate } from "~/actions/security/authenticate";
-import Permission from "~/components/auth/Permission";
-import ProjectDangerZone from "~/components/page/settings/project-danger-zone";
-import ProjectGithub from "~/components/page/settings/project-github";
-import ProjectInfo from "~/components/page/settings/project-info";
-import ProjectInvite from "~/components/page/settings/project-invite";
-import ProjectSprints from "~/components/page/settings/project-sprints";
-import ProjectTheme from "~/components/page/settings/project-theme";
-import SettingsSection from "~/components/page/settings/settings-section";
-import UsersTable from "~/components/projects/users-table";
+import ProjectDangerZone from "~/app/(application)/settings/components/ProjectDangerZone";
+import ProjectGithub from "~/app/(application)/settings/components/ProjectGithub";
+import ProjectInfo from "~/app/(application)/settings/components/ProjectInfo";
+import ProjectInvite from "~/app/(application)/settings/components/ProjectInvite";
+import ProjectSprints from "~/app/(application)/settings/components/ProjectSprints";
+import ProjectTheme from "~/app/(application)/settings/components/ProjectTheme";
+import SettingsSection from "~/app/(application)/settings/components/SettingsSection";
+import UsersTable from "~/app/(application)/settings/components/users-table";
+import Permission from "~/app/components/Permission";
 import { generalSettings } from "~/config/settingsConfig";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 

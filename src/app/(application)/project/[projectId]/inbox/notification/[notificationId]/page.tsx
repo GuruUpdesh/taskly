@@ -3,7 +3,7 @@ import React from "react";
 import { redirect } from "next/navigation";
 
 import { getNotification } from "~/actions/notification-actions";
-import { TaskWrapper } from "~/components/task/TaskWrapper";
+import { TaskWrapper } from "~/app/(application)/project/[projectId]/task/[taskId]/components/TaskWrapper";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 type Params = {

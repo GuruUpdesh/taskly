@@ -38,7 +38,7 @@ import {
 } from "react-icons/tb";
 import { z } from "zod";
 
-import UserProfilePicture from "~/components/user-profile-picture";
+import UserProfilePicture from "~/app/components/UserProfilePicture";
 import {
 	type User,
 	type Task,

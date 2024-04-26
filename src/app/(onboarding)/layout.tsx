@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 
-import BackButton from "~/components/layout/navbar/back-button";
-import Grid from "~/components/page/landing/background-grid";
-import Footer from "~/components/page/landing/footer";
+import Grid from "~/app/(landing)/components/BackgroundGrid";
+import Footer from "~/app/components/Footer";
+import BackButton from "~/app/components/layout/navbar/back-button";
 
 export default function LandingLayout({
 	children,

@@ -1,5 +1,6 @@
 import { initAction } from "~/actions/application/project-actions";
-import CreateProjectForm from "~/components/page/onboarding/create-project-form";
+
+import CreateProjectForm from "../components/CreateProjectForm";
 
 export default async function onboardingPage() {
 	await initAction();

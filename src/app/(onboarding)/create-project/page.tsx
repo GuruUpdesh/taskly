@@ -6,7 +6,8 @@ import {
 	getAllProjects,
 	initAction,
 } from "~/actions/application/project-actions";
-import ProjectCreateForm from "~/components/page/onboarding/create-project-form";
+
+import ProjectCreateForm from "../components/CreateProjectForm";
 
 export const metadata: Metadata = {
 	title: "Create Project",

@@ -3,7 +3,7 @@ import React from "react";
 import { type Metadata } from "next";
 import { cookies } from "next/headers";
 
-import SettingsSidebar from "~/components/page/settings/sidebar/settings-sidebar";
+import SettingsSidebar from "~/app/(application)/settings/components/sidebar/SettingsSidebar";
 
 import SettingsPanel from "./settings-panel";
 

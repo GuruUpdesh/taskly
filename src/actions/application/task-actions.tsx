@@ -7,7 +7,7 @@ import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 
 import { createNotification } from "~/actions/notification-actions";
-import { type TaskFormType as CreateTaskData } from "~/components/backlog/create-task";
+import { type TaskFormType as CreateTaskData } from "~/app/components/CreateTask";
 import { type StatefulTask, CreateTaskSchema } from "~/config/taskConfigType";
 import { db } from "~/server/db";
 import {
