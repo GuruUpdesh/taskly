@@ -1,22 +1,17 @@
 "use client";
 
-import type React from "react";
 import { useEffect } from "react";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { z } from "zod";
 
-type Props = {
-	children: React.ReactNode;
-};
-
 export const globalToastSchema = z.object({
 	message: z.string(),
 	type: z.enum(["success", "error"]),
 });
 
-const GlobalToastHandler = ({ children }: Props) => {
+const GlobalToastHandler = () => {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
@@ -58,7 +53,7 @@ const GlobalToastHandler = ({ children }: Props) => {
 		handleToast(query);
 	}, [searchParams.toString()]);
 
-	return children;
+	return null;
 };
 
 export default GlobalToastHandler;

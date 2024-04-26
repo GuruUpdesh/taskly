@@ -18,7 +18,11 @@ function generateAnimationFrames(padding: number, children: HTMLCollection) {
 	return frames;
 }
 
-const TextCycle = () => {
+type Props = {
+	defaultTextHeight?: number;
+};
+
+const TextCycle = ({ defaultTextHeight = 0 }: Props) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const cycleRef = useRef<HTMLDivElement>(null);
 	const cycleControls = useAnimation();
@@ -32,6 +36,7 @@ const TextCycle = () => {
 			if (!container || !cycle || !children) return;
 			const textHeight = cycle.clientHeight / children.length;
 			container.style.height = `${textHeight}px`;
+			document.cookie = `landing-text:textHeight=${textHeight}`;
 
 			const padding = 16;
 			cycle.style.setProperty("--padding-y", `${padding}px`);
@@ -52,9 +57,21 @@ const TextCycle = () => {
 	}, [cycleRef, containerRef]);
 
 	return (
-		<div className="cycle-text-container" ref={containerRef}>
+		<div
+			className="cycle-text-container text-3xl sm:text-6xl lg:text-7xl"
+			style={{
+				height: `${defaultTextHeight}px`,
+			}}
+			ref={containerRef}
+		>
 			<motion.div
 				className="cycle-text"
+				style={
+					{
+						"--padding-y": "16px",
+						transform: "translateY(-16px)",
+					} as React.CSSProperties
+				}
 				ref={cycleRef}
 				animate={cycleControls}
 			>

@@ -16,24 +16,26 @@ import Image from "next/image";
 import Footer from "~/app/components/Footer";
 import { cn } from "~/lib/utils";
 
-import Grid from "./components/BackgroundGrid";
 import ButtonOptions from "./components/ButtonOptions";
+import GridWrapper from "./components/grid/GridWrapper";
 import Panel from "./components/marketing/Panel";
+import "~/styles/homepage.css";
 import AiAutocompletePropertiesPanel from "./components/marketing/panels/AiAutocompletePropertiesPanel";
 import AiTaskCreationPanel from "./components/marketing/panels/AiTaskCreationPanel";
 import CommunicationPanel from "./components/marketing/panels/CommunicationPanel";
 import NotificationPanel from "./components/marketing/panels/NotificationPanel";
-import "~/styles/homepage.css";
-import TextCycle from "./components/TextCycle";
+import TextCycleWrapper from "./components/text-cycle/TextCycleWrapper";
 
 const poppins = Poppins({ weight: "600", subsets: ["latin"] });
 const sora = Sora({ subsets: ["latin"] });
+
+export const dynamic = "force-static";
 
 export default function HomePage() {
 	return (
 		<div className={cn(sora.className, "flex flex-1 flex-col")}>
 			<div className="absolute top-0 z-[-1] h-full w-full fade-in-5">
-				<Grid />
+				<GridWrapper />
 				<img
 					className="absolute h-full w-full opacity-100"
 					src="/static/auth.gif"
@@ -41,20 +43,20 @@ export default function HomePage() {
 				/>
 				<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent to-background" />
 			</div>
-			<div className="flex-1">
+			<div className="flex-1 px-4 lg:px-8">
 				<section className="z-10 mb-32 mt-32 flex flex-col items-center justify-center">
 					<div className="flex w-full max-w-[1400px] flex-col items-center justify-center">
 						<h1
 							className={cn(
 								poppins.className,
-								"-mb-5 -translate-y-1 scroll-m-20 text-center text-7xl font-bold leading-[1.1] drop-shadow-md",
+								"-mb-5 -translate-y-1 scroll-m-20 text-center text-5xl font-bold leading-[1.1] drop-shadow-md sm:text-6xl lg:text-7xl",
 							)}
 							data-testid="marketing-title"
 						>
 							Taskly simplifies
-							<TextCycle />
+							<TextCycleWrapper />
 						</h1>
-						<p className="mt-6 max-w-[800px] text-center text-lg leading-7 opacity-75">
+						<p className="sm:text-md mb-6 mt-6 max-w-[800px] text-center text-sm leading-7 opacity-75 lg:text-lg">
 							Simplify success and confidently finish your
 							projects.
 							<br />
@@ -64,7 +66,7 @@ export default function HomePage() {
 					</div>
 				</section>
 				<section className="mb-16 flex flex-col items-center justify-center">
-					<div className="grid max-h-[667px] max-w-[1400px] gap-4 px-2 pb-8 md:grid-cols-2 lg:px-0 xl:grid-cols-4 xl:grid-rows-2">
+					<div className="grid max-w-[1400px] gap-4 pb-8 md:max-h-[667px] md:grid-cols-2 lg:px-0 xl:grid-cols-4 xl:grid-rows-2">
 						<Panel
 							title="AI Features"
 							description="Enhance your workflow with cutting-edge AI. Our
@@ -110,7 +112,7 @@ export default function HomePage() {
 						/>
 					</div>
 				</section>
-				<section className="mb-32 flex flex-col items-center justify-center px-4 pb-0 md:px-12 lg:px-16">
+				<section className="mb-32 flex flex-col items-center justify-center px-0 pb-0 xl:px-16">
 					<div className="relative mb-4 w-full max-w-[1400px] rounded-lg">
 						<div className="mix-blend-lighten">
 							<div className="animated-border absolute h-full w-full rounded-lg bg-background"></div>
@@ -130,8 +132,8 @@ export default function HomePage() {
 						</div>
 					</div>
 					<div className="grid w-full max-w-[1400px] grid-cols-12 gap-4">
-						<div className="group z-10 col-span-4 flex flex-col overflow-hidden rounded-lg border bg-background/25 p-1 backdrop-blur-xl">
-							<div className="radial-gradient-mask flex flex-1 items-center justify-center overflow-hidden">
+						<div className="group z-10 col-span-12 flex flex-col overflow-hidden rounded-lg border bg-background/25 p-1 backdrop-blur-xl sm:col-span-6 lg:col-span-4">
+							<div className="radial-gradient-mask flex flex-1 items-center justify-center overflow-hidden p-4">
 								<AiAutocompletePropertiesPanel />
 							</div>
 							<div className="flex flex-col items-center rounded-lg border bg-accent/25 p-2 backdrop-blur-xl">
@@ -144,7 +146,7 @@ export default function HomePage() {
 								<p className="opacity-75">Move faster</p>
 							</div>
 						</div>
-						<div className="group z-10 col-span-3 flex flex-col overflow-hidden rounded-lg border bg-background/25 p-1 backdrop-blur-xl">
+						<div className="group z-10 col-span-12 flex flex-col overflow-hidden rounded-lg border bg-background/25 p-1 backdrop-blur-xl sm:col-span-6 lg:col-span-3">
 							<div className="gradient-mask-t-80">
 								<div className="gradient-mask-l-80">
 									<div className="gradient-mask-r-80">
@@ -165,11 +167,12 @@ export default function HomePage() {
 								<p className="opacity-75">Stay in the know</p>
 							</div>
 						</div>
-						<div className="group z-10 col-span-5 flex flex-col overflow-hidden rounded-lg border bg-background/25 p-1 backdrop-blur-xl">
-							<div className="max-h-[264px] p-3">
-								<CommunicationPanel />
+						<div className="group z-10 col-span-12 flex flex-col overflow-hidden rounded-lg border bg-background/25 p-1 backdrop-blur-xl lg:col-span-5">
+							<div className=" flex-1 p-3 gradient-mask-b-90">
+								<div className="max-h-[264px]">
+									<CommunicationPanel />
+								</div>
 							</div>
-							<div className="flex-1" />
 							<div className="flex flex-col items-center rounded-lg border bg-accent/25 p-2">
 								<div className="flex items-center gap-1">
 									<MessageCircle className="h-4 w-4" />
