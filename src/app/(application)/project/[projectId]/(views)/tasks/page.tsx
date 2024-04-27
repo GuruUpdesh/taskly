@@ -11,15 +11,17 @@ import CreateTask from "~/app/components/CreateTask";
 import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
 import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
 
 import AiDialog from "../components/AiDialog";
 import CreateGithubTicket from "../components/CreateGithubTicket";
 import Filters from "../components/filter/Filters";
 import FilterAndGroupToggles from "../components/FilterAndGroupToggles";
 import TasksContainer from "../components/TasksContainer";
+import ViewModeToggle from "../components/ViewModeToggle";
 
 export const metadata: Metadata = {
-	title: "Board",
+	title: "Backlog",
 };
 
 type Params = {
@@ -28,9 +30,6 @@ type Params = {
 	};
 };
 
-/**
- * This is a copy of backlog page until I have a better solution
- *  */
 export default async function BacklogPage({ params: { projectId } }: Params) {
 	// Prefetch tasks using react-query
 	const queryClient = new QueryClient();
@@ -40,14 +39,17 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 	});
 
 	return (
-		<div className="flex max-h-screen min-h-screen flex-col">
-			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b px-4 pb-2 pt-2 backdrop-blur-xl">
+		<div className="relative flex max-h-screen flex-1 flex-col overflow-y-scroll">
+			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b px-4 pb-2 pt-2 backdrop-blur-xl @container">
 				<div className="flex items-center gap-2">
 					<ToggleSidebarButton />
 					<BreadCrumbs />
 				</div>
-				<div className="flex items-center gap-2">
+				<div className="flex h-9 items-center gap-2">
+					<ViewModeToggle />
+					<Separator orientation="vertical" />
 					<FilterAndGroupToggles />
+					<Separator orientation="vertical" />
 					<AiDialog projectId={projectId} />
 					<CreateTask projectId={projectId}>
 						<Button
@@ -56,15 +58,15 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 							variant="secondary"
 						>
 							<PlusCircledIcon />
-							New Task
+							<span className="hidden @3xl:block">New Task</span>
 						</Button>
 					</CreateTask>
 				</div>
 			</header>
-			<Filters />
-			<section className="flex h-full flex-col overflow-hidden">
+			<section className="flex flex-1 flex-col">
+				<Filters />
 				<HydrationBoundary state={dehydrate(queryClient)}>
-					<TasksContainer projectId={projectId} variant="board" />
+					<TasksContainer projectId={projectId} />
 				</HydrationBoundary>
 			</section>
 			<CreateGithubTicket />

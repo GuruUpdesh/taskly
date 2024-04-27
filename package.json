@@ -69,7 +69,7 @@
 		"jose": "^5.2.3",
 		"kbar": "^0.1.0-beta.45",
 		"lodash.debounce": "^4.0.8",
-		"lucide-react": "^0.292.0",
+		"lucide-react": "^0.376.0",
 		"next": "^14.2.3",
 		"next-themes": "^0.2.1",
 		"openai": "^4.20.1",

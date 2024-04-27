@@ -4,10 +4,9 @@ import React, { useMemo } from "react";
 
 import { Filter } from "lucide-react";
 import { Group, MinusIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 
-// import GroupButton from "~/components/group/group-button";
+import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import {
 	Select,
@@ -25,21 +24,23 @@ const FilterAndGroupToggles = () => {
 	);
 
 	return (
-		<div className="flex overflow-hidden rounded-lg border">
-			<Button
-				variant="outline"
-				onClick={toggleFilters}
-				size="sm"
-				className={cn(
-					"flex items-center gap-1 rounded-none border-b-0 border-l-0 border-r border-t-0 bg-transparent px-4",
-					isFiltersOpen
-						? "bg-accent hover:bg-accent/75"
-						: "text-muted-foreground",
-				)}
-			>
-				<Filter className="h-4 w-4" />
-				Filter
-			</Button>
+		<div className="flex overflow-hidden rounded border">
+			<SimpleTooltip label="Filters">
+				<Button
+					variant="outline"
+					onClick={toggleFilters}
+					size="sm"
+					className={cn(
+						"flex items-center gap-1 rounded-none border-b-0 border-l-0 border-r border-t-0 bg-transparent px-3 @3xl:px-4",
+						isFiltersOpen
+							? "bg-accent hover:bg-accent/75"
+							: "text-muted-foreground",
+					)}
+				>
+					<Filter className="h-4 w-4" />
+					<span className="hidden @3xl:block">Filter</span>
+				</Button>
+			</SimpleTooltip>
 			<GroupButton />
 		</div>
 	);
@@ -55,15 +56,7 @@ const properties = [
 
 const GroupButton = () => {
 	const [open, setOpen] = React.useState(false);
-
-	const pathname = usePathname();
-	const context = useMemo(() => {
-		if (pathname.includes("backlog")) {
-			return "backlog";
-		}
-
-		return "board";
-	}, [pathname]);
+	const viewMode = useAppStore((state) => state.viewMode);
 
 	const [
 		groupByBacklog,
@@ -84,8 +77,8 @@ const GroupButton = () => {
 	);
 
 	const groupBy = useMemo(() => {
-		return context === "backlog" ? groupByBacklog : groupByBoard;
-	}, [groupByBacklog, groupByBoard, context]);
+		return viewMode === "backlog" ? groupByBacklog : groupByBoard;
+	}, [groupByBacklog, groupByBoard, viewMode]);
 
 	const config = useMemo(() => {
 		if (!groupBy) return null;
@@ -94,8 +87,8 @@ const GroupButton = () => {
 
 	function handleGroupChange(value: string) {
 		const setGroupBy =
-			context === "backlog" ? setGroupByBacklog : setGroupByBoard;
-		if (value === "none" && context === "backlog") {
+			viewMode === "backlog" ? setGroupByBacklog : setGroupByBoard;
+		if (value === "none" && viewMode === "backlog") {
 			setGroupByBacklog(null);
 		} else if (properties.includes(value as TaskProperty)) {
 			setGroupBy(value as TaskProperty);
@@ -120,19 +113,23 @@ const GroupButton = () => {
 					variant="outline"
 					size="sm"
 					className={cn(
-						"flex items-center gap-1 rounded-none border-none bg-transparent px-4 text-muted-foreground",
+						"flex items-center gap-1 rounded-none border-none bg-transparent px-3 text-muted-foreground @3xl:px-4",
 						{
 							"bg-accent text-white": open,
 							"bg-accent text-white hover:bg-accent/75": groupBy,
 						},
 					)}
 				>
-					<Group className="h-4 w-4" />
-					{groupBy ? `Grouping by ${config?.displayName}` : "Group"}
+					<Group className="h-5 w-5" />
+					<span className="hidden @3xl:block">
+						{groupBy
+							? `Grouping by ${config?.displayName}`
+							: "Group"}
+					</span>
 				</Button>
 			</SelectTrigger>
 			<SelectContent>
-				{pathname.includes("backlog") && (
+				{viewMode == "backlog" && (
 					<SelectItem
 						value="none"
 						className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"

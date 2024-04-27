@@ -1,13 +1,7 @@
 import React from "react";
 
-import {
-	GearIcon,
-	DashboardIcon,
-	LayoutIcon,
-	TableIcon,
-	ReaderIcon,
-	PlusCircledIcon,
-} from "@radix-ui/react-icons";
+import { GearIcon, ReaderIcon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { LayoutGrid, ListTodo } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -65,19 +59,14 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 				<div>
 					<SidebarButton
 						label="Dashboard"
-						icon={<DashboardIcon className="min-w-4" />}
+						icon={<LayoutGrid className="h-4 w-4 min-w-4" />}
 						url={`/project/${projectId}`}
 					/>
 					<InboxSidebarButton projectId={projectId} />
 					<SidebarButton
-						label="Backlog"
-						icon={<TableIcon className="min-w-4" />}
-						url={`/project/${projectId}/backlog`}
-					/>
-					<SidebarButton
-						label="Board"
-						icon={<LayoutIcon className="min-w-4" />}
-						url={`/project/${projectId}/board`}
+						label="Tasks"
+						icon={<ListTodo className="h-4 w-4 min-w-4" />}
+						url={`/project/${projectId}/tasks`}
 					/>
 				</div>
 				<div className="flex-1" />

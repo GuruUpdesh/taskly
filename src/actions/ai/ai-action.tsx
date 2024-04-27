@@ -38,6 +38,8 @@ export async function aiAction(
             - type: [Specity the type of task "task", "bug", "feature", "improvement", "research", or "testing"]
             - assignee: ${users}
 
+			If no title was provided but a description was provided, use also generate a concise title for the task.
+
             Example:
             Status: In Progress
 			Points: 3
@@ -57,6 +59,7 @@ export async function aiAction(
 	const response = JSON.parse(
 		gptResponse.choices[0]?.message.content,
 	) as unknown;
+	console.log(response);
 	const validationSchema = z.object({
 		title: schemaValidators.title,
 		description: schemaValidators.description,
@@ -68,6 +71,7 @@ export async function aiAction(
 	});
 	const results = validationSchema.safeParse(response);
 	if (!results.success) {
+		console.error(results.error);
 		return;
 	}
 	return results.data;

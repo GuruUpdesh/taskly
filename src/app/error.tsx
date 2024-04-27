@@ -26,9 +26,6 @@ const ErrorPage = ({ error, reset }: Props) => {
 				<p className="max-w-[60ch] rounded border bg-background/25 p-2 text-sm text-muted-foreground">
 					{error.message}
 				</p>
-				<p>
-					If you continue to see this message, please contact support.
-				</p>
 				<div className="flex items-center gap-4">
 					<Button
 						size="sm"

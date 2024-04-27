@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 
-import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
+import { Mail } from "lucide-react";
 
 import SidebarButton from "~/app/components/layout/sidebar/sidebar-button";
 import { useAppStore } from "~/store/app";
@@ -25,7 +25,7 @@ export default function InboxSidebarButton({ projectId }: Props) {
 					<div className="absolute -right-2 -top-2 rounded-full bg-accent px-1 text-xs">
 						{notificationCount == 0 ? null : notificationCount}
 					</div>
-					<EnvelopeClosedIcon className="min-w-4" />
+					<Mail className="h-4 w-4 min-w-4" />
 				</div>
 			}
 			url={`/project/${projectId}/inbox`}
