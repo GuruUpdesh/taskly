@@ -46,7 +46,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_NODE_ENV: z
 			.enum(["development", "test", "production"])
 			.default("development"),
-		NEXT_PUBLIC_VERCEL_URL: z.string().url(),
+		NEXT_PUBLIC_VERCEL_URL: z.string().url().optional(),
 	},
 
 	/**
