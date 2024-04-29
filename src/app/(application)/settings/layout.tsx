@@ -2,23 +2,13 @@ import React from "react";
 
 import { ArrowLeftIcon, Menu } from "lucide-react";
 import { type Metadata } from "next";
-import { cookies } from "next/headers";
 import Link from "next/link";
 
 import SettingsSidebar from "~/app/(application)/settings/components/sidebar/SettingsSidebar";
 import { Button } from "~/components/ui/button";
-import {
-	Sheet,
-	SheetContent,
-	SheetDescription,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
-} from "~/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
-
-import SettingsPanel from "./settings-panel";
 
 export const metadata: Metadata = {
 	title: "Settings",
@@ -31,7 +21,7 @@ export default function SettingsLayout({
 }) {
 	return (
 		<div className="flex flex-col">
-			<div className="flex w-full items-center justify-between py-2 px-4 border-b bg-background-dialog sticky top-0 z-50">
+			<div className="sticky top-0 z-50 flex w-full items-center justify-between border-b bg-background-dialog px-4 py-2">
 				<Link href="/app" prefetch>
 					<Button
 						variant="ghost"
@@ -59,7 +49,7 @@ export default function SettingsLayout({
 					</SheetContent>
 				</Sheet>
 			</div>
-			<div className="fixed top-[61px] hidden lg:block min-w-[250px] bg-background-dialog border-r h-full">
+			<div className="fixed top-[61px] hidden h-full min-w-[250px] border-r bg-background-dialog lg:block">
 				<div className="py-4">
 					<SettingsSidebar />
 				</div>
