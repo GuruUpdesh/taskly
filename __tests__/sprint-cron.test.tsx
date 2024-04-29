@@ -30,6 +30,7 @@ describe("/api/cron/sprint", () => {
 	const requestHeaders = new Headers();
 
 	it("should return 401 if no authorization header", async () => {
+        jest.setTimeout(5*1000);
 		requestHeaders.set("authorization", "Bearer wrong-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
@@ -38,6 +39,7 @@ describe("/api/cron/sprint", () => {
 	});
 
 	it("should handle no projects", async () => {
+        jest.setTimeout(5*1000);
 		requestHeaders.set("authorization", "Bearer mock-cron-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
@@ -49,6 +51,7 @@ describe("/api/cron/sprint", () => {
 	});
 
 	it("should create 2 sprints if there are 0", async () => {
+        jest.setTimeout(5*1000);
 		requestHeaders.set("authorization", "Bearer mock-cron-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
@@ -70,6 +73,7 @@ describe("/api/cron/sprint", () => {
 	});
 
     it("should create 1 sprint if current sprint is the last", async () => {
+        jest.setTimeout(5*1000);
         requestHeaders.set("authorization", "Bearer mock-cron-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
@@ -98,6 +102,7 @@ describe("/api/cron/sprint", () => {
     });
 
     it("should create 0 sprint if current sprint is second to last", async () => {
+        jest.setTimeout(5*1000);
         requestHeaders.set("authorization", "Bearer mock-cron-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
@@ -133,6 +138,7 @@ describe("/api/cron/sprint", () => {
     });
 
     it("should catch up to current sprint + 1 if there is a gap", async () => {
+        jest.setTimeout(5*1000);
         requestHeaders.set("authorization", "Bearer mock-cron-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
@@ -167,6 +173,7 @@ describe("/api/cron/sprint", () => {
     });
 
     it("should create 0 sprints if sprint start is in the future", async () => {
+        jest.setTimeout(5*1000);
         requestHeaders.set("authorization", "Bearer mock-cron-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
