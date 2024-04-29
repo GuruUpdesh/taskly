@@ -128,11 +128,11 @@ const TaskList = ({
 										>
 											<div
 												className={cn(
-													"group relative backdrop-blur-xl transition-colors",
+													"group relative backdrop-blur-xl transition-all",
 													{
 														"bg-accent-foreground/5":
 															snapshot.isDragging,
-														"pointer-events-none opacity-50":
+														"pointer-events-none opacity-80":
 															task.options
 																.isPending,
 														"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
