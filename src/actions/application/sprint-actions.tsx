@@ -8,9 +8,10 @@ import { revalidatePath } from "next/cache";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { projects, sprints, usersToProjects } from "~/server/db/schema";
+import buildUrl from "~/utils/buildUrl";
 
 export async function createSprintForProject() {
-	await fetch(env.NEXT_PUBLIC_VERCEL_URL + "/api/cron/sprint", {
+	await fetch(buildUrl("/api/cron/sprint") , {
 		method: "GET",
 		headers: {
 			authorization: "Bearer " + env.CRON_SECRET,
