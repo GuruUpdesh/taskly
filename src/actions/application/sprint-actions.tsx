@@ -2,64 +2,19 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { addWeeks } from "date-fns";
-import { and, asc, desc, eq, gte, lt } from "drizzle-orm";
+import { and, asc, eq, gte, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
+import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { projects, sprints, usersToProjects } from "~/server/db/schema";
 
-export async function createSprintForProject(projectId: number) {
-	const currentSprints = await db
-		.select()
-		.from(sprints)
-		.where(eq(sprints.projectId, projectId))
-		.orderBy(desc(sprints.endDate))
-		.limit(1);
-	const currentProjects = await db
-		.select()
-		.from(projects)
-		.where(eq(projects.id, projectId));
-
-	const currentProject = currentProjects[0];
-
-	if (!currentProject) {
-		return;
-	}
-
-	if (!currentSprints.length) {
-		await db.insert(sprints).values([
-			{
-				projectId: projectId,
-				startDate: currentProject.sprintStart,
-				endDate: addWeeks(
-					currentProject.sprintStart,
-					currentProject.sprintDuration,
-				),
-			},
-			{
-				projectId: projectId,
-				startDate: addWeeks(
-					currentProject.sprintStart,
-					currentProject.sprintDuration,
-				),
-				endDate: addWeeks(
-					currentProject.sprintStart,
-					currentProject.sprintDuration * 2,
-				),
-			},
-		]);
-		return;
-	}
-
-	const currSprint = currentSprints[0];
-	if (!currSprint) {
-		return;
-	}
-
-	await db.insert(sprints).values({
-		projectId: projectId,
-		startDate: currSprint.endDate,
-		endDate: addWeeks(currSprint.endDate, currentProject.sprintDuration),
+export async function createSprintForProject() {
+	await fetch(env.NEXT_PUBLIC_URL + "/api/cron/sprint", {
+		method: "GET",
+		headers: {
+			"authorization": "Bearer " + env.CRON_SECRET,
+		},
 	});
 
 	revalidatePath(`/`);

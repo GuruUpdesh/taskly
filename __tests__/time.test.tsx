@@ -1,6 +1,6 @@
 import { getHours } from "date-fns";
 
-import { getTimeOfDay } from "~/utils/time";
+import { getTimeOfDay } from "../src/utils/time";
 
 test("getTimeOfDay returns the correct time of the day", () => {
     const currentHour = getHours(new Date());

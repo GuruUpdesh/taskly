@@ -33,18 +33,20 @@ export const env = createEnv({
 		GH_WEBHOOK_SECRET: z.string(),
 		GH_CLIENT_SECRET:  z.string(),
 		GH_APP_PRIVATE_KEY_BASE_64: z.string(),
+		TESTING: z.boolean().default(false),
 	},
-
+	
 	/**
 	 * Specify your client-side environment variables schema here. This way you can ensure the app
 	 * isn't built with invalid env vars. To expose them to the client, prefix them with
 	 * `NEXT_PUBLIC_`.
-	 */
+	*/
 	client: {
 		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
 		NEXT_PUBLIC_NODE_ENV: z
-			.enum(["development", "test", "production"])
-			.default("development"),
+		.enum(["development", "test", "production"])
+		.default("development"),
+		NEXT_PUBLIC_URL: z.string().url().optional(),
 	},
 
 	/**
@@ -73,6 +75,8 @@ export const env = createEnv({
 		GH_WEBHOOK_SECRET: process.env.GH_WEBHOOK_SECRET,
 		GH_CLIENT_SECRET: process.env.GH_CLIENT_SECRET,
 		GH_APP_PRIVATE_KEY_BASE_64: process.env.GH_APP_PRIVATE_KEY_BASE_64,
+		TESTING: process.env.TESTING,
+		NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
