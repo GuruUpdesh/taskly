@@ -31,7 +31,7 @@ const ProjectSettings = () => {
 					url={`/settings/project/${project.id}/general`}
 				/>
 				<ul
-					className={cn("flex flex-col overflow-hidden pl-8", {
+					className={cn("hidden flex-col overflow-hidden pl-8 lg:flex", {
 						"max-h-0": !active,
 					})}
 				>

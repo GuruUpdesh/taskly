@@ -117,10 +117,11 @@ const CreateProjectForm = () => {
 		if (!inviteResult.status) {
 			toast.warning(inviteResult.message, {
 				icon: <PersonIcon className="h-4 w-4" />,
-				duration: 350,
 			});
 		} else {
-			toast.success(inviteResult.message);
+			toast.success(inviteResult.message, {
+				icon: <PersonIcon className="h-4 w-4" />,
+			});
 		}
 	}
 
@@ -129,7 +130,7 @@ const CreateProjectForm = () => {
 			void handleSubmit(initializeProject)();
 		} else if (formStep === 5) {
 			void handleSubmit(sendInvites)();
-			router.push(`/project/${newProjectData.newProjectId}/backlog`);
+			router.push(`/project/${newProjectData.newProjectId}/tasks`);
 		}
 	}, [formStep]);
 

@@ -98,7 +98,7 @@ const UserMenu = ({ children }: Props) => {
 				</Link>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
-					onClick={() => signOut(() => router.push("/"))}
+					onClick={() => signOut(() => router.push("/sign-in"))}
 				>
 					Log out
 					<DropdownMenuShortcut>

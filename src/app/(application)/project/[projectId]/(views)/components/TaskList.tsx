@@ -63,7 +63,7 @@ const TaskList = ({
 					{...provided.droppableProps}
 					ref={provided.innerRef}
 					className={cn("min-h-2", {
-						"bg-accent-foreground/5":
+						"bg-background/50":
 							snapshot.isDraggingOver && listId !== "tasks",
 						"flex h-full flex-col overflow-y-scroll p-1":
 							variant === "board",

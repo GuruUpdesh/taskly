@@ -5,10 +5,9 @@ import {
 	EnvelopeClosedIcon,
 	GearIcon,
 	HomeIcon,
-	LayoutIcon,
-	TableIcon,
 } from "@radix-ui/react-icons";
 import { KBarProvider as KBarProviderImpl } from "kbar";
+import { ListTodo } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -58,19 +57,11 @@ export default function KBarProvider({ children }: Props) {
 			section: "Navigation",
 		},
 		{
-			id: "backlog",
-			name: "Backlog",
-			icon: <TableIcon />,
+			id: "tasks",
+			name: "Tasks",
+			icon: <ListTodo />,
 			shortcut: ["g", "l"],
-			perform: () => projectNavigation("/project/<id>/backlog"),
-			section: "Navigation",
-		},
-		{
-			id: "board",
-			name: "Board",
-			icon: <LayoutIcon />,
-			shortcut: ["g", "b"],
-			perform: () => projectNavigation("/project/<id>/board"),
+			perform: () => projectNavigation("/project/<id>/tasks"),
 			section: "Navigation",
 		},
 		{
