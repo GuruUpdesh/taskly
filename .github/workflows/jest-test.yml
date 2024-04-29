@@ -31,6 +31,7 @@ jobs:
       GH_WEBHOOK_SECRET: ${{ secrets.GH_WEBHOOK_SECRET }}
       GH_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
       GH_APP_PRIVATE_KEY_BASE_64: ${{ secrets.GH_APP_PRIVATE_KEY_BASE_64 }}
+      TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
 
     steps:
       - name: Checkout repository
