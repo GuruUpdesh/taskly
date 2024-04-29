@@ -32,6 +32,7 @@ jobs:
       GH_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
       GH_APP_PRIVATE_KEY_BASE_64: ${{ secrets.GH_APP_PRIVATE_KEY_BASE_64 }}
       TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+      NEXT_PUBLIC_VERCEL_URL: ${{ secrets.NEXT_PUBLIC_VERCEL_URL }}
 
     steps:
       - name: Checkout repository

@@ -10,10 +10,10 @@ import { db } from "~/server/db";
 import { projects, sprints, usersToProjects } from "~/server/db/schema";
 
 export async function createSprintForProject() {
-	await fetch(env.NEXT_PUBLIC_URL + "/api/cron/sprint", {
+	await fetch(env.NEXT_PUBLIC_VERCEL_URL + "/api/cron/sprint", {
 		method: "GET",
 		headers: {
-			"authorization": "Bearer " + env.CRON_SECRET,
+			authorization: "Bearer " + env.CRON_SECRET,
 		},
 	});
 
