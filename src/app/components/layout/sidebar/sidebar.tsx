@@ -2,12 +2,16 @@ import React from "react";
 
 import { GearIcon, ReaderIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { LayoutGrid, ListTodo } from "lucide-react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 
 import CreateTask from "~/app/components/CreateTask";
 import Logo from "~/app/components/Logo";
-import UserButton from "~/app/components/user-button/UserButton";
+const UserButton = dynamic(
+	() => import("~/app/components/user-button/UserButton"),
+	{ ssr: false },
+);
 import { Button } from "~/components/ui/button";
 
 import InboxSidebarButton from "./InboxSidebarButton";

@@ -21,7 +21,7 @@ import TasksContainer from "../components/TasksContainer";
 import ViewModeToggle from "../components/ViewModeToggle";
 
 export const metadata: Metadata = {
-	title: "Backlog",
+	title: "Tasks",
 };
 
 type Params = {

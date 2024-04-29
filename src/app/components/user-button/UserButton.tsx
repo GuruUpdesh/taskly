@@ -4,7 +4,6 @@ import React from "react";
 
 import { useUser } from "@clerk/nextjs";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { toast } from "sonner";
 
 import UserProfilePicture from "~/app/components/UserProfilePicture";
 import { Button } from "~/components/ui/button";
@@ -20,9 +19,6 @@ const UserButton = ({ size = "default" }: Props) => {
 	const { user } = useUser();
 
 	if (!user) {
-		toast.error(
-			"You cannot access this component without being signed in.",
-		);
 		return null;
 	}
 

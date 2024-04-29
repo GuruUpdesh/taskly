@@ -56,7 +56,6 @@ const properties = [
 
 const GroupButton = () => {
 	const [open, setOpen] = React.useState(false);
-	const viewMode = useAppStore((state) => state.viewMode);
 
 	const [
 		groupByBacklog,
@@ -65,6 +64,7 @@ const GroupButton = () => {
 		setGroupByBoard,
 		assignees,
 		sprints,
+		viewMode,
 	] = useAppStore(
 		useShallow((state) => [
 			state.groupByBacklog,
@@ -73,6 +73,7 @@ const GroupButton = () => {
 			state.setGroupByBoard,
 			state.assignees,
 			state.sprints,
+			state.viewMode,
 		]),
 	);
 
@@ -81,7 +82,7 @@ const GroupButton = () => {
 	}, [groupByBacklog, groupByBoard, viewMode]);
 
 	const config = useMemo(() => {
-		if (!groupBy) return null;
+		if (!groupBy || !assignees[0]) return null;
 		return getPropertyConfig(groupBy, assignees, sprints);
 	}, [groupBy, assignees, sprints]);
 

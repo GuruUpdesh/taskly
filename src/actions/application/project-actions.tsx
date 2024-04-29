@@ -97,9 +97,11 @@ export async function getAssigneesForProject(projectId: number) {
 				},
 			},
 		});
-		const assignees = assigneesQuery.flatMap((userToProject) =>
-			userToProject.usersToProjects.map((up) => up.user),
-		);
+		const assignees = assigneesQuery
+			.flatMap((userToProject) =>
+				userToProject.usersToProjects.map((up) => up.user),
+			)
+			.filter(Boolean);
 
 		return assignees;
 	} catch (error) {

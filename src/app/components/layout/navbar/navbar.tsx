@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 
 import { Sora } from "next/font/google";
 
@@ -18,7 +18,9 @@ const Navbar = () => {
 		>
 			<div className="container flex h-12 max-w-[1400px] items-center justify-between px-4 @container lg:px-8">
 				<Logo />
-				<UserNav />
+				<Suspense>
+					<UserNav />
+				</Suspense>
 			</div>
 		</header>
 	);
