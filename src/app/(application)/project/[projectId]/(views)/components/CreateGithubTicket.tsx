@@ -75,7 +75,11 @@ export function CreateGithubTicket() {
 		>
 			<DialogTrigger asChild>
 				<div
-					style={{ position: "fixed", bottom: "20px", right: "20px" }}
+					style={{
+						position: "fixed",
+						bottom: "20px",
+						right: "20px",
+					}}
 				>
 					<Button
 						variant="outline"
@@ -107,6 +111,7 @@ export function CreateGithubTicket() {
 											type="text"
 											id="title"
 											placeholder="Title"
+											className="bg-transparent"
 											{...field}
 										/>
 									</FormControl>
@@ -124,7 +129,7 @@ export function CreateGithubTicket() {
 										<Textarea
 											id="description"
 											placeholder="Description"
-											className="max-h-200px"
+											className="max-h-200px bg-transparent"
 											{...field}
 										/>
 									</FormControl>

@@ -80,7 +80,7 @@ export const ProjectsMenuItem = ({ projects }: ProjectsMenuItemProps) => {
 					{projects.map((project, idx) => (
 						<NavigationMenuLink
 							key={project.id}
-							href={`/project/${project.id}/backlog`}
+							href={`/project/${project.id}/tasks`}
 							className="min-w-max "
 						>
 							<Button

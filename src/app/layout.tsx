@@ -1,6 +1,6 @@
 import "~/styles/globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
+import { Suspense } from "react";
+
 import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
 
@@ -10,6 +10,8 @@ import KBarProvider from "~/lib/kbar-provider";
 import ReactQueryProvider from "~/lib/react-query-provider";
 import GlobalToastHandler from "~/lib/toast/global-toast-handler";
 import { cn } from "~/lib/utils";
+
+import ClientProvider from "./components/ClientProvider";
 
 export const metadata = {
 	metadataBase: new URL("https://tasklypm.com"),
@@ -27,36 +29,29 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<ClerkProvider
-			appearance={{
-				baseTheme: dark,
-				variables: {
-					colorBackground: "#000000",
-					colorInputBackground: "#1b1b1b",
-				},
-			}}
-		>
+		<ClientProvider>
 			<KBarProvider>
 				<KBar />
-				<GlobalToastHandler>
-					<html lang="en" suppressHydrationWarning>
-						<body
-							className={cn(
-								"!m-0 min-h-screen bg-background bg-gradient-to-b font-sans antialiased",
-								GeistSans.className,
-							)}
-						>
-							<ReactQueryProvider>
-								<main className="relative flex min-h-screen flex-col">
-									{children}
-								</main>
-							</ReactQueryProvider>
-							<Toaster richColors />
-						</body>
-						<Analytics />
-					</html>
-				</GlobalToastHandler>
+				<Suspense>
+					<GlobalToastHandler />
+				</Suspense>
+				<html lang="en" suppressHydrationWarning>
+					<body
+						className={cn(
+							"!m-0 min-h-screen bg-background bg-gradient-to-b font-sans antialiased",
+							GeistSans.className,
+						)}
+					>
+						<ReactQueryProvider>
+							<main className="relative flex min-h-screen flex-col">
+								{children}
+							</main>
+						</ReactQueryProvider>
+						<Toaster richColors />
+					</body>
+					<Analytics />
+				</html>
 			</KBarProvider>
-		</ClerkProvider>
+		</ClientProvider>
 	);
 }

@@ -80,7 +80,7 @@ const TaskPage = ({
 	});
 
 	function handleDelete() {
-		router.push(`/project/${projectId}/backlog`);
+		router.push(`/project/${projectId}/tasks`);
 		deleteTaskMutation.mutate(parseInt(taskId));
 		toast.error("Task deleted", {
 			icon: <TrashIcon className="h-4 w-4" />,

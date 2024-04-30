@@ -49,6 +49,7 @@ const ProjectState = ({ projectId, userId }: Props) => {
 		queryFn: async () => {
 			const assignees = await getAssigneesForProject(parseInt(projectId));
 			const sprints = await getSprintsForProject(parseInt(projectId));
+			console.log("assignees", assignees);
 
 			return { assignees, sprints };
 		},

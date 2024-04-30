@@ -11,6 +11,8 @@ export type Filter = {
 	values: string[];
 };
 
+export type ViewMode = "backlog" | "board";
+
 interface AppState {
 	isFiltersOpen: boolean;
 	toggleFilters: () => void;
@@ -33,6 +35,8 @@ interface AppState {
 	setHoveredTaskId: (id: number | null) => void;
 	hoveredNotificationId: number | null;
 	setHoveredNotificationId: (id: number | null) => void;
+	viewMode: ViewMode;
+	setViewMode: (mode: ViewMode) => void;
 }
 
 const useAppStore = create<AppState>()(
@@ -75,6 +79,8 @@ const useAppStore = create<AppState>()(
 			hoveredNotificationId: null,
 			setHoveredNotificationId: (id) =>
 				set({ hoveredNotificationId: id }),
+			viewMode: "backlog",
+			setViewMode: (mode) => set({ viewMode: mode }),
 		}),
 		{
 			name: "settings-navigation-storage",

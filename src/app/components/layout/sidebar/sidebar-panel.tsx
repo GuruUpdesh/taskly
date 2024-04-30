@@ -63,7 +63,7 @@ const SidebarPanel = ({
 			<ResizablePanel
 				ref={sidebarRef}
 				id="sidebar"
-				minSize={8}
+				minSize={10}
 				collapsible={true}
 				collapsedSize={2}
 				maxSize={20}

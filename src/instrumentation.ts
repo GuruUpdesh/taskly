@@ -16,7 +16,7 @@ export async function register() {
 	if (env.NODE_ENV !== "development") {
 		return;
 	}
-	const result = await fetch("https://api.clerk.com/v1/users", {
+	const result = await fetch("https://api.clerk.com/v1/users?limit=500", {
 		method: "GET",
 		headers: {
 			"Content-Type": "application/json",

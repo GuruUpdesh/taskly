@@ -39,7 +39,6 @@ export type UpdateTask = {
 
 type Props = {
 	projectId: string;
-	variant?: "backlog" | "board";
 };
 
 type TaskTypeOverride = Omit<TaskType, "sprintId"> & {
@@ -50,27 +49,31 @@ async function updateTaskWrapper({ id, newTask }: UpdateTask) {
 	await updateTask(id, newTask);
 }
 
-export default function TasksContainer({
-	projectId,
-	variant = "backlog",
-}: Props) {
+export default function TasksContainer({ projectId }: Props) {
 	/**
 	 * Get the assignees and sprints
 	 */
-	const [assignees, sprints, filters, groupByBacklog, groupByBoard] =
-		useAppStore(
-			useShallow((state) => [
-				state.assignees,
-				state.sprints,
-				state.filters,
-				state.groupByBacklog,
-				state.groupByBoard,
-			]),
-		);
+	const [
+		assignees,
+		sprints,
+		filters,
+		groupByBacklog,
+		groupByBoard,
+		viewMode,
+	] = useAppStore(
+		useShallow((state) => [
+			state.assignees,
+			state.sprints,
+			state.filters,
+			state.groupByBacklog,
+			state.groupByBoard,
+			state.viewMode,
+		]),
+	);
 
 	const groupBy = useMemo(() => {
-		return variant === "backlog" ? groupByBacklog : groupByBoard;
-	}, [variant, groupByBacklog, groupByBoard]);
+		return viewMode === "backlog" ? groupByBacklog : groupByBoard;
+	}, [viewMode, groupByBacklog, groupByBoard]);
 
 	/**
 	 * Fetch the tasks from the server and handle optimistic updates
@@ -310,10 +313,10 @@ export default function TasksContainer({
 			<div
 				className={cn({
 					"grid max-w-full flex-1 gap-2 overflow-y-hidden overflow-x-scroll px-4":
-						variant === "board",
+						viewMode === "board",
 				})}
 				style={
-					variant === "board"
+					viewMode === "board"
 						? {
 								gridTemplateColumns: `repeat(${options?.length}, minmax(350px, 1fr))`,
 							}
@@ -327,7 +330,7 @@ export default function TasksContainer({
 							className={cn(
 								{
 									"overflow-y-scroll p-1 pt-0":
-										variant === "board",
+										viewMode === "board",
 								},
 								taskVariants({
 									color: option.color,
@@ -339,9 +342,9 @@ export default function TasksContainer({
 							<div
 								className={cn("w-full", {
 									"flex items-center gap-2 px-4 py-2 pb-0":
-										variant === "backlog",
+										viewMode === "backlog",
 									"sticky top-0 z-50 flex items-center gap-2 px-1 py-2 pt-3 backdrop-blur-lg":
-										variant === "board",
+										viewMode === "board",
 								})}
 							>
 								{option.icon}
@@ -357,7 +360,7 @@ export default function TasksContainer({
 									addTaskMutation={editTaskMutation}
 									deleteTaskMutation={deleteTaskMutation}
 									projectId={projectId}
-									variant={variant}
+									variant={viewMode}
 								/>
 							</div>
 						</div>
@@ -371,7 +374,7 @@ export default function TasksContainer({
 						addTaskMutation={editTaskMutation}
 						deleteTaskMutation={deleteTaskMutation}
 						projectId={projectId}
-						variant={variant}
+						variant={viewMode}
 					/>
 				)}
 			</div>

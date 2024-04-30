@@ -44,6 +44,8 @@ import { useAppStore } from "~/store/app";
 import { useNavigationStore } from "~/store/navigation";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
+import SimpleTooltip from "./SimpleTooltip";
+
 type FormProps = {
 	onSubmit: (newTask: TaskFormType) => void;
 	form: UseFormReturn<TaskFormType, undefined>;
@@ -100,6 +102,9 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 			if (userName) {
 				form.setValue("assignee", userName);
 			}
+			if (airesponse.title) {
+				form.setValue("title", airesponse.title);
+			}
 		}
 	};
 
@@ -134,24 +139,26 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 						animate={{ opacity: 1, scaleX: 1 }}
 						transition={transition}
 					>
-						<Button
-							disabled={isLoading}
-							type="button"
-							size="icon"
-							className="h-[30px]"
-							onClick={() =>
-								aiAutoComplete(
-									form.watch("title"),
-									form.watch("description"),
-								)
-							}
-						>
-							{isLoading ? (
-								<Loader2 className="h-4 w-4 animate-spin" />
-							) : (
-								<SparkleIcon className="h-4 w-4" />
-							)}
-						</Button>
+						<SimpleTooltip label="Autocomplete Properties">
+							<Button
+								disabled={isLoading}
+								type="button"
+								size="icon"
+								className="h-[30px] w-[30px]"
+								onClick={() =>
+									aiAutoComplete(
+										form.watch("title"),
+										form.watch("description"),
+									)
+								}
+							>
+								{isLoading ? (
+									<Loader2 className="h-4 w-4 animate-spin" />
+								) : (
+									<SparkleIcon className="h-4 w-4" />
+								)}
+							</Button>
+						</SimpleTooltip>
 					</motion.div>
 				) : null}
 				{taskProperties.map((property) => {

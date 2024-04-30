@@ -21,7 +21,7 @@ export default async function ProjectSettingsInvite({
 	const result = await joinProject(decodedToken);
 
 	if (result.success && result.projectId) {
-		redirect(`/project/${result.projectId}/backlog`);
+		redirect(`/project/${result.projectId}/tasks`);
 	}
 
 	redirect(constructToastURL(result.message, "error"));

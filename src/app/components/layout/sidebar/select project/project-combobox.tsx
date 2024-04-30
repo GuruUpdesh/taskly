@@ -96,26 +96,11 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 						variant="outline"
 						role="combobox"
 						aria-expanded={open}
-						// className="group relative z-10 w-full justify-center gap-2 overflow-hidden whitespace-nowrap bg-background/75 px-1 @sidebar:justify-between max-h-[36px]"
 						className={cn(
 							"group relative max-h-[36px] w-full cursor-pointer gap-2 overflow-hidden rounded border-none !bg-transparent font-semibold text-foreground/75 @sidebar:justify-between",
 							"bg-gradient-to-r from-background to-transparent to-0% bg-[length:200%] bg-left transition-all duration-300 ease-linear hover:bg-right @sidebar:to-50%",
 						)}
 					>
-						{/* {renderProjectImage(project)}
-						<span className="hidden font-bold @sidebar:inline-flex">
-							{project ? project.name : "Select project..."}
-						</span>
-						<div className="absolute left-0 -z-10 aspect-square w-full opacity-50 blur-3xl transition-opacity gradient-mask-l-50 group-hover:opacity-75  group-focus:opacity-75">
-							{project?.image ? (
-								<Image
-									src={project.image ?? "/project.svg"}
-									alt={project.name}
-									fill
-								/>
-							) : null}
-						</div>
-						<ChevronDown className="hidden h-4 w-4 shrink-0 opacity-50 @sidebar:inline-flex" /> */}
 						<div className="absolute left-0 -z-10 aspect-square w-full opacity-90 transition-opacity gradient-mask-l-50 group-hover:opacity-100 group-focus:opacity-100  @sidebar:opacity-75">
 							{project?.image ? (
 								<Image
@@ -123,7 +108,9 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 									alt={project.name}
 									fill
 								/>
-							) : null}
+							) : (
+								<Skeleton className="h-full w-full" />
+							)}
 						</div>
 						<span className="hidden @sidebar:inline-flex">
 							{project ? project.name : "Select project..."}
@@ -148,7 +135,7 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 							{projects.map((project) => (
 								<Link
 									key={project.id}
-									href={`/project/${project.id}/backlog`}
+									href={`/project/${project.id}/tasks`}
 								>
 									<CommandItem
 										value={
@@ -169,7 +156,9 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 													alt={project.name}
 													fill
 												/>
-											) : null}
+											) : (
+												<Skeleton className="h-full w-full" />
+											)}
 										</div>
 										<span className="group-focus-opacity-100 absolute right-2 opacity-0 transition-opacity group-hover:opacity-100">
 											<ArrowRight className="h-4 w-4" />

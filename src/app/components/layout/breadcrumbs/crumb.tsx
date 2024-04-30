@@ -14,10 +14,10 @@ interface CrumbProps extends TypeCrumb {
 
 const Crumb = ({ name, link, last }: CrumbProps) => {
 	return (
-		<>
+		<div className="flex items-center">
 			<div
 				className={cn(
-					"flex items-center rounded-sm   hover:bg-accent",
+					"flex items-center rounded-sm hover:bg-accent",
 					last
 						? "bg-accent px-2 font-bold"
 						: "bg-transparent px-1 text-muted-foreground",
@@ -37,7 +37,7 @@ const Crumb = ({ name, link, last }: CrumbProps) => {
 			{!last ? (
 				<ChevronRight className="my-1 h-4 w-4 text-muted-foreground" />
 			) : null}
-		</>
+		</div>
 	);
 };
 

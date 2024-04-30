@@ -35,7 +35,7 @@ export async function getUserApplicationData() {
 			if (projectsForUser.length === 1 && projectsForUser[0]) {
 				return {
 					lastApplicationPath:
-						"/project/" + projectsForUser[0].id + "/backlog",
+						"/project/" + projectsForUser[0].id + "/tasks",
 				};
 			}
 		}

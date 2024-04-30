@@ -5,8 +5,7 @@ import React from "react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { Priority } from "kbar";
-import { Expand, Trash, Trash2Icon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Trash, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -30,20 +29,8 @@ const TaskKBarUpdaterMemoized = React.memo(TaskKBarUpdater);
 
 const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 	const setHoveredTaskId = useAppStore((state) => state.setHoveredTaskId);
-	const router = useRouter();
 
 	const actions = [
-		{
-			id: "open",
-			name: "Open",
-			icon: <Expand className="h-4 w-4" />,
-			shortcut: ["o"],
-			perform: () => {
-				router.push(`/project/${task.projectId}/task/${task.id}`);
-			},
-			priority: Priority.HIGH,
-			section: `Actions - ${task.title}`,
-		},
 		{
 			id: "gitbranch",
 			name: "Copy Branch Name",
