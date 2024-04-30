@@ -31,8 +31,9 @@ export const env = createEnv({
 		ACCESS_TOKEN: z.string(),
 		BLOB_READ_WRITE_TOKEN: z.string(),
 		GH_WEBHOOK_SECRET: z.string(),
-		GH_CLIENT_SECRET:  z.string(),
+		GH_CLIENT_SECRET: z.string(),
 		GH_APP_PRIVATE_KEY_BASE_64: z.string(),
+		TESTING: z.boolean().default(false),
 	},
 
 	/**
@@ -45,6 +46,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_NODE_ENV: z
 			.enum(["development", "test", "production"])
 			.default("development"),
+		NEXT_PUBLIC_VERCEL_URL: z.string(),
 	},
 
 	/**
@@ -73,6 +75,8 @@ export const env = createEnv({
 		GH_WEBHOOK_SECRET: process.env.GH_WEBHOOK_SECRET,
 		GH_CLIENT_SECRET: process.env.GH_CLIENT_SECRET,
 		GH_APP_PRIVATE_KEY_BASE_64: process.env.GH_APP_PRIVATE_KEY_BASE_64,
+		TESTING: process.env.TESTING,
+		NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

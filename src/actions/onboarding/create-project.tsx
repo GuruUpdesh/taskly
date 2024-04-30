@@ -68,7 +68,7 @@ export async function createProject(
 		await addUserToProject(userId, insertId, "owner");
 
 		// create sprint for project
-		await createSprintForProject(insertId);
+		await createSprintForProject();
 
 		// create invite token
 		const token = await createInvite(insertId);

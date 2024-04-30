@@ -149,8 +149,8 @@ const CreateProjectForm = () => {
 	}
 
 	return (
-		<div className="flex min-h-[500px] rounded-lg border bg-background/75 shadow-xl backdrop-blur-lg">
-			<div className="m-4 mr-0 flex flex-col gap-8 rounded-lg border bg-accent-foreground/5 p-4 pr-8">
+		<div className="flex min-h-[500px] rounded-lg border bg-background-dialog shadow-xl backdrop-blur-lg">
+			<div className="m-4 mr-0 flex flex-col gap-8 rounded-lg border bg-background/50 p-4 pr-8">
 				<StepButton
 					step={1}
 					currentStep={formStep}
@@ -228,9 +228,7 @@ const CreateProjectForm = () => {
 												type="text"
 												{...register("name")}
 												placeholder="Project Name"
-												className={cn(
-													"w-full rounded-md border px-4 py-2",
-												)}
+												className="w-full rounded-md border bg-background/50 px-4 py-2"
 												autoFocus={true}
 												autoComplete="off"
 												hidden={formStep !== 1}
@@ -255,7 +253,7 @@ const CreateProjectForm = () => {
 											<Textarea
 												{...register("description")}
 												placeholder="Describe your project so our system can better provide suggestions (optional)"
-												className="mb-4 w-full rounded-md border px-4 py-2"
+												className="mb-4 w-full rounded-md border bg-background/50 px-4 py-2"
 												rows={6}
 											/>
 										</FormControl>

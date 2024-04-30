@@ -1,11 +1,70 @@
-import { startOfYesterday } from "date-fns";
-import { eq } from "drizzle-orm";
+import { addWeeks } from "date-fns";
+import { asc, desc, eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 
-import { createSprintForProject } from "~/actions/application/sprint-actions";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
-import { sprints } from "~/server/db/schema";
+import { projects, sprints } from "~/server/db/schema";
+
+type Sprint =
+	| {
+			id: number;
+			startDate: Date;
+			endDate: Date;
+	  }
+	| undefined;
+
+async function createSprintForProject(projectId: number) {
+	// get current project for sprint settings
+	const currentProjects = await db
+		.select()
+		.from(projects)
+		.where(eq(projects.id, projectId));
+
+	const currentProject = currentProjects[0];
+
+	if (!currentProject) {
+		console.error(
+			"Attempted to create sprint for non-existent project",
+			projectId,
+		);
+		return;
+	}
+
+	// initialize sprint start to project start
+	let newSprintStart = currentProject.sprintStart;
+
+	// get the last sprint for the project
+	const currentSprints = await db
+		.select()
+		.from(sprints)
+		.where(eq(sprints.projectId, projectId))
+		.orderBy(desc(sprints.endDate))
+		.limit(1);
+
+	const lastSprint = currentSprints[0];
+	if (lastSprint) {
+		// if there is a last sprint, set the new sprint start to the last sprint end
+		newSprintStart = lastSprint.endDate;
+	}
+
+	// add sprint duration to get the new sprint end
+	const newSprintEnd = addWeeks(
+		newSprintStart,
+		currentProject.sprintDuration,
+	);
+	const newSprint = {
+		projectId: projectId,
+		startDate: newSprintStart,
+		endDate: newSprintEnd,
+	};
+
+	await db.insert(sprints).values(newSprint);
+
+	return newSprint;
+}
+
+type Results = Record<number, Omit<Sprint, "id">[]>;
 
 export async function GET(request: NextRequest) {
 	const authHeader = request.headers.get("authorization");
@@ -15,16 +74,58 @@ export async function GET(request: NextRequest) {
 		});
 	}
 
-	const expiredSprints = await db
-		.select()
-		.from(sprints)
-		.where(eq(sprints.endDate, startOfYesterday()));
+	const allProjects = await db.select().from(projects);
+	const results: Results = {};
 
-	const promises = [];
-	for (const sprint of expiredSprints) {
-		const projectId = sprint.projectId;
-		promises.push(createSprintForProject(projectId));
+	for (const project of allProjects) {
+		const projectId = project.id;
+		results[projectId] = [];
+
+		while (true) {
+			const sprintsForProject = await db
+				.select()
+				.from(sprints)
+				.where(eq(sprints.projectId, projectId))
+				.orderBy(asc(sprints.endDate));
+
+			const currentSprintIndex = sprintsForProject.findIndex(
+				(sprint) =>
+					sprint.startDate <= new Date() &&
+					sprint.endDate >= new Date(),
+			);
+
+			if (currentSprintIndex !== -1) {
+				const nextSprintsCount =
+					sprintsForProject.length - 1 - currentSprintIndex;
+
+				if (nextSprintsCount === 0) {
+					const newSprint = await createSprintForProject(projectId);
+					if (newSprint) {
+						results[projectId]?.push({
+							startDate: newSprint.startDate,
+							endDate: newSprint.endDate,
+						});
+					}
+					break;
+				} else {
+					break;
+				}
+			} else {
+				const firstSprint = sprintsForProject[0];
+				if (firstSprint && firstSprint.endDate > new Date()) {
+					break;
+				}
+				const newSprint = await createSprintForProject(projectId);
+				if (newSprint) {
+					results[projectId]?.push({
+						startDate: newSprint.startDate,
+						endDate: newSprint.endDate,
+					});
+					continue;
+				}
+			}
+		}
 	}
 
-	await Promise.all(promises);
+	return new Response(JSON.stringify(results), { status: 200 });
 }
