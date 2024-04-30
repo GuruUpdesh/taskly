@@ -14,7 +14,6 @@ type Props = {
 };
 
 const Comments = ({ taskComments, taskId, createComment }: Props) => {
-	console.log(taskComments);
 	const [comments, setComments] = React.useState(taskComments);
 
 	const deleteComment = (commentId: number) => {

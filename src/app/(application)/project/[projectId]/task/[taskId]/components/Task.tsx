@@ -2,12 +2,13 @@
 
 import React from "react";
 
-import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
+import { GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, ClipboardCopy, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
 
 import { createComment } from "~/actions/application/comment-actions";
 import {
@@ -18,6 +19,7 @@ import {
 import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
 import BackButtonRelative from "~/app/components/layout/navbar/back-button-relative";
 import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
+import Message from "~/app/components/Message";
 import SimpleTooltip from "~/app/components/SimpleTooltip";
 import Task from "~/app/components/task/Task";
 import { Button } from "~/components/ui/button";
@@ -36,6 +38,7 @@ import {
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
 import { Separator } from "~/components/ui/separator";
+import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 import Comments from "./comments/Comments";
 import PrimaryTaskForm from "./PrimaryTaskForm";
@@ -105,7 +108,19 @@ const TaskPage = ({
 	}
 
 	if (!result.data.success || !result.data.task) {
-		return <div>{result.data.message}</div>;
+		let message = "Task not found";
+		if (result.data.message) {
+			message = result.data.message;
+		}
+
+		router.push(
+			constructToastURL(message, "error", `/project/${projectId}/tasks`),
+		);
+		return (
+			<div className="flex w-full items-center justify-center">
+				<Message type="error">{message}</Message>
+			</div>
+		);
 	}
 
 	const onLayout = (sizes: number[]) => {
@@ -138,15 +153,6 @@ const TaskPage = ({
 								<BreadCrumbs />
 							</div>
 							<div className="flex items-center gap-2">
-								<Button
-									onClick={handleCopyLinkToClipboard}
-									size="sm"
-									variant="outline"
-									className="gap-2 bg-transparent"
-								>
-									<LinkIcon className="h-4 w-4" />
-									Copy Link
-								</Button>
 								{context === "inbox" && (
 									<Link
 										href={`/project/${projectId}/task/${taskId}`}
@@ -179,14 +185,14 @@ const TaskPage = ({
 					<div className="flex h-screen max-h-screen flex-col bg-foreground/5">
 						<header className="flex items-center justify-between gap-2 border-b border-foreground/10 px-4 py-2 pb-2 pt-2">
 							<div className="flex w-full items-center gap-2">
-								<SimpleTooltip label="Toggle Notifications">
+								<SimpleTooltip label="Copy Link">
 									<Button
 										size="icon"
 										variant="outline"
 										className="border-foreground/10 bg-transparent"
-										disabled
+										onClick={handleCopyLinkToClipboard}
 									>
-										<BellIcon />
+										<LinkIcon className="h-4 w-4" />
 									</Button>
 								</SimpleTooltip>
 								<SimpleTooltip label="Copy Git Branch Name">

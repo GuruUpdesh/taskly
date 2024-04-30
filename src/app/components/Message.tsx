@@ -3,6 +3,8 @@ import React from "react";
 import { type VariantProps, cva } from "class-variance-authority";
 import { AlertTriangle, CheckCircle, Info, XCircle } from "lucide-react";
 
+import { cn } from "~/lib/utils";
+
 const messageVariants = cva("rounded border backdrop-blur-xl", {
 	variants: {
 		type: {
@@ -22,12 +24,13 @@ type Props = {
 	type: VariantProps<typeof messageVariants>["type"];
 	children: React.ReactNode;
 	description?: React.ReactNode;
+	className?: string;
 };
 
-function Message({ type, children, description = null }: Props) {
+function Message({ type, children, description = null, className }: Props) {
 	return (
 		<div className="my-2 flex w-full justify-center">
-			<div className={messageVariants({ type })}>
+			<div className={cn(messageVariants({ type }), className)}>
 				<header className="flex min-w-[600px] items-center gap-2 p-2 leading-7">
 					<MessageIcon type={type} />
 					{children}

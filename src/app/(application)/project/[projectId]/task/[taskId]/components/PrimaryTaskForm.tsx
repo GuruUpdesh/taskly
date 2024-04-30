@@ -12,7 +12,7 @@ import { z } from "zod";
 
 import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)/components/TasksContainer";
 import { Input } from "~/components/ui/input";
-import { Separator } from "~/components/ui/separator";
+import { Skeleton } from "~/components/ui/skeleton";
 import type { NewTask, Task } from "~/server/db/schema";
 
 import TaskHistoryItem, { type TaskHistoryWithUser } from "./HistoryItem";
@@ -24,6 +24,7 @@ const Editor = dynamic(
 		),
 	{
 		ssr: false,
+		loading: () => <Skeleton className="h-[95.5px]" />,
 	},
 );
 
@@ -88,7 +89,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	return (
 		<form
 			onSubmit={form.handleSubmit(onSubmit)}
-			className="flex flex-grow flex-col gap-2 px-4 pb-4 pt-2"
+			className="mx-auto flex w-[800px] max-w-full flex-grow flex-col gap-2 px-4 pb-4 pt-2"
 		>
 			<Input
 				type="text"
@@ -99,7 +100,6 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 				{...form.register("title")}
 				onChangeCapture={debouncedHandleChange}
 			/>
-
 			<Editor
 				editorRef={editorRef}
 				markdown={form.watch("description")}
@@ -109,8 +109,8 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 					debouncedHandleChange();
 				}}
 			/>
-			<Separator className="my-4" />
-			<div className="pb-4">
+			{/* <Separator className="my-4" /> */}
+			<div className="py-4">
 				<div className="flex flex-col gap-4 overflow-hidden">
 					<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 						Activity

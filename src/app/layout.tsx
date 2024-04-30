@@ -1,6 +1,8 @@
 import "~/styles/globals.css";
 import { Suspense } from "react";
 
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
 
@@ -10,8 +12,6 @@ import KBarProvider from "~/lib/kbar-provider";
 import ReactQueryProvider from "~/lib/react-query-provider";
 import GlobalToastHandler from "~/lib/toast/global-toast-handler";
 import { cn } from "~/lib/utils";
-
-import ClientProvider from "./components/ClientProvider";
 
 export const metadata = {
 	metadataBase: new URL("https://tasklypm.com"),
@@ -29,7 +29,15 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<ClientProvider>
+		<ClerkProvider
+			appearance={{
+				baseTheme: dark,
+				variables: {
+					colorBackground: "#000000",
+					colorInputBackground: "#1b1b1b",
+				},
+			}}
+		>
 			<KBarProvider>
 				<KBar />
 				<Suspense>
@@ -52,6 +60,6 @@ export default function RootLayout({
 					<Analytics />
 				</html>
 			</KBarProvider>
-		</ClientProvider>
+		</ClerkProvider>
 	);
 }

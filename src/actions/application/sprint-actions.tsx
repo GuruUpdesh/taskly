@@ -11,7 +11,7 @@ import { projects, sprints, usersToProjects } from "~/server/db/schema";
 import buildUrl from "~/utils/buildUrl";
 
 export async function createSprintForProject() {
-	await fetch(buildUrl("/api/cron/sprint") , {
+	await fetch(buildUrl("/api/cron/sprint"), {
 		method: "GET",
 		headers: {
 			authorization: "Bearer " + env.CRON_SECRET,

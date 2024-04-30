@@ -3,10 +3,11 @@
 import React, { useMemo } from "react";
 
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { formatDistanceToNow } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { Dot } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
+import SimpleTooltip from "~/app/components/SimpleTooltip";
 import {
 	type TaskProperty as TaskPropertyType,
 	getPropertyConfig,
@@ -63,7 +64,12 @@ const TaskHistoryItem = ({ history }: Props) => {
 	}
 
 	return (
-		<div className={cn("flex items-center", typography.paragraph.p_muted)}>
+		<div
+			className={cn(
+				"flex items-center text-sm",
+				typography.paragraph.p_muted,
+			)}
+		>
 			<div className="relative">
 				<TaskProperty option={newOption} size="iconSm" />
 				<div className="absolute left-0 top-0 -z-10 h-full w-full bg-background" />
@@ -72,32 +78,43 @@ const TaskHistoryItem = ({ history }: Props) => {
 			{!oldOption || history.comment ? (
 				<p className="ml-3">
 					{history.userId === "github" ? (
-						<b className="inline-flex items-center gap-1">
-							<GitHubLogoIcon className="h-4 w-4" /> GitHub
+						<b className="inline-flex items-baseline gap-1 text-foreground">
+							<GitHubLogoIcon className="h-4 w-4 translate-y-0.5" />{" "}
+							GitHub
 						</b>
 					) : (
-						<b>{history.user.username}</b>
+						<b className="text-foreground">
+							{history.user.username}
+						</b>
 					)}{" "}
 					{history.comment}
 				</p>
 			) : (
 				<p className="ml-3">
 					{history.userId === "github" ? (
-						<b className="inline-flex  items-center gap-1">
-							<GitHubLogoIcon className="h-4 w-4" /> GitHub
+						<b className="inline-flex items-baseline gap-1 text-foreground">
+							<GitHubLogoIcon className="h-4 w-4 translate-y-0.5" />{" "}
+							GitHub
 						</b>
 					) : (
-						<b>{history.user.username}</b>
+						<b className="text-foreground">
+							{history.user.username}
+						</b>
 					)}{" "}
 					changed {config.displayName} from{" "}
-					<b>{oldOption.displayName}</b> to{" "}
-					<b>{newOption.displayName}</b>
+					<b className="text-foreground">{oldOption.displayName}</b>{" "}
+					to{" "}
+					<b className="text-foreground">{newOption.displayName}</b>
 				</p>
 			)}
 			<Dot />
-			<p className="whitespace-nowrap">
-				{formatDistanceToNow(history.insertedDate)}
-			</p>
+			<SimpleTooltip
+				label={format(history.insertedDate, "MMM dd, yyyy, h:mm:ss aa")}
+			>
+				<p className="whitespace-nowrap transition-colors hover:text-foreground">
+					{formatDistanceToNow(history.insertedDate)}
+				</p>
+			</SimpleTooltip>
 		</div>
 	);
 };
