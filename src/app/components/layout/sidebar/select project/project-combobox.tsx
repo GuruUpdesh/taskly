@@ -112,9 +112,15 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 								<Skeleton className="h-full w-full" />
 							)}
 						</div>
-						<span className="hidden @sidebar:inline-flex">
+						<div className="hidden items-center gap-2 @sidebar:inline-flex">
+							<span
+								className="h-3 w-3 rounded-full"
+								style={{
+									backgroundColor: project?.color,
+								}}
+							></span>
 							{project ? project.name : "Select project..."}
-						</span>
+						</div>
 						<ChevronDown className="hidden h-4 w-4 shrink-0 opacity-50 @sidebar:inline-flex" />
 					</Button>
 				</PopoverTrigger>
@@ -163,7 +169,16 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 										<span className="group-focus-opacity-100 absolute right-2 opacity-0 transition-opacity group-hover:opacity-100">
 											<ArrowRight className="h-4 w-4" />
 										</span>
-										{project.name}
+										<div className="flex items-center gap-2">
+											<span
+												className="h-3 w-3 rounded-full"
+												style={{
+													backgroundColor:
+														project?.color,
+												}}
+											></span>
+											{project.name}
+										</div>
 									</CommandItem>
 								</Link>
 							))}
