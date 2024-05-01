@@ -21,11 +21,13 @@ export async function generateMetadata({
 			title: "Task",
 		};
 	}
+
 	const taskResults = await db
 		.select()
 		.from(tasks)
 		.where(eq(tasks.id, taskIdInteger));
 	const task = taskResults[0];
+
 	if (!task) {
 		return {
 			title: "Task",

@@ -5,12 +5,16 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
+import dynamic from "next/dynamic";
 
 import KBar from "~/app/components/Kbar";
 import { Toaster } from "~/components/ui/sonner";
 import KBarProvider from "~/lib/kbar-provider";
 import ReactQueryProvider from "~/lib/react-query-provider";
-import GlobalToastHandler from "~/lib/toast/global-toast-handler";
+const GlobalToastHandler = dynamic(
+	() => import("~/lib/toast/global-toast-handler"),
+	{ ssr: false },
+);
 import { cn } from "~/lib/utils";
 
 export const metadata = {
@@ -40,9 +44,6 @@ export default function RootLayout({
 		>
 			<KBarProvider>
 				<KBar />
-				<Suspense>
-					<GlobalToastHandler />
-				</Suspense>
 				<html lang="en" suppressHydrationWarning>
 					<body
 						className={cn(
@@ -50,6 +51,9 @@ export default function RootLayout({
 							GeistSans.className,
 						)}
 					>
+						<Suspense>
+							<GlobalToastHandler />
+						</Suspense>
 						<ReactQueryProvider>
 							<main className="relative flex min-h-screen flex-col">
 								{children}

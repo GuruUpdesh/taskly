@@ -198,7 +198,7 @@ const Task = ({
 									className="grid w-full grid-cols-3"
 									key={idx}
 								>
-									<p className="col-span-1 capitalize text-muted-foreground">
+									<p className="col-span-1 capitalize">
 										{config.displayName}
 									</p>
 									<Property

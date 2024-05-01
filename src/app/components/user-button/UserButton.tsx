@@ -24,12 +24,14 @@ const UserButton = ({ size = "default" }: Props) => {
 
 	if (size === "large") {
 		return (
-			<div className="flex items-center justify-between rounded-md bg-background-dialog px-2 py-2">
-				<div className="flex items-center gap-2">
-					<UserProfilePicture src={user.imageUrl} size={30} />
-					<h4 className={"text-lg font-semibold"}>{user.username}</h4>
-				</div>
-				<UserMenu>
+			<UserMenu>
+				<div className="flex items-center justify-between rounded-md bg-[#111111] px-2 py-2">
+					<div className="flex items-center gap-2">
+						<UserProfilePicture src={user.imageUrl} size={30} />
+						<h4 className={"text-lg font-semibold"}>
+							{user.username}
+						</h4>
+					</div>
 					<Button
 						variant="ghost"
 						size="iconSm"
@@ -37,8 +39,8 @@ const UserButton = ({ size = "default" }: Props) => {
 					>
 						<DotsVerticalIcon />
 					</Button>
-				</UserMenu>
-			</div>
+				</div>
+			</UserMenu>
 		);
 	}
 

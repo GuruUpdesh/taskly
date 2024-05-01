@@ -123,7 +123,7 @@ const UserComment = ({
 		>
 			<div
 				className={cn(
-					"relative mb-4 overflow-hidden text-wrap rounded-lg border bg-background/50 p-4 py-2",
+					"relative mb-2 overflow-hidden text-wrap rounded-lg border bg-background/50 p-4 py-2",
 					{
 						"mb-0": isLastComment,
 					},

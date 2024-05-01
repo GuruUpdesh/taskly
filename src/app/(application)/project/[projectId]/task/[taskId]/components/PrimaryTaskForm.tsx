@@ -10,12 +10,14 @@ import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { type getPRStatusFromGithubRepo } from "~/actions/application/github-actions";
 import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)/components/TasksContainer";
 import { Input } from "~/components/ui/input";
 import { Skeleton } from "~/components/ui/skeleton";
 import type { NewTask, Task } from "~/server/db/schema";
 
 import TaskHistoryItem, { type TaskHistoryWithUser } from "./HistoryItem";
+import PullRequest from "./PullRequest";
 
 const Editor = dynamic(
 	() =>
@@ -35,6 +37,7 @@ interface TaskWithComments extends Task {
 type Props = {
 	task: TaskWithComments;
 	editTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
+	pullRequests?: Awaited<ReturnType<typeof getPRStatusFromGithubRepo>>;
 };
 
 const insertTaskSchema__Primary = z.object({
@@ -44,7 +47,7 @@ const insertTaskSchema__Primary = z.object({
 
 type FormType = Pick<NewTask, "title" | "description">;
 
-const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
+const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 	const form = useForm<FormType>({
 		resolver: zodResolver(insertTaskSchema__Primary),
 		mode: "onChange",
@@ -109,20 +112,28 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 					debouncedHandleChange();
 				}}
 			/>
-			{/* <Separator className="my-4" /> */}
 			<div className="py-4">
-				<div className="flex flex-col gap-4 overflow-hidden">
+				<div className="flex flex-col gap-2 overflow-hidden">
 					<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
 						Activity
 					</h3>
-					{task.taskHistory.map((history) => {
-						return (
-							<TaskHistoryItem
-								key={history.id}
-								history={history}
-							/>
-						);
-					})}
+					<div className="flex flex-col gap-2 pb-2">
+						{pullRequests?.map((pr) => {
+							return (
+								<PullRequest key={pr.number} pullRequest={pr} />
+							);
+						})}
+					</div>
+					<div className="flex flex-col gap-4 px-3">
+						{task.taskHistory.map((history) => {
+							return (
+								<TaskHistoryItem
+									key={history.id}
+									history={history}
+								/>
+							);
+						})}
+					</div>
 				</div>
 			</div>
 		</form>

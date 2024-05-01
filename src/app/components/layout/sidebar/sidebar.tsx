@@ -10,9 +10,13 @@ import CreateTask from "~/app/components/CreateTask";
 import Logo from "~/app/components/Logo";
 const UserButton = dynamic(
 	() => import("~/app/components/user-button/UserButton"),
-	{ ssr: false },
+	{
+		ssr: false,
+		loading: () => <Skeleton className="h-[46px] rounded-md" />,
+	},
 );
 import { Button } from "~/components/ui/button";
+import { Skeleton } from "~/components/ui/skeleton";
 
 import InboxSidebarButton from "./InboxSidebarButton";
 import SelectProject from "./select project/select-project";
