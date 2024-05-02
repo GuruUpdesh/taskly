@@ -72,7 +72,7 @@ const ProjectGithub = async ({ project }: Props) => {
 					))}
 				</div>
 			) : (
-				<Message type="faint">
+				<Message type="faint" className="w-full">
 					Connect to automate workflows and keep everything synced
 				</Message>
 			)}

@@ -1,15 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
-import { BellIcon, GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
+import { GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, ClipboardCopy, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getPanelElement } from "react-resizable-panels";
 import { toast } from "sonner";
 
 import { createComment } from "~/actions/application/comment-actions";
+import { type getPRStatusFromGithubRepo } from "~/actions/application/github-actions";
 import {
 	deleteTask,
 	getTask,
@@ -18,6 +20,7 @@ import {
 import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
 import BackButtonRelative from "~/app/components/layout/navbar/back-button-relative";
 import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
+import Message from "~/app/components/Message";
 import SimpleTooltip from "~/app/components/SimpleTooltip";
 import Task from "~/app/components/task/Task";
 import { Button } from "~/components/ui/button";
@@ -36,6 +39,8 @@ import {
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
 import { Separator } from "~/components/ui/separator";
+import constructToastURL from "~/lib/toast/global-toast-url-constructor";
+import { useAppStore } from "~/store/app";
 
 import Comments from "./comments/Comments";
 import PrimaryTaskForm from "./PrimaryTaskForm";
@@ -47,6 +52,7 @@ type Props = {
 	projectId: string;
 	context: "page" | "inbox";
 	defaultLayout?: number[];
+	pullRequests?: Awaited<ReturnType<typeof getPRStatusFromGithubRepo>>;
 };
 
 const TaskPage = ({
@@ -54,9 +60,25 @@ const TaskPage = ({
 	projectId,
 	context,
 	defaultLayout = [75, 25],
+	pullRequests,
 }: Props) => {
 	const queryClient = useQueryClient();
 	const router = useRouter();
+
+	const setRightSidebarWidth = useAppStore(
+		(state) => state.setRightSidebarWidth,
+	);
+
+	useEffect(() => {
+		const rightPanelElement = getPanelElement("task-info");
+		if (rightPanelElement) {
+			const width = rightPanelElement.getBoundingClientRect().width;
+			setRightSidebarWidth(width);
+		}
+		return () => {
+			setRightSidebarWidth(0);
+		};
+	}, []);
 
 	const result = useQuery({
 		queryKey: ["task", taskId],
@@ -105,10 +127,27 @@ const TaskPage = ({
 	}
 
 	if (!result.data.success || !result.data.task) {
-		return <div>{result.data.message}</div>;
+		let message = "Task not found";
+		if (result.data.message) {
+			message = result.data.message;
+		}
+
+		router.push(
+			constructToastURL(message, "error", `/project/${projectId}/tasks`),
+		);
+		return (
+			<div className="flex w-full items-center justify-center">
+				<Message type="error">{message}</Message>
+			</div>
+		);
 	}
 
 	const onLayout = (sizes: number[]) => {
+		const rightPanelElement = getPanelElement("task-info");
+		if (rightPanelElement) {
+			const width = rightPanelElement.getBoundingClientRect().width;
+			setRightSidebarWidth(width);
+		}
 		document.cookie = `react-resizable-panels:task-layout=${JSON.stringify(sizes)}`;
 	};
 
@@ -138,15 +177,6 @@ const TaskPage = ({
 								<BreadCrumbs />
 							</div>
 							<div className="flex items-center gap-2">
-								<Button
-									onClick={handleCopyLinkToClipboard}
-									size="sm"
-									variant="outline"
-									className="gap-2 bg-transparent"
-								>
-									<LinkIcon className="h-4 w-4" />
-									Copy Link
-								</Button>
 								{context === "inbox" && (
 									<Link
 										href={`/project/${projectId}/task/${taskId}`}
@@ -166,6 +196,7 @@ const TaskPage = ({
 						<PrimaryTaskForm
 							task={result.data.task}
 							editTaskMutation={editTaskMutation}
+							pullRequests={pullRequests}
 						/>
 					</div>
 				</ResizablePanel>
@@ -176,17 +207,17 @@ const TaskPage = ({
 					minSize={20}
 					order={1}
 				>
-					<div className="flex h-screen max-h-screen flex-col bg-foreground/5">
+					<div className="flex h-screen max-h-screen flex-col bg-background-dialog">
 						<header className="flex items-center justify-between gap-2 border-b border-foreground/10 px-4 py-2 pb-2 pt-2">
 							<div className="flex w-full items-center gap-2">
-								<SimpleTooltip label="Toggle Notifications">
+								<SimpleTooltip label="Copy Link">
 									<Button
 										size="icon"
 										variant="outline"
 										className="border-foreground/10 bg-transparent"
-										disabled
+										onClick={handleCopyLinkToClipboard}
 									>
-										<BellIcon />
+										<LinkIcon className="h-4 w-4" />
 									</Button>
 								</SimpleTooltip>
 								<SimpleTooltip label="Copy Git Branch Name">
@@ -260,7 +291,7 @@ const TaskPage = ({
 							</div>
 						</header>
 						<section className="flex flex-col gap-2 p-4">
-							<h3 className="mb-4 scroll-m-20 text-xl font-semibold tracking-tight">
+							<h3 className="mb-2 scroll-m-20 text-xl font-semibold tracking-tight">
 								Attributes
 							</h3>
 							<Task
@@ -275,7 +306,7 @@ const TaskPage = ({
 						<h3 className="scroll-m-20 px-4 text-xl font-semibold tracking-tight">
 							Comments
 						</h3>
-						<section className="comments-container mb-3 mt-4 flex max-w-full flex-grow flex-col gap-4 overflow-scroll px-4 pb-1">
+						<section className="comments-container mb-3 mt-2 flex max-w-full flex-grow flex-col gap-4 overflow-scroll px-4 pb-1">
 							<Comments
 								taskComments={result.data.task.comments}
 								taskId={result.data.task.id}

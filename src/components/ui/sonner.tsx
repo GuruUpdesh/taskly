@@ -3,10 +3,13 @@
 import { useTheme } from "next-themes";
 import { Toaster as Sonner } from "sonner";
 
+import { useAppStore } from "~/store/app";
+
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
 	const { theme = "system" } = useTheme();
+	const rightSidebarWidth = useAppStore((state) => state.rightSidebarWidth);
 
 	return (
 		<Sonner
@@ -21,6 +24,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
 					cancelButton:
 						"group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
 				},
+			}}
+			style={{
+				right: rightSidebarWidth + 32,
 			}}
 			{...props}
 		/>

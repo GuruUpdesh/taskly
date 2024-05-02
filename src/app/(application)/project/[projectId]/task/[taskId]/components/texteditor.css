@@ -113,7 +113,8 @@
 }
 
 .mdxeditor .mdxeditor-toolbar {
-	background-color: hsl(var(--accent));
-	border-radius: 0;
+	background: #111111;
+	border-radius: calc(var(--radius) - 2px);
+	border-bottom: 1px solid hsl(var(--border));
 	top: 57px;
 }

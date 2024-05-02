@@ -1,5 +1,6 @@
 import React from "react";
 
+import { auth } from "@clerk/nextjs/server";
 import {
 	dehydrate,
 	HydrationBoundary,
@@ -14,7 +15,6 @@ import {
 } from "~/actions/application/project-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { getAllNotifications } from "~/actions/notification-actions";
-import { authenticate } from "~/actions/security/authenticate";
 import Sidebar from "~/app/components/layout/sidebar/sidebar";
 import SidebarPanel from "~/app/components/layout/sidebar/sidebar-panel";
 
@@ -52,7 +52,10 @@ export default async function ApplicationLayout({
 	children,
 	params: { projectId },
 }: Params) {
-	const userId = authenticate();
+	const { userId } = auth();
+	if (!userId) {
+		throw new Error("User not authenticated");
+	}
 
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({

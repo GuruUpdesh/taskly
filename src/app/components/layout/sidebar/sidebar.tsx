@@ -10,13 +10,16 @@ import CreateTask from "~/app/components/CreateTask";
 import Logo from "~/app/components/Logo";
 const UserButton = dynamic(
 	() => import("~/app/components/user-button/UserButton"),
-	{ ssr: false },
+	{
+		ssr: false,
+		loading: () => <Skeleton className="h-[46px] rounded-md" />,
+	},
 );
 import { Button } from "~/components/ui/button";
+import { Skeleton } from "~/components/ui/skeleton";
 
 import InboxSidebarButton from "./InboxSidebarButton";
 import SelectProject from "./select project/select-project";
-import SidebarBackgroundWrapper from "./sidebar-background";
 import SidebarButton from "./sidebar-button";
 import SidebarSearch from "./sidebar-search";
 
@@ -27,7 +30,6 @@ interface SidebarProps {
 const Sidebar = ({ projectId }: SidebarProps) => {
 	return (
 		<div className="relative h-full bg-background @container">
-			<SidebarBackgroundWrapper projectId={projectId} />
 			<div className="flex h-full flex-col px-1.5 pb-2 @sidebar:px-4">
 				<div className="flex min-h-[57px] items-center justify-center @sidebar:justify-start">
 					<div className="hidden @sidebar:block">

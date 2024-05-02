@@ -1,7 +1,9 @@
+import { eq } from "drizzle-orm";
 import { type Metadata } from "next";
 
-import { getTask } from "~/actions/application/task-actions";
 import { TaskWrapper } from "~/app/(application)/project/[projectId]/task/[taskId]/components/TaskWrapper";
+import { db } from "~/server/db";
+import { tasks } from "~/server/db/schema";
 
 type Params = {
 	params: {
@@ -13,15 +15,27 @@ type Params = {
 export async function generateMetadata({
 	params: { taskId },
 }: Params): Promise<Metadata> {
-	const task = await getTask(parseInt(taskId));
-	if (!task || !task.success || !task.task) {
+	const taskIdInteger = parseInt(taskId);
+	if (isNaN(taskIdInteger)) {
+		return {
+			title: "Task",
+		};
+	}
+
+	const taskResults = await db
+		.select()
+		.from(tasks)
+		.where(eq(tasks.id, taskIdInteger));
+	const task = taskResults[0];
+
+	if (!task) {
 		return {
 			title: "Task",
 		};
 	}
 
 	return {
-		title: task.task.title,
+		title: task.title,
 	};
 }
 

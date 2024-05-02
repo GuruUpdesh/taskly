@@ -37,6 +37,8 @@ interface AppState {
 	setHoveredNotificationId: (id: number | null) => void;
 	viewMode: ViewMode;
 	setViewMode: (mode: ViewMode) => void;
+	rightSidebarWidth: number;
+	setRightSidebarWidth: (width: number) => void;
 }
 
 const useAppStore = create<AppState>()(
@@ -81,6 +83,8 @@ const useAppStore = create<AppState>()(
 				set({ hoveredNotificationId: id }),
 			viewMode: "backlog",
 			setViewMode: (mode) => set({ viewMode: mode }),
+			rightSidebarWidth: 0,
+			setRightSidebarWidth: (width) => set({ rightSidebarWidth: width }),
 		}),
 		{
 			name: "settings-navigation-storage",
