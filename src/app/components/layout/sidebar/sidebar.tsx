@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 
+import { getAiLimitCount } from "~/actions/ai/ai-limit-actions";
 import CreateTask from "~/app/components/CreateTask";
 import Logo from "~/app/components/Logo";
 const UserButton = dynamic(
@@ -27,7 +28,9 @@ interface SidebarProps {
 	projectId: string;
 }
 
-const Sidebar = ({ projectId }: SidebarProps) => {
+const Sidebar = async ({ projectId }: SidebarProps) => {
+	const aiLimitCount = await getAiLimitCount();
+
 	return (
 		<div className="relative h-full bg-background @container">
 			<div className="flex h-full flex-col px-1.5 pb-2 @sidebar:px-4">
@@ -51,7 +54,10 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 				<div className="mb-2 flex items-center gap-2">
 					<SidebarSearch />
 					<div className="hidden @sidebar:block">
-						<CreateTask projectId={projectId}>
+						<CreateTask
+							projectId={projectId}
+							aiLimitCount={aiLimitCount}
+						>
 							<Button
 								className="aspect-square h-[36px] w-[36px] bg-foreground/5 font-bold"
 								variant="outline"

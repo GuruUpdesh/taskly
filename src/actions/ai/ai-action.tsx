@@ -10,6 +10,8 @@ import { env } from "~/env.mjs";
 import { type User } from "~/server/db/schema";
 import { getTaskAiSchema } from "~/utils/ai-context";
 
+import { isAiLimitReached } from "./ai-limit-actions";
+
 const openai = new OpenAI({
 	apiKey: env.OPENAI_API_KEY,
 });
@@ -19,6 +21,9 @@ export async function aiAction(
 	description: string,
 	assignees: User[],
 ) {
+	if (await isAiLimitReached()) {
+		return;
+	}
 	const users = assignees.map((user) => user.username).join(", ");
 	const gptResponse = await openai.chat.completions.create({
 		messages: [
@@ -78,6 +83,10 @@ export async function aiAction(
 }
 
 export async function aiGenerateTask(description: string, projectId: number) {
+	if (await isAiLimitReached()) {
+		return;
+	}
+
 	const assignees = await getAssigneesForProject(projectId);
 	const sprints = await getSprintsForProject(projectId);
 

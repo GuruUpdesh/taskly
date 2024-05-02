@@ -4,12 +4,15 @@ import React, { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { ChevronRight, Loader2, SparklesIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { aiGenerateTask } from "~/actions/ai/ai-action";
 import { createTask } from "~/actions/application/task-actions";
+import Message from "~/app/components/Message";
 import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import {
@@ -22,19 +25,21 @@ import {
 } from "~/components/ui/dialog";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Textarea } from "~/components/ui/textarea";
+import { AIDAILYLIMIT, timeTillNextReset } from "~/config/aiLimit";
 import { schemaValidators } from "~/config/taskConfigType";
 import { useNavigationStore } from "~/store/navigation";
 import { taskNameToBranchName } from "~/utils/task-name-branch-converters";
 
 type Props = {
 	projectId: string;
+	aiLimitCount: number;
 };
 
 const formSchema = z.object({
 	description: z.string().max(1000),
 });
 
-const AiDialog = ({ projectId }: Props) => {
+const AiDialog = ({ projectId, aiLimitCount }: Props) => {
 	const [open, setOpen] = useState(false);
 	const project = useNavigationStore((state) => state.currentProject);
 
@@ -56,6 +61,13 @@ const AiDialog = ({ projectId }: Props) => {
 			values.description,
 			parseInt(projectId),
 		);
+
+		if (!result) {
+			toast.error(
+				`AI daily limit reached. Please try again in ${timeTillNextReset()} hours.`,
+			);
+			return;
+		}
 
 		const jsonResult = JSON.parse(result) as unknown;
 
@@ -99,6 +111,7 @@ const AiDialog = ({ projectId }: Props) => {
 			}
 		});
 
+		resetForm();
 		setOpen(false);
 	}
 
@@ -134,26 +147,47 @@ const AiDialog = ({ projectId }: Props) => {
 							<SparklesIcon className="h-4 w-4" />
 							AI Task Creation
 						</DialogTitle>
+						{aiLimitCount >= AIDAILYLIMIT && (
+							<Message
+								type="error"
+								className="mt-2 w-full flex-shrink"
+							>
+								You have reached the daily AI limit. <br />
+								Your usage will reset in {timeTillNextReset()}{" "}
+								hours.
+							</Message>
+						)}
 					</DialogHeader>
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)}>
-							<FormField
-								control={form.control}
-								name="description"
-								render={({ field }) => (
-									<FormItem>
-										<Textarea
-											placeholder="Describe the task you would like to create, and our AI model will create it for you..."
-											className="h-[200px] max-h-[180px] bg-transparent"
-											{...field}
-										/>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</form>
-					</Form>
+					{aiLimitCount < AIDAILYLIMIT && (
+						<Form {...form}>
+							<form onSubmit={form.handleSubmit(onSubmit)}>
+								<FormField
+									control={form.control}
+									name="description"
+									render={({ field }) => (
+										<FormItem>
+											<Textarea
+												placeholder="Describe the task or tasks you would like to create..."
+												className="h-[200px] max-h-[180px] bg-transparent"
+												{...field}
+											/>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</form>
+						</Form>
+					)}
 					<DialogFooter>
+						<SimpleTooltip
+							label={`Resets in ${timeTillNextReset()} hours`}
+						>
+							<span className="flex items-center gap-1 text-sm text-muted-foreground">
+								<InfoCircledIcon className="h-4 w-4" />
+								Daily Usage: {aiLimitCount}/{AIDAILYLIMIT}
+							</span>
+						</SimpleTooltip>
+						<div className="flex-1" />
 						<DialogClose asChild>
 							<Button
 								type="button"

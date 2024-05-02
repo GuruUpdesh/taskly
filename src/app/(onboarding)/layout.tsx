@@ -19,7 +19,7 @@ export default function LandingLayout({
 				</div>
 			</header>
 			<div className="relative mb-32 flex flex-grow justify-center">
-				<div className="absolute pointer-events-none backdrop-grayscale h-full w-full" />
+				<div className="pointer-events-none absolute h-full w-full backdrop-grayscale" />
 				<div className="absolute z-[-1] h-full w-full fade-in-5">
 					<GridWrapper />
 					<img

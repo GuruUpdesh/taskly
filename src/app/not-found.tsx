@@ -12,13 +12,22 @@ export default function NotFoundCatchAll() {
 				</div>
 				<p className="opacity-75">Could not find requested resource!</p>
 				<Separator className="my-4" />
-				<Link href="/" className="w-full border hover:bg-accent transition-colors p-4 py-2 rounded mb-1 bg-background/25">
+				<Link
+					href="/"
+					className="mb-1 w-full rounded border bg-background/25 p-4 py-2 transition-colors hover:bg-accent"
+				>
 					Home
 				</Link>
-        <Link href="/app" className="w-full border hover:bg-accent transition-colors p-4 py-2 rounded mb-1 bg-background/25">
+				<Link
+					href="/app"
+					className="mb-1 w-full rounded border bg-background/25 p-4 py-2 transition-colors hover:bg-accent"
+				>
 					Application
 				</Link>
-        <Link href="/create-project" className="w-full border hover:bg-accent transition-colors p-4 py-2 rounded mb-1 bg-background/25">
+				<Link
+					href="/create-project"
+					className="mb-1 w-full rounded border bg-background/25 p-4 py-2 transition-colors hover:bg-accent"
+				>
 					Create Project
 				</Link>
 			</div>

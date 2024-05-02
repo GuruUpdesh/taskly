@@ -59,7 +59,7 @@ export default function KBarProvider({ children }: Props) {
 		{
 			id: "tasks",
 			name: "Tasks",
-			icon: <ListTodo className="w-4 h-4"/>,
+			icon: <ListTodo className="h-4 w-4" />,
 			shortcut: ["g", "l"],
 			perform: () => projectNavigation("/project/<id>/tasks"),
 			section: "Navigation",
