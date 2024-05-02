@@ -25,7 +25,7 @@ const UserButton = ({ size = "default" }: Props) => {
 	if (size === "large") {
 		return (
 			<UserMenu>
-				<div className="z-10 flex items-center justify-between rounded-md bg-[#111111] px-2 py-2">
+				<div className="z-10 flex items-center justify-between rounded-md bg-[#111111] px-2 py-2 border-b">
 					<div className="flex items-center gap-2">
 						<UserProfilePicture src={user.imageUrl} size={30} />
 						<h4 className={"text-lg font-semibold"}>
