@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { type Metadata } from "next";
 
+import { getAiLimitCount } from "~/actions/ai/ai-limit-actions";
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import CreateTask from "~/app/components/CreateTask";
 import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
@@ -38,6 +39,8 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 		queryFn: () => getTasksFromProject(parseInt(projectId)),
 	});
 
+	const aiLimitCount = await getAiLimitCount();
+
 	return (
 		<div className="relative flex max-h-screen flex-1 flex-col overflow-y-scroll">
 			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b px-4 pb-2 pt-2 backdrop-blur-xl @container">
@@ -50,8 +53,14 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<Separator orientation="vertical" />
 					<FilterAndGroupToggles />
 					<Separator orientation="vertical" />
-					<AiDialog projectId={projectId} />
-					<CreateTask projectId={projectId}>
+					<AiDialog
+						projectId={projectId}
+						aiLimitCount={aiLimitCount}
+					/>
+					<CreateTask
+						projectId={projectId}
+						aiLimitCount={aiLimitCount}
+					>
 						<Button
 							className="gap-1 font-bold"
 							size="sm"

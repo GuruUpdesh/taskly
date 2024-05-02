@@ -31,7 +31,7 @@ function Message({ type, children, description = null, className }: Props) {
 	return (
 		<div className="my-2 flex w-full justify-center">
 			<div className={cn(messageVariants({ type }), className)}>
-				<header className="flex min-w-[600px] items-center gap-2 p-2 leading-7">
+				<header className="flex items-center gap-2 p-2 leading-7">
 					<MessageIcon type={type} />
 					{children}
 				</header>

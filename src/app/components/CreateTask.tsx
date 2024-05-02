@@ -25,6 +25,7 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
+import { AIDAILYLIMIT, timeTillNextReset } from "~/config/aiLimit";
 import {
 	type StatefulTask,
 	buildValidator,
@@ -51,6 +52,7 @@ type FormProps = {
 	form: UseFormReturn<TaskFormType, undefined>;
 	assignees: User[];
 	sprints: Sprint[];
+	aiLimitCount: number;
 };
 
 export const taskFormSchema = buildValidator([
@@ -76,7 +78,13 @@ export const taskFormSchema = buildValidator([
 
 export type TaskFormType = Omit<NewTask, "sprintId"> & { sprintId: string };
 
-const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
+const TaskCreateForm = ({
+	onSubmit,
+	form,
+	assignees,
+	sprints,
+	aiLimitCount,
+}: FormProps) => {
 	const project = useNavigationStore((state) => state.currentProject);
 
 	// Framer motion transition
@@ -88,6 +96,12 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const aiAutoComplete = async (title: string, description: string) => {
+		if (aiLimitCount >= AIDAILYLIMIT) {
+			toast.error(
+				`AI daily limit reached. Please try again in ${timeTillNextReset()} hours.`,
+			);
+			return;
+		}
 		setIsLoading(true);
 		const airesponse = await aiAction(title, description, assignees);
 		setIsLoading(false);
@@ -193,10 +207,11 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 
 type Props = {
 	projectId: string;
+	aiLimitCount: number;
 	children: React.ReactNode;
 };
 
-const CreateTask = ({ projectId, children }: Props) => {
+const CreateTask = ({ projectId, children, aiLimitCount }: Props) => {
 	const [assignees, sprints] = useAppStore(
 		useShallow((state) => [state.assignees, state.sprints]),
 	);
@@ -328,6 +343,7 @@ const CreateTask = ({ projectId, children }: Props) => {
 					form={form}
 					assignees={assignees}
 					sprints={sprints}
+					aiLimitCount={aiLimitCount}
 				/>
 				<DialogFooter className="border-t px-4 py-2">
 					<Button

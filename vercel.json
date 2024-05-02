@@ -1,11 +1,15 @@
 {
-    "crons": [
-      {
-        "path": "/api/cron/sprint",
-        "schedule": "1 * * * *"
-      }
-    ],
-    "github": {
-      "autoJobCancelation": true
-    }
-  }
+	"crons": [
+		{
+			"path": "/api/cron/sprint",
+			"schedule": "1 * * * *"
+		},
+		{
+			"path": "/api/cron/ai_limit_reset",
+			"schedule": "0 0 * * *"
+		}
+	],
+	"github": {
+		"autoJobCancelation": true
+	}
+}
