@@ -2,7 +2,7 @@
 	"crons": [
 		{
 			"path": "/api/cron/sprint",
-			"schedule": "1 * * * *"
+			"schedule": "0 0 * * *"
 		},
 		{
 			"path": "/api/cron/ai_limit_reset",
