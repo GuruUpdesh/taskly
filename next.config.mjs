@@ -17,7 +17,7 @@ const config = {
 			},
 			{
 				protocol: "https",
-				hostname: "ujxc2e33aswtcpny.public.blob.vercel-storage.com",
+				hostname: "mubcao7zfz2oohlb.public.blob.vercel-storage.com",
 				port: "",
 				pathname: "/**",
 			},
