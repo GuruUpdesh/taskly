@@ -3,17 +3,17 @@ import { type MetadataRoute } from "next";
 export default function sitemap(): MetadataRoute.Sitemap {
 	return [
 		{
-			url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/`,
+			url: `https://tasklypm.com/`,
 			lastModified: new Date(),
 			priority: 1,
 		},
 		{
-			url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/sign-in`,
+			url: `https://tasklypm.com/sign-in`,
 			lastModified: new Date(),
 			priority: 0.8,
 		},
 		{
-			url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/sign-up`,
+			url: `https://tasklypm.com/sign-up`,
 			lastModified: new Date(),
 			priority: 0.8,
 		},

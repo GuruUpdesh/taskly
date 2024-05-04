@@ -40,7 +40,7 @@ const UserMenu = ({ children }: Props) => {
 			<DropdownMenuContent
 				className="w-56 bg-background/75 p-2 backdrop-blur-lg"
 				onCloseAutoFocus={(e) => e.preventDefault()}
-				align="start"
+				align="end"
 			>
 				<DropdownMenuGroup>
 					<Link href="/settings" target="_blank">
