@@ -3,7 +3,7 @@
 Taskly is an opinionated agile project managment website that provides a simplified and user focused project managment experience.
 <div align="center">
 
-[![Open - TasklyPM.com](https://img.shields.io/badge/Open-TasklyPM.com-09d897?style=for-the-badge)](https://www.tasklypm.com/)
+[Taskly PM](https://tasklypm.vercel.app/)
 
 </div>
 
