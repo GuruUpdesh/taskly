@@ -8,6 +8,7 @@ export function getRefetchIntervals() {
 		notifications: 10 * 1000,
 		task: 6 * 1000,
 	};
+	console.log(env.NEXT_PUBLIC_NODE_ENV);
 
 	if (env.NEXT_PUBLIC_NODE_ENV === "development") {
 		const devIntervals = {

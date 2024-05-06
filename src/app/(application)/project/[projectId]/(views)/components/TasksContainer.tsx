@@ -222,7 +222,11 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 
 	function onDragEnd(dragResult: DropResult) {
 		const { source, destination } = dragResult;
-		if (!destination || source.index === destination.index) {
+		if (
+			!destination ||
+			(source.index === destination.index &&
+				source.droppableId === destination.droppableId)
+		) {
 			return;
 		}
 
