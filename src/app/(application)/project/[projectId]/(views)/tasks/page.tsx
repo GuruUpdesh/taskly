@@ -75,7 +75,10 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 			<section className="flex flex-1 flex-col">
 				<Filters />
 				<HydrationBoundary state={dehydrate(queryClient)}>
-					<TasksContainer projectId={projectId} />
+					<TasksContainer
+						projectId={projectId}
+						aiLimitCount={aiLimitCount}
+					/>
 				</HydrationBoundary>
 			</section>
 			<CreateGithubTicket />

@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo } from "react";
 
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
+import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRegisterActions } from "kbar";
 import { find } from "lodash";
@@ -16,8 +17,10 @@ import {
 	getTasksFromProject,
 	updateTask,
 } from "~/actions/application/task-actions";
+import CreateTask from "~/app/components/CreateTask";
 import Message from "~/app/components/Message";
 import { TaskStatus } from "~/app/components/RecentTasks";
+import { Button } from "~/components/ui/button";
 import {
 	type StatefulTask,
 	getPropertyConfig,
@@ -39,6 +42,7 @@ export type UpdateTask = {
 
 type Props = {
 	projectId: string;
+	aiLimitCount: number;
 };
 
 type TaskTypeOverride = Omit<TaskType, "sprintId"> & {
@@ -49,7 +53,7 @@ async function updateTaskWrapper({ id, newTask }: UpdateTask) {
 	await updateTask(id, newTask);
 }
 
-export default function TasksContainer({ projectId }: Props) {
+export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 	/**
 	 * Get the assignees and sprints
 	 */
@@ -349,7 +353,23 @@ export default function TasksContainer({ projectId }: Props) {
 							>
 								{option.icon}
 								{option.displayName}
+								<div className="flex-grow" />
 								<TotalTaskListPoints listId={option.key} />
+								<CreateTask
+									projectId={projectId}
+									aiLimitCount={aiLimitCount}
+									overrideDefaultValues={{
+										[groupBy]: option.key,
+									}}
+								>
+									<Button
+										size="icon"
+										variant="ghost"
+										className="text-muted-foreground"
+									>
+										<PlusCircledIcon />
+									</Button>
+								</CreateTask>
 							</div>
 							<div className="pb-2">
 								<TaskList
