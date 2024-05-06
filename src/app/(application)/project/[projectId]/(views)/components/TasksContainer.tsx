@@ -21,6 +21,7 @@ import CreateTask from "~/app/components/CreateTask";
 import Message from "~/app/components/Message";
 import { TaskStatus } from "~/app/components/RecentTasks";
 import { Button } from "~/components/ui/button";
+import { getRefetchIntervals } from "~/config/refetchIntervals";
 import {
 	type StatefulTask,
 	getPropertyConfig,
@@ -109,7 +110,7 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 		queryKey: ["tasks", projectId],
 		queryFn: () => refetch(),
 		staleTime: 6 * 1000,
-		refetchInterval: 6 * 1000,
+		refetchInterval: getRefetchIntervals().tasks,
 	});
 
 	const editTaskMutation = useMutation({
@@ -333,7 +334,7 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 							key={option.key}
 							className={cn(
 								{
-									"overflow-y-scroll p-1 pt-0":
+									"group/list overflow-y-scroll p-1 pt-0":
 										viewMode === "board",
 								},
 								taskVariants({
@@ -381,6 +382,7 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 									deleteTaskMutation={deleteTaskMutation}
 									projectId={projectId}
 									variant={viewMode}
+									aiLimitCount={aiLimitCount}
 								/>
 							</div>
 						</div>
@@ -395,6 +397,7 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 						deleteTaskMutation={deleteTaskMutation}
 						projectId={projectId}
 						variant={viewMode}
+						aiLimitCount={aiLimitCount}
 					/>
 				)}
 			</div>

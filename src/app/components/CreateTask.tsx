@@ -320,11 +320,13 @@ const CreateTask = ({
 		const sprintId = form.watch("sprintId");
 		const status = form.watch("status");
 		if (status === "backlog" && sprintId !== "-1") {
+			console.log("setting sprintId to -1");
 			form.setValue("sprintId", "-1", {
 				shouldDirty: true,
 				shouldValidate: true,
 			});
 		} else if (status !== "backlog" && sprintId === "-1") {
+			console.log("setting sprintId to current sprint");
 			form.setValue("sprintId", `${getCurrentSprintId(sprints)}`, {
 				shouldDirty: true,
 				shouldValidate: true,
