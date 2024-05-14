@@ -307,6 +307,7 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 				description={
 					<p className="py-2">Please create a task to get started.</p>
 				}
+				className="min-w-[600px]"
 			>
 				This project doesn&apos;t have any tasks yet.
 			</Message>
