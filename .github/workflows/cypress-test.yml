@@ -47,4 +47,4 @@ jobs:
         run: npm install
 
       - name: Run Cypress tests
-        run: npm run cypress:run
+        run: cypress-io/github-action@v5
