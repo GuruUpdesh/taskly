@@ -30,7 +30,7 @@ describe("/api/cron/sprint", () => {
 	const requestHeaders = new Headers();
 
 	it("should return 401 if no authorization header", async () => {
-        jest.setTimeout(5*1000);
+		jest.setTimeout(5 * 1000);
 		requestHeaders.set("authorization", "Bearer wrong-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
@@ -39,7 +39,7 @@ describe("/api/cron/sprint", () => {
 	});
 
 	it("should handle no projects", async () => {
-        jest.setTimeout(5*1000);
+		jest.setTimeout(5 * 1000);
 		requestHeaders.set("authorization", "Bearer mock-cron-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
@@ -51,12 +51,12 @@ describe("/api/cron/sprint", () => {
 	});
 
 	it("should create 2 sprints if there are 0", async () => {
-        jest.setTimeout(5*1000);
+		jest.setTimeout(5 * 1000);
 		requestHeaders.set("authorization", "Bearer mock-cron-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
 		const startDate = new Date();
-		const projectData =  mockProject(startDate);
+		const projectData = mockProject(startDate);
 		await db.insert(projects).values(projectData);
 
 		const response = await GET(instance(mockedRequest));
@@ -72,140 +72,140 @@ describe("/api/cron/sprint", () => {
 		expect(sprintsData).toHaveLength(2);
 	});
 
-    it("should create 1 sprint if current sprint is the last", async () => {
-        jest.setTimeout(5*1000);
-        requestHeaders.set("authorization", "Bearer mock-cron-secret");
+	it("should create 1 sprint if current sprint is the last", async () => {
+		jest.setTimeout(5 * 1000);
+		requestHeaders.set("authorization", "Bearer mock-cron-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
-        const startDate = new Date();
-        const projectData =  mockProject(startDate);
-        await db.insert(projects).values(projectData);
+		const startDate = new Date();
+		const projectData = mockProject(startDate);
+		await db.insert(projects).values(projectData);
 
-        const sprintData = {
-            projectId: projectData[0].id,
-            startDate: startDate,
-            endDate: addWeeks(startDate, 2),
-        };
-        await db.insert(sprints).values(sprintData);
+		const sprintData = {
+			projectId: projectData[0].id,
+			startDate: startDate,
+			endDate: addWeeks(startDate, 2),
+		};
+		await db.insert(sprints).values(sprintData);
 
-        const response = await GET(instance(mockedRequest));
-        const body = await response.text();
-        const results = JSON.parse(body);
+		const response = await GET(instance(mockedRequest));
+		const body = await response.text();
+		const results = JSON.parse(body);
 
-        expect(response.status).toBe(200);
-        expect(results).toHaveProperty("1");
-        expect(results[1]).toHaveLength(1);
+		expect(response.status).toBe(200);
+		expect(results).toHaveProperty("1");
+		expect(results[1]).toHaveLength(1);
 
-        // verify sprints where correctly created
-        const sprintsData = await db.select().from(sprints);
-        expect(sprintsData).toHaveLength(2);
-    });
+		// verify sprints where correctly created
+		const sprintsData = await db.select().from(sprints);
+		expect(sprintsData).toHaveLength(2);
+	});
 
-    it("should create 0 sprint if current sprint is second to last", async () => {
-        jest.setTimeout(5*1000);
-        requestHeaders.set("authorization", "Bearer mock-cron-secret");
+	it("should create 0 sprint if current sprint is second to last", async () => {
+		jest.setTimeout(5 * 1000);
+		requestHeaders.set("authorization", "Bearer mock-cron-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
-        const startDate = new Date();
-        const projectData =  mockProject(startDate);
-        await db.insert(projects).values(projectData);
+		const startDate = new Date();
+		const projectData = mockProject(startDate);
+		await db.insert(projects).values(projectData);
 
-        const sprintData = [
-            {
-                projectId: projectData[0].id,
-                startDate: startDate,
-                endDate: addWeeks(startDate, 2),
-            },
-            {
-                projectId: projectData[0].id,
-                startDate: addWeeks(startDate, 2),
-                endDate: addWeeks(startDate, 4),
-            },
-        ]
-        await db.insert(sprints).values(sprintData);
+		const sprintData = [
+			{
+				projectId: projectData[0].id,
+				startDate: startDate,
+				endDate: addWeeks(startDate, 2),
+			},
+			{
+				projectId: projectData[0].id,
+				startDate: addWeeks(startDate, 2),
+				endDate: addWeeks(startDate, 4),
+			},
+		];
+		await db.insert(sprints).values(sprintData);
 
-        const response = await GET(instance(mockedRequest));
-        const body = await response.text();
-        const results = JSON.parse(body);
+		const response = await GET(instance(mockedRequest));
+		const body = await response.text();
+		const results = JSON.parse(body);
 
-        expect(response.status).toBe(200);
-        expect(results).toHaveProperty("1");
-        expect(results[1]).toHaveLength(0);
+		expect(response.status).toBe(200);
+		expect(results).toHaveProperty("1");
+		expect(results[1]).toHaveLength(0);
 
-        // verify sprints still only have 2
-        const sprintsData = await db.select().from(sprints);
-        expect(sprintsData).toHaveLength(2);
-    });
+		// verify sprints still only have 2
+		const sprintsData = await db.select().from(sprints);
+		expect(sprintsData).toHaveLength(2);
+	});
 
-    it("should catch up to current sprint + 1 if there is a gap", async () => {
-        jest.setTimeout(5*1000);
-        requestHeaders.set("authorization", "Bearer mock-cron-secret");
+	it("should catch up to current sprint + 1 if there is a gap", async () => {
+		jest.setTimeout(5 * 1000);
+		requestHeaders.set("authorization", "Bearer mock-cron-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
-        const startDate = subMonths(new Date(), 3);
-        const projectData =  mockProject(startDate);
-        await db.insert(projects).values(projectData);
+		const startDate = subMonths(new Date(), 3);
+		const projectData = mockProject(startDate);
+		await db.insert(projects).values(projectData);
 
-        const sprintData = [
-            {
-                projectId: projectData[0].id,
-                startDate: startDate,
-                endDate: addWeeks(startDate, 2),
-            },
-            {
-                projectId: projectData[0].id,
-                startDate: addWeeks(startDate, 2),
-                endDate: addWeeks(startDate, 4),
-            },
-        ]
-        await db.insert(sprints).values(sprintData);
+		const sprintData = [
+			{
+				projectId: projectData[0].id,
+				startDate: startDate,
+				endDate: addWeeks(startDate, 2),
+			},
+			{
+				projectId: projectData[0].id,
+				startDate: addWeeks(startDate, 2),
+				endDate: addWeeks(startDate, 4),
+			},
+		];
+		await db.insert(sprints).values(sprintData);
 
-        const response = await GET(instance(mockedRequest));
-        const body = await response.text();
-        const results = JSON.parse(body);
-        expect(response.status).toBe(200);
-        expect(results).toHaveProperty("1");
-        expect(results[1]).toHaveLength(6);
+		const response = await GET(instance(mockedRequest));
+		const body = await response.text();
+		const results = JSON.parse(body);
+		expect(response.status).toBe(200);
+		expect(results).toHaveProperty("1");
+		expect(results[1]).toHaveLength(6);
 
-        // verify sprints
-        const sprintsData = await db.select().from(sprints);
-        expect(sprintsData).toHaveLength(8);
-    });
+		// verify sprints
+		const sprintsData = await db.select().from(sprints);
+		expect(sprintsData).toHaveLength(8);
+	});
 
-    it("should create 0 sprints if sprint start is in the future", async () => {
-        jest.setTimeout(5*1000);
-        requestHeaders.set("authorization", "Bearer mock-cron-secret");
+	it("should create 0 sprints if sprint start is in the future", async () => {
+		jest.setTimeout(5 * 1000);
+		requestHeaders.set("authorization", "Bearer mock-cron-secret");
 		when(mockedRequest.headers).thenReturn(requestHeaders);
 
-        const startDate = addDays(new Date(), 3);
-        const projectData =  mockProject(startDate);
-        await db.insert(projects).values(projectData);
+		const startDate = addDays(new Date(), 3);
+		const projectData = mockProject(startDate);
+		await db.insert(projects).values(projectData);
 
-        const sprintData = [
-            {
-                projectId: projectData[0].id,
-                startDate: startDate,
-                endDate: addWeeks(startDate, 2),
-            },
-            {
-                projectId: projectData[0].id,
-                startDate: addWeeks(startDate, 2),
-                endDate: addWeeks(startDate, 4),
-            },
-        ]
-        await db.insert(sprints).values(sprintData);
+		const sprintData = [
+			{
+				projectId: projectData[0].id,
+				startDate: startDate,
+				endDate: addWeeks(startDate, 2),
+			},
+			{
+				projectId: projectData[0].id,
+				startDate: addWeeks(startDate, 2),
+				endDate: addWeeks(startDate, 4),
+			},
+		];
+		await db.insert(sprints).values(sprintData);
 
-        const response = await GET(instance(mockedRequest));
-        const body = await response.text();
-        const results = JSON.parse(body);
-        expect(response.status).toBe(200);
-        expect(results).toHaveProperty("1");
-        expect(results[1]).toHaveLength(0);
+		const response = await GET(instance(mockedRequest));
+		const body = await response.text();
+		const results = JSON.parse(body);
+		expect(response.status).toBe(200);
+		expect(results).toHaveProperty("1");
+		expect(results[1]).toHaveLength(0);
 
-        // verify sprints
-        const sprintsData = await db.select().from(sprints);
-        expect(sprintsData).toHaveLength(2);
-    });
+		// verify sprints
+		const sprintsData = await db.select().from(sprints);
+		expect(sprintsData).toHaveLength(2);
+	});
 });
 
 function mockProject(date: Date): Project[] {
