@@ -156,9 +156,9 @@ const ProjectState = ({ projectId, userId, aiUsageCount }: Props) => {
 	}, [assigneeSprintResult.data?.sprints]);
 
 	useEffect(() => {
-		if (notificationResults.data) {
-			console.log("notifications", notificationResults.data);
-			updateNotifications(notificationResults.data);
+		const results = notificationResults.data;
+		if (results) {
+			updateNotifications(results);
 		}
 	}, [notificationResults.data]);
 

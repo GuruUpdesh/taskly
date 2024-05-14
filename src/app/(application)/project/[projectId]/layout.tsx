@@ -94,7 +94,14 @@ export default async function ApplicationLayout({
 	});
 	await queryClient.prefetchQuery({
 		queryKey: ["notifications", projectIdInt],
-		queryFn: () => getAllNotifications(user.id),
+		queryFn: async () => {
+			const result = await getAllNotifications(user.id);
+			if (result.error !== null) {
+				console.error(result.error);
+				return [];
+			}
+			return result.data;
+		},
 	});
 
 	// get the layout from cookies (for consistent ssr)

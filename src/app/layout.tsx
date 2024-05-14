@@ -61,9 +61,9 @@ export default function RootLayout({
 							</main>
 						</ReactQueryProvider>
 						<Toaster richColors />
+						<SpeedInsights />
 					</body>
 					<Analytics />
-					<SpeedInsights />
 				</html>
 			</KBarProvider>
 		</ClerkProvider>
