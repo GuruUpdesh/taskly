@@ -312,7 +312,6 @@ async function createTaskUpdateNotification(
 			const validatedValues = insertTaskHistorySchema.parse(values);
 
 			await tx.insert(taskHistory).values(validatedValues);
-
 			if (
 				user?.username === task.assignee ||
 				!task.assignee ||

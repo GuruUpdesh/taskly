@@ -286,9 +286,7 @@ const ProjectTheme = ({ project, aiLimitCount }: Props) => {
 							form.formState.isSubmitting
 						}
 					>
-						{form.formState.isSubmitting
-							? "Saving"
-							: "Save"}
+						{form.formState.isSubmitting ? "Saving" : "Save"}
 						{form.formState.isSubmitting ? (
 							<Loader2Icon className="ml-2 h-4 w-4 animate-spin" />
 						) : (

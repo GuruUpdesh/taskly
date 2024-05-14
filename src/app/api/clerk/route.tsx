@@ -5,7 +5,12 @@ import { Webhook as svixWebhook } from "svix";
 
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
-import { type NewUser, insertUserSchema, users } from "~/server/db/schema";
+import {
+	type NewUser,
+	insertUserSchema,
+	users,
+	tasks,
+} from "~/server/db/schema";
 
 const webhookSecret = env.CLERK_WEBHOOK_SECRET;
 
@@ -129,7 +134,86 @@ async function onSessionCreated(payload: WebhookEvent) {
 			return;
 		}
 		await helperCreateUser(userId, user.username, user.imageUrl);
+	} else if (user[0]) {
+		// check that the username still matches
+		const clerkUser = await clerkClient.users.getUser(userId);
+		if (!clerkUser.username) {
+			console.error(
+				"🪩 Clerk Webhook: onSessionCreated > User does not have a username",
+			);
+			return;
+		}
+
+		// if not update the username
+		if (clerkUser.username !== user[0].username) {
+			console.log("🪩 Clerk Webhook: updating username");
+			await db
+				.update(users)
+				.set({ username: clerkUser.username })
+				.where(eq(users.userId, userId));
+		}
 	}
+}
+async function onUserUpdated(payload: WebhookEvent) {
+	if (payload.type !== "session.created") {
+		console.error(
+			`🪩 Clerk Webhook: onUserUpdated > Invalid payload type (${payload.type}) expected session.created`,
+		);
+		return;
+	}
+
+	const userId = payload.data.user_id;
+	if (!userId) {
+		console.error("🪩 Clerk Webhook: onUserUpdated > No user ID provided");
+		return;
+	}
+
+	const clerkUser = await clerkClient.users.getUser(userId);
+
+	if (!clerkUser) {
+		console.error("🪩 Clerk Webhook: onUserUpdated > User not found");
+		return;
+	}
+
+	if (!clerkUser.username) {
+		console.error(
+			"🪩 Clerk Webhook: onUserUpdated > User does not have a username",
+		);
+		return;
+	}
+
+	if (!clerkUser.imageUrl) {
+		console.error(
+			"🪩 Clerk Webhook: onUserUpdated > User does not have a profile picture",
+		);
+		return;
+	}
+
+	// get current username
+	const user = await db.select().from(users).where(eq(users.userId, userId));
+
+	if (user.length === 0) {
+		await helperCreateUser(userId, clerkUser.username, clerkUser.imageUrl);
+		return;
+	}
+
+	if (!user[0]) {
+		return;
+	}
+
+	// if the username has changed we need to update all tasks where assignee = username
+	await db
+		.update(tasks)
+		.set({ assignee: clerkUser.username })
+		.where(eq(tasks.assignee, user[0].username));
+
+	await db
+		.update(users)
+		.set({
+			username: clerkUser.username,
+			profilePicture: clerkUser.imageUrl,
+		})
+		.where(eq(users.userId, userId));
 }
 
 export async function POST(request: Request) {
@@ -147,6 +231,8 @@ export async function POST(request: Request) {
 			case "session.created":
 				await onSessionCreated(payload);
 				break;
+			case "user.updated":
+				await onUserUpdated(payload);
 			default:
 				console.error("🪩 Clerk Webhook: Unhandled webhook event");
 		}

@@ -31,7 +31,7 @@ function KBar() {
 			<KBarPositioner className="z-50">
 				<KBarAnimator
 					style={animatorStyle}
-					className="rounded-lg bg-background/75 ring-1 ring-border backdrop-blur-xl"
+					className="rounded-lg bg-background-dialog ring-1 ring-border"
 				>
 					<KBarSearch
 						style={searchStyle}
