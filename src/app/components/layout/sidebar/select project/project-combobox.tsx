@@ -25,6 +25,7 @@ import {
 	PopoverTrigger,
 } from "~/components/ui/popover";
 import { Skeleton } from "~/components/ui/skeleton";
+import { env } from "~/env.mjs";
 import { cn } from "~/lib/utils";
 import type { Project } from "~/server/db/schema";
 import { useNavigationStore } from "~/store/navigation";
@@ -33,6 +34,13 @@ type Props = {
 	projects: Project[];
 	projectId: string | null;
 };
+
+function getProjectImageURL(url: string) {
+	if (env.NEXT_PUBLIC_NODE_ENV === "development") {
+		return "/static/placeholder.png";
+	}
+	return url;
+}
 
 const ProjectCombobox = ({ projects, projectId }: Props) => {
 	const currentProject = useNavigationStore((state) => state.currentProject);
@@ -58,7 +66,7 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 			<>
 				{project?.image ? (
 					<Image
-						src={project.image}
+						src={getProjectImageURL(project.image)}
 						alt={project.name}
 						width={24}
 						height={24}
@@ -104,7 +112,7 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 						<div className="absolute left-0 -z-10 aspect-square w-full opacity-90 transition-opacity gradient-mask-l-50 group-hover:opacity-100 group-focus:opacity-100  @sidebar:opacity-75">
 							{project?.image ? (
 								<Image
-									src={project.image ?? "/project.svg"}
+									src={getProjectImageURL(project.image)}
 									alt={project.name}
 									fill
 								/>
@@ -155,10 +163,9 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 										<div className="absolute left-0 -z-10 aspect-square w-full opacity-50 transition-opacity gradient-mask-l-50 group-hover:opacity-75  group-focus:opacity-75">
 											{project.image ? (
 												<Image
-													src={
-														project.image ??
-														"/project.svg"
-													}
+													src={getProjectImageURL(
+														project.image,
+													)}
 													alt={project.name}
 													fill
 												/>

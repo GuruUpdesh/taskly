@@ -8,13 +8,15 @@ import {
 	type DroppableProvided,
 	type DroppableStateSnapshot,
 } from "@hello-pangea/dnd";
-import { DragHandleDots2Icon } from "@radix-ui/react-icons";
+import { DragHandleDots2Icon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { type UseMutationResult } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { useShallow } from "zustand/react/shallow";
 
 import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)/components/TasksContainer";
+import CreateTask from "~/app/components/CreateTask";
 import Task from "~/app/components/task/Task";
+import { Button } from "~/components/ui/button";
 import { type StatefulTask } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
@@ -28,6 +30,7 @@ type Props = {
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 	projectId: string;
+	aiLimitCount: number;
 	variant?: "backlog" | "board";
 };
 
@@ -39,6 +42,7 @@ const TaskList = ({
 	addTaskMutation,
 	deleteTaskMutation,
 	projectId,
+	aiLimitCount,
 	variant = "backlog",
 }: Props) => {
 	const [groupByBacklog, groupByBoard] = useAppStore(
@@ -176,6 +180,26 @@ const TaskList = ({
 						})}
 						{provided.placeholder}
 					</AnimatePresence>
+					{variant === "board" && (
+						<CreateTask
+							projectId={projectId}
+							aiLimitCount={aiLimitCount}
+							overrideDefaultValues={
+								groupBy
+									? {
+											[groupBy]: listId,
+										}
+									: {}
+							}
+						>
+							<Button
+								variant="secondary"
+								className="flex items-center justify-center border bg-accent/25 text-muted-foreground opacity-0 transition-opacity group-hover/list:opacity-100"
+							>
+								<PlusCircledIcon />
+							</Button>
+						</CreateTask>
+					)}
 				</div>
 			)}
 		</Droppable>

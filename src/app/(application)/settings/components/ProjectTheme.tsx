@@ -41,6 +41,7 @@ import {
 } from "~/components/ui/popover";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
+import { AIDAILYLIMIT, timeTillNextReset } from "~/config/aiLimit";
 import safeAsync from "~/lib/safe-action";
 import { cn } from "~/lib/utils";
 import { type Project } from "~/server/db/schema";
@@ -48,6 +49,7 @@ import typography from "~/styles/typography";
 
 type Props = {
 	project: Project;
+	aiLimitCount: number;
 };
 
 const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
@@ -56,7 +58,7 @@ const formSchema = z.object({
 	color: z.string().regex(hexColorRegex, "Invalid hex color"),
 });
 
-const ProjectTheme = ({ project }: Props) => {
+const ProjectTheme = ({ project, aiLimitCount }: Props) => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		mode: "onChange",
@@ -101,6 +103,12 @@ const ProjectTheme = ({ project }: Props) => {
 	const [isRegenerating, setIsRegenerating] = useState(false);
 
 	async function handleAIGenerate() {
+		if (aiLimitCount >= AIDAILYLIMIT) {
+			toast.error(
+				`AI daily limit reached. Please try again in ${timeTillNextReset()} hours.`,
+			);
+			return;
+		}
 		setIsRegenerating(true);
 		await generateAndUpdateProjectImage(
 			project.id,
@@ -279,8 +287,8 @@ const ProjectTheme = ({ project }: Props) => {
 						}
 					>
 						{form.formState.isSubmitting
-							? "Saving Changes"
-							: "Save Changes"}
+							? "Saving"
+							: "Save"}
 						{form.formState.isSubmitting ? (
 							<Loader2Icon className="ml-2 h-4 w-4 animate-spin" />
 						) : (
