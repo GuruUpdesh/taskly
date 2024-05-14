@@ -46,5 +46,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Build the application
+        run: npm run dev
+
+      - name: Wait for server to be ready
+        run: |
+          for i in {1..30}; do
+            curl -sSf http://localhost:3000 && break
+            sleep 1
+          done
+
       - name: Run Cypress tests
         uses: cypress-io/github-action@v5
