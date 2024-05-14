@@ -1,6 +1,6 @@
 import React from "react";
 
-import { auth } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import {
 	dehydrate,
 	HydrationBoundary,
@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { type Metadata } from "next";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 import {
 	getAssigneesForProject,
@@ -17,6 +18,7 @@ import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { getAllNotifications } from "~/actions/notification-actions";
 import Sidebar from "~/app/components/layout/sidebar/sidebar";
 import SidebarPanel from "~/app/components/layout/sidebar/sidebar-panel";
+import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 import ProjectState from "./project-state";
 
@@ -52,30 +54,39 @@ export default async function ApplicationLayout({
 	children,
 	params: { projectId },
 }: Params) {
-	const { userId } = auth();
-	if (!userId) {
-		throw new Error("User not authenticated");
+	const user = await currentUser();
+	if (!user) {
+		redirect(
+			constructToastURL(
+				"You need to be logged in to view the application",
+				"error",
+			),
+		);
 	}
 
+	const projectIdInt = parseInt(projectId, 10);
+
+	// prefetch the project, assignees, sprints, and notifications
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
 		queryKey: ["project", projectId],
-		queryFn: () => getProject(Number(projectId)),
+		queryFn: () => getProject(projectIdInt),
 	});
 	await queryClient.prefetchQuery({
 		queryKey: ["assignees/sprints", projectId],
 		queryFn: async () => {
-			const assignees = await getAssigneesForProject(parseInt(projectId));
-			const sprints = await getSprintsForProject(parseInt(projectId));
+			const assignees = await getAssigneesForProject(projectIdInt);
+			const sprints = await getSprintsForProject(projectIdInt);
 
 			return { assignees, sprints };
 		},
 	});
 	await queryClient.prefetchQuery({
 		queryKey: ["notifications", projectId],
-		queryFn: () => getAllNotifications(userId),
+		queryFn: () => getAllNotifications(user.id),
 	});
 
+	// get the layout from cookies (for consistent ssr)
 	const layout = cookies().get("react-resizable-panels:layout");
 	let defaultLayout;
 	if (layout) {
@@ -84,7 +95,7 @@ export default async function ApplicationLayout({
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<ProjectState projectId={projectId} userId={userId} />
+			<ProjectState projectId={projectId} userId={user.id} />
 			<SidebarPanel
 				sidebarComponent={<Sidebar projectId={projectId} />}
 				defaultLayout={defaultLayout}

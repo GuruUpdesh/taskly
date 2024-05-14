@@ -1,9 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { type NotificationWithTask } from "~/actions/notification-actions";
 import { type TaskProperty } from "~/config/taskConfigType";
-import { type Sprint, type User } from "~/server/db/schema";
 
 export type Filter = {
 	property: TaskProperty | "";
@@ -16,12 +14,6 @@ export type ViewMode = "backlog" | "board";
 interface AppState {
 	isFiltersOpen: boolean;
 	toggleFilters: () => void;
-	assignees: User[];
-	updateAssignees: (assignees: User[]) => void;
-	sprints: Sprint[];
-	updateSprints: (sprints: Sprint[]) => void;
-	notifications: NotificationWithTask[];
-	updateNotifications: (notifications: NotificationWithTask[]) => void;
 	filters: Filter[];
 	updateFilters: (filters: Filter[]) => void;
 	addFilter: (filter: Filter) => void;
@@ -37,8 +29,6 @@ interface AppState {
 	setHoveredNotificationId: (id: number | null) => void;
 	viewMode: ViewMode;
 	setViewMode: (mode: ViewMode) => void;
-	rightSidebarWidth: number;
-	setRightSidebarWidth: (width: number) => void;
 }
 
 const useAppStore = create<AppState>()(
@@ -47,12 +37,6 @@ const useAppStore = create<AppState>()(
 			isFiltersOpen: true,
 			toggleFilters: () =>
 				set((state) => ({ isFiltersOpen: !state.isFiltersOpen })),
-			assignees: [],
-			updateAssignees: (assignees) => set({ assignees }),
-			sprints: [],
-			updateSprints: (sprints) => set({ sprints }),
-			notifications: [],
-			updateNotifications: (notifications) => set({ notifications }),
 			filters: [],
 			updateFilters: (filters) => set({ filters }),
 			addFilter: (filter) =>
@@ -83,8 +67,6 @@ const useAppStore = create<AppState>()(
 				set({ hoveredNotificationId: id }),
 			viewMode: "backlog",
 			setViewMode: (mode) => set({ viewMode: mode }),
-			rightSidebarWidth: 0,
-			setRightSidebarWidth: (width) => set({ rightSidebarWidth: width }),
 		}),
 		{
 			name: "settings-navigation-storage",

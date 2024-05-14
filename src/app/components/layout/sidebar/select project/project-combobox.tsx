@@ -28,7 +28,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { env } from "~/env.mjs";
 import { cn } from "~/lib/utils";
 import type { Project } from "~/server/db/schema";
-import { useNavigationStore } from "~/store/navigation";
+import { useRealtimeStore } from "~/store/realtime";
 
 type Props = {
 	projects: Project[];
@@ -43,7 +43,7 @@ function getProjectImageURL(url: string) {
 }
 
 const ProjectCombobox = ({ projects, projectId }: Props) => {
-	const currentProject = useNavigationStore((state) => state.currentProject);
+	const currentProject = useRealtimeStore((state) => state.project);
 	const [open, setOpen] = React.useState(false);
 
 	const project = useMemo(() => {

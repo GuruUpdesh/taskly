@@ -3,10 +3,12 @@
 import React, { useCallback, useMemo } from "react";
 
 import { CrossCircledIcon } from "@radix-ui/react-icons";
+import { useShallow } from "zustand/react/shallow";
 
 import { getPropertyConfig } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
+import { useRealtimeStore } from "~/store/realtime";
 import { renderFilterValues } from "~/utils/filter-values";
 
 import FilterMenu from "./FilterMenu";
@@ -16,11 +18,10 @@ type Props = {
 };
 
 const FilterChip = ({ filter }: Props) => {
-	const [assignees, sprints, deleteFilter] = useAppStore((state) => [
-		state.assignees,
-		state.sprints,
-		state.deleteFilter,
-	]);
+	const [assignees, sprints] = useRealtimeStore(
+		useShallow((state) => [state.assignees, state.sprints]),
+	);
+	const deleteFilter = useAppStore((state) => state.deleteFilter);
 
 	const config = useMemo(() => {
 		const property = filter.property;

@@ -15,8 +15,8 @@ import { taskFormSchema, type TaskFormType } from "~/app/components/CreateTask";
 import { type TaskProperty, getPropertyConfig } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { type Task as TaskType } from "~/server/db/schema";
-import { useAppStore } from "~/store/app";
 import { usePointStore } from "~/store/point";
+import { useRealtimeStore } from "~/store/realtime";
 
 import Property from "./property/Property";
 import TaskDropDownMenu from "./TaskDropDownMenu";
@@ -99,7 +99,7 @@ const Task = ({
 	listId,
 	disableNavigation = false,
 }: Props) => {
-	const [assignees, sprints] = useAppStore(
+	const [assignees, sprints] = useRealtimeStore(
 		useShallow((state) => [state.assignees, state.sprints]),
 	);
 

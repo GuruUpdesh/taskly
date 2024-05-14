@@ -23,7 +23,7 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { useNavigationStore } from "~/store/navigation";
+import { useRealtimeStore } from "~/store/realtime";
 
 type Props = {
 	children: React.ReactNode;
@@ -32,7 +32,7 @@ type Props = {
 const UserMenu = ({ children }: Props) => {
 	const { signOut } = useClerk();
 	const router = useRouter();
-	const project = useNavigationStore((state) => state.currentProject);
+	const project = useRealtimeStore((state) => state.project);
 
 	return (
 		<DropdownMenu>

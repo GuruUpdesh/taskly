@@ -33,6 +33,7 @@ import {
 } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
+import { useRealtimeStore } from "~/store/realtime";
 import { renderFilterValues } from "~/utils/filter-values";
 
 type Props = {
@@ -57,11 +58,11 @@ const formSchema = z.object({
 
 const FilterMenu = ({ children, defaultValues }: Props) => {
 	const [open, setOpen] = React.useState(false);
-
-	const [assignees, sprints, addFilter, updateFilter, filters] = useAppStore(
+	const [assignees, sprints] = useRealtimeStore(
+		useShallow((state) => [state.assignees, state.sprints]),
+	);
+	const [addFilter, updateFilter, filters] = useAppStore(
 		useShallow((state) => [
-			state.assignees,
-			state.sprints,
 			state.addFilter,
 			state.updateFilter,
 			state.filters,

@@ -41,8 +41,7 @@ import {
 	type Task,
 	type User,
 } from "~/server/db/schema";
-import { useAppStore } from "~/store/app";
-import { useNavigationStore } from "~/store/navigation";
+import { useRealtimeStore } from "~/store/realtime";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
 import SimpleTooltip from "./SimpleTooltip";
@@ -85,7 +84,7 @@ const TaskCreateForm = ({
 	sprints,
 	aiLimitCount,
 }: FormProps) => {
-	const project = useNavigationStore((state) => state.currentProject);
+	const project = useRealtimeStore((state) => state.project);
 
 	// Framer motion transition
 	const transition = {
@@ -218,12 +217,11 @@ const CreateTask = ({
 	aiLimitCount,
 	overrideDefaultValues,
 }: Props) => {
-	const [assignees, sprints] = useAppStore(
-		useShallow((state) => [state.assignees, state.sprints]),
+	const [project, assignees, sprints] = useRealtimeStore(
+		useShallow((state) => [state.project, state.assignees, state.sprints]),
 	);
 	const [open, setOpen] = useState(false);
 	const queryClient = useQueryClient();
-	const project = useNavigationStore((state) => state.currentProject);
 
 	const addTaskMutation = useMutation({
 		mutationFn: ({ data }: { data: TaskFormType }) => createTask(data),

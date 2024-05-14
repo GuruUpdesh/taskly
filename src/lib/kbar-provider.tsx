@@ -11,7 +11,7 @@ import { ListTodo } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { useNavigationStore } from "~/store/navigation";
+import { useRealtimeStore } from "~/store/realtime";
 
 type Props = {
 	children: React.ReactNode;
@@ -19,7 +19,7 @@ type Props = {
 
 export default function KBarProvider({ children }: Props) {
 	const router = useRouter();
-	const project = useNavigationStore((state) => state.currentProject);
+	const project = useRealtimeStore((state) => state.project);
 
 	function projectNavigation(route: string) {
 		if (!project) {

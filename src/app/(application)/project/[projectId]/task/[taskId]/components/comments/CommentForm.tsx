@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { Button } from "~/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "~/components/ui/form";
-import { useAppStore } from "~/store/app";
+import { useRealtimeStore } from "~/store/realtime";
 
 import TextAreaWithMentions from "./TextAreaWithMentions";
 
@@ -22,7 +22,7 @@ const formSchema = z.object({
 });
 
 const CommentForm = ({ taskId, createComment }: Props) => {
-	const assignees = useAppStore((state) => state.assignees);
+	const assignees = useRealtimeStore((state) => state.assignees);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),

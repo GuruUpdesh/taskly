@@ -17,6 +17,7 @@ import {
 import { type TaskProperty, getPropertyConfig } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
+import { useRealtimeStore } from "~/store/realtime";
 
 const FilterAndGroupToggles = () => {
 	const [toggleFilters, isFiltersOpen] = useAppStore(
@@ -62,8 +63,6 @@ const GroupButton = () => {
 		setGroupByBacklog,
 		groupByBoard,
 		setGroupByBoard,
-		assignees,
-		sprints,
 		viewMode,
 	] = useAppStore(
 		useShallow((state) => [
@@ -71,10 +70,12 @@ const GroupButton = () => {
 			state.setGroupByBacklog,
 			state.groupByBoard,
 			state.setGroupByBoard,
-			state.assignees,
-			state.sprints,
 			state.viewMode,
 		]),
+	);
+
+	const [assignees, sprints] = useRealtimeStore(
+		useShallow((state) => [state.assignees, state.sprints]),
 	);
 
 	const groupBy = useMemo(() => {

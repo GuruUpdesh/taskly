@@ -30,6 +30,7 @@ import {
 import { cn } from "~/lib/utils";
 import type { Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
+import { useRealtimeStore } from "~/store/realtime";
 import { updateOrder } from "~/utils/order";
 
 import LoadingTaskList from "./LoadingTaskList";
@@ -58,22 +59,17 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 	/**
 	 * Get the assignees and sprints
 	 */
-	const [
-		assignees,
-		sprints,
-		filters,
-		groupByBacklog,
-		groupByBoard,
-		viewMode,
-	] = useAppStore(
+	const [filters, groupByBacklog, groupByBoard, viewMode] = useAppStore(
 		useShallow((state) => [
-			state.assignees,
-			state.sprints,
 			state.filters,
 			state.groupByBacklog,
 			state.groupByBoard,
 			state.viewMode,
 		]),
+	);
+
+	const [assignees, sprints] = useRealtimeStore(
+		useShallow((state) => [state.assignees, state.sprints]),
 	);
 
 	const groupBy = useMemo(() => {

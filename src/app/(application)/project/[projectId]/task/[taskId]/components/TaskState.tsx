@@ -3,14 +3,14 @@
 import React from "react";
 
 import type { Task } from "~/server/db/schema";
-import { useNavigationStore } from "~/store/navigation";
+import { useRealtimeStore } from "~/store/realtime";
 
 type Props = {
 	task: Task;
 };
 
 const TaskState = ({ task }: Props) => {
-	const updateTask = useNavigationStore((state) => state.updateTask);
+	const updateTask = useRealtimeStore((state) => state.updateTask);
 
 	React.useEffect(() => {
 		updateTask(task);

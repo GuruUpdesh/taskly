@@ -10,7 +10,7 @@ import { z } from "zod";
 
 import { sendEmailInvites } from "~/actions/onboarding/invite-actions";
 import { Button } from "~/components/ui/button";
-import { useNavigationStore } from "~/store/navigation";
+import { useRealtimeStore } from "~/store/realtime";
 
 import EmailInviteForm from "./email-invite-form";
 
@@ -23,7 +23,7 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 		invitees: z.array(z.string().email()),
 	});
 
-	const project = useNavigationStore((state) => state.currentProject);
+	const project = useRealtimeStore((state) => state.project);
 
 	const form = useForm<z.infer<typeof EmailInviteFormSchema>>({
 		mode: "onChange",

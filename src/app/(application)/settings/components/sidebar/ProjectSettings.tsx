@@ -9,12 +9,12 @@ import SidebarButton from "~/app/components/layout/sidebar/sidebar-button";
 import { Separator } from "~/components/ui/separator";
 import { generalSettings } from "~/config/settingsConfig";
 import { cn } from "~/lib/utils";
-import { useNavigationStore } from "~/store/navigation";
+import { useRealtimeStore } from "~/store/realtime";
 
 import SettingsSidebarSubButton from "./SettingsSidebarSubButton";
 
 const ProjectSettings = () => {
-	const project = useNavigationStore((state) => state.currentProject);
+	const project = useRealtimeStore((state) => state.project);
 	const url = `/settings/project/${project?.id ?? -1}/general`;
 	const pathname = usePathname();
 	const active = useMemo(() => pathname === url, [pathname, url]);

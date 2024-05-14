@@ -41,7 +41,7 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { getRefetchIntervals } from "~/config/refetchIntervals";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
-import { useAppStore } from "~/store/app";
+import { useLayoutStore } from "~/store/layout";
 
 import Comments from "./comments/Comments";
 import PrimaryTaskForm from "./PrimaryTaskForm";
@@ -66,7 +66,7 @@ const TaskPage = ({
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
-	const setRightSidebarWidth = useAppStore(
+	const setRightSidebarWidth = useLayoutStore(
 		(state) => state.setRightSidebarWidth,
 	);
 

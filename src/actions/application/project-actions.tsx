@@ -40,6 +40,7 @@ export async function getAllProjects(userId: string) {
 }
 
 export async function getProject(projectId: number) {
+	console.log("🏃 getProject pulled");
 	try {
 		const { userId }: { userId: string | null } = auth();
 		if (!userId) {
@@ -86,6 +87,7 @@ export async function updateProject(id: number, data: NewProject) {
 }
 
 export async function getAssigneesForProject(projectId: number) {
+	console.log("🏃 getAssigneesForProject pulled");
 	try {
 		const assigneesQuery = await db.query.projects.findMany({
 			where: (project) => eq(project.id, projectId),

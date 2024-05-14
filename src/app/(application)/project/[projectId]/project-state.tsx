@@ -20,8 +20,7 @@ import {
 } from "~/actions/notification-actions";
 import { getRefetchIntervals } from "~/config/refetchIntervals";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
-import { useAppStore } from "~/store/app";
-import { useNavigationStore } from "~/store/navigation";
+import { useRealtimeStore } from "~/store/realtime";
 
 type Props = {
 	projectId: string;
@@ -29,14 +28,15 @@ type Props = {
 };
 
 const ProjectState = ({ projectId, userId }: Props) => {
-	const updateProject = useNavigationStore((state) => state.updateProject);
-	const [updateAssignees, updateSprints, updateNotifications] = useAppStore(
-		useShallow((state) => [
-			state.updateAssignees,
-			state.updateSprints,
-			state.updateNotifications,
-		]),
-	);
+	const [updateProject, updateAssignees, updateSprints, updateNotifications] =
+		useRealtimeStore(
+			useShallow((state) => [
+				state.updateProject,
+				state.updateAssignees,
+				state.updateSprints,
+				state.updateNotifications,
+			]),
+		);
 
 	const projectResult = useQuery({
 		queryKey: ["project", projectId],

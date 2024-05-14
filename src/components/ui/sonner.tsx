@@ -3,13 +3,15 @@
 import { useTheme } from "next-themes";
 import { Toaster as Sonner } from "sonner";
 
-import { useAppStore } from "~/store/app";
+import { useLayoutStore } from "~/store/layout";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
 	const { theme = "system" } = useTheme();
-	const rightSidebarWidth = useAppStore((state) => state.rightSidebarWidth);
+	const rightSidebarWidth = useLayoutStore(
+		(state) => state.rightSidebarWidth,
+	);
 
 	return (
 		<Sonner

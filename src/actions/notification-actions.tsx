@@ -49,6 +49,7 @@ export type NotificationWithTask = Notification & {
 };
 
 export async function getAllNotifications(userId: string) {
+	console.log("🏃 getAllNotifications pulled");
 	try {
 		const allNotifications = await db.query.notifications.findMany({
 			where: (notification) => eq(notification.userId, userId),

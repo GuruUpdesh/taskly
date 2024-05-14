@@ -14,7 +14,7 @@ import {
 } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { type TaskHistory, type User } from "~/server/db/schema";
-import { useAppStore } from "~/store/app";
+import { useRealtimeStore } from "~/store/realtime";
 import typography from "~/styles/typography";
 
 import TaskProperty from "./TaskProperty";
@@ -27,7 +27,7 @@ type Props = {
 };
 
 const TaskHistoryItem = ({ history }: Props) => {
-	const [assignees, sprints] = useAppStore(
+	const [assignees, sprints] = useRealtimeStore(
 		useShallow((state) => [state.assignees, state.sprints]),
 	);
 

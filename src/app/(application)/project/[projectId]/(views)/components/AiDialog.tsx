@@ -27,7 +27,7 @@ import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Textarea } from "~/components/ui/textarea";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/config/aiLimit";
 import { schemaValidators } from "~/config/taskConfigType";
-import { useNavigationStore } from "~/store/navigation";
+import { useRealtimeStore } from "~/store/realtime";
 import { taskNameToBranchName } from "~/utils/task-name-branch-converters";
 
 type Props = {
@@ -41,7 +41,7 @@ const formSchema = z.object({
 
 const AiDialog = ({ projectId, aiLimitCount }: Props) => {
 	const [open, setOpen] = useState(false);
-	const project = useNavigationStore((state) => state.currentProject);
+	const project = useRealtimeStore((state) => state.project);
 
 	function resetForm() {
 		form.reset({
