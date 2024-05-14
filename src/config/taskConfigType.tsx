@@ -673,7 +673,7 @@ export const defaultValues = {
 	title: "",
 	description: "",
 	status: "backlog",
-	points: "0",
+	points: "1",
 	priority: "none",
 	type: "task",
 	assignee: "unassigned",

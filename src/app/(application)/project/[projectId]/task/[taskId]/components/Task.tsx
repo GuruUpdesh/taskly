@@ -39,6 +39,7 @@ import {
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
 import { Separator } from "~/components/ui/separator";
+import { getRefetchIntervals } from "~/config/refetchIntervals";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 import { useAppStore } from "~/store/app";
 
@@ -84,7 +85,7 @@ const TaskPage = ({
 		queryKey: ["task", taskId],
 		queryFn: () => getTask(parseInt(taskId)),
 		staleTime: 6 * 1000,
-		refetchInterval: 6 * 1000,
+		refetchInterval: getRefetchIntervals().task,
 	});
 
 	const editTaskMutation = useMutation({

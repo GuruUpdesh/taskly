@@ -18,6 +18,7 @@ import {
 	type NotificationWithTask,
 	getAllNotifications,
 } from "~/actions/notification-actions";
+import { getRefetchIntervals } from "~/config/refetchIntervals";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 import { useAppStore } from "~/store/app";
 import { useNavigationStore } from "~/store/navigation";
@@ -41,7 +42,7 @@ const ProjectState = ({ projectId, userId }: Props) => {
 		queryKey: ["project", projectId],
 		queryFn: () => getProject(Number(projectId)),
 		staleTime: 2 * 1000,
-		refetchInterval: 20 * 1000,
+		refetchInterval: getRefetchIntervals().projects,
 	});
 
 	const assigneeSprintResult = useQuery({
@@ -53,7 +54,7 @@ const ProjectState = ({ projectId, userId }: Props) => {
 			return { assignees, sprints };
 		},
 		staleTime: 2 * 1000,
-		refetchInterval: 10 * 1000,
+		refetchInterval: getRefetchIntervals().assignees,
 	});
 
 	const queryClient = useQueryClient();
@@ -98,7 +99,7 @@ const ProjectState = ({ projectId, userId }: Props) => {
 		queryKey: ["notifications", projectId],
 		queryFn: () => refetchNotifications(),
 		staleTime: 2 * 1000,
-		refetchInterval: 10 * 1000,
+		refetchInterval: getRefetchIntervals().notifications,
 	});
 
 	const router = useRouter();
