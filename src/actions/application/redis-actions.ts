@@ -25,26 +25,48 @@ export async function getUserApplicationData() {
 	if (!user || !user.userId) {
 		return;
 	}
-	const data = await kv.get(user.userId);
 
-	if (!data) {
-		const projectsForUser = await getAllProjects(user.userId);
-		if (!projectsForUser || projectsForUser.length === 0) {
+	const projectsForUser = await getAllProjects(user.userId);
+	let validUrlPrefix = [] as string[];
+	if (projectsForUser) {
+		validUrlPrefix = projectsForUser.map(
+			(project) => `/project/${project.id}`,
+		);
+	}
+	console.log("Application Router > validUrlPrefix", validUrlPrefix);
+
+	const data = await kv.get(user.userId);
+	const dataValidation = UserApplicationDataSchema.safeParse(data);
+	if (!dataValidation.success) {
+		if (validUrlPrefix.length === 0) {
 			return { lastApplicationPath: "/create-project" };
-		} else {
-			if (projectsForUser.length === 1 && projectsForUser[0]) {
-				return {
-					lastApplicationPath:
-						"/project/" + projectsForUser[0].id + "/tasks",
-				};
-			}
+		} else if (validUrlPrefix.length === 1 && validUrlPrefix[0]) {
+			return {
+				lastApplicationPath: validUrlPrefix[0] + "/tasks",
+			};
 		}
 		return { lastApplicationPath: "/" };
 	}
 
-	const parsedData = UserApplicationDataSchema.parse(data);
+	const applicationData = dataValidation.data;
+	console.log("Application Router > applicationData", applicationData);
 
-	return parsedData;
+	// check that applicationData starts with one of the validUrlPrefixes
+	const validProjectPaths = validUrlPrefix.filter((prefix) =>
+		applicationData.lastApplicationPath.startsWith(prefix),
+	);
+	if (validProjectPaths.length === 0) {
+		console.log("Application Router > No valid project paths");
+		if (validUrlPrefix.length === 0) {
+			return { lastApplicationPath: "/create-project" };
+		} else if (validUrlPrefix.length === 1 && validUrlPrefix[0]) {
+			return {
+				lastApplicationPath: validUrlPrefix[0] + "/tasks",
+			};
+		}
+	}
+
+	return applicationData;
 }
 
 const UserApplicationDataSchema = z.object({

@@ -14,7 +14,9 @@ import { checkPermissions } from "~/actions/security/permissions";
 import ProjectInviteEmail from "~/email/project-invite";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
-import { invites, usersToProjects } from "~/server/db/schema";
+import { invites, users, usersToProjects } from "~/server/db/schema";
+
+import { createNotification } from "../notification-actions";
 
 const getInviteSchema = z.object({
 	userId: z.string(),
@@ -93,6 +95,19 @@ export async function joinProject(token: string) {
 			projectId: inviteData.projectId,
 			userRole: "member",
 		});
+
+		const invitedUser = await db
+			.select()
+			.from(users)
+			.where(eq(users.userId, userId));
+		if (invitedUser && invitedUser.length > 0 && invitedUser[0]) {
+			await createNotification({
+				userId: inviteData.userId,
+				message: `${invitedUser[0].username} has joined your project`,
+				date: new Date(),
+				projectId: inviteData.projectId,
+			});
+		}
 
 		return {
 			success: true,

@@ -12,6 +12,7 @@ export const globalToastSchema = z.object({
 });
 
 const GlobalToastHandler = () => {
+	console.log("GlobalToastHandler > rendering");
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
@@ -29,11 +30,15 @@ const GlobalToastHandler = () => {
 		// handle the toast
 		switch (toastQuery.type) {
 			case "success":
+				console.log("GlobalToastHandler > success", toastQuery.message);
 				toast.success(toastQuery.message);
 				break;
 			case "error":
+				console.log("GlobalToastHandler > error", toastQuery.message);
 				toast.error(toastQuery.message);
 				break;
+			default:
+				toast(toastQuery.message);
 		}
 
 		// remove the toast from the search params
@@ -49,7 +54,6 @@ const GlobalToastHandler = () => {
 			type: searchParams.get("type"),
 		};
 		if (!query.message || !query.type) return;
-
 		handleToast(query);
 	}, [searchParams.toString()]);
 
