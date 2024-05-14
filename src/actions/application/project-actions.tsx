@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -10,8 +9,11 @@ import {
 	insertProjectSchema,
 	type User,
 	type UserRole,
+	type UsersToProjects,
+	type Project,
 } from "~/server/db/schema";
 import { type NewProject } from "~/server/db/schema";
+import { type ActionReturnType } from "~/utils/actionReturnType";
 import { throwServerError } from "~/utils/errors";
 
 // top level await workaround from https://github.com/vercel/next.js/issues/54282
@@ -39,13 +41,16 @@ export async function getAllProjects(userId: string) {
 	}
 }
 
-export async function getProject(projectId: number) {
+interface ProjectWithUser extends Project {
+	usersToProjects: UsersToProjects[];
+}
+
+export async function getProject(
+	projectId: number,
+	userId: string,
+): Promise<ActionReturnType<ProjectWithUser>> {
 	console.log("🏃 getProject pulled");
 	try {
-		const { userId }: { userId: string | null } = auth();
-		if (!userId) {
-			return { success: false, message: "UserId not found" };
-		}
 		const projectQuery = await db.query.projects.findFirst({
 			where: (projects) => eq(projects.id, projectId),
 			with: {
@@ -58,19 +63,22 @@ export async function getProject(projectId: number) {
 			},
 		});
 		if (!projectQuery) {
-			return { success: false, message: "Project not found" };
+			return { data: null, error: `Project ${projectId} not found` };
 		}
-		if (!projectQuery.usersToProjects.length) {
-			return { success: false, message: "Project not found" };
+		if (projectQuery.usersToProjects.length === 0) {
+			return {
+				data: null,
+				error: `Project ${projectId} is not related to your account`,
+			};
 		}
 
-		return { success: true, project: projectQuery };
+		return { data: projectQuery, error: null };
 	} catch (error) {
 		console.error(error);
 		if (error instanceof Error) {
-			return { success: false, message: error.message };
+			return { data: null, error: error.message };
 		}
-		return { success: false, message: "Unknown error" };
+		return { data: null, error: "An unknown error occurred" };
 	}
 }
 
@@ -86,7 +94,9 @@ export async function updateProject(id: number, data: NewProject) {
 	}
 }
 
-export async function getAssigneesForProject(projectId: number) {
+export async function getAssigneesForProject(
+	projectId: number,
+): Promise<ActionReturnType<User[]>> {
 	console.log("🏃 getAssigneesForProject pulled");
 	try {
 		const assigneesQuery = await db.query.projects.findMany({
@@ -105,10 +115,13 @@ export async function getAssigneesForProject(projectId: number) {
 			)
 			.filter(Boolean);
 
-		return assignees;
+		return { data: assignees, error: null };
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
-		return [];
+		console.error(error);
+		if (error instanceof Error) {
+			return { data: null, error: error.message };
+		}
+		return { data: null, error: "An unknown error occurred" };
 	}
 }
 

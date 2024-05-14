@@ -28,20 +28,21 @@ import { Textarea } from "~/components/ui/textarea";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/config/aiLimit";
 import { schemaValidators } from "~/config/taskConfigType";
 import { useRealtimeStore } from "~/store/realtime";
+import { useUserStore } from "~/store/user";
 import { taskNameToBranchName } from "~/utils/task-name-branch-converters";
 
 type Props = {
 	projectId: string;
-	aiLimitCount: number;
 };
 
 const formSchema = z.object({
 	description: z.string().max(1000),
 });
 
-const AiDialog = ({ projectId, aiLimitCount }: Props) => {
+const AiDialog = ({ projectId }: Props) => {
 	const [open, setOpen] = useState(false);
 	const project = useRealtimeStore((state) => state.project);
+	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
 
 	function resetForm() {
 		form.reset({
@@ -147,7 +148,7 @@ const AiDialog = ({ projectId, aiLimitCount }: Props) => {
 							<SparklesIcon className="h-4 w-4" />
 							AI Task Creation
 						</DialogTitle>
-						{aiLimitCount >= AIDAILYLIMIT && (
+						{aiUsageCount >= AIDAILYLIMIT && (
 							<Message
 								type="error"
 								className="mt-2 w-full flex-shrink"
@@ -158,7 +159,7 @@ const AiDialog = ({ projectId, aiLimitCount }: Props) => {
 							</Message>
 						)}
 					</DialogHeader>
-					{aiLimitCount < AIDAILYLIMIT && (
+					{aiUsageCount < AIDAILYLIMIT && (
 						<Form {...form}>
 							<form onSubmit={form.handleSubmit(onSubmit)}>
 								<FormField
@@ -184,7 +185,7 @@ const AiDialog = ({ projectId, aiLimitCount }: Props) => {
 						>
 							<span className="flex items-center gap-1 text-sm text-muted-foreground">
 								<InfoCircledIcon className="h-4 w-4" />
-								Daily Usage: {aiLimitCount}/{AIDAILYLIMIT}
+								Daily Usage: {aiUsageCount}/{AIDAILYLIMIT}
 							</span>
 						</SimpleTooltip>
 						<div className="flex-1" />

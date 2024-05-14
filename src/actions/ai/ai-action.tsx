@@ -88,9 +88,13 @@ export async function aiGenerateTask(description: string, projectId: number) {
 	}
 
 	const assignees = await getAssigneesForProject(projectId);
+	if (assignees.error !== null) {
+		console.error(assignees.error);
+		return;
+	}
 	const sprints = await getSprintsForProject(projectId);
 
-	const taskSchema = getTaskAiSchema(assignees, sprints);
+	const taskSchema = getTaskAiSchema(assignees.data, sprints);
 
 	const prompt = `
 	RESPOND IN JSON FORMAT!

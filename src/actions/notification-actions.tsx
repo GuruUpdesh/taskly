@@ -11,6 +11,7 @@ import {
 	type Task,
 	type Notification,
 } from "~/server/db/schema";
+import { type ActionReturnType } from "~/utils/actionReturnType";
 import { throwServerError } from "~/utils/errors";
 
 export async function createNotification(data: NewNotification) {
@@ -48,7 +49,9 @@ export type NotificationWithTask = Notification & {
 	options?: { isNew: boolean };
 };
 
-export async function getAllNotifications(userId: string) {
+export async function getAllNotifications(
+	userId: string,
+): Promise<ActionReturnType<NotificationWithTask[]>> {
 	console.log("🏃 getAllNotifications pulled");
 	try {
 		const allNotifications = await db.query.notifications.findMany({
@@ -58,9 +61,13 @@ export async function getAllNotifications(userId: string) {
 				task: true,
 			},
 		});
-		return allNotifications;
+		return { data: allNotifications, error: null };
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
+		console.error(error);
+		if (error instanceof Error) {
+			return { data: null, error: error.message };
+		}
+		return { data: null, error: "An unknown error occurred" };
 	}
 }
 

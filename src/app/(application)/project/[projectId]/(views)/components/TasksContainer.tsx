@@ -44,7 +44,6 @@ export type UpdateTask = {
 
 type Props = {
 	projectId: string;
-	aiLimitCount: number;
 };
 
 type TaskTypeOverride = Omit<TaskType, "sprintId"> & {
@@ -55,7 +54,7 @@ async function updateTaskWrapper({ id, newTask }: UpdateTask) {
 	await updateTask(id, newTask);
 }
 
-export default function TasksContainer({ projectId, aiLimitCount }: Props) {
+export default function TasksContainer({ projectId }: Props) {
 	/**
 	 * Get the assignees and sprints
 	 */
@@ -359,7 +358,6 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 								<TotalTaskListPoints listId={option.key} />
 								<CreateTask
 									projectId={projectId}
-									aiLimitCount={aiLimitCount}
 									overrideDefaultValues={{
 										[groupBy]: option.key,
 									}}
@@ -383,7 +381,6 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 									deleteTaskMutation={deleteTaskMutation}
 									projectId={projectId}
 									variant={viewMode}
-									aiLimitCount={aiLimitCount}
 								/>
 							</div>
 						</div>
@@ -398,7 +395,6 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 						deleteTaskMutation={deleteTaskMutation}
 						projectId={projectId}
 						variant={viewMode}
-						aiLimitCount={aiLimitCount}
 					/>
 				)}
 			</div>

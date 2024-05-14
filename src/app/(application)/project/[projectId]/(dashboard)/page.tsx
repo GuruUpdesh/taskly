@@ -1,12 +1,13 @@
 import React from "react";
 
-import { auth } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { type Metadata } from "next";
 
 import { getTasksFromProject } from "~/actions/application/task-actions";
 import { getAllNotifications } from "~/actions/notification-actions";
 import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
+import Message from "~/app/components/Message";
 import RecentTasks from "~/app/components/RecentTasks";
 import {
 	Card,
@@ -14,7 +15,7 @@ import {
 	CardDescription,
 	CardHeader,
 } from "~/components/ui/card";
-import { type Notification, type Task } from "~/server/db/schema";
+import { type Task } from "~/server/db/schema";
 
 import { DataCardFigure } from "./components/DataCard";
 import UserGreeting from "./components/UserGreeting";
@@ -32,13 +33,25 @@ type ProjectPageProps = {
 async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 	const tasks: Task[] = (await getTasksFromProject(Number(projectId))) ?? [];
 
-	const user = auth();
+	const user = await currentUser();
 	if (!user) {
-		return;
+		return (
+			<Message type="error" className="min-w-[600px]">
+				You must be logged in to access the dashboard
+			</Message>
+		);
 	}
 
-	const notifications: Notification[] =
-		(await getAllNotifications(user.userId ?? "")) ?? [];
+	const notificationsResult = await getAllNotifications(user.id);
+	if (notificationsResult.error !== null) {
+		console.error(notificationsResult.error);
+		return (
+			<Message type="error" className="min-w-[600px]">
+				{notificationsResult.error}
+			</Message>
+		);
+	}
+	const notifications = notificationsResult.data;
 
 	const backlogTaskCount: number = tasks.filter(
 		(task: Task) => task.status === "backlog",

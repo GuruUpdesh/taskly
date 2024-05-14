@@ -13,9 +13,16 @@ type Params = {
 };
 
 async function TaskPage({ params: { projectId } }: Params) {
-	const tasks = await getTasksFromProject(parseInt(projectId));
-	const assignees = await getAssigneesForProject(parseInt(projectId));
-	const sprints = await getSprintsForProject(parseInt(projectId));
+	const projectIdInt = parseInt(projectId, 10);
+	const tasks = await getTasksFromProject(projectIdInt);
+	const assigneeResult = await getAssigneesForProject(projectIdInt);
+	if (assigneeResult.error !== null) {
+		console.error(assigneeResult.error);
+		return null;
+	}
+	const assignees = assigneeResult.data;
+
+	const sprints = await getSprintsForProject(projectIdInt);
 
 	if (!tasks) return null;
 	return (

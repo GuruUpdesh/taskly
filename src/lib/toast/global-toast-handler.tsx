@@ -12,7 +12,6 @@ export const globalToastSchema = z.object({
 });
 
 const GlobalToastHandler = () => {
-	console.log("GlobalToastHandler > rendering");
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();

@@ -10,6 +10,7 @@ import { type Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { getAiLimitCount } from "~/actions/ai/ai-limit-actions";
 import {
 	getAssigneesForProject,
 	getProject,
@@ -32,22 +33,32 @@ type Params = {
 export async function generateMetadata({
 	params: { projectId },
 }: Params): Promise<Metadata> {
-	const projectResults = await getProject(Number(projectId));
-	if (!projectResults || !projectResults.success || !projectResults.project) {
+	try {
+		const user = await currentUser();
+		if (!user) {
+			throw new Error("User not found");
+		}
+
+		const projectIdInt = parseInt(projectId, 10);
+		const result = await getProject(projectIdInt, user.id);
+		if (result.error !== null) {
+			throw new Error(result.error);
+		}
+		return {
+			title: {
+				default: result.data.name,
+				template: `Taskly | %s > ${result.data.name}`,
+			},
+		};
+	} catch (e) {
+		console.error(e);
 		return {
 			title: {
 				default: "Project",
-				template: "%s | Taskly",
+				template: "Taskly | %s",
 			},
 		};
 	}
-
-	return {
-		title: {
-			default: projectResults.project.name,
-			template: `%s > ${projectResults.project.name} | Taskly`,
-		},
-	};
 }
 
 export default async function ApplicationLayout({
@@ -69,11 +80,11 @@ export default async function ApplicationLayout({
 	// prefetch the project, assignees, sprints, and notifications
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
-		queryKey: ["project", projectId],
-		queryFn: () => getProject(projectIdInt),
+		queryKey: ["project", projectIdInt],
+		queryFn: () => getProject(projectIdInt, user.id),
 	});
 	await queryClient.prefetchQuery({
-		queryKey: ["assignees/sprints", projectId],
+		queryKey: ["assignees/sprints", projectIdInt],
 		queryFn: async () => {
 			const assignees = await getAssigneesForProject(projectIdInt);
 			const sprints = await getSprintsForProject(projectIdInt);
@@ -82,7 +93,7 @@ export default async function ApplicationLayout({
 		},
 	});
 	await queryClient.prefetchQuery({
-		queryKey: ["notifications", projectId],
+		queryKey: ["notifications", projectIdInt],
 		queryFn: () => getAllNotifications(user.id),
 	});
 
@@ -93,9 +104,15 @@ export default async function ApplicationLayout({
 		defaultLayout = JSON.parse(layout.value) as number[] | undefined;
 	}
 
+	const aiUsageCount = await getAiLimitCount();
+
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<ProjectState projectId={projectId} userId={user.id} />
+			<ProjectState
+				projectId={projectIdInt}
+				userId={user.id}
+				aiUsageCount={aiUsageCount}
+			/>
 			<SidebarPanel
 				sidebarComponent={<Sidebar projectId={projectId} />}
 				defaultLayout={defaultLayout}

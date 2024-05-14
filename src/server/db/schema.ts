@@ -207,6 +207,7 @@ export const usersToProjects = pgTable(
 export const usersToProjectsSchema = createInsertSchema(usersToProjects);
 
 // types
+export type UsersToProjects = InferSelectModel<typeof usersToProjects>;
 export type UserRole = InferSelectModel<typeof usersToProjects>["userRole"];
 
 export const usersToProjectsRelations = relations(

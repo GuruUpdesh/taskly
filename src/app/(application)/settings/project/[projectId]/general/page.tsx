@@ -1,5 +1,6 @@
 import React from "react";
 
+import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 import { getAiLimitCount } from "~/actions/ai/ai-limit-actions";
@@ -8,7 +9,6 @@ import {
 	getProject,
 } from "~/actions/application/project-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
-import { authenticate } from "~/actions/security/authenticate";
 import ProjectDangerZone from "~/app/(application)/settings/components/ProjectDangerZone";
 import ProjectGithub from "~/app/(application)/settings/components/ProjectGithub";
 import ProjectInfo from "~/app/(application)/settings/components/ProjectInfo";
@@ -28,18 +28,24 @@ type Params = {
 };
 
 async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
-	const userId = authenticate();
+	const user = await currentUser();
 	const aiLimitCount = await getAiLimitCount();
-
-	const projectResults = await getProject(Number(projectId));
-	if (!projectResults?.success || !projectResults.project) {
-		if (projectResults?.message) {
-			redirect(constructToastURL(projectResults.message, "error"));
-		}
-		redirect(constructToastURL("Issue loading project", "error"));
+	if (!user) {
+		redirect(
+			constructToastURL(
+				"You need to be logged in to view settings",
+				"error",
+			),
+		);
 	}
 
-	const project = projectResults.project;
+	const projectIdInt = parseInt(projectId, 10);
+	const result = await getProject(projectIdInt, user.id);
+	if (result.error !== null) {
+		redirect(constructToastURL(result.error, "error"));
+	}
+	const project = result.data;
+
 	const sprints = await getSprintsForProject(Number(projectId));
 	const users = await getAllUsersInProject(Number(projectId));
 
@@ -53,7 +59,7 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 			<UsersTable
 				users={users ?? []}
 				projectId={project.id}
-				userId={userId}
+				userId={user.id}
 			/>
 		),
 		sprints: <ProjectSprints sprints={sprints ?? []} project={project} />,

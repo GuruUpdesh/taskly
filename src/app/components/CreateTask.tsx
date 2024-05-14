@@ -42,6 +42,7 @@ import {
 	type User,
 } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
+import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
 import SimpleTooltip from "./SimpleTooltip";
@@ -51,7 +52,6 @@ type FormProps = {
 	form: UseFormReturn<TaskFormType, undefined>;
 	assignees: User[];
 	sprints: Sprint[];
-	aiLimitCount: number;
 };
 
 export const taskFormSchema = buildValidator([
@@ -77,14 +77,9 @@ export const taskFormSchema = buildValidator([
 
 export type TaskFormType = Omit<NewTask, "sprintId"> & { sprintId: string };
 
-const TaskCreateForm = ({
-	onSubmit,
-	form,
-	assignees,
-	sprints,
-	aiLimitCount,
-}: FormProps) => {
+const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 	const project = useRealtimeStore((state) => state.project);
+	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
 
 	// Framer motion transition
 	const transition = {
@@ -95,7 +90,7 @@ const TaskCreateForm = ({
 	const [isLoading, setIsLoading] = useState(false);
 
 	const aiAutoComplete = async (title: string, description: string) => {
-		if (aiLimitCount >= AIDAILYLIMIT) {
+		if (aiUsageCount >= AIDAILYLIMIT) {
 			toast.error(
 				`AI daily limit reached. Please try again in ${timeTillNextReset()} hours.`,
 			);
@@ -206,17 +201,11 @@ const TaskCreateForm = ({
 
 type Props = {
 	projectId: string;
-	aiLimitCount: number;
 	children: React.ReactNode;
 	overrideDefaultValues?: Partial<TaskFormType>;
 };
 
-const CreateTask = ({
-	projectId,
-	children,
-	aiLimitCount,
-	overrideDefaultValues,
-}: Props) => {
+const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 	const [project, assignees, sprints] = useRealtimeStore(
 		useShallow((state) => [state.project, state.assignees, state.sprints]),
 	);
@@ -361,7 +350,6 @@ const CreateTask = ({
 					form={form}
 					assignees={assignees}
 					sprints={sprints}
-					aiLimitCount={aiLimitCount}
 				/>
 				<DialogFooter className="border-t px-4 py-2">
 					<Button

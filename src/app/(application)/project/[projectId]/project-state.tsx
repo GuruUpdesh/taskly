@@ -21,13 +21,15 @@ import {
 import { getRefetchIntervals } from "~/config/refetchIntervals";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 import { useRealtimeStore } from "~/store/realtime";
+import { useUserStore } from "~/store/user";
 
 type Props = {
-	projectId: string;
+	projectId: number;
 	userId: string;
+	aiUsageCount: number;
 };
 
-const ProjectState = ({ projectId, userId }: Props) => {
+const ProjectState = ({ projectId, userId, aiUsageCount }: Props) => {
 	const [updateProject, updateAssignees, updateSprints, updateNotifications] =
 		useRealtimeStore(
 			useShallow((state) => [
@@ -38,9 +40,13 @@ const ProjectState = ({ projectId, userId }: Props) => {
 			]),
 		);
 
+	const [setUserId, setAiUsageCount] = useUserStore(
+		useShallow((state) => [state.setUserId, state.setAiUsageCount]),
+	);
+
 	const projectResult = useQuery({
 		queryKey: ["project", projectId],
-		queryFn: () => getProject(Number(projectId)),
+		queryFn: () => getProject(projectId, userId),
 		staleTime: 2 * 1000,
 		refetchInterval: getRefetchIntervals().projects,
 	});
@@ -48,8 +54,8 @@ const ProjectState = ({ projectId, userId }: Props) => {
 	const assigneeSprintResult = useQuery({
 		queryKey: ["assignees/sprints", projectId],
 		queryFn: async () => {
-			const assignees = await getAssigneesForProject(parseInt(projectId));
-			const sprints = await getSprintsForProject(parseInt(projectId));
+			const assignees = await getAssigneesForProject(projectId);
+			const sprints = await getSprintsForProject(projectId);
 
 			return { assignees, sprints };
 		},
@@ -60,38 +66,42 @@ const ProjectState = ({ projectId, userId }: Props) => {
 	const queryClient = useQueryClient();
 
 	async function refetchNotifications() {
-		const data = await getAllNotifications(userId);
-		let newNotifications = data;
-		if (newNotifications) {
-			const previousNotifications = queryClient.getQueryData<
-				NotificationWithTask[]
-			>(["notifications", projectId]);
-
-			newNotifications = newNotifications.map((notification) => {
-				const isExistingNotification = previousNotifications?.find(
-					(prevNotif) => prevNotif.id === notification.id,
-				);
-				if (!isExistingNotification) {
-					toast(`New notification`, {
-						description: notification.message,
-						icon: <BellIcon className="h-4 w-4" />,
-						cancel: {
-							label: "Dismiss",
-							onClick: () => {
-								console.log("dismissed");
-							},
-						},
-						cancelButtonStyle: {
-							backgroundColor: "transparent",
-							color: "hsl(var(--foreground))",
-						},
-						duration: 5000,
-					});
-					return { ...notification, options: { isNew: true } };
-				}
-				return notification;
-			});
+		const result = await getAllNotifications(userId);
+		if (result.error !== null) {
+			console.error(result.error);
+			return;
 		}
+		let newNotifications = result.data;
+
+		const previousNotifications = queryClient.getQueryData<
+			NotificationWithTask[]
+		>(["notifications", projectId]);
+
+		newNotifications = newNotifications.map((notification) => {
+			const isExistingNotification = previousNotifications?.find(
+				(prevNotif) => prevNotif.id === notification.id,
+			);
+			if (!isExistingNotification) {
+				toast(`New notification`, {
+					description: notification.message,
+					icon: <BellIcon className="h-4 w-4" />,
+					cancel: {
+						label: "Dismiss",
+						onClick: () => {
+							console.log("dismissed");
+						},
+					},
+					cancelButtonStyle: {
+						backgroundColor: "transparent",
+						color: "hsl(var(--foreground))",
+					},
+					duration: 5000,
+				});
+				return { ...notification, options: { isNew: true } };
+			}
+			return notification;
+		});
+
 		return newNotifications;
 	}
 
@@ -106,24 +116,37 @@ const ProjectState = ({ projectId, userId }: Props) => {
 
 	useEffect(() => {
 		const result = projectResult.data;
-		if (!result?.success || !result.project) {
-			if (result?.message) {
-				router.push(constructToastURL(result.message, "error"));
+		if (!result || result.error !== null) {
+			if (result?.error) {
+				router.push(constructToastURL(result.error, "error"));
+				return;
 			}
-			router.push(constructToastURL("Error loading project", "error"));
+			router.push(
+				constructToastURL("Project results are undefined", "error"),
+			);
 			return;
 		}
-		const project = result?.project;
-		if (project) {
-			updateProject(project);
-			void updateProjectApplicationData(project);
-		}
+		const project = result.data;
+		updateProject(project);
+		void updateProjectApplicationData(project);
 	}, [projectResult.data]);
 
 	useEffect(() => {
-		if (assigneeSprintResult.data?.assignees) {
-			updateAssignees(assigneeSprintResult.data.assignees);
+		const result = assigneeSprintResult.data?.assignees;
+		if (!result || result.error !== null) {
+			if (result?.error) {
+				router.push(constructToastURL(result.error, "error"));
+				return;
+			}
+			router.push(
+				constructToastURL(
+					"Assignee and sprint results are undefined",
+					"error",
+				),
+			);
+			return;
 		}
+		updateAssignees(result.data);
 	}, [assigneeSprintResult.data?.assignees]);
 
 	useEffect(() => {
@@ -134,9 +157,18 @@ const ProjectState = ({ projectId, userId }: Props) => {
 
 	useEffect(() => {
 		if (notificationResults.data) {
+			console.log("notifications", notificationResults.data);
 			updateNotifications(notificationResults.data);
 		}
 	}, [notificationResults.data]);
+
+	useEffect(() => {
+		setUserId(userId);
+	}, [userId]);
+
+	useEffect(() => {
+		setAiUsageCount(aiUsageCount);
+	}, [aiUsageCount]);
 
 	return null;
 };
