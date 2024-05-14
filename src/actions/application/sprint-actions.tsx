@@ -24,7 +24,6 @@ export async function createSprintForProject() {
 }
 
 export async function getSprintsForProject(projectId: number) {
-	console.log("🏃 getAssigneesForProject pulled");
 	const allSprints = await db
 		.select()
 		.from(sprints)

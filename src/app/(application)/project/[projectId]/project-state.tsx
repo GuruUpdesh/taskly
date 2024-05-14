@@ -2,8 +2,14 @@
 
 import { useEffect } from "react";
 
+import {
+	DashboardIcon,
+	EnvelopeClosedIcon,
+	GearIcon,
+} from "@radix-ui/react-icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { BellIcon } from "lucide-react";
+import { useRegisterActions } from "kbar";
+import { BellIcon, ListTodo } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
@@ -169,6 +175,44 @@ const ProjectState = ({ projectId, userId, aiUsageCount }: Props) => {
 	useEffect(() => {
 		setAiUsageCount(aiUsageCount);
 	}, [aiUsageCount]);
+
+	const actions = [
+		{
+			id: "dashboard",
+			name: "Dashboard",
+			icon: <DashboardIcon />,
+			shortcut: ["g", "d"],
+			perform: () => router.push(`/project/${projectId}`),
+			section: "Navigation",
+		},
+		{
+			id: "inbox",
+			name: "Inbox",
+			icon: <EnvelopeClosedIcon />,
+			shortcut: ["g", "i"],
+			perform: () => router.push(`/project/${projectId}/inbox`),
+			section: "Navigation",
+		},
+		{
+			id: "tasks",
+			name: "Tasks",
+			icon: <ListTodo className="h-4 w-4" />,
+			shortcut: ["g", "l"],
+			perform: () => router.push(`/project/${projectId}/tasks`),
+			section: "Navigation",
+		},
+		{
+			id: "settings",
+			name: "Settings",
+			icon: <GearIcon />,
+			shortcut: ["g", "s"],
+			perform: () =>
+				router.push(`/settings/project/${projectId}/general`),
+			section: "Navigation",
+		},
+	];
+
+	useRegisterActions(actions, [projectId]);
 
 	return null;
 };

@@ -49,7 +49,6 @@ export async function getProject(
 	projectId: number,
 	userId: string,
 ): Promise<ActionReturnType<ProjectWithUser>> {
-	console.log("🏃 getProject pulled");
 	try {
 		const projectQuery = await db.query.projects.findFirst({
 			where: (projects) => eq(projects.id, projectId),
@@ -97,7 +96,6 @@ export async function updateProject(id: number, data: NewProject) {
 export async function getAssigneesForProject(
 	projectId: number,
 ): Promise<ActionReturnType<User[]>> {
-	console.log("🏃 getAssigneesForProject pulled");
 	try {
 		const assigneesQuery = await db.query.projects.findMany({
 			where: (project) => eq(project.id, projectId),
