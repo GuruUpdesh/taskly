@@ -38,13 +38,17 @@ export async function getUserApplicationData() {
 	const data = await kv.get(user.userId);
 	const dataValidation = UserApplicationDataSchema.safeParse(data);
 	if (!dataValidation.success) {
+		console.log("Application Router > validation failed");
 		if (validUrlPrefix.length === 0) {
+			console.log("Application Router -> create project");
 			return { lastApplicationPath: "/create-project" };
-		} else if (validUrlPrefix.length === 1 && validUrlPrefix[0]) {
+		} else if (validUrlPrefix[0]) {
+			console.log("Application Router -> tasks");
 			return {
 				lastApplicationPath: validUrlPrefix[0] + "/tasks",
 			};
 		}
+		console.log("Application Router -> home");
 		return { lastApplicationPath: "/" };
 	}
 
@@ -58,8 +62,10 @@ export async function getUserApplicationData() {
 	if (validProjectPaths.length === 0) {
 		console.log("Application Router > No valid project paths");
 		if (validUrlPrefix.length === 0) {
+			console.log("Application Router -> create project");
 			return { lastApplicationPath: "/create-project" };
-		} else if (validUrlPrefix.length === 1 && validUrlPrefix[0]) {
+		} else if (validUrlPrefix[0]) {
+			console.log("Application Router -> tasks");
 			return {
 				lastApplicationPath: validUrlPrefix[0] + "/tasks",
 			};
