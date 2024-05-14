@@ -9,12 +9,17 @@ const ButtonOptions = () => {
 	return (
 		<div className="flex w-full items-center justify-between gap-4">
 			<div>
-				<Button
-					variant="outline"
-					className="mr-4 rounded-full bg-transparent backdrop-blur-lg"
+				<Link
+					href="https://www.youtube.com/watch?v=2JG1OJx5DK8"
+					target="_blank"
 				>
-					Watch a Demo
-				</Button>
+					<Button
+						variant="outline"
+						className="mr-4 rounded-full bg-transparent backdrop-blur-lg"
+					>
+						Watch a Demo
+					</Button>
+				</Link>
 				<Link href="https://docs.tasklypm.com" target="_blank">
 					<Button
 						variant="outline"

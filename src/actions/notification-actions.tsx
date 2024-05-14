@@ -44,7 +44,7 @@ export async function getNotification(notificationId: number) {
 }
 
 export type NotificationWithTask = Notification & {
-	task: Task;
+	task: Task | null;
 	options?: { isNew: boolean };
 };
 

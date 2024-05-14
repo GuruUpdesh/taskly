@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { Priority } from "kbar";
-import { Mail, Trash2 } from "lucide-react";
+import { BellIcon, Mail, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
@@ -197,7 +197,9 @@ const NotificationItem = ({ notification, projectId }: Props) => {
 						>
 							<div className="flex items-center justify-between gap-2">
 								<p className="flex-shrink overflow-hidden overflow-ellipsis whitespace-nowrap">
-									{notification.task.title}
+									{notification.task
+										? notification.task.title
+										: notification.message}
 								</p>
 
 								<p
@@ -211,7 +213,15 @@ const NotificationItem = ({ notification, projectId }: Props) => {
 								</p>
 							</div>
 							<div className="mt-2 flex items-center justify-between gap-2">
-								<TaskStatus status={notification.task.status} />
+								{notification.task ? (
+									<TaskStatus
+										status={notification.task.status}
+									/>
+								) : (
+									<div className="flex h-6 w-6 items-center justify-center rounded-full border">
+										<BellIcon className="h-4 w-4 text-muted-foreground" />
+									</div>
+								)}
 								<p
 									className={cn(
 										"flex-shrink overflow-hidden overflow-ellipsis whitespace-nowrap pb-1",
