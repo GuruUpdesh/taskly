@@ -1,7 +1,11 @@
 import React from "react";
 
-import { GearIcon, ReaderIcon, PlusCircledIcon } from "@radix-ui/react-icons";
-import { LayoutGrid, ListTodo } from "lucide-react";
+import {
+	GearIcon,
+	ReaderIcon,
+	PlusCircledIcon,
+} from "@radix-ui/react-icons";
+import {  LayoutGrid } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +26,7 @@ import InboxSidebarButton from "./InboxSidebarButton";
 import SelectProject from "./select project/select-project";
 import SidebarButton from "./sidebar-button";
 import SidebarSearch from "./sidebar-search";
+import TaskViews from "./TaskViews";
 
 interface SidebarProps {
 	projectId: string;
@@ -69,11 +74,7 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 						url={`/project/${projectId}`}
 					/>
 					<InboxSidebarButton projectId={projectId} />
-					<SidebarButton
-						label="Tasks"
-						icon={<ListTodo className="h-4 w-4 min-w-4" />}
-						url={`/project/${projectId}/tasks`}
-					/>
+					<TaskViews projectId={projectId} />
 				</div>
 				<div className="flex-1" />
 				<div className="mb-2">

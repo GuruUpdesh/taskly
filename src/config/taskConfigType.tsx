@@ -3,7 +3,6 @@ import {
 	ArrowRightIcon,
 	ArrowUpIcon,
 	CheckCircledIcon,
-	Component1Icon,
 	EyeOpenIcon,
 	GitHubLogoIcon,
 	PersonIcon,
@@ -46,6 +45,10 @@ import {
 	selectTaskSchema,
 } from "~/server/db/schema";
 import { helperIsSprintActive } from "~/utils/getCurrentSprintId";
+import {
+	getClockIconForSprintProgress,
+	getSprintProgress,
+} from "~/utils/getSprintIcon";
 
 export type TaskProperty = keyof Task;
 type StaticProperty = Extract<
@@ -510,12 +513,12 @@ export const taskConfig: TaskConfig = {
 		key: "sprintId",
 		displayName: "Sprint",
 		type: "dynamic",
-		icon: <Component1Icon className="h-4 w-4" />,
+		icon: <Clock className="h-4 w-4" />,
 		options: [
 			{
 				key: "-1",
 				displayName: "No Sprint",
-				icon: <Component1Icon className="h-4 w-4 opacity-50" />,
+				icon: <Clock className="h-4 w-4 opacity-50" />,
 				color: "null",
 			},
 		],
@@ -575,12 +578,23 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 
 	config.sprintId.options = [
 		...taskConfig.sprintId.options,
-		...sprints.map((sprint) => ({
-			key: sprint.id.toString(),
-			displayName: sprint.name,
-			icon: <Component1Icon className="h-4 w-4" />,
-			color: helperIsSprintActive(sprint) ? "green" : ("orange" as Color),
-		})),
+		...sprints.map((sprint) => {
+			const isActive = helperIsSprintActive(sprint);
+			let ClockIcon = <Clock className="h-4 w-4" />;
+			if (isActive) {
+				const progress = getSprintProgress(sprint);
+				const dynamicIcon = getClockIconForSprintProgress(progress);
+				if (dynamicIcon) {
+					ClockIcon = dynamicIcon;
+				}
+			}
+			return {
+				key: sprint.id.toString(),
+				displayName: sprint.name,
+				icon: ClockIcon,
+				color: isActive ? "green" : ("orange" as Color),
+			};
+		}),
 	];
 
 	return config;

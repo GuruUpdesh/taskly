@@ -16,6 +16,7 @@ export type SidebarButtonProps = {
 	openInNewTab?: boolean;
 	children?: React.ReactNode;
 	hidden?: boolean;
+	callback?: () => void;
 };
 
 const SidebarButton = ({
@@ -25,6 +26,7 @@ const SidebarButton = ({
 	openInNewTab = false,
 	children,
 	hidden = false,
+	callback,
 }: SidebarButtonProps) => {
 	const pathname = usePathname();
 	const active = useMemo(() => {
@@ -51,6 +53,7 @@ const SidebarButton = ({
 						active &&
 							"border-b border-foreground/15 bg-foreground/5 opacity-100",
 					)}
+					onClick={callback}
 				>
 					{icon ? icon : null}
 					<span className="hidden @sidebar:inline-flex">{label}</span>

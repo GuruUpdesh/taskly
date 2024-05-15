@@ -39,6 +39,7 @@ import { renderFilterValues } from "~/utils/filter-values";
 type Props = {
 	children: (menuOpen: boolean) => React.ReactNode;
 	defaultValues?: Filter;
+	disabled?: boolean;
 };
 
 const properties = [
@@ -56,7 +57,7 @@ const formSchema = z.object({
 	values: z.array(z.any()).min(1),
 });
 
-const FilterMenu = ({ children, defaultValues }: Props) => {
+const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 	const [open, setOpen] = React.useState(false);
 	const [assignees, sprints] = useRealtimeStore(
 		useShallow((state) => [state.assignees, state.sprints]),
@@ -141,7 +142,9 @@ const FilterMenu = ({ children, defaultValues }: Props) => {
 
 	return (
 		<Popover open={open} onOpenChange={(open) => setOpen(open)}>
-			<PopoverTrigger asChild>{children(open)}</PopoverTrigger>
+			<PopoverTrigger asChild disabled={disabled}>
+				{children(open)}
+			</PopoverTrigger>
 			<PopoverContent
 				className="overflow-hidden rounded-lg bg-background/75 p-0 backdrop-blur-xl"
 				align="start"

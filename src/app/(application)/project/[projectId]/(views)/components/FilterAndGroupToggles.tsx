@@ -39,7 +39,7 @@ const FilterAndGroupToggles = () => {
 					)}
 				>
 					<Filter className="h-4 w-4" />
-					<span className="hidden @3xl:block">Filter</span>
+					<span className="hidden @3xl:block">Filters</span>
 				</Button>
 			</SimpleTooltip>
 			<GroupButton />

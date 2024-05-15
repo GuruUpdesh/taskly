@@ -7,6 +7,7 @@ export type Filter = {
 	property: TaskProperty | "";
 	is: boolean;
 	values: string[];
+	locked?: boolean;
 };
 
 export type ViewMode = "backlog" | "board";
