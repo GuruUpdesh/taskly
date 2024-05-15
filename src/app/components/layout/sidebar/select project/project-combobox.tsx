@@ -25,7 +25,7 @@ import {
 	PopoverTrigger,
 } from "~/components/ui/popover";
 import { Skeleton } from "~/components/ui/skeleton";
-import { env } from "~/env.mjs";
+// import { env } from "~/env.mjs";
 import { cn } from "~/lib/utils";
 import type { Project } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
@@ -36,9 +36,9 @@ type Props = {
 };
 
 function getProjectImageURL(url: string) {
-	if (env.NEXT_PUBLIC_NODE_ENV === "development") {
-		return "/static/placeholder.png";
-	}
+	// if (env.NEXT_PUBLIC_NODE_ENV === "development") {
+	// 	return "/static/placeholder.png";
+	// }
 	return url;
 }
 

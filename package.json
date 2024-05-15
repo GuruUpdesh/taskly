@@ -88,7 +88,7 @@
 		"react-resizable-panels": "^1.0.10",
 		"recharts": "^2.10.4",
 		"resend": "^2.0.0",
-		"sharp": "^0.33.2",
+		"sharp": "^0.33.3",
 		"sonner": "^1.4.41",
 		"svix": "^1.15.0",
 		"tailwind-gradient-mask-image": "^1.2.0",

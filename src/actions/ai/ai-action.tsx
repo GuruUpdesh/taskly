@@ -84,10 +84,10 @@ export async function aiAction(
 }
 
 const truncateDescription = (description: string, maxLength: number) => {
-    if (description.length > maxLength) {
-        return description.substring(0, maxLength) + '...';
-    }
-    return description;
+	if (description.length > maxLength) {
+		return description.substring(0, maxLength) + "...";
+	}
+	return description;
 };
 
 export async function aiGenerateTask(description: string, projectId: number) {
@@ -96,10 +96,12 @@ export async function aiGenerateTask(description: string, projectId: number) {
 	}
 
 	const context = await getMostRecentTasks(5);
-	const contextJSON = JSON.stringify(context.map(task => ({
-		...task,
-		description: truncateDescription(task.description, 100),
-	})));
+	const contextJSON = JSON.stringify(
+		context.map((task) => ({
+			...task,
+			description: truncateDescription(task.description, 100),
+		})),
+	);
 
 	const assignees = await getAssigneesForProject(projectId);
 	if (assignees.error !== null) {

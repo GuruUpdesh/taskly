@@ -210,7 +210,7 @@ export async function getPRStatusFromGithubRepo(taskId: number) {
 			);
 			const pullRequestResults = resultSchema.parse(data);
 			for (const pr of pullRequestResults) {
-				const mergedUrl = `https://api.github.com/repos/${repo.owner.login}/${repo.full_name}/pulls/${pr.number}/merge`;
+				const mergedUrl = `https://api.github.com/repos/${repo.full_name}/pulls/${pr.number}/merge`;
 				const mergedResponse = await fetch(mergedUrl, {
 					method: "GET",
 					headers: {
@@ -218,8 +218,10 @@ export async function getPRStatusFromGithubRepo(taskId: number) {
 						Accept: "application/vnd.github.v3+json",
 					},
 				});
+				console.log(mergedUrl);
 				// if status is 204, then PR is merged
 				if (mergedResponse.status === 204) {
+					console.log("GitHub Integration: PR is merged");
 					pr.state = "merged";
 				}
 			}
