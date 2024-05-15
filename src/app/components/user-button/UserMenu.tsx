@@ -11,6 +11,7 @@ import {
 	PlusIcon,
 	ReaderIcon,
 } from "@radix-ui/react-icons";
+import { LightbulbIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -24,7 +25,6 @@ import {
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { useNavigationStore } from "~/store/navigation";
-import { LightbulbIcon } from "lucide-react";
 
 type Props = {
 	children: React.ReactNode;
