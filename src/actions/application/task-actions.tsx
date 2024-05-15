@@ -348,7 +348,7 @@ export async function getTask(id: number) {
 	try {
 		const { userId }: { userId: string | null } = auth();
 		if (!userId) {
-			return { success: false, message: "UserId not found" };
+			return { data: null, error: "UserId not found" };
 		}
 
 		const taskQuery = await db.query.tasks.findFirst({
@@ -377,16 +377,23 @@ export async function getTask(id: number) {
 			},
 		});
 		if (!taskQuery) {
-			return { success: false, message: "Task not found" };
+			return { data: null, error: `Task ${id} not found` };
 		}
 		if (!taskQuery.project.usersToProjects.length) {
-			return { success: false, message: "User not authorized" };
+			return {
+				data: null,
+				error: "You don't have permission to view this task",
+			};
 		}
 
-		void updateOrInsertTaskView(id, userId);
+		await updateOrInsertTaskView(id, userId);
 
-		return { success: true, task: taskQuery };
+		return { data: taskQuery, error: null };
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
+		console.error(error);
+		if (error instanceof Error) {
+			return { data: null, error: error.message };
+		}
+		return { data: null, error: "An unknown error occurred" };
 	}
 }
