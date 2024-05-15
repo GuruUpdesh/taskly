@@ -126,7 +126,7 @@ export async function aiGenerateTask(description: string, projectId: number) {
 	Note:
 		1. If the status is backlog, there cannot be a sprint.
 		2. If a sprint is selected, the status cannot be backlog.
-		3. The description can and should use basic markdown.
+		3. The description can and should use basic markdown!
 			This includes: **bold**, #h1, ##h2, ###h3, *italic*, code (slanted quotes), <u>underlined</u>, [link](https://... "title), divider: ***
 	`;
 
