@@ -24,6 +24,7 @@ import {
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { useNavigationStore } from "~/store/navigation";
+import { LightbulbIcon } from "lucide-react";
 
 type Props = {
 	children: React.ReactNode;
@@ -33,6 +34,13 @@ const UserMenu = ({ children }: Props) => {
 	const { signOut } = useClerk();
 	const router = useRouter();
 	const project = useNavigationStore((state) => state.currentProject);
+
+	const handleLightModeClick = () => {
+		const html = document.querySelector("html");
+		if (html) {
+			html.classList.toggle("invert");
+		}
+	};
 
 	return (
 		<DropdownMenu>
@@ -96,6 +104,13 @@ const UserMenu = ({ children }: Props) => {
 						</DropdownMenuShortcut>
 					</DropdownMenuItem>
 				</Link>
+				<DropdownMenuSeparator />
+				<DropdownMenuItem onClick={handleLightModeClick}>
+					Light Mode (Beta)
+					<DropdownMenuShortcut>
+						<LightbulbIcon />
+					</DropdownMenuShortcut>
+				</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
 					onClick={() => signOut(() => router.push("/sign-in"))}

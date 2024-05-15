@@ -25,6 +25,7 @@
 		--ring: 0 0% 83.1%;
 
 		--radius: 0.5rem;
+		--background-dialog: #adadad;
 	}
 
 	.dark {
@@ -55,7 +56,9 @@
 		--border: 214.3 31.8% 91.4%;
 		--input: 214.3 31.8% 91.4%;
 		--ring: 222.2 84% 4.9%;
+		--background-dialog: #181818;
 	}
+
 }
 
 

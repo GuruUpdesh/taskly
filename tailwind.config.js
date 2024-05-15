@@ -26,7 +26,7 @@ module.exports = {
 				ring: "hsl(var(--ring))",
 				background: {
 					DEFAULT: "hsl(var(--background))",
-					dialog: "#181818",
+					dialog: "(var(--background-dialog))",
 				},
 				foreground: "hsl(var(--foreground))",
 				primary: {
