@@ -28,7 +28,10 @@ export async function TaskWrapper({
 		queryKey: ["task", taskIdInt],
 		queryFn: () => getTask(taskIdInt),
 	});
-	const pullRequests = await getPRStatusFromGithubRepo(taskIdInt);
+	await queryClient.prefetchQuery({
+		queryKey: ["task-pr", taskIdInt],
+		queryFn: () => getPRStatusFromGithubRepo(taskIdInt),
+	});
 
 	const layout = cookies().get("react-resizable-panels:task-layout");
 	let defaultLayout;
@@ -43,7 +46,6 @@ export async function TaskWrapper({
 				projectId={projectId}
 				context={context}
 				defaultLayout={defaultLayout}
-				pullRequests={pullRequests}
 			/>
 		</HydrationBoundary>
 	);

@@ -2,7 +2,11 @@
 
 import React, { useEffect } from "react";
 
-import { GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
+import {
+	ArrowLeftIcon,
+	GitHubLogoIcon,
+	TrashIcon,
+} from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, ClipboardCopy, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
@@ -11,14 +15,13 @@ import { getPanelElement } from "react-resizable-panels";
 import { toast } from "sonner";
 
 import { createComment } from "~/actions/application/comment-actions";
-import { type getPRStatusFromGithubRepo } from "~/actions/application/github-actions";
+import { getPRStatusFromGithubRepo } from "~/actions/application/github-actions";
 import {
 	deleteTask,
 	getTask,
 	updateTask,
 } from "~/actions/application/task-actions";
 import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
-import BackButtonRelative from "~/app/components/layout/navbar/back-button-relative";
 import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
 import Message from "~/app/components/Message";
 import SimpleTooltip from "~/app/components/SimpleTooltip";
@@ -54,7 +57,6 @@ type Props = {
 	projectId: string;
 	context: "page" | "inbox";
 	defaultLayout?: number[];
-	pullRequests?: Awaited<ReturnType<typeof getPRStatusFromGithubRepo>>;
 };
 
 const TaskPage = ({
@@ -62,7 +64,6 @@ const TaskPage = ({
 	projectId,
 	context,
 	defaultLayout = [75, 25],
-	pullRequests,
 }: Props) => {
 	const queryClient = useQueryClient();
 	const router = useRouter();
@@ -101,6 +102,13 @@ const TaskPage = ({
 		onMutate: () => {
 			router.back();
 		},
+	});
+
+	const pullRequests = useQuery({
+		queryKey: ["task-pr", taskId],
+		queryFn: () => getPRStatusFromGithubRepo(taskId),
+		staleTime: 6 * 1000,
+		refetchInterval: getRefetchIntervals().task * 2,
 	});
 
 	function handleDelete() {
@@ -172,7 +180,18 @@ const TaskPage = ({
 								{context === "page" && (
 									<>
 										<ToggleSidebarButton />
-										<BackButtonRelative />
+										<Link
+											href={`/project/${projectId}/tasks`}
+										>
+											<Button
+												size="sm"
+												variant="outline"
+												className="flex items-center gap-2 bg-transparent"
+											>
+												<ArrowLeftIcon />
+												Tasks
+											</Button>
+										</Link>
 									</>
 								)}
 								<BreadCrumbs />
@@ -197,7 +216,7 @@ const TaskPage = ({
 						<PrimaryTaskForm
 							task={result.data.data}
 							editTaskMutation={editTaskMutation}
-							pullRequests={pullRequests}
+							pullRequests={pullRequests.data}
 						/>
 					</div>
 				</ResizablePanel>

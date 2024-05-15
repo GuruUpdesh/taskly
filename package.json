@@ -8,6 +8,7 @@
 		"db:migrations": "npx drizzle-kit generate:pg",
 		"db:studio": "dotenv drizzle-kit studio",
 		"dev": "next dev",
+		"dev:turbo": "next dev --turbo",
 		"start": "next start",
 		"lint": "next lint",
 		"style:all": "run-p style:tsc style:lint",
