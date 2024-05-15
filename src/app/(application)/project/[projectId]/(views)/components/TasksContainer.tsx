@@ -348,7 +348,7 @@ export default function TasksContainer({ projectId }: Props) {
 								className={cn("w-full", {
 									"flex items-center gap-2 px-4 py-2 pb-0":
 										viewMode === "backlog",
-									"sticky top-0 z-50 flex items-center gap-2 px-1 py-2 pt-3 backdrop-blur-lg":
+									"sticky top-0 z-10 flex items-center gap-2 px-1 py-2 pt-3 backdrop-blur-lg":
 										viewMode === "board",
 								})}
 							>

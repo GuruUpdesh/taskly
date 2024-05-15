@@ -91,6 +91,8 @@ export async function aiGenerateTask(description: string, projectId: number) {
 	const context = await getMostRecentTasks(5);
 	const contextJSON = JSON.stringify(context);
 
+	console.log("context length", context.length);
+
 	const assignees = await getAssigneesForProject(projectId);
 	if (assignees.error !== null) {
 		console.error(assignees.error);
@@ -119,7 +121,9 @@ export async function aiGenerateTask(description: string, projectId: number) {
 		3. The description can and should use basic markdown.
 			This includes: **bold**, #h1, ##h2, ###h3, *italic*, code (slanted quotes), <u>underlined</u>, [link](https://... "title), divider: ***
 	`;
+	
 
+	console.time("aiGenerateTask");
 	const gptResponse = await openai.chat.completions.create({
 		messages: [
 			{
@@ -129,6 +133,7 @@ export async function aiGenerateTask(description: string, projectId: number) {
 		],
 		model: "gpt-4o",
 	});
+	console.timeEnd("aiGenerateTask");
 
 	if (!gptResponse.choices[0]?.message.content) {
 		return "";
