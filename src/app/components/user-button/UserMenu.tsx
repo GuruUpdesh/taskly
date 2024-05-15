@@ -11,6 +11,7 @@ import {
 	PlusIcon,
 	ReaderIcon,
 } from "@radix-ui/react-icons";
+import { LightbulbIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -33,6 +34,13 @@ const UserMenu = ({ children }: Props) => {
 	const { signOut } = useClerk();
 	const router = useRouter();
 	const project = useNavigationStore((state) => state.currentProject);
+
+	const handleLightModeClick = () => {
+		const html = document.querySelector("html");
+		if (html) {
+			html.classList.toggle("invert");
+		}
+	};
 
 	return (
 		<DropdownMenu>
@@ -96,6 +104,13 @@ const UserMenu = ({ children }: Props) => {
 						</DropdownMenuShortcut>
 					</DropdownMenuItem>
 				</Link>
+				<DropdownMenuSeparator />
+				<DropdownMenuItem onClick={handleLightModeClick}>
+					Light Mode (Beta)
+					<DropdownMenuShortcut>
+						<LightbulbIcon />
+					</DropdownMenuShortcut>
+				</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
 					onClick={() => signOut(() => router.push("/sign-in"))}
