@@ -83,15 +83,23 @@ export async function aiAction(
 	return results.data;
 }
 
+const truncateDescription = (description: string, maxLength: number) => {
+    if (description.length > maxLength) {
+        return description.substring(0, maxLength) + '...';
+    }
+    return description;
+};
+
 export async function aiGenerateTask(description: string, projectId: number) {
 	if (await isAiLimitReached()) {
 		return;
 	}
 
 	const context = await getMostRecentTasks(5);
-	const contextJSON = JSON.stringify(context);
-
-	console.log("context length", context.length);
+	const contextJSON = JSON.stringify(context.map(task => ({
+		...task,
+		description: truncateDescription(task.description, 100),
+	})));
 
 	const assignees = await getAssigneesForProject(projectId);
 	if (assignees.error !== null) {
@@ -121,9 +129,9 @@ export async function aiGenerateTask(description: string, projectId: number) {
 		3. The description can and should use basic markdown.
 			This includes: **bold**, #h1, ##h2, ###h3, *italic*, code (slanted quotes), <u>underlined</u>, [link](https://... "title), divider: ***
 	`;
-	
 
-	console.time("aiGenerateTask");
+	console.log(prompt);
+
 	const gptResponse = await openai.chat.completions.create({
 		messages: [
 			{
@@ -133,7 +141,6 @@ export async function aiGenerateTask(description: string, projectId: number) {
 		],
 		model: "gpt-4o",
 	});
-	console.timeEnd("aiGenerateTask");
 
 	if (!gptResponse.choices[0]?.message.content) {
 		return "";
