@@ -35,7 +35,9 @@ const UserMenu = ({ children }: Props) => {
 	const router = useRouter();
 	const project = useRealtimeStore((state) => state.project);
 
+	const [isLightMode, setIsLightMode] = React.useState(false);
 	const handleLightModeClick = () => {
+		setIsLightMode(!isLightMode);
 		const html = document.querySelector("html");
 		if (html) {
 			html.classList.toggle("invert");
@@ -59,6 +61,13 @@ const UserMenu = ({ children }: Props) => {
 							</DropdownMenuShortcut>
 						</DropdownMenuItem>
 					</Link>
+					<DropdownMenuItem onClick={handleLightModeClick}>
+						{isLightMode ? "Dark" : "Light"} Mode{" "}
+						{isLightMode ? "" : "(beta)"}
+						<DropdownMenuShortcut>
+							<LightbulbIcon className="h-4 w-4" />
+						</DropdownMenuShortcut>
+					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
@@ -104,13 +113,6 @@ const UserMenu = ({ children }: Props) => {
 						</DropdownMenuShortcut>
 					</DropdownMenuItem>
 				</Link>
-				<DropdownMenuSeparator />
-				<DropdownMenuItem onClick={handleLightModeClick}>
-					Light Mode (Beta)
-					<DropdownMenuShortcut>
-						<LightbulbIcon />
-					</DropdownMenuShortcut>
-				</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
 					onClick={() => signOut(() => router.push("/sign-in"))}

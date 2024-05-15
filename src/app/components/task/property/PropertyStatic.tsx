@@ -1,5 +1,6 @@
 import React from "react";
 
+import markdownToTxt from "markdown-to-txt";
 import type { UseFormReturn } from "react-hook-form";
 
 import { type TaskFormType } from "~/app/components/CreateTask";
@@ -39,7 +40,9 @@ const PropertyStatic = ({
 					className,
 				)}
 			>
-				{String(form.watch(property))}
+				{property === "description"
+					? markdownToTxt(String(form.watch(property)))
+					: String(form.watch(property))}
 			</p>
 		</>
 	);
