@@ -14,7 +14,12 @@ export function renderFilterValues(
 	const pluralProperty = pluralize(config.displayName);
 
 	return (
-		<div className="mx-2 flex items-center gap-2 mix-blend-screen">
+		<div
+			className={cn(
+				"flex items-center gap-2 mix-blend-screen",
+				values.length > 1 && "mx-2",
+			)}
+		>
 			{values.map((value) => {
 				const option = options.find((option) => option.key === value);
 				if (!option) return null;
@@ -28,6 +33,7 @@ export function renderFilterValues(
 								context:
 									values.length === 1 ? "menu" : "default",
 							}),
+							"flex items-center",
 							values.length === 1
 								? "flex !bg-transparent "
 								: "relative z-10 -m-2 flex gap-1 overflow-hidden rounded-full p-1 shadow-sm ring-2 ring-black after:absolute after:-left-[1px] after:-top-[1px] after:-z-[1] after:h-full after:w-full after:border after:border-black after:bg-black",

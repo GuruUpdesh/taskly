@@ -30,7 +30,6 @@ type Props = {
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 	projectId: string;
-	aiLimitCount: number;
 	variant?: "backlog" | "board";
 };
 
@@ -42,7 +41,6 @@ const TaskList = ({
 	addTaskMutation,
 	deleteTaskMutation,
 	projectId,
-	aiLimitCount,
 	variant = "backlog",
 }: Props) => {
 	const [groupByBacklog, groupByBoard] = useAppStore(
@@ -183,7 +181,6 @@ const TaskList = ({
 					{variant === "board" && (
 						<CreateTask
 							projectId={projectId}
-							aiLimitCount={aiLimitCount}
 							overrideDefaultValues={
 								groupBy
 									? {

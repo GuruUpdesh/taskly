@@ -1,5 +1,8 @@
+"use server";
+
 import React from "react";
 
+import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 import { getAiLimitCount } from "~/actions/ai/ai-limit-actions";
@@ -8,7 +11,6 @@ import {
 	getProject,
 } from "~/actions/application/project-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
-import { authenticate } from "~/actions/security/authenticate";
 import ProjectDangerZone from "~/app/(application)/settings/components/ProjectDangerZone";
 import ProjectGithub from "~/app/(application)/settings/components/ProjectGithub";
 import ProjectInfo from "~/app/(application)/settings/components/ProjectInfo";
@@ -28,47 +30,51 @@ type Params = {
 };
 
 async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
-	const userId = authenticate();
+	const user = await currentUser();
 	const aiLimitCount = await getAiLimitCount();
-
-	const projectResults = await getProject(Number(projectId));
-	if (!projectResults?.success || !projectResults.project) {
-		if (projectResults?.message) {
-			redirect(constructToastURL(projectResults.message, "error"));
-		}
-		redirect(constructToastURL("Issue loading project", "error"));
+	if (!user) {
+		redirect(
+			constructToastURL(
+				"You need to be logged in to view settings",
+				"error",
+			),
+		);
 	}
 
-	const project = projectResults.project;
+	const projectIdInt = parseInt(projectId, 10);
+	const result = await getProject(projectIdInt, user.id);
+	if (result.error !== null) {
+		redirect(constructToastURL(result.error, "error"));
+	}
+	const project = result.data;
+
 	const sprints = await getSprintsForProject(Number(projectId));
 	const users = await getAllUsersInProject(Number(projectId));
 
 	const componentMap = {
-		"project-info": <ProjectInfo project={project} />,
-		appearance: (
+		General: <ProjectInfo project={project} />,
+		Appearance: (
 			<ProjectTheme project={project} aiLimitCount={aiLimitCount} />
 		),
-		invite: <ProjectInvite project={project} />,
-		members: (
-			<UsersTable
-				users={users ?? []}
-				projectId={project.id}
-				userId={userId}
-			/>
-		),
-		sprints: <ProjectSprints sprints={sprints ?? []} project={project} />,
-		github: <ProjectGithub project={project} />,
-		"danger-zone": <ProjectDangerZone project={project} />,
+		Invite: <ProjectInvite project={project} />,
+		Sprints: <ProjectSprints sprints={sprints ?? []} project={project} />,
+		GitHub: <ProjectGithub project={project} />,
+		"Danger Zone": <ProjectDangerZone project={project} />,
 	} as const;
 
 	return (
-		<div
-			className="flex flex-col gap-8 p-6"
-			style={{
-				scrollBehavior: "smooth",
-			}}
-		>
+		<>
 			{generalSettings.map((setting, index) => {
+				if (setting.title === "Members") {
+					return (
+						<UsersTable
+							key={index}
+							users={users ?? []}
+							projectId={project.id}
+							userId={user.id}
+						/>
+					);
+				}
 				return (
 					<Permission
 						key={index}
@@ -79,20 +85,19 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 						projectId={project.id}
 					>
 						<SettingsSection
-							anchor={setting.anchor}
 							title={setting.title}
 							icon={setting.icon}
 						>
 							{
 								componentMap[
-									setting.anchor as keyof typeof componentMap
+									setting.title as keyof typeof componentMap
 								]
 							}
 						</SettingsSection>
 					</Permission>
 				);
 			})}
-		</div>
+		</>
 	);
 }
 

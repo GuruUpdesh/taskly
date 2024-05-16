@@ -5,14 +5,14 @@ import React, { useMemo } from "react";
 import { Mail } from "lucide-react";
 
 import SidebarButton from "~/app/components/layout/sidebar/sidebar-button";
-import { useAppStore } from "~/store/app";
+import { useRealtimeStore } from "~/store/realtime";
 
 type Props = {
 	projectId: string;
 };
 
 export default function InboxSidebarButton({ projectId }: Props) {
-	const notifications = useAppStore((state) => state.notifications);
+	const notifications = useRealtimeStore((state) => state.notifications);
 	const notificationCount = useMemo(() => {
 		return notifications.filter((n) => n.readAt === null).length;
 	}, [notifications]);

@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { Button } from "~/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "~/components/ui/form";
-import { useAppStore } from "~/store/app";
+import { useRealtimeStore } from "~/store/realtime";
 
 import TextAreaWithMentions from "./TextAreaWithMentions";
 
@@ -22,7 +22,7 @@ const formSchema = z.object({
 });
 
 const CommentForm = ({ taskId, createComment }: Props) => {
-	const assignees = useAppStore((state) => state.assignees);
+	const assignees = useRealtimeStore((state) => state.assignees);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -45,7 +45,7 @@ const CommentForm = ({ taskId, createComment }: Props) => {
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="sticky bottom-0 w-full"
 			>
-				<div className="pointer-events-none absolute -bottom-1 left-0 -z-10 h-[135%] w-full bg-gradient-to-b from-transparent to-[#1b1b1b] to-25%" />
+				<div className="pointer-events-none absolute -bottom-1 left-0 -z-10 h-[135%] w-full bg-gradient-to-b from-transparent to-background-dialog to-25%" />
 				<FormField
 					control={form.control}
 					name="comment"

@@ -5,6 +5,7 @@ import { addMinutes, startOfDay } from "date-fns";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import OpenAI from "openai";
+import sharp from "sharp";
 
 import { createSprintForProject } from "~/actions/application/sprint-actions";
 import { authenticate } from "~/actions/security/authenticate";
@@ -170,7 +171,7 @@ export async function generateProjectImage(
 	// in light blue metallic iridescent material
 	const response = await client.images.generate({
 		model: "dall-e-3",
-		prompt: `an icon of a ${object} , 3D render isometric perspective on dark background`,
+		prompt: `an icon of a ${object}, 3D render isometric perspective on dark background`,
 		n: 1,
 		size: "1024x1024",
 	});
@@ -183,10 +184,12 @@ export async function generateProjectImage(
 	console.log("🤖 - Finished generating image!");
 	const imageResponse = await (await fetch(image_url)).arrayBuffer();
 	const imageData = Buffer.from(imageResponse);
-	const filename = `project_image_generated_${Date.now()}.png`;
-	const blob = await put(filename, imageData, {
+	const resizedImage = await sharp(imageData).resize(500).webp().toBuffer();
+
+	const filename = `project_image_generated_${Date.now()}.webp`;
+	const blob = await put(filename, resizedImage, {
 		access: "public",
-		contentType: "image/png",
+		contentType: "image/webp",
 	});
 
 	console.log("🤖 - Finished uploading image!", blob);
@@ -223,7 +226,7 @@ async function imageGenerationHelper(
             `,
 			},
 		],
-		model: "gpt-3.5-turbo",
+		model: "gpt-4o",
 	});
 
 	if (!gptResponse.choices[0]?.message.content) {

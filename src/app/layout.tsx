@@ -18,6 +18,8 @@ const GlobalToastHandler = dynamic(
 );
 import { cn } from "~/lib/utils";
 
+export const maxDuration = 60;
+
 export const metadata = {
 	metadataBase: new URL("https://tasklypm.com"),
 	title: {
@@ -61,9 +63,9 @@ export default function RootLayout({
 							</main>
 						</ReactQueryProvider>
 						<Toaster richColors />
+						<SpeedInsights />
 					</body>
 					<Analytics />
-					<SpeedInsights />
 				</html>
 			</KBarProvider>
 		</ClerkProvider>

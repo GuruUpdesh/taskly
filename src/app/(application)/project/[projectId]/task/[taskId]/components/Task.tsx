@@ -2,7 +2,11 @@
 
 import React, { useEffect } from "react";
 
-import { GitHubLogoIcon, TrashIcon } from "@radix-ui/react-icons";
+import {
+	ArrowLeftIcon,
+	GitHubLogoIcon,
+	TrashIcon,
+} from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, ClipboardCopy, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
@@ -11,14 +15,13 @@ import { getPanelElement } from "react-resizable-panels";
 import { toast } from "sonner";
 
 import { createComment } from "~/actions/application/comment-actions";
-import { type getPRStatusFromGithubRepo } from "~/actions/application/github-actions";
+import { getPRStatusFromGithubRepo } from "~/actions/application/github-actions";
 import {
 	deleteTask,
 	getTask,
 	updateTask,
 } from "~/actions/application/task-actions";
 import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
-import BackButtonRelative from "~/app/components/layout/navbar/back-button-relative";
 import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
 import Message from "~/app/components/Message";
 import SimpleTooltip from "~/app/components/SimpleTooltip";
@@ -41,19 +44,19 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { getRefetchIntervals } from "~/config/refetchIntervals";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
-import { useAppStore } from "~/store/app";
+import { useLayoutStore } from "~/store/layout";
 
 import Comments from "./comments/Comments";
+import LoadingPage from "./LoadingPage";
 import PrimaryTaskForm from "./PrimaryTaskForm";
 import TaskState from "./TaskState";
 import { type UpdateTask } from "../../../(views)/components/TasksContainer";
 
 type Props = {
-	taskId: string;
+	taskId: number;
 	projectId: string;
 	context: "page" | "inbox";
 	defaultLayout?: number[];
-	pullRequests?: Awaited<ReturnType<typeof getPRStatusFromGithubRepo>>;
 };
 
 const TaskPage = ({
@@ -61,12 +64,11 @@ const TaskPage = ({
 	projectId,
 	context,
 	defaultLayout = [75, 25],
-	pullRequests,
 }: Props) => {
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
-	const setRightSidebarWidth = useAppStore(
+	const setRightSidebarWidth = useLayoutStore(
 		(state) => state.setRightSidebarWidth,
 	);
 
@@ -83,7 +85,7 @@ const TaskPage = ({
 
 	const result = useQuery({
 		queryKey: ["task", taskId],
-		queryFn: () => getTask(parseInt(taskId)),
+		queryFn: () => getTask(taskId),
 		staleTime: 6 * 1000,
 		refetchInterval: getRefetchIntervals().task,
 	});
@@ -102,9 +104,16 @@ const TaskPage = ({
 		},
 	});
 
+	const pullRequests = useQuery({
+		queryKey: ["task-pr", taskId],
+		queryFn: () => getPRStatusFromGithubRepo(taskId),
+		staleTime: 6 * 1000,
+		refetchInterval: getRefetchIntervals().task * 2,
+	});
+
 	function handleDelete() {
 		router.push(`/project/${projectId}/tasks`);
-		deleteTaskMutation.mutate(parseInt(taskId));
+		deleteTaskMutation.mutate(taskId);
 		toast.error("Task deleted", {
 			icon: <TrashIcon className="h-4 w-4" />,
 		});
@@ -124,21 +133,20 @@ const TaskPage = ({
 	};
 
 	if (!result.data) {
-		return <div>Loading...</div>;
+		return <LoadingPage defaultLayout={defaultLayout} />;
 	}
 
-	if (!result.data.success || !result.data.task) {
-		let message = "Task not found";
-		if (result.data.message) {
-			message = result.data.message;
-		}
-
+	if (result.data.error !== null) {
 		router.push(
-			constructToastURL(message, "error", `/project/${projectId}/tasks`),
+			constructToastURL(
+				result.data.error,
+				"error",
+				`/project/${projectId}/tasks`,
+			),
 		);
 		return (
 			<div className="flex w-full items-center justify-center">
-				<Message type="error">{message}</Message>
+				<Message type="error">{result.data.error}</Message>
 			</div>
 		);
 	}
@@ -154,7 +162,7 @@ const TaskPage = ({
 
 	return (
 		<>
-			<TaskState task={result.data.task} />
+			<TaskState task={result.data.data} />
 			<ResizablePanelGroup
 				direction="horizontal"
 				onLayout={onLayout}
@@ -172,7 +180,18 @@ const TaskPage = ({
 								{context === "page" && (
 									<>
 										<ToggleSidebarButton />
-										<BackButtonRelative />
+										<Link
+											href={`/project/${projectId}/tasks`}
+										>
+											<Button
+												size="sm"
+												variant="outline"
+												className="flex items-center gap-2 bg-transparent"
+											>
+												<ArrowLeftIcon />
+												Tasks
+											</Button>
+										</Link>
 									</>
 								)}
 								<BreadCrumbs />
@@ -195,9 +214,9 @@ const TaskPage = ({
 							</div>
 						</header>
 						<PrimaryTaskForm
-							task={result.data.task}
+							task={result.data.data}
 							editTaskMutation={editTaskMutation}
-							pullRequests={pullRequests}
+							pullRequests={pullRequests.data}
 						/>
 					</div>
 				</ResizablePanel>
@@ -228,18 +247,18 @@ const TaskPage = ({
 										className="border-foreground/10 bg-transparent"
 										onClick={async () => {
 											if (
-												!result?.data?.task?.branchName
+												!result?.data?.data?.branchName
 											) {
 												return;
 											}
 											await navigator.clipboard.writeText(
-												result.data.task.branchName,
+												result.data.data.branchName,
 											);
 											toast.info(
 												`Copied branch name to clipboard`,
 												{
 													description:
-														result.data.task
+														result.data.data
 															.branchName,
 													icon: (
 														<GitHubLogoIcon className="h-4 w-4" />
@@ -296,7 +315,7 @@ const TaskPage = ({
 								Attributes
 							</h3>
 							<Task
-								task={result.data.task}
+								task={result.data.data}
 								addTaskMutation={editTaskMutation}
 								deleteTaskMutation={deleteTaskMutation}
 								variant="list"
@@ -309,8 +328,8 @@ const TaskPage = ({
 						</h3>
 						<section className="comments-container mb-3 mt-2 flex max-w-full flex-grow flex-col gap-4 overflow-scroll px-4 pb-1">
 							<Comments
-								taskComments={result.data.task.comments}
-								taskId={result.data.task.id}
+								taskComments={result.data.data.comments}
+								taskId={result.data.data.id}
 								createComment={createComment}
 							/>
 						</section>

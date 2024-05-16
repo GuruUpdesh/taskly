@@ -11,6 +11,7 @@ import { type User } from "~/server/db/schema";
 import { getTaskAiSchema } from "~/utils/ai-context";
 
 import { isAiLimitReached } from "./ai-limit-actions";
+import { getMostRecentTasks } from "../application/task-views-actions";
 
 const openai = new OpenAI({
 	apiKey: env.OPENAI_API_KEY,
@@ -56,7 +57,7 @@ export async function aiAction(
             `,
 			},
 		],
-		model: "gpt-3.5-turbo",
+		model: "gpt-4o",
 	});
 	if (!gptResponse.choices[0]?.message.content) {
 		return;
@@ -82,15 +83,34 @@ export async function aiAction(
 	return results.data;
 }
 
+const truncateDescription = (description: string, maxLength: number) => {
+	if (description.length > maxLength) {
+		return description.substring(0, maxLength) + "...";
+	}
+	return description;
+};
+
 export async function aiGenerateTask(description: string, projectId: number) {
 	if (await isAiLimitReached()) {
 		return;
 	}
 
+	const context = await getMostRecentTasks(5);
+	const contextJSON = JSON.stringify(
+		context.map((task) => ({
+			...task,
+			description: truncateDescription(task.description, 100),
+		})),
+	);
+
 	const assignees = await getAssigneesForProject(projectId);
+	if (assignees.error !== null) {
+		console.error(assignees.error);
+		return;
+	}
 	const sprints = await getSprintsForProject(projectId);
 
-	const taskSchema = getTaskAiSchema(assignees, sprints);
+	const taskSchema = getTaskAiSchema(assignees.data, sprints);
 
 	const prompt = `
 	RESPOND IN JSON FORMAT!
@@ -102,10 +122,17 @@ export async function aiGenerateTask(description: string, projectId: number) {
 
 	${taskSchema}
 
+	The most recent tasks are:
+	${contextJSON}
+
 	Note:
 		1. If the status is backlog, there cannot be a sprint.
 		2. If a sprint is selected, the status cannot be backlog.
+		3. The description can and should use basic markdown!
+			This includes: **bold**, #h1, ##h2, ###h3, *italic*, code (slanted quotes), <u>underlined</u>, [link](https://... "title), divider: ***
 	`;
+
+	console.log(prompt);
 
 	const gptResponse = await openai.chat.completions.create({
 		messages: [
@@ -114,7 +141,7 @@ export async function aiGenerateTask(description: string, projectId: number) {
 				content: prompt,
 			},
 		],
-		model: "gpt-3.5-turbo",
+		model: "gpt-4o",
 	});
 
 	if (!gptResponse.choices[0]?.message.content) {

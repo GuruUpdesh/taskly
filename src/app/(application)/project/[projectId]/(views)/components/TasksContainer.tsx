@@ -30,6 +30,7 @@ import {
 import { cn } from "~/lib/utils";
 import type { Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
+import { useRealtimeStore } from "~/store/realtime";
 import { updateOrder } from "~/utils/order";
 
 import LoadingTaskList from "./LoadingTaskList";
@@ -43,7 +44,6 @@ export type UpdateTask = {
 
 type Props = {
 	projectId: string;
-	aiLimitCount: number;
 };
 
 type TaskTypeOverride = Omit<TaskType, "sprintId"> & {
@@ -54,26 +54,21 @@ async function updateTaskWrapper({ id, newTask }: UpdateTask) {
 	await updateTask(id, newTask);
 }
 
-export default function TasksContainer({ projectId, aiLimitCount }: Props) {
+export default function TasksContainer({ projectId }: Props) {
 	/**
 	 * Get the assignees and sprints
 	 */
-	const [
-		assignees,
-		sprints,
-		filters,
-		groupByBacklog,
-		groupByBoard,
-		viewMode,
-	] = useAppStore(
+	const [filters, groupByBacklog, groupByBoard, viewMode] = useAppStore(
 		useShallow((state) => [
-			state.assignees,
-			state.sprints,
 			state.filters,
 			state.groupByBacklog,
 			state.groupByBoard,
 			state.viewMode,
 		]),
+	);
+
+	const [assignees, sprints] = useRealtimeStore(
+		useShallow((state) => [state.assignees, state.sprints]),
 	);
 
 	const groupBy = useMemo(() => {
@@ -311,6 +306,7 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 				description={
 					<p className="py-2">Please create a task to get started.</p>
 				}
+				className="min-w-[600px]"
 			>
 				This project doesn&apos;t have any tasks yet.
 			</Message>
@@ -352,7 +348,7 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 								className={cn("w-full", {
 									"flex items-center gap-2 px-4 py-2 pb-0":
 										viewMode === "backlog",
-									"sticky top-0 z-50 flex items-center gap-2 px-1 py-2 pt-3 backdrop-blur-lg":
+									"sticky top-0 z-10 flex items-center gap-2 px-1 py-2 pt-3 backdrop-blur-lg":
 										viewMode === "board",
 								})}
 							>
@@ -362,7 +358,6 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 								<TotalTaskListPoints listId={option.key} />
 								<CreateTask
 									projectId={projectId}
-									aiLimitCount={aiLimitCount}
 									overrideDefaultValues={{
 										[groupBy]: option.key,
 									}}
@@ -386,7 +381,6 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 									deleteTaskMutation={deleteTaskMutation}
 									projectId={projectId}
 									variant={viewMode}
-									aiLimitCount={aiLimitCount}
 								/>
 							</div>
 						</div>
@@ -401,7 +395,6 @@ export default function TasksContainer({ projectId, aiLimitCount }: Props) {
 						deleteTaskMutation={deleteTaskMutation}
 						projectId={projectId}
 						variant={viewMode}
-						aiLimitCount={aiLimitCount}
 					/>
 				)}
 			</div>

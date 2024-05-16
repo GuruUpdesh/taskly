@@ -27,12 +27,12 @@ const GithubAppConnect = ({ projectId }: Props) => {
 	return (
 		<Button
 			onClick={openPopup}
-			variant="outline"
+			variant="secondary"
 			size="sm"
 			disabled={loading}
 		>
 			Connect Repository
-			{loading && <Loader2 className="h-4 w-4 animate-spin" />}
+			{loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
 		</Button>
 	);
 };

@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
-import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
 
@@ -14,7 +13,7 @@ import FilterChip from "./FilterChip";
 import FilterMenu from "./FilterMenu";
 
 const filterContainer =
-	"rounded-full border bg-accent/25 p-1 transition-all hover:bg-accent";
+	"rounded-full border bg-accent/25 p-1 transition-all hover:bg-accent h-[30px]";
 
 const Filters = () => {
 	const [isFiltersOpen, filters] = useAppStore(
@@ -44,15 +43,17 @@ const Filters = () => {
 				<FilterMenu>
 					{(menuOpen) => (
 						<div>
-							<SimpleTooltip label="Add Filters">
-								<button
-									className={cn(filterContainer, {
+							<button
+								className={cn(
+									filterContainer,
+									"flex aspect-square items-center justify-center",
+									{
 										"bg-accent text-white": menuOpen,
-									})}
-								>
-									<Plus className="h-4 w-4" />
-								</button>
-							</SimpleTooltip>
+									},
+								)}
+							>
+								<Plus className="h-4 w-4" />
+							</button>
 						</div>
 					)}
 				</FilterMenu>

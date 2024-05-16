@@ -3,8 +3,8 @@
 import React, { useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { endOfYesterday, isEqual } from "date-fns";
-import { ChevronRight, Loader2Icon } from "lucide-react";
+import { isEqual } from "date-fns";
+import { Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -25,7 +25,7 @@ export type ProjectSprintOptions = Pick<
 >;
 const ProjectSprintOptionsSchema = z.object({
 	sprintDuration: z.number().min(1).max(4),
-	sprintStart: z.date().min(endOfYesterday()),
+	sprintStart: z.date(),
 });
 
 const SprintOptionsForm = ({ project }: Props) => {
@@ -65,8 +65,21 @@ const SprintOptionsForm = ({ project }: Props) => {
 	return (
 		<form onSubmit={form.handleSubmit(onSubmit)}>
 			<SprintOptions form={form} />
-			<div className="mt-4 flex w-full items-center justify-between gap-8">
-				<div />
+			<div className="mt-4 flex w-full items-center justify-end gap-4">
+				<Button
+					size="sm"
+					variant="secondary"
+					type="button"
+					onClick={(e) => {
+						e.preventDefault();
+						form.reset();
+					}}
+					disabled={
+						!form.formState.isDirty || form.formState.isSubmitting
+					}
+				>
+					Cancel
+				</Button>
 				<Button
 					disabled={
 						!form.formState.isValid ||
@@ -79,13 +92,12 @@ const SprintOptionsForm = ({ project }: Props) => {
 						loading
 					}
 					type="submit"
+					size="sm"
 				>
 					{loading ? "Saving" : "Save"}
 					{loading ? (
 						<Loader2Icon className="ml-2 h-4 w-4 animate-spin" />
-					) : (
-						<ChevronRight className="ml-2 h-4 w-4" />
-					)}
+					) : null}
 				</Button>
 			</div>
 		</form>

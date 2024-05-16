@@ -1,12 +1,12 @@
-import React from "react";
+import React, { Suspense } from "react";
 
-import { auth } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { type Metadata } from "next";
 
-import { getTasksFromProject } from "~/actions/application/task-actions";
 import { getAllNotifications } from "~/actions/notification-actions";
 import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
+import Message from "~/app/components/Message";
 import RecentTasks from "~/app/components/RecentTasks";
 import {
 	Card,
@@ -14,9 +14,10 @@ import {
 	CardDescription,
 	CardHeader,
 } from "~/components/ui/card";
-import { type Notification, type Task } from "~/server/db/schema";
+import { Skeleton } from "~/components/ui/skeleton";
 
-import { DataCardFigure } from "./components/DataCard";
+import CurrentSprintGraph from "./components/CurrentSprintGraph";
+import Figures from "./components/Figures";
 import UserGreeting from "./components/UserGreeting";
 
 export const metadata: Metadata = {
@@ -30,29 +31,27 @@ type ProjectPageProps = {
 };
 
 async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
-	const tasks: Task[] = (await getTasksFromProject(Number(projectId))) ?? [];
+	const projectIdInt = parseInt(projectId, 10);
 
-	const user = auth();
+	const user = await currentUser();
 	if (!user) {
-		return;
+		return (
+			<Message type="error" className="min-w-[600px]">
+				You must be logged in to access the dashboard
+			</Message>
+		);
 	}
 
-	const notifications: Notification[] =
-		(await getAllNotifications(user.userId ?? "")) ?? [];
-
-	const backlogTaskCount: number = tasks.filter(
-		(task: Task) => task.status === "backlog",
-	).length;
-
-	const activeTaskCount: number = tasks.filter(
-		(task: Task) => task.status === "inprogress",
-	).length;
-
-	const completedTaskCount: number = tasks.filter(
-		(task: Task) => task.status === "done",
-	).length;
-
-	const totalTaskCount: number = tasks.length;
+	const notificationsResult = await getAllNotifications(user.id);
+	if (notificationsResult.error !== null) {
+		console.error(notificationsResult.error);
+		return (
+			<Message type="error" className="min-w-[600px]">
+				{notificationsResult.error}
+			</Message>
+		);
+	}
+	const notifications = notificationsResult.data;
 
 	return (
 		<div className="max-h-screen overflow-y-scroll pt-2">
@@ -71,7 +70,7 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 							<CardDescription>Recent Tasks</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<RecentTasks number={10} />
+							<RecentTasks number={8} />
 						</CardContent>
 					</Card>
 					<Card className="bg-foreground/5">
@@ -97,26 +96,14 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 					</Card>
 				</section>
 				<section className="grid grid-cols-4 gap-4">
-					<DataCardFigure
-						cardTitle={backlogTaskCount.toString()}
-						cardDescriptionUp="Backlog Tasks"
-						cardDescriptionDown=""
-					/>
-					<DataCardFigure
-						cardTitle={activeTaskCount.toString()}
-						cardDescriptionUp="Active Tasks"
-						cardDescriptionDown=""
-					/>
-					<DataCardFigure
-						cardTitle={completedTaskCount.toString()}
-						cardDescriptionUp="Completed Tasks"
-						cardDescriptionDown=""
-					/>
-					<DataCardFigure
-						cardTitle={totalTaskCount.toString()}
-						cardDescriptionUp="Total Tasks"
-						cardDescriptionDown=""
-					/>
+					<Figures projectId={projectIdInt} />
+					<Suspense
+						fallback={
+							<Skeleton className="col-span-4 h-[278px] w-full rounded-lg border" />
+						}
+					>
+						<CurrentSprintGraph projectId={projectIdInt} />
+					</Suspense>
 				</section>
 			</section>
 		</div>

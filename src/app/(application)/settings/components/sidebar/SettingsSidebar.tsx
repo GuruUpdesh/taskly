@@ -17,8 +17,6 @@ const SettingsSidebar = () => {
 					label="Account"
 					url={["/settings/account", "/settings/account/security"]}
 				/>
-			</div>
-			<div className="px-4">
 				<ProjectSettings />
 			</div>
 		</div>

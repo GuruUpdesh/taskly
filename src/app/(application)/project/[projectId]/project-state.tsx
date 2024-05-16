@@ -2,8 +2,14 @@
 
 import { useEffect } from "react";
 
+import {
+	DashboardIcon,
+	EnvelopeClosedIcon,
+	GearIcon,
+} from "@radix-ui/react-icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { BellIcon } from "lucide-react";
+import { useRegisterActions } from "kbar";
+import { BellIcon, ListTodo } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
@@ -20,27 +26,33 @@ import {
 } from "~/actions/notification-actions";
 import { getRefetchIntervals } from "~/config/refetchIntervals";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
-import { useAppStore } from "~/store/app";
-import { useNavigationStore } from "~/store/navigation";
+import { useRealtimeStore } from "~/store/realtime";
+import { useUserStore } from "~/store/user";
 
 type Props = {
-	projectId: string;
+	projectId: number;
 	userId: string;
+	aiUsageCount: number;
 };
 
-const ProjectState = ({ projectId, userId }: Props) => {
-	const updateProject = useNavigationStore((state) => state.updateProject);
-	const [updateAssignees, updateSprints, updateNotifications] = useAppStore(
-		useShallow((state) => [
-			state.updateAssignees,
-			state.updateSprints,
-			state.updateNotifications,
-		]),
+const ProjectState = ({ projectId, userId, aiUsageCount }: Props) => {
+	const [updateProject, updateAssignees, updateSprints, updateNotifications] =
+		useRealtimeStore(
+			useShallow((state) => [
+				state.updateProject,
+				state.updateAssignees,
+				state.updateSprints,
+				state.updateNotifications,
+			]),
+		);
+
+	const [setUserId, setAiUsageCount] = useUserStore(
+		useShallow((state) => [state.setUserId, state.setAiUsageCount]),
 	);
 
 	const projectResult = useQuery({
 		queryKey: ["project", projectId],
-		queryFn: () => getProject(Number(projectId)),
+		queryFn: () => getProject(projectId, userId),
 		staleTime: 2 * 1000,
 		refetchInterval: getRefetchIntervals().projects,
 	});
@@ -48,8 +60,8 @@ const ProjectState = ({ projectId, userId }: Props) => {
 	const assigneeSprintResult = useQuery({
 		queryKey: ["assignees/sprints", projectId],
 		queryFn: async () => {
-			const assignees = await getAssigneesForProject(parseInt(projectId));
-			const sprints = await getSprintsForProject(parseInt(projectId));
+			const assignees = await getAssigneesForProject(projectId);
+			const sprints = await getSprintsForProject(projectId);
 
 			return { assignees, sprints };
 		},
@@ -60,38 +72,42 @@ const ProjectState = ({ projectId, userId }: Props) => {
 	const queryClient = useQueryClient();
 
 	async function refetchNotifications() {
-		const data = await getAllNotifications(userId);
-		let newNotifications = data;
-		if (newNotifications) {
-			const previousNotifications = queryClient.getQueryData<
-				NotificationWithTask[]
-			>(["notifications", projectId]);
-
-			newNotifications = newNotifications.map((notification) => {
-				const isExistingNotification = previousNotifications?.find(
-					(prevNotif) => prevNotif.id === notification.id,
-				);
-				if (!isExistingNotification) {
-					toast(`New notification`, {
-						description: notification.message,
-						icon: <BellIcon className="h-4 w-4" />,
-						cancel: {
-							label: "Dismiss",
-							onClick: () => {
-								console.log("dismissed");
-							},
-						},
-						cancelButtonStyle: {
-							backgroundColor: "transparent",
-							color: "hsl(var(--foreground))",
-						},
-						duration: 5000,
-					});
-					return { ...notification, options: { isNew: true } };
-				}
-				return notification;
-			});
+		const result = await getAllNotifications(userId);
+		if (result.error !== null) {
+			console.error(result.error);
+			return;
 		}
+		let newNotifications = result.data;
+
+		const previousNotifications = queryClient.getQueryData<
+			NotificationWithTask[]
+		>(["notifications", projectId]);
+
+		newNotifications = newNotifications.map((notification) => {
+			const isExistingNotification = previousNotifications?.find(
+				(prevNotif) => prevNotif.id === notification.id,
+			);
+			if (!isExistingNotification) {
+				toast(`New notification`, {
+					description: notification.message,
+					icon: <BellIcon className="h-4 w-4" />,
+					cancel: {
+						label: "Dismiss",
+						onClick: () => {
+							console.log("dismissed");
+						},
+					},
+					cancelButtonStyle: {
+						backgroundColor: "transparent",
+						color: "hsl(var(--foreground))",
+					},
+					duration: 5000,
+				});
+				return { ...notification, options: { isNew: true } };
+			}
+			return notification;
+		});
+
 		return newNotifications;
 	}
 
@@ -106,24 +122,37 @@ const ProjectState = ({ projectId, userId }: Props) => {
 
 	useEffect(() => {
 		const result = projectResult.data;
-		if (!result?.success || !result.project) {
-			if (result?.message) {
-				router.push(constructToastURL(result.message, "error"));
+		if (!result || result.error !== null) {
+			if (result?.error) {
+				router.push(constructToastURL(result.error, "error"));
+				return;
 			}
-			router.push(constructToastURL("Error loading project", "error"));
+			router.push(
+				constructToastURL("Project results are undefined", "error"),
+			);
 			return;
 		}
-		const project = result?.project;
-		if (project) {
-			updateProject(project);
-			void updateProjectApplicationData(project);
-		}
+		const project = result.data;
+		updateProject(project);
+		void updateProjectApplicationData(project);
 	}, [projectResult.data]);
 
 	useEffect(() => {
-		if (assigneeSprintResult.data?.assignees) {
-			updateAssignees(assigneeSprintResult.data.assignees);
+		const result = assigneeSprintResult.data?.assignees;
+		if (!result || result.error !== null) {
+			if (result?.error) {
+				router.push(constructToastURL(result.error, "error"));
+				return;
+			}
+			router.push(
+				constructToastURL(
+					"Assignee and sprint results are undefined",
+					"error",
+				),
+			);
+			return;
 		}
+		updateAssignees(result.data);
 	}, [assigneeSprintResult.data?.assignees]);
 
 	useEffect(() => {
@@ -133,10 +162,57 @@ const ProjectState = ({ projectId, userId }: Props) => {
 	}, [assigneeSprintResult.data?.sprints]);
 
 	useEffect(() => {
-		if (notificationResults.data) {
-			updateNotifications(notificationResults.data);
+		const results = notificationResults.data;
+		if (results) {
+			updateNotifications(results);
 		}
 	}, [notificationResults.data]);
+
+	useEffect(() => {
+		setUserId(userId);
+	}, [userId]);
+
+	useEffect(() => {
+		setAiUsageCount(aiUsageCount);
+	}, [aiUsageCount]);
+
+	const actions = [
+		{
+			id: "dashboard",
+			name: "Dashboard",
+			icon: <DashboardIcon />,
+			shortcut: ["g", "d"],
+			perform: () => router.push(`/project/${projectId}`),
+			section: "Navigation",
+		},
+		{
+			id: "inbox",
+			name: "Inbox",
+			icon: <EnvelopeClosedIcon />,
+			shortcut: ["g", "i"],
+			perform: () => router.push(`/project/${projectId}/inbox`),
+			section: "Navigation",
+		},
+		{
+			id: "tasks",
+			name: "Tasks",
+			icon: <ListTodo className="h-4 w-4" />,
+			shortcut: ["g", "l"],
+			perform: () => router.push(`/project/${projectId}/tasks`),
+			section: "Navigation",
+		},
+		{
+			id: "settings",
+			name: "Settings",
+			icon: <GearIcon />,
+			shortcut: ["g", "s"],
+			perform: () =>
+				router.push(`/settings/project/${projectId}/general`),
+			section: "Navigation",
+		},
+	];
+
+	useRegisterActions(actions, [projectId]);
 
 	return null;
 };

@@ -21,12 +21,17 @@ export async function TaskWrapper({
 	projectId,
 	context = "page",
 }: Props) {
+	const taskIdInt = parseInt(taskId, 10);
+
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
-		queryKey: ["task", taskId],
-		queryFn: () => getTask(parseInt(taskId)),
+		queryKey: ["task", taskIdInt],
+		queryFn: () => getTask(taskIdInt),
 	});
-	const pullRequests = await getPRStatusFromGithubRepo(parseInt(taskId));
+	await queryClient.prefetchQuery({
+		queryKey: ["task-pr", taskIdInt],
+		queryFn: () => getPRStatusFromGithubRepo(taskIdInt),
+	});
 
 	const layout = cookies().get("react-resizable-panels:task-layout");
 	let defaultLayout;
@@ -37,11 +42,10 @@ export async function TaskWrapper({
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
 			<Task
-				taskId={taskId}
+				taskId={taskIdInt}
 				projectId={projectId}
 				context={context}
 				defaultLayout={defaultLayout}
-				pullRequests={pullRequests}
 			/>
 		</HydrationBoundary>
 	);

@@ -39,9 +39,14 @@ const SprintOptions = ({ form, hidden = false }: Props) => {
 	return (
 		<div className={cn("grid w-full gap-4", hidden && "hidden")}>
 			<div className="flex w-full items-center justify-between gap-8">
-				<Label className={"whitespace-nowrap font-bold"}>
-					Sprint Duration
-				</Label>
+				<div className="mr-8 space-y-0.5">
+					<Label className={"whitespace-nowrap font-bold"}>
+						Sprint Duration
+					</Label>
+					<p className="text-sm text-muted-foreground">
+						The duration of each sprint in the project
+					</p>
+				</div>
 				<Controller
 					control={control}
 					name="sprintDuration"
@@ -50,7 +55,7 @@ const SprintOptions = ({ form, hidden = false }: Props) => {
 							onValueChange={(val) => onChange(parseInt(val))}
 							value={value.toString()}
 						>
-							<SelectTrigger className="max-w-[400px]">
+							<SelectTrigger className="max-w-[200px] border-none bg-transparent hover:bg-accent">
 								<SelectValue placeholder="Select Sprint Duration" />
 								<ChevronDown className="ml-2 h-4 w-4" />
 							</SelectTrigger>
@@ -85,13 +90,20 @@ const SprintOptions = ({ form, hidden = false }: Props) => {
 				/>
 			</div>
 			<div className="flex w-full items-center justify-between gap-8">
-				<Label className="font-bold">Sprint Start</Label>
+				<div className="mr-8 space-y-0.5">
+					<Label className={"whitespace-nowrap font-bold"}>
+						Start Date
+					</Label>
+					<p className="text-sm text-muted-foreground">
+						The first day of the first sprint
+					</p>
+				</div>
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button
 							variant={"outline"}
 							className={cn(
-								"w-full max-w-[400px] justify-between text-left font-normal",
+								"w-full max-w-[200px] justify-between border-none bg-transparent text-left font-normal",
 								!watch("sprintStart") &&
 									"text-muted-foreground",
 							)}

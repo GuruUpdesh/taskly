@@ -1,9 +1,16 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef } from "react";
+import React, {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type MDXEditorMethods } from "@mdxeditor/editor";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { UseMutationResult } from "@tanstack/react-query";
 import _debounce from "lodash/debounce";
 import dynamic from "next/dynamic";
@@ -12,6 +19,8 @@ import { z } from "zod";
 
 import { type getPRStatusFromGithubRepo } from "~/actions/application/github-actions";
 import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)/components/TasksContainer";
+import SimpleTooltip from "~/app/components/SimpleTooltip";
+import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Skeleton } from "~/components/ui/skeleton";
 import type { NewTask, Task } from "~/server/db/schema";
@@ -75,7 +84,6 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 	}
 
 	async function handleChange() {
-		console.log("triggered");
 		const isValid = await form.trigger();
 		if (isValid) {
 			await form.handleSubmit(onSubmit)();
@@ -88,6 +96,15 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 	);
 
 	const editorRef = useRef<MDXEditorMethods>(null);
+
+	const [showAllHistory, setShowAllHistory] = useState(false);
+
+	const displayedHistory = useMemo(
+		() =>
+			showAllHistory ? task.taskHistory : task.taskHistory.slice(0, 10),
+
+		[task.taskHistory, showAllHistory],
+	);
 
 	return (
 		<form
@@ -125,7 +142,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 						})}
 					</div>
 					<div className="flex flex-col gap-4 px-3">
-						{task.taskHistory.map((history) => {
+						{displayedHistory.map((history) => {
 							return (
 								<TaskHistoryItem
 									key={history.id}
@@ -134,6 +151,31 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 							);
 						})}
 					</div>
+					{task.taskHistory.length > 10 && (
+						<div className="relative flex w-full justify-center bg-[#101010]">
+							<span className="absolute top-[50%] z-10 h-[1px] w-full bg-gradient-to-r from-transparent via-border  to-transparent" />
+							<SimpleTooltip
+								label={
+									showAllHistory ? "Show Less" : "Show All"
+								}
+							>
+								<Button
+									size="icon"
+									variant="outline"
+									onClick={() =>
+										setShowAllHistory(!showAllHistory)
+									}
+									className="z-10 rounded-full bg-[#101010]"
+								>
+									{showAllHistory ? (
+										<ChevronDownIcon className="rotate-180" />
+									) : (
+										<ChevronDownIcon />
+									)}
+								</Button>
+							</SimpleTooltip>
+						</div>
+					)}
 				</div>
 			</div>
 		</form>

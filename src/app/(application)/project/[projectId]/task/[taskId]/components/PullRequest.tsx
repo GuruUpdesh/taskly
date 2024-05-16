@@ -39,7 +39,7 @@ const PullRequest = ({ pullRequest }: Props) => {
 			return (
 				<div className="flex items-center gap-2 rounded-full border bg-accent px-3 py-1 text-sm">
 					<GitMerge className="h-4 w-4 text-[#8957e5]" />
-					<span>Open</span>
+					<span>Merged</span>
 				</div>
 			);
 		}
@@ -97,9 +97,7 @@ const PullRequest = ({ pullRequest }: Props) => {
 		>
 			<div className="flex items-baseline gap-2">
 				<GitHubLogoIcon className="h-4 w-4 translate-y-0.5" />
-				<span className="group-hover:underline">
-					{pullRequest.title}
-				</span>
+				<span>{pullRequest.title}</span>
 				<span className="text-muted-foreground">
 					#{pullRequest.number}
 				</span>

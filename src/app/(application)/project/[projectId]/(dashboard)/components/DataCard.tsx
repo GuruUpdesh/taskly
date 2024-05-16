@@ -6,8 +6,6 @@ import {
 	LineChart,
 	Line,
 	ResponsiveContainer,
-	AreaChart,
-	Area,
 	XAxis,
 	YAxis,
 	Legend,
@@ -57,75 +55,13 @@ const DataCardLineGraph: React.FC<{
 	);
 };
 
-const DataCardAreaGraph: React.FC<{
-	title: string;
-	data: {
-		name: string;
-		uv: number;
-		pv: number;
-		amt: number;
-	}[];
-}> = (props) => {
-	return (
-		<Card className="col-span-2 bg-foreground/5">
-			<CardHeader className="pb-2">
-				<CardDescription>{props.title}</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<ResponsiveContainer width="100%" height={200}>
-					<AreaChart
-						width={500}
-						height={400}
-						data={props.data}
-						margin={{
-							top: 10,
-							right: 30,
-							left: 0,
-							bottom: 0,
-						}}
-					>
-						<defs>
-							<linearGradient
-								id="color-1"
-								x1="0"
-								y1="0"
-								x2="0"
-								y2="1"
-							>
-								<stop
-									offset="5%"
-									stopColor={`#8884d8`}
-									stopOpacity={0.8}
-								/>
-								<stop
-									offset="95%"
-									stopColor={`#8884d8`}
-									stopOpacity={0}
-								/>
-							</linearGradient>
-						</defs>
-						<XAxis dataKey="name" />
-						<YAxis />
-						<Area
-							type="monotone"
-							dataKey="uv"
-							stroke="#8884d8"
-							fill="url(#color-1)"
-						/>
-					</AreaChart>
-				</ResponsiveContainer>
-			</CardContent>
-		</Card>
-	);
-};
-
 const DataCardFigure: React.FC<{
 	cardTitle: string;
 	cardDescriptionUp: string;
 	cardDescriptionDown: string;
 }> = ({ cardTitle, cardDescriptionUp, cardDescriptionDown }) => {
 	return (
-		<Card className="bg-accent/50">
+		<Card className="col-span-2 bg-accent/50 lg:col-span-1">
 			<CardHeader className="pb-2">
 				<CardDescription>{cardDescriptionUp}</CardDescription>
 			</CardHeader>
@@ -137,4 +73,4 @@ const DataCardFigure: React.FC<{
 	);
 };
 
-export { DataCardLineGraph, DataCardAreaGraph, DataCardFigure };
+export { DataCardLineGraph, DataCardFigure };

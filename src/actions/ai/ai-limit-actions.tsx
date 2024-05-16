@@ -53,7 +53,6 @@ export async function isAiLimitReached() {
 }
 
 export async function getAiLimitCount() {
-	console.log("Getting AI limit count...");
 	const { userId } = auth();
 	if (!userId) {
 		console.log("No user ID found.");

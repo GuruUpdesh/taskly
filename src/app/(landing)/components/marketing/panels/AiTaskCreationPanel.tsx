@@ -22,7 +22,7 @@ import {
 import { Textarea } from "~/components/ui/textarea";
 import { type StatefulTask } from "~/config/taskConfigType";
 import { type User } from "~/server/db/schema";
-import { useAppStore } from "~/store/app";
+import { useRealtimeStore } from "~/store/realtime";
 
 const exampleTasks = [
 	{
@@ -150,7 +150,7 @@ const AiTaskCreationPanel = () => {
 		return () => clearTimeout(resultTimer);
 	}, [typingComplete]);
 
-	const [updateAssignees, updateSprints] = useAppStore(
+	const [updateAssignees, updateSprints] = useRealtimeStore(
 		useShallow((state) => [state.updateAssignees, state.updateSprints]),
 	);
 

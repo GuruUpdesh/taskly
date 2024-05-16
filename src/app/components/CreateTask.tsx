@@ -41,8 +41,8 @@ import {
 	type Task,
 	type User,
 } from "~/server/db/schema";
-import { useAppStore } from "~/store/app";
-import { useNavigationStore } from "~/store/navigation";
+import { useRealtimeStore } from "~/store/realtime";
+import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
 import SimpleTooltip from "./SimpleTooltip";
@@ -52,7 +52,6 @@ type FormProps = {
 	form: UseFormReturn<TaskFormType, undefined>;
 	assignees: User[];
 	sprints: Sprint[];
-	aiLimitCount: number;
 };
 
 export const taskFormSchema = buildValidator([
@@ -78,14 +77,9 @@ export const taskFormSchema = buildValidator([
 
 export type TaskFormType = Omit<NewTask, "sprintId"> & { sprintId: string };
 
-const TaskCreateForm = ({
-	onSubmit,
-	form,
-	assignees,
-	sprints,
-	aiLimitCount,
-}: FormProps) => {
-	const project = useNavigationStore((state) => state.currentProject);
+const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
+	const project = useRealtimeStore((state) => state.project);
+	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
 
 	// Framer motion transition
 	const transition = {
@@ -96,7 +90,7 @@ const TaskCreateForm = ({
 	const [isLoading, setIsLoading] = useState(false);
 
 	const aiAutoComplete = async (title: string, description: string) => {
-		if (aiLimitCount >= AIDAILYLIMIT) {
+		if (aiUsageCount >= AIDAILYLIMIT) {
 			toast.error(
 				`AI daily limit reached. Please try again in ${timeTillNextReset()} hours.`,
 			);
@@ -207,23 +201,16 @@ const TaskCreateForm = ({
 
 type Props = {
 	projectId: string;
-	aiLimitCount: number;
 	children: React.ReactNode;
 	overrideDefaultValues?: Partial<TaskFormType>;
 };
 
-const CreateTask = ({
-	projectId,
-	children,
-	aiLimitCount,
-	overrideDefaultValues,
-}: Props) => {
-	const [assignees, sprints] = useAppStore(
-		useShallow((state) => [state.assignees, state.sprints]),
+const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
+	const [project, assignees, sprints] = useRealtimeStore(
+		useShallow((state) => [state.project, state.assignees, state.sprints]),
 	);
 	const [open, setOpen] = useState(false);
 	const queryClient = useQueryClient();
-	const project = useNavigationStore((state) => state.currentProject);
 
 	const addTaskMutation = useMutation({
 		mutationFn: ({ data }: { data: TaskFormType }) => createTask(data),
@@ -363,7 +350,6 @@ const CreateTask = ({
 					form={form}
 					assignees={assignees}
 					sprints={sprints}
-					aiLimitCount={aiLimitCount}
 				/>
 				<DialogFooter className="border-t px-4 py-2">
 					<Button

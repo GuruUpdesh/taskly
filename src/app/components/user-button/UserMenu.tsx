@@ -4,14 +4,13 @@ import React from "react";
 
 import { useClerk } from "@clerk/nextjs";
 import {
-	GearIcon,
 	GitHubLogoIcon,
-	PaperPlaneIcon,
+	PersonIcon,
 	PinLeftIcon,
 	PlusIcon,
 	ReaderIcon,
 } from "@radix-ui/react-icons";
-import { LightbulbIcon } from "lucide-react";
+import { Folder, LightbulbIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -24,7 +23,7 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { useNavigationStore } from "~/store/navigation";
+import { useRealtimeStore } from "~/store/realtime";
 
 type Props = {
 	children: React.ReactNode;
@@ -33,14 +32,17 @@ type Props = {
 const UserMenu = ({ children }: Props) => {
 	const { signOut } = useClerk();
 	const router = useRouter();
-	const project = useNavigationStore((state) => state.currentProject);
 
+	const [isLightMode, setIsLightMode] = React.useState(false);
 	const handleLightModeClick = () => {
+		setIsLightMode(!isLightMode);
 		const html = document.querySelector("html");
 		if (html) {
 			html.classList.toggle("invert");
 		}
 	};
+
+	const project = useRealtimeStore((state) => state.project);
 
 	return (
 		<DropdownMenu>
@@ -53,28 +55,33 @@ const UserMenu = ({ children }: Props) => {
 				<DropdownMenuGroup>
 					<Link href="/settings" target="_blank">
 						<DropdownMenuItem>
-							Settings
+							Account
 							<DropdownMenuShortcut>
-								<GearIcon />
+								<PersonIcon />
 							</DropdownMenuShortcut>
 						</DropdownMenuItem>
 					</Link>
+					<DropdownMenuItem onClick={handleLightModeClick}>
+						{isLightMode ? "Dark" : "Light"} Mode{" "}
+						{isLightMode ? "" : "(beta)"}
+						<DropdownMenuShortcut>
+							<LightbulbIcon className="h-4 w-4" />
+						</DropdownMenuShortcut>
+					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					{project && (
-						<Link
-							href={`/settings/project/${project.id}/general#invite`}
-							target="_blank"
-						>
-							<DropdownMenuItem>
-								Invite to Project
-								<DropdownMenuShortcut>
-									<PaperPlaneIcon />
-								</DropdownMenuShortcut>
-							</DropdownMenuItem>
-						</Link>
-					)}
+					<Link
+						href={`/settings/project/${project?.id}/general`}
+						target="_blank"
+					>
+						<DropdownMenuItem>
+							Project Settings
+							<DropdownMenuShortcut>
+								<Folder className="h-4 w-4" />
+							</DropdownMenuShortcut>
+						</DropdownMenuItem>
+					</Link>
 					<Link href="/create-project">
 						<DropdownMenuItem>
 							New Project
@@ -104,13 +111,6 @@ const UserMenu = ({ children }: Props) => {
 						</DropdownMenuShortcut>
 					</DropdownMenuItem>
 				</Link>
-				<DropdownMenuSeparator />
-				<DropdownMenuItem onClick={handleLightModeClick}>
-					Light Mode (Beta)
-					<DropdownMenuShortcut>
-						<LightbulbIcon />
-					</DropdownMenuShortcut>
-				</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
 					onClick={() => signOut(() => router.push("/sign-in"))}

@@ -8,15 +8,10 @@ import type {
 
 type Props = TooltipProps<ValueType, NameType>;
 
-const GraphTooltip = ({ payload, label }: Props) => {
+const GraphTooltip = ({ label }: Props) => {
 	return (
 		<div className="rounded-sm border bg-accent/50 p-2 backdrop-blur-lg">
-			<h1 className="border-b">{label}</h1>
-			{payload?.map((item, index) => (
-				<p key={index}>
-					{item.name}: {item.value}
-				</p>
-			))}
+			<p className="text-xs">{label}</p>
 		</div>
 	);
 };

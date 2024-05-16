@@ -7,7 +7,7 @@ import { AnimatePresence } from "framer-motion";
 
 import { type NotificationWithTask } from "~/actions/notification-actions";
 import { cn } from "~/lib/utils";
-import { useAppStore } from "~/store/app";
+import { useRealtimeStore } from "~/store/realtime";
 import typography from "~/styles/typography";
 
 import NotificationItem from "./NotificationItem";
@@ -56,7 +56,7 @@ type Props = {
 };
 
 const NotificationList = ({ projectId }: Props) => {
-	const notifications = useAppStore((state) => state.notifications);
+	const notifications = useRealtimeStore((state) => state.notifications);
 	const groupedNotifications = groupNotifications(notifications);
 
 	return (
