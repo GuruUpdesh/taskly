@@ -1,7 +1,5 @@
 "use server";
 
-export const maxDuration = 60;
-
 import { put } from "@vercel/blob";
 import { addMinutes, startOfDay } from "date-fns";
 import { eq } from "drizzle-orm";
