@@ -72,7 +72,7 @@ export type Result = {
 
 const DataCardAreaGraph: React.FC<{
 	title: string;
-	data: Result[]
+	data: Result[];
 }> = (props) => {
 	const today = format(new Date(), "MMM d");
 	const maxPoints = Math.max(...props.data.map((d) => d.points ?? 0));

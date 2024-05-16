@@ -75,17 +75,17 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 				<div className="flex-1" />
 				<div className="mb-2">
 					<SidebarButton
-						label="Docs"
+						label="Settings"
+						icon={<GearIcon className="min-w-4" />}
+						url={`/settings/project/${projectId}/general`}
+					/>
+					<SidebarButton
+						label="Documentation"
 						icon={
 							<ReaderIcon className="min-w-4 fill-foreground" />
 						}
 						url="https://docs.tasklypm.com"
 						openInNewTab
-					/>
-					<SidebarButton
-						label="Settings"
-						icon={<GearIcon className="min-w-4" />}
-						url={`/settings/project/${projectId}/general`}
 					/>
 				</div>
 				<div className="hidden @sidebar:block">

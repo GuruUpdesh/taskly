@@ -84,8 +84,6 @@ const CurrentSprintGraph = async ({ projectId }: Props) => {
 			}
 		});
 
-
-
 		const result: Result = {
 			date: format(date, "MMM d"),
 			points: Math.ceil(index * optimalIncrement),

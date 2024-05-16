@@ -4,13 +4,13 @@ import React from "react";
 
 import { useClerk } from "@clerk/nextjs";
 import {
-	GearIcon,
 	GitHubLogoIcon,
+	PersonIcon,
 	PinLeftIcon,
 	PlusIcon,
 	ReaderIcon,
 } from "@radix-ui/react-icons";
-import { LightbulbIcon } from "lucide-react";
+import { Folder, LightbulbIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -23,6 +23,7 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { useRealtimeStore } from "~/store/realtime";
 
 type Props = {
 	children: React.ReactNode;
@@ -41,6 +42,8 @@ const UserMenu = ({ children }: Props) => {
 		}
 	};
 
+	const project = useRealtimeStore((state) => state.project);
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
@@ -52,9 +55,9 @@ const UserMenu = ({ children }: Props) => {
 				<DropdownMenuGroup>
 					<Link href="/settings" target="_blank">
 						<DropdownMenuItem>
-							Settings
+							Account
 							<DropdownMenuShortcut>
-								<GearIcon />
+								<PersonIcon />
 							</DropdownMenuShortcut>
 						</DropdownMenuItem>
 					</Link>
@@ -68,6 +71,17 @@ const UserMenu = ({ children }: Props) => {
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
+					<Link
+						href={`/settings/project/${project?.id}/general`}
+						target="_blank"
+					>
+						<DropdownMenuItem>
+							Project Settings
+							<DropdownMenuShortcut>
+								<Folder className="h-4 w-4" />
+							</DropdownMenuShortcut>
+						</DropdownMenuItem>
+					</Link>
 					<Link href="/create-project">
 						<DropdownMenuItem>
 							New Project
