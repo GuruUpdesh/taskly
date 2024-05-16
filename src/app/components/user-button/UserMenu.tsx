@@ -6,7 +6,6 @@ import { useClerk } from "@clerk/nextjs";
 import {
 	GearIcon,
 	GitHubLogoIcon,
-	PaperPlaneIcon,
 	PinLeftIcon,
 	PlusIcon,
 	ReaderIcon,
@@ -24,7 +23,6 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { useRealtimeStore } from "~/store/realtime";
 
 type Props = {
 	children: React.ReactNode;
@@ -33,7 +31,6 @@ type Props = {
 const UserMenu = ({ children }: Props) => {
 	const { signOut } = useClerk();
 	const router = useRouter();
-	const project = useRealtimeStore((state) => state.project);
 
 	const [isLightMode, setIsLightMode] = React.useState(false);
 	const handleLightModeClick = () => {
@@ -71,19 +68,6 @@ const UserMenu = ({ children }: Props) => {
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					{project && (
-						<Link
-							href={`/settings/project/${project.id}/general#invite`}
-							target="_blank"
-						>
-							<DropdownMenuItem>
-								Invite to Project
-								<DropdownMenuShortcut>
-									<PaperPlaneIcon />
-								</DropdownMenuShortcut>
-							</DropdownMenuItem>
-						</Link>
-					)}
 					<Link href="/create-project">
 						<DropdownMenuItem>
 							New Project

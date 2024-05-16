@@ -70,7 +70,7 @@ const NestedSidebarButton = ({
 					onClick={handleClick}
 				>
 					{icon ? icon : null}
-					<span className="hidden flex-1 @sidebar:inline-flex">
+					<span className="hidden flex-1 whitespace-nowrap @sidebar:inline-flex">
 						{label}
 					</span>
 					<ArrowRightIcon className="mr-2 hidden h-4 w-4 opacity-0 transition-all group-hover:mr-0 group-hover:opacity-100 @sidebar:block" />

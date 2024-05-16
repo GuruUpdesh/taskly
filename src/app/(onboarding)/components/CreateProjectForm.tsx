@@ -8,15 +8,15 @@ import { endOfYesterday, isMonday, nextMonday } from "date-fns";
 import {
 	ChevronLeft,
 	ChevronRight,
+	Clock,
 	Loader2,
-	PlusIcon,
+	Folder,
 	SparkleIcon,
 	Sprout,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { GoPeople } from "react-icons/go";
-import { PiPersonSimpleRun } from "react-icons/pi";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -167,7 +167,7 @@ const CreateProjectForm = () => {
 					disabled={!isStepValid(1) || formStep > 2}
 					stepTitle="Configure Sprints"
 				>
-					<PiPersonSimpleRun className="h-3.5 w-3.5" />
+					<Clock className="h-3.5 w-3.5" />
 				</StepButton>
 				<div className="flex w-full flex-grow flex-col items-center justify-center gap-3 overflow-hidden">
 					<Separator orientation="vertical" />
@@ -179,7 +179,7 @@ const CreateProjectForm = () => {
 							disabled={true}
 							stepTitle="Initialize Project"
 						>
-							<PlusIcon className="h-3.5 w-3.5" />
+							<Folder className="h-3.5 w-3.5" />
 						</StepButton>
 					</div>
 					<Separator orientation="vertical" />
@@ -267,7 +267,7 @@ const CreateProjectForm = () => {
 							header="Configure Sprints"
 							description="Sprints are a vital part of any project management system. Configure your sprints to match your team's workflow."
 						>
-							<PiPersonSimpleRun />
+							<Clock />
 						</StepHeader>
 						<SprintOptions
 							form={
