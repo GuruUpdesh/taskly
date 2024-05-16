@@ -1,4 +1,6 @@
-"use server";
+export const maxDuration = 60;
+
+("use server");
 
 import { put } from "@vercel/blob";
 import { addMinutes, startOfDay } from "date-fns";
