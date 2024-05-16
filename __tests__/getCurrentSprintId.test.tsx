@@ -3,23 +3,6 @@ import {
 	helperIsSprintActive,
 } from "../src/utils/getCurrentSprintId";
 
-import { type Sprint } from "../src/server/db/schema";
-
-/** export function getCurrentSprintId(sprints: Sprint[]) {
-	const currentSprint = sprints.find((sprint) =>
-		helperIsSprintActive(sprint),
-	);
-	return currentSprint ? currentSprint.id : -1;
-}
-
-export function helperIsSprintActive(sprint: Sprint) {
-	return (
-		isAfter(new Date(), sprint.startDate) &&
-		isBefore(new Date(), sprint.endDate)
-	);
-}
- */
-
 test("getCurrentSprintId returns the correct sprint id", () => {
 	const sprints = [
 		{
