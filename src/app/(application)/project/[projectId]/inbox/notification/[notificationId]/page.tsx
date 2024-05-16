@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { getNotification } from "~/actions/notification-actions";
 import { TaskWrapper } from "~/app/(application)/project/[projectId]/task/[taskId]/components/TaskWrapper";
+import Message from "~/app/components/Message";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 type Params = {
@@ -30,6 +31,15 @@ export default async function InboxPage({
 
 	if (notification.length === 0 || notification[0] === undefined) {
 		return null;
+	}
+
+	if (!notification[0].taskId) {
+		console.log("task id is null");
+		return (
+			<Message type="info">
+				<p>{notification[0].message}</p>
+			</Message>
+		);
 	}
 
 	return (

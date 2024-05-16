@@ -2,6 +2,7 @@ import React from "react";
 
 import { redirect } from "next/navigation";
 
+import { getAiLimitCount } from "~/actions/ai/ai-limit-actions";
 import {
 	getAllUsersInProject,
 	getProject,
@@ -28,6 +29,7 @@ type Params = {
 
 async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 	const userId = authenticate();
+	const aiLimitCount = await getAiLimitCount();
 
 	const projectResults = await getProject(Number(projectId));
 	if (!projectResults?.success || !projectResults.project) {
@@ -43,7 +45,9 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 
 	const componentMap = {
 		"project-info": <ProjectInfo project={project} />,
-		appearance: <ProjectTheme project={project} />,
+		appearance: (
+			<ProjectTheme project={project} aiLimitCount={aiLimitCount} />
+		),
 		invite: <ProjectInvite project={project} />,
 		members: (
 			<UsersTable

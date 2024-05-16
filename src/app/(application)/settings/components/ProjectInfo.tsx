@@ -172,9 +172,7 @@ const ProjectInfo = ({ project }: Props) => {
 							form.formState.isSubmitting
 						}
 					>
-						{form.formState.isSubmitting
-							? "Saving Changes"
-							: "Save Changes"}
+						{form.formState.isSubmitting ? "Saving" : "Save"}
 						{form.formState.isSubmitting ? (
 							<Loader2Icon className="ml-2 h-4 w-4 animate-spin" />
 						) : (

@@ -328,7 +328,7 @@ export const notifications = pgTable("notifications", {
 	date: timestamp("date", { precision: 6, withTimezone: true }).notNull(),
 	message: text("message").notNull(),
 	userId: varchar("user_id", { length: 32 }).notNull(),
-	taskId: integer("task_id").notNull(),
+	taskId: integer("task_id"),
 	projectId: integer("project_id").notNull(),
 	readAt: timestamp("read_at", { precision: 6, withTimezone: true }),
 });

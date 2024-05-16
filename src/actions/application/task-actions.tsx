@@ -8,7 +8,11 @@ import { fromZodError } from "zod-validation-error";
 
 import { createNotification } from "~/actions/notification-actions";
 import { type TaskFormType as CreateTaskData } from "~/app/components/CreateTask";
-import { type StatefulTask, CreateTaskSchema } from "~/config/taskConfigType";
+import {
+	type StatefulTask,
+	CreateTaskSchema,
+	getPropertyConfig,
+} from "~/config/taskConfigType";
 import { db } from "~/server/db";
 import {
 	comments,
@@ -308,20 +312,36 @@ async function createTaskUpdateNotification(
 			const validatedValues = insertTaskHistorySchema.parse(values);
 
 			await tx.insert(taskHistory).values(validatedValues);
+			if (
+				user?.username === task.assignee ||
+				!task.assignee ||
+				!validatedValues?.propertyKey
+			) {
+				console.log("Skipping notification");
+				return;
+			}
+
+			const config = getPropertyConfig(validatedValues.propertyKey);
+			const assignedUser = await db
+				.select()
+				.from(users)
+				.where(eq(users.username, task.assignee));
+			if (assignedUser.length === 0 || !assignedUser[0]) {
+				console.log("Skipping notification");
+				return;
+			}
+
+			await createNotification({
+				date: new Date(),
+				message: `${user.username} changed ${config.displayName} to ${validatedValues.propertyValue}`,
+				userId: assignedUser[0].userId,
+				taskId: taskId,
+				projectId: task.projectId,
+			});
 		}
 	});
 
 	revalidatePath("/");
-
-	if (user?.username === task.assignee || task.assignee === null) return;
-
-	await createNotification({
-		date: new Date(),
-		message: `Task was updated.`,
-		userId: user.id,
-		taskId: taskId,
-		projectId: task.projectId,
-	});
 }
 
 export async function getTask(id: number) {

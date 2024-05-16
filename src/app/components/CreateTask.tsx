@@ -209,9 +209,15 @@ type Props = {
 	projectId: string;
 	aiLimitCount: number;
 	children: React.ReactNode;
+	overrideDefaultValues?: Partial<TaskFormType>;
 };
 
-const CreateTask = ({ projectId, children, aiLimitCount }: Props) => {
+const CreateTask = ({
+	projectId,
+	children,
+	aiLimitCount,
+	overrideDefaultValues,
+}: Props) => {
 	const [assignees, sprints] = useAppStore(
 		useShallow((state) => [state.assignees, state.sprints]),
 	);
@@ -268,12 +274,24 @@ const CreateTask = ({ projectId, children, aiLimitCount }: Props) => {
 		defaultValues: {
 			title: defaultValues.title,
 			description: defaultValues.description,
-			status: defaultValues.status,
-			priority: defaultValues.priority,
-			type: defaultValues.type,
-			assignee: defaultValues.assignee,
-			points: defaultValues.points,
-			sprintId: defaultValues.sprintId,
+			status: overrideDefaultValues?.status
+				? overrideDefaultValues.status
+				: defaultValues.status,
+			priority: overrideDefaultValues?.priority
+				? overrideDefaultValues.priority
+				: defaultValues.priority,
+			type: overrideDefaultValues?.type
+				? overrideDefaultValues.type
+				: defaultValues.type,
+			assignee: overrideDefaultValues?.assignee
+				? overrideDefaultValues.assignee
+				: defaultValues.assignee,
+			points: overrideDefaultValues?.points
+				? overrideDefaultValues.points
+				: defaultValues.points,
+			sprintId: overrideDefaultValues?.sprintId
+				? overrideDefaultValues.sprintId
+				: defaultValues.sprintId,
 			projectId: parseInt(projectId),
 			backlogOrder: 1000000,
 			boardOrder: 1000000,
@@ -302,11 +320,13 @@ const CreateTask = ({ projectId, children, aiLimitCount }: Props) => {
 		const sprintId = form.watch("sprintId");
 		const status = form.watch("status");
 		if (status === "backlog" && sprintId !== "-1") {
+			console.log("setting sprintId to -1");
 			form.setValue("sprintId", "-1", {
 				shouldDirty: true,
 				shouldValidate: true,
 			});
 		} else if (status !== "backlog" && sprintId === "-1") {
+			console.log("setting sprintId to current sprint");
 			form.setValue("sprintId", `${getCurrentSprintId(sprints)}`, {
 				shouldDirty: true,
 				shouldValidate: true,
