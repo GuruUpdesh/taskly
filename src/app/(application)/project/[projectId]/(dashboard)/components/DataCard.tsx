@@ -2,15 +2,19 @@
 
 import React from "react";
 
+import { format } from "date-fns";
+import { Clock } from "lucide-react";
 import {
 	LineChart,
 	Line,
 	ResponsiveContainer,
-	AreaChart,
 	Area,
 	XAxis,
 	YAxis,
 	Legend,
+	Tooltip,
+	ReferenceLine,
+	ComposedChart,
 } from "recharts";
 
 import {
@@ -20,6 +24,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from "~/components/ui/card";
+
+import GraphTooltip from "./GraphTooltip";
 
 const DataCardLineGraph: React.FC<{
 	data: { name: string; tasks: number; target: number; amt: number }[];
@@ -57,23 +63,30 @@ const DataCardLineGraph: React.FC<{
 	);
 };
 
+export type Result = {
+	date: string;
+	inProgress?: number;
+	done?: number;
+	points: number;
+};
+
 const DataCardAreaGraph: React.FC<{
 	title: string;
-	data: {
-		name: string;
-		uv: number;
-		pv: number;
-		amt: number;
-	}[];
+	data: Result[]
 }> = (props) => {
+	const today = format(new Date(), "MMM d");
+	const maxPoints = Math.max(...props.data.map((d) => d.points ?? 0));
 	return (
-		<Card className="col-span-2 bg-foreground/5">
+		<Card className="col-span-4 bg-foreground/5">
 			<CardHeader className="pb-2">
-				<CardDescription>{props.title}</CardDescription>
+				<CardDescription className="flex items-center gap-2">
+					<Clock className="h-4 w-4" />
+					Current Sprint
+				</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<ResponsiveContainer width="100%" height={200}>
-					<AreaChart
+					<ComposedChart
 						width={500}
 						height={400}
 						data={props.data}
@@ -94,25 +107,74 @@ const DataCardAreaGraph: React.FC<{
 							>
 								<stop
 									offset="5%"
-									stopColor={`#8884d8`}
-									stopOpacity={0.8}
+									stopColor={`#2cba2d`}
+									stopOpacity={0.2}
 								/>
 								<stop
 									offset="95%"
-									stopColor={`#8884d8`}
+									stopColor={`#2cba2d`}
+									stopOpacity={0}
+								/>
+							</linearGradient>
+							<linearGradient
+								id="color-2"
+								x1="0"
+								y1="0"
+								x2="0"
+								y2="1"
+							>
+								<stop
+									offset="5%"
+									stopColor={`#ffd500`}
+									stopOpacity={0.2}
+								/>
+								<stop
+									offset="95%"
+									stopColor={`#ffd500`}
 									stopOpacity={0}
 								/>
 							</linearGradient>
 						</defs>
-						<XAxis dataKey="name" />
-						<YAxis />
+						<YAxis domain={[0, maxPoints]} hide />
+						<XAxis dataKey="date" tickCount={5} interval={1} />
+						<ReferenceLine x={today} stroke="#3c3c3c" />
+						<Line
+							strokeDasharray="8 8"
+							dataKey="points"
+							label="Points"
+							stroke="#6f6f6f"
+							dot={false}
+							activeDot={false}
+						/>
 						<Area
+							connectNulls
+							type="linear"
+							dataKey="points"
+							stroke="transparent"
+							fill="#242424"
+						/>
+						<Area
+							connectNulls
 							type="monotone"
-							dataKey="uv"
-							stroke="#8884d8"
+							dataKey="inProgress"
+							label="In Progress"
+							stroke="#ffd500"
+							fill="url(#color-2)"
+						/>
+						<Area
+							connectNulls
+							type="monotone"
+							dataKey="done"
+							label="Done"
+							stroke="#2cba2d"
 							fill="url(#color-1)"
 						/>
-					</AreaChart>
+						<Tooltip
+							content={<GraphTooltip />}
+							position={{ y: 0 }}
+							animationDuration={0}
+						/>
+					</ComposedChart>
 				</ResponsiveContainer>
 			</CardContent>
 		</Card>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 
 import { currentUser } from "@clerk/nextjs/server";
 import { type Metadata } from "next";
@@ -15,8 +15,10 @@ import {
 	CardDescription,
 	CardHeader,
 } from "~/components/ui/card";
+import { Skeleton } from "~/components/ui/skeleton";
 import { type Task } from "~/server/db/schema";
 
+import CurrentSprintGraph from "./components/CurrentSprintGraph";
 import { DataCardFigure } from "./components/DataCard";
 import UserGreeting from "./components/UserGreeting";
 
@@ -31,7 +33,8 @@ type ProjectPageProps = {
 };
 
 async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
-	const tasks: Task[] = (await getTasksFromProject(Number(projectId))) ?? [];
+	const projectIdInt = parseInt(projectId, 10);
+	const tasks: Task[] = (await getTasksFromProject(projectIdInt)) ?? [];
 
 	const user = await currentUser();
 	if (!user) {
@@ -130,6 +133,13 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 						cardDescriptionUp="Total Tasks"
 						cardDescriptionDown=""
 					/>
+					<Suspense
+						fallback={
+							<Skeleton className="col-span-4 h-[278px] w-full rounded-lg border" />
+						}
+					>
+						<CurrentSprintGraph projectId={projectIdInt} />
+					</Suspense>
 				</section>
 			</section>
 		</div>
