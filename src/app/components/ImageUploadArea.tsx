@@ -79,7 +79,7 @@ const ImageUploadArea = ({ urlCallback }: Props) => {
 		<div
 			{...getRootProps()}
 			className={cn(
-				"relative col-span-2 flex flex-col items-center justify-center overflow-hidden rounded border border-dashed bg-accent/25",
+				"relative col-span-2 flex flex-col items-center justify-center overflow-hidden rounded border border-dashed bg-background-dialog",
 				dynamicClassName,
 			)}
 		>
@@ -94,11 +94,7 @@ const ImageUploadArea = ({ urlCallback }: Props) => {
 			) : (
 				<>
 					<UploadIcon className="mb-2 h-6 w-6 text-muted-foreground" />
-					<button
-						type="button"
-						onClick={open}
-						className="text-blue-500"
-					>
+					<button type="button" onClick={open}>
 						Choose files or drag and drop
 					</button>
 					<p className="text-sm text-muted-foreground">

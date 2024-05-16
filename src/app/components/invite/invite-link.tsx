@@ -29,15 +29,16 @@ function InviteLink({ token }: Props) {
 				onChange={(e) => {
 					e.preventDefault();
 				}}
-				className="flex-1 overflow-hidden whitespace-nowrap rounded-sm border bg-accent/25 p-2 text-muted-foreground"
+				className="flex-1 overflow-hidden whitespace-nowrap rounded-sm border bg-background-dialog p-2 text-muted-foreground"
 			/>
 			<Button
 				onClick={handleCopyToClipboard}
 				className="ml-2 gap-1" // Added ml-2 for left margin
 				type="button"
-				variant="outline"
+				variant="secondary"
+				size="sm"
 			>
-				<CopyIcon className="h-4 w-4" />
+				<CopyIcon className="mr-1 h-3 w-3" />
 				Copy
 			</Button>
 		</div>

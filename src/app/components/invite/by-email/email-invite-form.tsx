@@ -34,7 +34,7 @@ const EmailInviteForm = ({
 		<Input
 			placeholder={placeholder}
 			onChange={handleInviteeChange}
-			className="w-full rounded-md border bg-accent/25 px-4 py-2"
+			className="w-full rounded-md border bg-background-dialog px-4 py-2"
 			autoComplete="off"
 			autoFocus={autoFocus}
 		/>

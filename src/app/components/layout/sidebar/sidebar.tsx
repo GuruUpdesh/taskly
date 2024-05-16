@@ -1,11 +1,7 @@
 import React from "react";
 
-import {
-	GearIcon,
-	ReaderIcon,
-	PlusCircledIcon,
-} from "@radix-ui/react-icons";
-import {  LayoutGrid } from "lucide-react";
+import { GearIcon, ReaderIcon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { LayoutGrid } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";

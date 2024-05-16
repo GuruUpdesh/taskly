@@ -33,5 +33,9 @@ export default async function ProjectSettingsLayout({
 		redirect(constructToastURL(result.error, "error"));
 	}
 
-	return <div>{children}</div>;
+	return (
+		<div className="mx-4 flex w-[700px] flex-col gap-8 py-6 pt-8">
+			{children}
+		</div>
+	);
 }

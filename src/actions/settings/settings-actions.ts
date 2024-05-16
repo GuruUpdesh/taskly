@@ -60,14 +60,9 @@ export async function autoColor(image: string) {
 	});
 }
 
-export async function handleDeleteProject(formData: FormData) {
+export async function handleDeleteProject(projectId: number) {
 	const userId = authenticate();
-	const projectId = formData.get("projectId");
-	await checkPermissions(
-		userId,
-		parseInt(formData.get("projectId") as string),
-		["owner"],
-	);
+	await checkPermissions(userId, projectId, ["owner"]);
 
 	if (!projectId) {
 		return { success: false, message: "Project ID not found" };
@@ -76,7 +71,7 @@ export async function handleDeleteProject(formData: FormData) {
 	const project = await db
 		.select()
 		.from(projects)
-		.where(eq(projects.id, parseInt(projectId as string)));
+		.where(eq(projects.id, projectId));
 	if (!project || project.length === 0) {
 		return { success: false, message: "Project not found" };
 	}
@@ -113,10 +108,9 @@ export async function handleDeleteProject(formData: FormData) {
 	redirect("/");
 }
 
-export async function removeUserFormProject_formData(formData: FormData) {
-	const currProjectId = formData.get("projectId");
+export async function leaveProject(projectId: number) {
 	const userId = authenticate();
-	await removeUserFromProject(Number(currProjectId), userId);
+	await removeUserFromProject(projectId, userId);
 }
 
 export async function removeUserFromProject(projectId: number, userId: string) {

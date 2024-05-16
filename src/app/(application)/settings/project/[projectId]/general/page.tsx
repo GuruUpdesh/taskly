@@ -1,3 +1,5 @@
+"use server";
+
 import React from "react";
 
 import { currentUser } from "@clerk/nextjs/server";
@@ -50,31 +52,29 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 	const users = await getAllUsersInProject(Number(projectId));
 
 	const componentMap = {
-		"project-info": <ProjectInfo project={project} />,
-		appearance: (
+		General: <ProjectInfo project={project} />,
+		Appearance: (
 			<ProjectTheme project={project} aiLimitCount={aiLimitCount} />
 		),
-		invite: <ProjectInvite project={project} />,
-		members: (
-			<UsersTable
-				users={users ?? []}
-				projectId={project.id}
-				userId={user.id}
-			/>
-		),
-		sprints: <ProjectSprints sprints={sprints ?? []} project={project} />,
-		github: <ProjectGithub project={project} />,
-		"danger-zone": <ProjectDangerZone project={project} />,
+		Invite: <ProjectInvite project={project} />,
+		Sprints: <ProjectSprints sprints={sprints ?? []} project={project} />,
+		GitHub: <ProjectGithub project={project} />,
+		"Danger Zone": <ProjectDangerZone project={project} />,
 	} as const;
 
 	return (
-		<div
-			className="flex flex-col gap-8 p-6"
-			style={{
-				scrollBehavior: "smooth",
-			}}
-		>
+		<>
 			{generalSettings.map((setting, index) => {
+				if (setting.title === "Members") {
+					return (
+						<UsersTable
+							key={index}
+							users={users ?? []}
+							projectId={project.id}
+							userId={user.id}
+						/>
+					);
+				}
 				return (
 					<Permission
 						key={index}
@@ -85,20 +85,19 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 						projectId={project.id}
 					>
 						<SettingsSection
-							anchor={setting.anchor}
 							title={setting.title}
 							icon={setting.icon}
 						>
 							{
 								componentMap[
-									setting.anchor as keyof typeof componentMap
+									setting.title as keyof typeof componentMap
 								]
 							}
 						</SettingsSection>
 					</Permission>
 				);
 			})}
-		</div>
+		</>
 	);
 }
 

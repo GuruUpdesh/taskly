@@ -114,6 +114,8 @@ export async function updateSprintsForProject(
 		}
 	});
 
+	await createSprintForProject();
+
 	revalidatePath(`/`);
 
 	return true;

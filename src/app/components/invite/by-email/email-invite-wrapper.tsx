@@ -63,10 +63,11 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 					}
 				/>
 				<Button
-					variant="outline"
+					variant="secondary"
 					disabled={form.watch("invitees").length === 0 || isLoading}
 					onClick={() => startTransition(form.handleSubmit(onSubmit))}
 					className="ml-2 gap-2" // Added ml-2 for left margin
+					size="sm"
 				>
 					{isLoading ? "Sending invites..." : "Invite"}
 					{isLoading ? (
