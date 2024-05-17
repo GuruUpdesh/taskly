@@ -76,7 +76,10 @@ const CurrentSprintGraph = async ({ projectId }: Props) => {
 		insertDate: getMaxDate(task.insertDate, task.editedDate),
 	}));
 	const taskIdArray = sprintTasks.map((task) => task.id);
-
+	if (taskIdArray.length === 0) {
+		return;
+	}
+	
 	const taskHistoryEntries = await db.query.taskHistory.findMany({
 		where: (th) =>
 			and(eq(th.propertyKey, "status"), inArray(th.taskId, taskIdArray)),
