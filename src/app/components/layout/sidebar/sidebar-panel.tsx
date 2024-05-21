@@ -51,7 +51,8 @@ const SidebarPanel = ({
 	}, [sidebarRef]);
 
 	const onLayout = (sizes: number[]) => {
-		document.cookie = `react-resizable-panels:layout=${JSON.stringify(sizes)}`;
+		const cookieValue = `react-resizable-panels:layout=${JSON.stringify(sizes)}`;
+		document.cookie = `${cookieValue}; SameSite=Lax`;
 	};
 
 	return (

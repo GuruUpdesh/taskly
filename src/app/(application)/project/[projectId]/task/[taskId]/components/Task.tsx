@@ -157,7 +157,8 @@ const TaskPage = ({
 			const width = rightPanelElement.getBoundingClientRect().width;
 			setRightSidebarWidth(width);
 		}
-		document.cookie = `react-resizable-panels:task-layout=${JSON.stringify(sizes)}`;
+		const cookieValue = `react-resizable-panels:task-layout=${JSON.stringify(sizes)}`;
+		document.cookie = `${cookieValue}; SameSite=Lax`;
 	};
 
 	return (
