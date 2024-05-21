@@ -13,9 +13,10 @@ import SidebarButton from "./sidebar-button";
 
 type Props = {
 	projectId: string;
+	username?: string | null;
 };
 
-const TaskViews = ({ projectId }: Props) => {
+const TaskViews = ({ projectId, username }: Props) => {
 	const [currentFilters, updateFilters] = useAppStore(
 		useShallow((state) => [state.filters, state.updateFilters]),
 	);
@@ -32,7 +33,7 @@ const TaskViews = ({ projectId }: Props) => {
 					updateFilters(unlockedFilters);
 				}}
 			/>
-			<div className="flex flex-col items-center @sidebar:ml-4 @sidebar:items-start @sidebar:border-l">
+			<div className="flex flex-col items-center gradient-mask-r-90 @sidebar:ml-4 @sidebar:items-start @sidebar:border-l">
 				{filteredTaskViews.map((view) => (
 					<NestedSidebarButton
 						key={view.label}
@@ -40,6 +41,7 @@ const TaskViews = ({ projectId }: Props) => {
 						icon={view.icon}
 						filters={view.filters}
 						url={`/project/${projectId}/tasks`}
+						username={username}
 					/>
 				))}
 			</div>

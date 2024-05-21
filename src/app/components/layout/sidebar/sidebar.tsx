@@ -1,5 +1,6 @@
 import React from "react";
 
+import { currentUser } from "@clerk/nextjs/server";
 import { GearIcon, ReaderIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { LayoutGrid } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -28,7 +29,8 @@ interface SidebarProps {
 	projectId: string;
 }
 
-const Sidebar = ({ projectId }: SidebarProps) => {
+const Sidebar = async ({ projectId }: SidebarProps) => {
+	const user = await currentUser();
 	return (
 		<div className="relative h-full bg-background @container">
 			<div className="flex h-full flex-col px-1.5 pb-2 @sidebar:px-4">
@@ -70,7 +72,10 @@ const Sidebar = ({ projectId }: SidebarProps) => {
 						url={`/project/${projectId}`}
 					/>
 					<InboxSidebarButton projectId={projectId} />
-					<TaskViews projectId={projectId} />
+					<TaskViews
+						projectId={projectId}
+						username={user?.username}
+					/>
 				</div>
 				<div className="flex-1" />
 				<div className="mb-2">

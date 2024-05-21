@@ -2,7 +2,6 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 
-import { useUser } from "@clerk/nextjs";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useShallow } from "zustand/react/shallow";
@@ -19,6 +18,7 @@ export type SidebarButtonProps = {
 	url: string | string[];
 	filters: (sprints?: Sprint[], username?: string | null) => Filter[];
 	icon?: React.ReactNode;
+	username?: string | null;
 };
 
 const NestedSidebarButton = ({
@@ -26,8 +26,8 @@ const NestedSidebarButton = ({
 	icon,
 	filters,
 	url,
+	username,
 }: SidebarButtonProps) => {
-	const { user } = useUser();
 	const [currentFilters, updateFilters] = useAppStore(
 		useShallow((state) => [state.filters, state.updateFilters]),
 	);
@@ -35,19 +35,19 @@ const NestedSidebarButton = ({
 	const [hidden, setHidden] = useState(false);
 
 	useEffect(() => {
-		const getFilters = filters(sprints, user?.username);
+		const getFilters = filters(sprints, username);
 		if (getFilters.length === 0) setHidden(true);
 		else setHidden(false);
 	}, [filters, sprints]);
 
 	const active = useMemo(() => {
-		const getFilters = filters(sprints, user?.username);
+		const getFilters = filters(sprints, username);
 		const lockedFilters = currentFilters.filter((f) => f.locked);
 		return JSON.stringify(getFilters) === JSON.stringify(lockedFilters);
 	}, [currentFilters, filters, sprints]);
 
 	function handleClick() {
-		const getFilters = filters(sprints, user?.username);
+		const getFilters = filters(sprints, username);
 		const unlockedFilters = currentFilters.filter((f) => !f.locked);
 		updateFilters([...getFilters, ...unlockedFilters]);
 	}
@@ -73,7 +73,9 @@ const NestedSidebarButton = ({
 					<span className="hidden flex-1 whitespace-nowrap @sidebar:inline-flex">
 						{label}
 					</span>
-					<ArrowRightIcon className="mr-2 hidden h-4 w-4 opacity-0 transition-all group-hover:mr-0 group-hover:opacity-100 @sidebar:block" />
+					<div className="absolute right-2 bg-gradient-to-r from-transparent to-background to-25% p-1 pl-0 pr-2 opacity-0 transition-all  group-hover:right-0  group-hover:opacity-100">
+						<ArrowRightIcon className="h-4 w-4 transition-all" />
+					</div>
 				</Button>
 			</Link>
 		</SimpleTooltip>

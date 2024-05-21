@@ -109,7 +109,7 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 							"bg-gradient-to-r from-background to-transparent to-0% bg-[length:200%] bg-left transition-all duration-300 ease-linear hover:bg-right @sidebar:to-50%",
 						)}
 					>
-						<div className="absolute left-0 -z-10 aspect-square w-full opacity-90 transition-opacity gradient-mask-l-50 group-hover:opacity-100 group-focus:opacity-100  @sidebar:opacity-75">
+						<div className="absolute left-0 -z-10 aspect-square w-full opacity-90 transition-opacity group-hover:opacity-100 group-focus:opacity-100 @sidebar:opacity-75  @sidebar:gradient-mask-l-50">
 							{project?.image ? (
 								<Image
 									src={getProjectImageURL(project.image)}
@@ -120,14 +120,16 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 								<Skeleton className="h-full w-full" />
 							)}
 						</div>
-						<div className="hidden items-center gap-2 @sidebar:inline-flex">
+						<div className="hidden min-w-0 items-center gap-2 @sidebar:inline-flex">
 							<span
-								className="h-3 w-3 rounded-full"
+								className="h-3 w-3 min-w-3 rounded-full"
 								style={{
 									backgroundColor: project?.color,
 								}}
 							></span>
-							{project ? project.name : "Select project..."}
+							<span className="max-w-full truncate overflow-ellipsis whitespace-nowrap">
+								{project ? project.name : "Select project..."}
+							</span>
 						</div>
 						<ChevronDown className="hidden h-4 w-4 shrink-0 opacity-50 @sidebar:inline-flex" />
 					</Button>

@@ -65,10 +65,10 @@ const BreadCrumbs = () => {
 
 	function getFromState(id: string, type?: CrumbType) {
 		if (type === "project") {
-			return project?.name + ` (${id})` ?? "";
+			return project?.name ?? "";
 		}
 		if (type === "task" || type === "notification") {
-			return task?.title + ` (${id})` ?? "";
+			return task?.title ?? "";
 		}
 
 		return "Placeholder";
