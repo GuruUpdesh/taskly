@@ -93,17 +93,19 @@ export async function handleDeleteProject(projectId: number) {
 			.delete(usersToProjects)
 			.where(eq(usersToProjects.projectId, projectData.id));
 		await tx.delete(tasks).where(eq(tasks.projectId, projectData.id));
-		await tx
-			.delete(comments)
-			.where(inArray(comments.taskId, tasksToDeleteIds));
-		await tx
-			.delete(taskHistory)
-			.where(inArray(taskHistory.taskId, tasksToDeleteIds));
 		await tx.delete(sprints).where(eq(sprints.projectId, projectData.id));
 		await tx.delete(invites).where(eq(invites.projectId, projectData.id));
-		await tx
-			.delete(tasksToViews)
-			.where(inArray(tasksToViews.taskId, tasksToDeleteIds));
+		if (tasksToDeleteIds.length > 0) {
+			await tx
+				.delete(comments)
+				.where(inArray(comments.taskId, tasksToDeleteIds));
+			await tx
+				.delete(taskHistory)
+				.where(inArray(taskHistory.taskId, tasksToDeleteIds));
+			await tx
+				.delete(tasksToViews)
+				.where(inArray(tasksToViews.taskId, tasksToDeleteIds));
+		}
 	});
 	redirect("/");
 }
