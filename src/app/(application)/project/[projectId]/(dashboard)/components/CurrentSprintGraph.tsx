@@ -79,7 +79,7 @@ const CurrentSprintGraph = async ({ projectId }: Props) => {
 	if (taskIdArray.length === 0) {
 		return;
 	}
-	
+
 	const taskHistoryEntries = await db.query.taskHistory.findMany({
 		where: (th) =>
 			and(eq(th.propertyKey, "status"), inArray(th.taskId, taskIdArray)),

@@ -70,7 +70,7 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 							<CardDescription>Recent Tasks</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<RecentTasks number={8} />
+							<RecentTasks number={8} projectId={projectIdInt} />
 						</CardContent>
 					</Card>
 					<Card className="bg-foreground/5">

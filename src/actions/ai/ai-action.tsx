@@ -95,7 +95,7 @@ export async function aiGenerateTask(description: string, projectId: number) {
 		return;
 	}
 
-	const context = await getMostRecentTasks(5);
+	const context = await getMostRecentTasks(projectId, 5);
 	const contextJSON = JSON.stringify(
 		context.map((task) => ({
 			...task,

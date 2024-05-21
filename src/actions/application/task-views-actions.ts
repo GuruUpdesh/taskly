@@ -1,12 +1,10 @@
 "use server";
 
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { authenticate } from "~/actions/security/authenticate";
 import { db } from "~/server/db";
 import { tasksToViews } from "~/server/db/schema";
-
-import { getAllProjects } from "./project-actions";
 
 export async function updateOrInsertTaskView(taskId: number, userId: string) {
 	const taskView = await db.query.tasksToViews.findFirst({
@@ -34,17 +32,13 @@ export async function updateOrInsertTaskView(taskId: number, userId: string) {
 	}
 }
 
-export async function getMostRecentTasks(number = 5) {
+export async function getMostRecentTasks(projectId: number, number = 5) {
 	const userId = authenticate();
 	if (!userId) return [];
 
-	const userProjects = await getAllProjects(userId);
-	const projectIds: number[] =
-		userProjects?.map((project: { id: number }) => project.id) ?? [];
-
 	const { recentlyViewed, recentlyEdited, recentlyCreated } =
 		await db.transaction(async (tx) => {
-			const recentlyViewed = await tx.query.tasksToViews.findMany({
+			let recentlyViewed = await tx.query.tasksToViews.findMany({
 				where: (tasksToViews) => eq(tasksToViews.userId, userId),
 				orderBy: (tasksToViews, { desc }) => [
 					desc(tasksToViews.viewedAt),
@@ -53,13 +47,16 @@ export async function getMostRecentTasks(number = 5) {
 					task: true,
 				},
 			});
+			recentlyViewed = recentlyViewed.filter(
+				(v) => v.task.projectId === projectId,
+			);
 
 			const recentlyEdited = await tx.query.tasks.findMany({
-				where: (tasks) => inArray(tasks.projectId, projectIds),
+				where: (tasks) => eq(tasks.projectId, projectId),
 				orderBy: (tasks, { desc }) => [desc(tasks.lastEditedAt)],
 			});
 			const recentlyCreated = await tx.query.tasks.findMany({
-				where: (tasks) => inArray(tasks.projectId, projectIds),
+				where: (tasks) => eq(tasks.projectId, projectId),
 				orderBy: (tasks, { desc }) => [desc(tasks.insertedDate)],
 			});
 

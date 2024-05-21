@@ -9,18 +9,15 @@ import { getEnumOptionByKey } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { type Task as TaskType } from "~/server/db/schema";
 
-export function RecentTasksNavWrapper() {
-	return <RecentTasks />;
-}
-
 type RecentTasksProps = {
+	projectId: number;
 	number?: number;
 };
 
-const RecentTasks = async ({ number }: RecentTasksProps) => {
+const RecentTasks = async ({ projectId, number }: RecentTasksProps) => {
 	let mostRecentTasks = [];
 	try {
-		mostRecentTasks = await getMostRecentTasks(number);
+		mostRecentTasks = await getMostRecentTasks(projectId, number);
 	} catch (error) {
 		console.error("Error fetching most recent tasks", error);
 		return <p>You have no tasks yet!</p>;
