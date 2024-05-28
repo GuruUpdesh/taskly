@@ -21,6 +21,7 @@ export const env = createEnv({
 		RESEND_API_KEY: z.string(),
 		CRON_SECRET: z.string(),
 		CLERK_SECRET_KEY: z.string(),
+		CLERK_PROD_SECRET_KEY: z.string().optional(),
 		CLERK_WEBHOOK_SECRET: z.string(),
 		KV_URL: z.string(),
 		KV_REST_API_URL: z.string(),
@@ -60,6 +61,7 @@ export const env = createEnv({
 		RESEND_API_KEY: process.env.RESEND_API_KEY,
 		CRON_SECRET: process.env.CRON_SECRET,
 		CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+		CLERK_PROD_SECRET_KEY: process.env.CLERK_PROD_SECRET_KEY,
 		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
 			process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
 		CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
