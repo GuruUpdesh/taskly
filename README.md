@@ -9,7 +9,7 @@ Taskly is an opinionated agile project managment website that provides a simplif
 </div>
 
 # Features
-![Frame 15](https://github.com/GuruUpdesh/taskly/assets/62634868/fdd810f4-feac-4570-bffd-164d28746e6a)
+![Frame 15](https://github.com/GuruUpdesh/taskly/assets/62634868/02da6bcd-7b91-421d-8dec-3cc8262928c1)
 
 1. **AI Integration**: Enhance the project managment workflow with our Open AI (gpt-4o) integration. The integration adapts to your project needs, streamlining task creation and boosting productivity.
 3. **Simple**: Intuitive for all skill levels. Navigate your projects with an interface designed for simplicity, backed by powerful technology.
