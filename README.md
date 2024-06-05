@@ -3,7 +3,9 @@
 Taskly is an opinionated agile project managment website that provides a simplified and user focused project managment experience.
 ![Frame 16](https://github.com/GuruUpdesh/taskly/assets/62634868/5bf2ff46-c764-41e7-b4e8-44f4394b56db)
 <div align="center">
+  
 [Taskly PM](https://tasklypm.com/)
+
 </div>
 
 ## Features
