@@ -1,20 +1,19 @@
 
 # Taskly
 Taskly is an opinionated agile project managment website that provides a simplified and user focused project managment experience.
+![Frame 16](https://github.com/GuruUpdesh/taskly/assets/62634868/5bf2ff46-c764-41e7-b4e8-44f4394b56db)
 <div align="center">
-
 [Taskly PM](https://tasklypm.com/)
-
 </div>
 
 ## Features
-![Screenshot 2024-03-13 121651](https://github.com/GuruUpdesh/taskly/assets/62634868/50042f27-d237-4988-9249-4a930d36bd9b)
+![Frame 15](https://github.com/GuruUpdesh/taskly/assets/62634868/fdd810f4-feac-4570-bffd-164d28746e6a)
+
 1. **AI Features**: Enhance your workflow with cutting-edge AI. Our machine learning algorithms adapt to your project needs, streamlining tasks and boosting productivity.
 2. **Fast & Realtime**: Speed up your work with our seamless user experience. Gain a competitive edge with instant a task management system thats easy for everyone.
 3. **Simple**: Intuitive for all skill levels. Navigate your projects with an interface designed for simplicity, backed by powerful technology.
 4. **Stay Notified**: Taskly provides seamless notification integration and a UI which helps you catch up quickly.
 5. **Documentation** (Coming Soon): Get started quickly with comprehensive guides. Our detailed documentation provides all you need to harness the power of simplified project management.
-![Screenshot 2024-03-13 131326](https://github.com/GuruUpdesh/track-it/assets/62634868/d474efba-e258-47c5-96ad-195b4a9f5046)
 
 ## Installation
 
@@ -30,7 +29,7 @@ The environment is needed for the project to function properly in local developm
 
 **Install**
 ```bash
-  Git pull https://github.com/GuruUpdesh/taskly.git
+  git pull https://github.com/GuruUpdesh/taskly.git
   cd taskly
   npm install
 ```
