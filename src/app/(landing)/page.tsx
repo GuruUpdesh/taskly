@@ -102,16 +102,12 @@ export default function HomePage() {
 			</section>
 			<section className="container relative mb-32 max-w-[1400px]">
 				<div className="relative">
-					<div className="mix-blend-lighten">
-						<div className="animated-border absolute h-full w-full rounded-lg bg-background"></div>
-					</div>
-					<div className="absolute left-0 top-0 h-full w-full rounded-lg backdrop-blur-xl"></div>
+					<div className="animated-border absolute h-full w-full rounded-lg bg-background"></div>
 					<div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
 						<Image
 							src="/static/marketing/taskboard.webp"
 							fill
 							alt="Taskly Taskboard"
-							className="aspect-[16/9] w-full"
 							priority
 						/>
 					</div>
