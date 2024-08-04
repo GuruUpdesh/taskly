@@ -79,7 +79,7 @@ const Grid = ({
 
 	return (
 		<div
-			className="absolute top-0 z-10 grid h-full w-full overflow-hidden backdrop-blur-[100px]"
+			className="absolute top-0 z-10 grid h-full w-full overflow-hidden"
 			style={{
 				gridTemplateColumns: `repeat(${cols}, 1fr)`,
 				gridTemplateRows: `repeat(${rows}, 1fr)`,

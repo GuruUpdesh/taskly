@@ -1,12 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 
-import Image from "next/image";
-
 import Footer from "~/app/components/Footer";
 import BackButton from "~/app/components/layout/navbar/back-button";
-
-import GridWrapper from "../(landing)/components/grid/GridWrapper";
 
 export default function LandingLayout({
 	children,
@@ -21,17 +17,6 @@ export default function LandingLayout({
 				</div>
 			</header>
 			<div className="relative mb-32 flex flex-grow justify-center">
-				<div className="pointer-events-none absolute h-full w-full backdrop-grayscale" />
-				<div className="absolute z-[-1] h-full w-full fade-in-5">
-					<GridWrapper />
-					<Image
-						className="absolute h-full w-full opacity-100"
-						fill
-						src="/static/background.webp"
-						alt="backdrop"
-					/>
-					<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent to-background" />
-				</div>
 				<div className="mt-24">{children}</div>
 			</div>
 			<Footer />

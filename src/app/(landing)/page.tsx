@@ -8,6 +8,7 @@ import {
 	Rabbit,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 import Footer from "~/app/components/Footer";
 import AnimatedShinyText from "~/components/magicui/animated-shiny-text";
@@ -25,10 +26,10 @@ export default function HomePage() {
 	return (
 		<div className={cn("flex flex-1 flex-col")}>
 			<section className="relative py-32">
-				<div className="absolute top-0 z-[-1] h-full w-full fade-in-5">
+				<div className="absolute top-0 z-[-1] h-full w-full overflow-clip fade-in-5">
 					<GridWrapper />
 					<Image
-						className="absolute h-full w-full opacity-100"
+						className="absolute h-full w-full opacity-100 blur-[100px]"
 						fill
 						src="/static/background.webp"
 						alt="backdrop"
@@ -36,17 +37,19 @@ export default function HomePage() {
 					<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent to-background" />
 				</div>
 				<div className="container max-w-[1400px] px-8">
-					<div
-						className={cn(
-							"group mb-4 w-fit rounded-full border border-white/5 text-base backdrop-blur-lg transition-all ease-in hover:cursor-pointer hover:bg-neutral-800",
-						)}
-					>
-						<AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 text-neutral-400 transition ease-out hover:duration-300">
-							<span>✨ Free to use</span>
-							<ArrowRight className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-						</AnimatedShinyText>
-					</div>
-					<h1 className="text-7xl font-bold drop-shadow-md">
+					<Link href="/app">
+						<div
+							className={cn(
+								"group w-fit rounded-full border text-base backdrop-blur-lg transition-all ease-in hover:cursor-pointer hover:bg-neutral-800",
+							)}
+						>
+							<AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 text-neutral-400 transition ease-out hover:duration-300">
+								<span>✨ Free to use</span>
+								<ArrowRight className="ml-1 size-3 transition-all duration-300 ease-in-out group-hover:ml-2" />
+							</AnimatedShinyText>
+						</div>
+					</Link>
+					<h1 className="mt-4 text-7xl font-bold drop-shadow-md">
 						Taskly Simplifies
 					</h1>
 					<WordRotate
