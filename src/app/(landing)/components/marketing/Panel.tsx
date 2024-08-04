@@ -25,23 +25,20 @@ const panelVariants = cva(
 	},
 );
 
-const iconVariants = cva(
-	"flex aspect-square w-min items-center gap-2 rounded-lg p-2",
-	{
-		variants: {
-			color: {
-				indigo: "bg-indigo-900 text-indigo-400",
-				red: "bg-red-900 text-red-400",
-				green: "bg-green-900 text-green-400",
-				blue: "bg-blue-900 text-blue-400",
-				yellow: "bg-yellow-900 text-yellow-400",
-			},
-		},
-		defaultVariants: {
-			color: "indigo",
+const iconVariants = cva("absolute bottom-0 -right-1 -z-10 opacity-15", {
+	variants: {
+		color: {
+			indigo: "text-indigo-400",
+			red: "text-red-400",
+			green: "text-green-400",
+			blue: "text-blue-400",
+			yellow: "text-yellow-400",
 		},
 	},
-);
+	defaultVariants: {
+		color: "indigo",
+	},
+});
 
 interface Props extends VariantProps<typeof panelVariants> {
 	title: string;
@@ -70,14 +67,7 @@ const Panel = ({ title, icon, description, color, className }: Props) => {
 				>
 					{description}
 				</p>
-				<div className="flex-1" />
-				<div className="flex w-full justify-between">
-					<div className={iconVariants({ color: color })}>{icon}</div>
-					<Button variant="ghost">
-						Learn More
-						<ChevronRight className="h-4 w-4" />
-					</Button>
-				</div>
+				<div className={iconVariants({ color: color })}>{icon}</div>
 			</div>
 		</div>
 	);

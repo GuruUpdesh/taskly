@@ -1,41 +1,45 @@
 import React from "react";
 
-import { ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "~/components/ui/button";
 
 const ButtonOptions = () => {
 	return (
-		<div className="flex w-full items-center justify-between gap-4">
-			<div>
+		<div className="flex items-center gap-4">
+			<Button
+				variant="outline"
+				className="bg-transparent backdrop-blur-lg"
+				asChild
+			>
 				<Link
 					href="https://www.youtube.com/watch?v=2JG1OJx5DK8"
 					target="_blank"
+					aria-label="Watch a demo"
 				>
-					<Button
-						variant="outline"
-						className="mr-4 rounded-full bg-transparent backdrop-blur-lg"
-					>
-						Watch a Demo
-					</Button>
+					Demo Video
 				</Link>
-				<Link href="https://docs.tasklypm.com" target="_blank">
-					<Button
-						variant="outline"
-						className="rounded-full bg-transparent backdrop-blur-lg"
-					>
-						Documentation
-					</Button>
+			</Button>
+			<Button
+				variant="outline"
+				className="bg-transparent backdrop-blur-lg"
+				asChild
+			>
+				<Link
+					href="https://docs.tasklypm.com"
+					target="_blank"
+					aria-label="Documentationx"
+				>
+					Docs
 				</Link>
-			</div>
-			<Link href="/app">
-				<Button className="group rounded-full bg-gradient-to-r font-bold hover:from-green-600 hover:to-green-400 hover:text-foreground">
-					<span className="flex items-center">
-						Get Started <ChevronRight className="h-4 w-4" />
-					</span>
-				</Button>
-			</Link>
+			</Button>
+			<Button className="group rounded-full" asChild>
+				<Link href="/app" aria-label="Get Started">
+					Get Started
+					<ArrowRight className="ml-1 h-4 w-4 transition-all duration-300 ease-in-out group-hover:ml-2" />
+				</Link>
+			</Button>
 		</div>
 	);
 };

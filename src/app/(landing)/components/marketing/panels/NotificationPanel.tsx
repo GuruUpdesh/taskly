@@ -28,38 +28,6 @@ const notificationData: NotificationItemProps[][] = [
 		{ title: "Received a new task comment", type: "info" },
 		{ title: "Failed to join the project", type: "error" },
 	],
-	[
-		{ title: "Copied to Clipboard", type: "info" },
-		{ title: "Task finished successfully", type: "success" },
-		{ title: "New feedback on task", type: "info" },
-		{ title: "Issue in task processing", type: "error" },
-		{ title: "AI Task Creation Completed", type: "error" },
-	],
-	[
-		{ title: "Task assigned to you", type: "info" },
-		{ title: "Task completed successfully", type: "success" },
-		{ title: "New comment on task", type: "info" },
-		{ title: "Error in task execution", type: "error" },
-	],
-	[
-		{ title: "New project initiated", type: "success" },
-		{ title: "Approaching project deadline", type: "warning" },
-		{ title: "Project status update", type: "info" },
-		{ title: "Issue with project creation", type: "error" },
-	],
-	[
-		{ title: "You have been added to a new task", type: "info" },
-		{ title: "Task successfully reassigned", type: "success" },
-		{ title: "Received a new task comment", type: "info" },
-		{ title: "Failed to join the project", type: "error" },
-	],
-	[
-		{ title: "Copied to Clipboard", type: "info" },
-		{ title: "Task finished successfully", type: "success" },
-		{ title: "New feedback on task", type: "info" },
-		{ title: "Issue in task processing", type: "error" },
-		{ title: "AI Task Creation Completed", type: "error" },
-	],
 ];
 
 const NotificationPanel = () => {
