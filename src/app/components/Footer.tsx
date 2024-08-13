@@ -13,7 +13,7 @@ const Footer = () => {
 	return (
 		<footer
 			className={cn(
-				"flex justify-center border-t border-foreground/5 bg-background/5 py-8",
+				"flex justify-center border-t border-foreground/5 bg-background/5 py-8 backdrop-blur-xl",
 			)}
 		>
 			<div className="w-[1400px] max-w-[1400px] px-4">
@@ -31,55 +31,55 @@ const Footer = () => {
 						</p>
 					</div>
 					<div className="grid grid-cols-3 gap-8 lg:col-span-3">
-						<div className="flex flex-col items-start gap-2">
+						<div className="flex flex-col items-start">
 							<p className="font-semibold">Application</p>
 							<Link
 								href="/app"
-								className="p-0 py-0.5 opacity-75 transition-opacity hover:underline hover:opacity-100"
+								className="p-0 py-0.5 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
 							>
 								Dashboard
 							</Link>
 							<Link
 								href="/create-project"
-								className="p-0 opacity-75 transition-opacity hover:underline hover:opacity-100"
+								className="p-0 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
 							>
 								Create Project
 							</Link>
 							<Link
 								href="/settings"
-								className="p-0 py-0.5 opacity-75 transition-opacity hover:underline hover:opacity-100"
+								className="p-0 py-0.5 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
 							>
 								Settings
 							</Link>
 						</div>
-						<div className="flex flex-col items-start gap-2">
+						<div className="flex flex-col items-start">
 							<p className="font-semibold">Support</p>
 							<Link
 								href="https://docs.tasklypm.com"
 								target="_blank"
-								className="p-0 opacity-75 transition-opacity hover:underline hover:opacity-100"
+								className="p-0 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
 							>
 								Documentation
 							</Link>
 							<Link
 								href="https://github.com/GuruUpdesh/taskly"
 								target="_blank"
-								className="p-0 opacity-75 transition-opacity hover:underline hover:opacity-100"
+								className="p-0 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
 							>
 								GitHub
 							</Link>
 						</div>
-						<div className="flex flex-col items-start gap-2">
+						<div className="flex flex-col items-start">
 							<p className="font-semibold">Authentication</p>
 							<Link
 								href="/sign-in"
-								className="p-0 py-0.5 opacity-75 transition-opacity hover:underline hover:opacity-100"
+								className="p-0 py-0.5 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
 							>
 								Sign In
 							</Link>
 							<Link
 								href="/sign-up"
-								className="p-0 py-0.5 opacity-75 transition-opacity hover:underline hover:opacity-100"
+								className="p-0 py-0.5 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
 							>
 								Sign Up
 							</Link>

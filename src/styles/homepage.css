@@ -80,13 +80,7 @@
 .cycle-text-container {
 	height: 111px;
 	overflow: hidden;
-	mask-image: linear-gradient(
-		to bottom,
-		transparent,
-		white 10%,
-		white 98%,
-		transparent
-	);
+	mask-image: linear-gradient(to bottom, transparent, white 10%, white 98%, transparent);
 }
 
 .cycle-text p {
@@ -107,12 +101,7 @@
 	top: -1px;
 	left: -1px;
 	position: absolute;
-	background: conic-gradient(
-		from var(--rotate),
-		hsl(var(--border)) 0deg 300deg,
-		rgba(255, 255, 255, 0.5) 340deg,
-		#7578e4 360deg
-	);
+	background: conic-gradient(from var(--rotate), hsl(var(--border)) 0deg 300deg, #4eb875 320deg, #dc6262 340deg, #7578e4 360deg);
 	animation: rotation 10s linear infinite;
 	border-radius: inherit;
 	z-index: -1;
