@@ -47,7 +47,7 @@ export async function generateMetadata({
 		return {
 			title: {
 				default: result.data.name,
-				template: `Taskly | %s`,
+				template: `Taskly | %s > ${result.data.name}`,
 			},
 		};
 	} catch (e) {
