@@ -74,7 +74,7 @@
 		"lodash.debounce": "^4.0.8",
 		"lucide-react": "^0.376.0",
 		"markdown-to-txt": "^2.0.1",
-		"next": "^14.2.3",
+		"next": "^14.2.15",
 		"next-themes": "^0.2.1",
 		"openai": "^4.20.1",
 		"pluralize": "^8.0.0",
