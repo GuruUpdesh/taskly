@@ -30,35 +30,13 @@ type Params = {
 	};
 };
 
-export async function generateMetadata({
-	params: { projectId },
-}: Params): Promise<Metadata> {
-	try {
-		const user = await currentUser();
-		if (!user) {
-			throw new Error("User not found");
-		}
-
-		const projectIdInt = parseInt(projectId, 10);
-		const result = await getProject(projectIdInt, user.id);
-		if (result.error !== null) {
-			throw new Error(result.error);
-		}
-		return {
-			title: {
-				default: result.data.name,
-				template: `Taskly | %s > ${result.data.name}`,
-			},
-		};
-	} catch (e) {
-		console.error(e);
-		return {
-			title: {
-				default: "Project",
-				template: "Taskly | %s",
-			},
-		};
-	}
+export function generateMetadata(): Metadata {
+	return {
+		title: {
+			default: "Taskly",
+			template: "Taskly > %s",
+		},
+	};
 }
 
 export default async function ApplicationLayout({

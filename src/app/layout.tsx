@@ -24,7 +24,7 @@ export const metadata = {
 	metadataBase: new URL("https://tasklypm.com"),
 	title: {
 		default: "Taskly",
-		template: "%s | Taskly",
+		template: "Taskly > %s",
 	},
 	description: "Simplified project management tool",
 	icons: [{ rel: "icon", url: "/favicon.ico" }],
