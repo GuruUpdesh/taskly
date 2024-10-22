@@ -254,7 +254,7 @@ export default function TasksContainer({ projectId }: Props) {
 			editTaskMutation.mutate({
 				id: task.id,
 				newTask: {
-				[groupBy]: transformedValue,
+					[groupBy]: transformedValue,
 					backlogOrder: destination.index,
 				},
 			});

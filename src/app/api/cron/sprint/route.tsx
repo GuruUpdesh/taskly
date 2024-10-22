@@ -164,5 +164,3 @@ export async function GET(request: NextRequest) {
 	}
 	return new Response(JSON.stringify(results), { status: 200 });
 }
-
-

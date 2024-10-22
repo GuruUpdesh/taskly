@@ -256,7 +256,6 @@ export async function updateTask(
 
 		await db.update(tasks).set(requestedTask).where(eq(tasks.id, id));
 
-
 		if (waitForNotification) {
 			await createTaskUpdateNotification(id, data, existingTask);
 			revalidatePath("/");
