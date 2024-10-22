@@ -1,10 +1,10 @@
 import { addWeeks } from "date-fns";
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, ne } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
-import { projects, sprints } from "~/server/db/schema";
+import { projects, sprints, tasks } from "~/server/db/schema";
 
 type Sprint =
 	| {
@@ -127,5 +127,40 @@ export async function GET(request: NextRequest) {
 		}
 	}
 
+	// update non-finished tasks of current sprint to backlog
+	for (const project of allProjects) {
+		const projectId = project.id;
+		console.log("------------------\n\n");
+		console.log(projectId, project.name);
+
+		const sprintsForProject = await db
+			.select()
+			.from(sprints)
+			.where(eq(sprints.projectId, projectId))
+			.orderBy(asc(sprints.endDate));
+
+		const currentSprintIndex = sprintsForProject.findIndex(
+			(sprint) =>
+				sprint.startDate <= new Date() && sprint.endDate >= new Date(),
+		);
+		const currentSprint = sprintsForProject[currentSprintIndex];
+
+		if (!currentSprint) {
+			continue;
+		}
+
+		await db
+			.update(tasks)
+			.set({ status: "backlog", sprintId: -1 })
+			.where(
+				and(
+					eq(tasks.projectId, projectId),
+					ne(tasks.status, "done"),
+					ne(tasks.status, "backlog"),
+					ne(tasks.sprintId, currentSprint.id),
+					ne(tasks.sprintId, -1),
+				),
+			);
+	}
 	return new Response(JSON.stringify(results), { status: 200 });
 }

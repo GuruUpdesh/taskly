@@ -27,6 +27,7 @@ import { type Task } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
 import { taskNameToBranchName } from "~/utils/task-name-branch-converters";
 
+import { getCurrentSprintForProject } from "./sprint-actions";
 import {
 	deleteViewsForTask,
 	updateOrInsertTaskView,
@@ -201,37 +202,60 @@ export async function updateTask(
 	data: UpdateTaskData,
 	waitForNotification = false,
 ) {
-	console.time("update task");
 	try {
-		const updatedTaskData = CreateTaskSchema.partial().parse(data);
-		if (Object.keys(updatedTaskData).length === 0) {
+		// validation
+		const requestedUpdates = CreateTaskSchema.partial().parse(data);
+		if (Object.keys(requestedUpdates).length === 0) {
 			console.warn("No data to update");
 			return;
 		}
 
-		const taskData = {
-			...updatedTaskData,
-			lastEditedAt: new Date(),
-		};
-
-		if (
-			updatedTaskData.status === "backlog" &&
-			updatedTaskData.sprintId !== -1
-		) {
-			updatedTaskData.sprintId = -1;
-		} else if (
-			updatedTaskData.sprintId !== -1 &&
-			updatedTaskData.status === "backlog"
-		) {
-			updatedTaskData.status = "todo";
-		}
-
-		if (!taskData) return;
+		// find existing task
 		const existingTask = await db.query.tasks.findFirst({
 			where: (tasks) => eq(tasks.id, id),
 		});
-		if (!existingTask) return;
-		await db.update(tasks).set(taskData).where(eq(tasks.id, id));
+		if (!existingTask) {
+			console.error(`Failed to fetch existing task ${id}`);
+			return;
+		}
+
+		// get the proposed task object
+		const requestedTask = {
+			...existingTask,
+			...requestedUpdates,
+			lastEditedAt: new Date(),
+		};
+
+		// get the current sprint in case of auto changes
+		const sprint = await getCurrentSprintForProject(
+			requestedTask.projectId,
+		);
+
+		if (requestedUpdates.status !== undefined) {
+			if (
+				requestedTask.sprintId === -1 &&
+				requestedTask.status !== "backlog" &&
+				sprint
+			) {
+				requestedTask.sprintId = sprint.id;
+			} else if (requestedTask.sprintId !== -1) {
+				requestedTask.sprintId = -1;
+			}
+		}
+
+		if (requestedUpdates.sprintId !== undefined) {
+			if (
+				requestedTask.sprintId !== -1 &&
+				requestedTask.status === "backlog"
+			) {
+				requestedTask.status = "todo";
+			} else if (requestedTask.sprintId === -1) {
+				requestedTask.status = "backlog";
+			}
+		}
+
+		await db.update(tasks).set(requestedTask).where(eq(tasks.id, id));
+
 		if (waitForNotification) {
 			await createTaskUpdateNotification(id, data, existingTask);
 			revalidatePath("/");

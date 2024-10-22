@@ -140,6 +140,7 @@ const Task = ({
 
 	function onSubmit(newTask: TaskFormType) {
 		newTask.projectId = task.projectId;
+		task.sprintId = task.sprintId.toString() as unknown as number;
 		const changes = Object.keys(newTask).reduce((acc, key) => {
 			if (
 				newTask[key as keyof TaskFormType] !==

@@ -255,7 +255,6 @@ export default function TasksContainer({ projectId }: Props) {
 				id: task.id,
 				newTask: {
 					[groupBy]: transformedValue,
-					sprintId: String(task.sprintId),
 					backlogOrder: destination.index,
 				},
 			});

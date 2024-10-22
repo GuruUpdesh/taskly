@@ -44,7 +44,10 @@ import {
 	type Sprint,
 	selectTaskSchema,
 } from "~/server/db/schema";
-import { helperIsSprintActive } from "~/utils/getCurrentSprintId";
+import {
+	getCurrentSprintId,
+	helperIsSprintActive,
+} from "~/utils/getCurrentSprintId";
 import {
 	getClockIconForSprintProgress,
 	getSprintProgress,
@@ -576,9 +579,17 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 		})),
 	];
 
+	const currentSprintId = getCurrentSprintId(sprints);
+	const currentSprintIndex = sprints
+		.map((s) => s.id)
+		.indexOf(currentSprintId);
+	const sprintsToDisplay = sprints.filter(
+		(_, i) => currentSprintIndex - 2 < i && i < currentSprintIndex + 2,
+	);
+
 	config.sprintId.options = [
 		...taskConfig.sprintId.options,
-		...sprints.map((sprint) => {
+		...sprintsToDisplay.map((sprint) => {
 			const isActive = helperIsSprintActive(sprint);
 			let ClockIcon = <Clock className="h-4 w-4" />;
 			if (isActive) {
@@ -588,6 +599,7 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 					ClockIcon = dynamicIcon;
 				}
 			}
+
 			return {
 				key: sprint.id.toString(),
 				displayName: sprint.name,
