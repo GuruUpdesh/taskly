@@ -584,7 +584,7 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 		.map((s) => s.id)
 		.indexOf(currentSprintId);
 	const sprintsToDisplay = sprints.filter(
-		(_, i) => currentSprintIndex - 4 < i && i < currentSprintIndex + 4,
+		(_, i) => currentSprintIndex - 2 < i && i < currentSprintIndex + 2,
 	);
 
 	config.sprintId.options = [
