@@ -27,6 +27,7 @@ import type { NewTask, Task } from "~/server/db/schema";
 
 import TaskHistoryItem, { type TaskHistoryWithUser } from "./HistoryItem";
 import PullRequest from "./PullRequest";
+import Tiptap from "./TipTap";
 
 const Editor = dynamic(
 	() =>
@@ -120,7 +121,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 				{...form.register("title")}
 				onChangeCapture={debouncedHandleChange}
 			/>
-			<Editor
+			{/* <Editor
 				editorRef={editorRef}
 				markdown={form.watch("description")}
 				onChange={(content) => {
@@ -128,7 +129,16 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 					form.setValue("description", content);
 					debouncedHandleChange();
 				}}
-			/>
+			/> */}
+			<div className="p-2 border rounded">
+				<Tiptap
+					content={form.watch("description")}
+					onChange={(content: string) => {
+						form.setValue("description", content);
+						debouncedHandleChange();
+					}}
+				/>
+			</div>
 			<div className="py-4">
 				<div className="flex flex-col gap-2 overflow-hidden">
 					<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">

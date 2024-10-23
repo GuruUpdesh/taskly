@@ -1,120 +1,118 @@
-@import "../../../../../../../../node_modules/@mdxeditor/editor/dist/style.css";
-
-.mdxeditor {
-	/* Common styles for both MDXEditor and Textarea */
+/* Basic editor styles */
+.tiptap {
 	outline: none;
-	border-width: 1px;
-	border-radius: calc(var(--radius) - 2px);
-	border-color: hsl(var(--input));
-	min-height: 80px;
-	--tw-ring-color: transparent;
-}
+	:first-child {
+		margin-top: 0;
+	}
 
-.mdxeditor:focus-visible {
-	outline: none;
-	border-color: hsl(var(--ring));
-}
+	/* List styles */
+	ul,
+	ol {
+		padding: 0 1rem;
+		margin: 1.25rem 1rem 1.25rem 0.4rem;
+		list-style-type: initial;
 
-/* Headers */
-.mdxeditor h1 {
-	font-size: 2.25rem;
-	font-weight: 800;
-	letter-spacing: -0.025em;
-	line-height: 1.2;
-}
+		ul {
+			list-style-type: disc;
+		}
 
-.mdxeditor h2 {
-	font-size: 1.875rem;
-	font-weight: 600;
-	letter-spacing: -0.0125em;
-}
+		ol {
+			list-style-type: decimal;
+		}
 
-.mdxeditor h3 {
-	font-size: 1.5rem;
-	font-weight: 600;
-	letter-spacing: -0.0125em;
-}
+		li p {
+			margin-top: 0.25em;
+			margin-bottom: 0.25em;
+		}
+	}
 
-.mdxeditor h4 {
-	font-size: 1.25rem;
-	font-weight: 600;
-	letter-spacing: -0.0125em;
-}
+	/* Heading styles */
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		line-height: 1.1;
+		margin-top: 2.5rem;
+		text-wrap: pretty;
+	}
 
-/* Paragraphs */
-.mdxeditor p {
-	line-height: 1.75;
-}
+	h1,
+	h2 {
+		margin-top: 3.5rem;
+		margin-bottom: 1.5rem;
+	}
 
-.mdxeditor p:not(:first-child) {
-	margin-top: 1.5rem;
-}
+	h1 {
+		font-size: 1.4rem;
+	}
 
-.mdxeditor p.large {
-	font-size: 1.125rem;
-	font-weight: 600;
-}
+	h2 {
+		font-size: 1.2rem;
+	}
 
-.mdxeditor p.lead {
-	font-size: 1.25rem;
-	color: #6b7280;
-}
+	h3 {
+		font-size: 1.1rem;
+	}
 
-.mdxeditor p.muted {
-	color: #6b7280;
-}
-.mdxeditor p a {
-	color: #2563eb;
-	text-decoration: underline;
-}
+	h4,
+	h5,
+	h6 {
+		font-size: 1rem;
+	}
 
-.mdxeditor p.code {
-	position: relative;
-	border-radius: 0.25rem;
-	background-color: #f3f4f6;
-	padding: 0.125rem 0.25rem;
-	font-family: "Menlo", "Monaco", "Courier New", monospace;
-	font-size: 0.875rem;
-	font-weight: 600;
-}
+	/* Code and preformatted text styles */
+	code {
+		background-color: hsl(var(--border));
+		border-radius: 0.4rem;
+		color: var(--black);
+		font-size: 0.85rem;
+		padding: 0.25em 0.3em;
+	}
 
-/* Lists */
-.mdxeditor ul,
-.mdxeditor ol {
-	margin-top: 1.5rem;
-	margin-left: 1.5rem;
-	list-style-type: disc;
-}
+	pre {
+		background: hsl(var(--background));
+		border-radius: 0.5rem;
+		color: var(--white);
+		font-family: "JetBrainsMono", monospace;
+		margin: 1.5rem 0;
+		padding: 0.75rem 1rem;
 
-.mdxeditor ul ul,
-.mdxeditor ul ol,
-.mdxeditor ol ul,
-.mdxeditor ol ol {
-	margin-top: 0; /* Remove margin-top for nested lists */
-}
+		code {
+			background: none;
+			color: inherit;
+			font-size: 0.8rem;
+			padding: 0;
+		}
+	}
 
-.mdxeditor ul > li,
-.mdxeditor ol > li {
-	margin-top: 0.5rem;
-}
+	blockquote {
+		border-left: 3px solid hsl(var(--border));
+		margin: 1.5rem 0;
+		padding-left: 1rem;
+	}
 
-.mdxeditor-popup-container div {
-	background-color: hsl(var(--popover));
-	color: hsl(var(--popover-foreground));
-}
+	hr {
+		border: none;
+		border-top: 1px solid hsl(var(--border));
+		margin: 2rem 0;
+	}
 
-.mdxeditor-popup-container div span svg {
-	fill: hsl(var(--border));
-}
+	a {
+		color: #4da6ff;
+		cursor: pointer;
+	}
 
-.mdxeditor-popup-container form button[type="submit"] {
-	background-color: hsl(var(--primary));
-	color: hsl(var(--primary-foreground));
-}
+	a:hover {
+		color: #66ccff;
+	}
 
-.mdxeditor .mdxeditor-toolbar {
-	background: #111111;
-	border-radius: calc(var(--radius) - 2px);
-	border-bottom: 1px solid hsl(var(--border));
-	top: 57px;
+	p.is-editor-empty:first-child::before {
+		color: hsl(var(--foreground) / 0.25);
+		content: attr(data-placeholder);
+		float: left;
+		height: 0;
+		pointer-events: none;
+	  }
 }
