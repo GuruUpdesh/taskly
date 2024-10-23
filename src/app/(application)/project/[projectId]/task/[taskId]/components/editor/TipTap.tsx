@@ -7,7 +7,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import Typography from "@tiptap/extension-typography";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, type Content } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
 import "./tiptap.css";
@@ -20,6 +20,20 @@ type Props = {
 };
 
 const Tiptap = ({ content, onChange }: Props) => {
+	function getContent() {
+		try {
+			return JSON.parse(content) as Content;
+		} catch (e) {
+			return "";
+		}
+	}
+
+	// TODO
+	// TODO: implement this https://github.com/troop-dev/tiptap-react-render
+	// we can  use this for SSR
+	//
+	//TODO
+
 	const editor = useEditor({
 		immediatelyRender: false,
 		extensions: [
@@ -45,7 +59,7 @@ const Tiptap = ({ content, onChange }: Props) => {
 				suggestion,
 			}),
 		],
-		content: JSON.parse(content) as string,
+		content: getContent(),
 		onUpdate: (e) => {
 			onChange(JSON.stringify(e.editor.getJSON()));
 		},
