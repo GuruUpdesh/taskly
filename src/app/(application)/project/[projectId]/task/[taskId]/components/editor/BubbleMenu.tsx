@@ -121,44 +121,9 @@ const BubbleMenu = ({ editor }: Props) => {
 	return (
 		<TipTapBubbleMenu
 			className="bubble-menu flex rounded-sm border bg-background"
-			tippyOptions={{ duration: 100 }}
+			tippyOptions={{ duration: 35 }}
 			editor={editor}
 		>
-			<Select
-				value={getActiveHeading()}
-				onValueChange={handleHeadingChange}
-			>
-				<SelectTrigger
-					asChild
-					className="w-min rounded border border-0 border-r"
-				>
-					<Button
-						size="icon"
-						variant="ghost"
-						className="flex gap-1 rounded-r-none text-sm font-normal text-muted-foreground"
-					>
-						<SelectValue placeholder={<LetterCaseToggleIcon />} />
-						<ChevronDownIcon />
-					</Button>
-				</SelectTrigger>
-				<SelectContent
-					portal={false}
-					onCloseAutoFocus={(e) => e.preventDefault()}
-				>
-					<SelectItem value="p" className="text-sm">
-						Regular text
-					</SelectItem>
-					<SelectItem value="1" className="text-xl">
-						Heading 1
-					</SelectItem>
-					<SelectItem value="2" className="text-lg">
-						Heading 2
-					</SelectItem>
-					<SelectItem value="3" className="text-md">
-						Heading 3
-					</SelectItem>
-				</SelectContent>
-			</Select>
 			<Button
 				size="icon"
 				variant="ghost"
@@ -198,19 +163,40 @@ const BubbleMenu = ({ editor }: Props) => {
 			>
 				<StrikethroughIcon />
 			</Button>
-			<Button
-				size="icon"
-				variant="ghost"
-				onClick={() => editor.chain().focus().toggleCode().run()}
-				className={cn(
-					"rounded-none",
-					editor.isActive("code")
-						? "bg-accent hover:bg-accent/75"
-						: "text-muted-foreground",
-				)}
+			<Select
+				value={getActiveHeading()}
+				onValueChange={handleHeadingChange}
 			>
-				<CodeIcon />
-			</Button>
+				<SelectTrigger
+					asChild
+					className="w-min rounded border border-0 border-r bg-transparent"
+				>
+					<Button
+						size="icon"
+						variant="ghost"
+						className="flex gap-1 rounded-none text-sm font-normal text-muted-foreground"
+					>
+						<SelectValue placeholder={<LetterCaseToggleIcon />} />
+					</Button>
+				</SelectTrigger>
+				<SelectContent
+					portal={false}
+					onCloseAutoFocus={(e) => e.preventDefault()}
+				>
+					<SelectItem value="p" className="text-sm">
+						Regular text
+					</SelectItem>
+					<SelectItem value="1" className="text-xl">
+						Heading 1
+					</SelectItem>
+					<SelectItem value="2" className="text-lg">
+						Heading 2
+					</SelectItem>
+					<SelectItem value="3" className="text-md">
+						Heading 3
+					</SelectItem>
+				</SelectContent>
+			</Select>
 			<Popover onOpenChange={openLinkPopover}>
 				<PopoverTrigger asChild>
 					<Button
@@ -259,21 +245,33 @@ const BubbleMenu = ({ editor }: Props) => {
 					<LinkBreak1Icon />
 				</Button>
 			) : null}
+			<Button
+				size="icon"
+				variant="ghost"
+				onClick={() => editor.chain().focus().toggleCode().run()}
+				className={cn(
+					"rounded-none",
+					editor.isActive("code")
+						? "bg-accent hover:bg-accent/75"
+						: "text-muted-foreground",
+				)}
+			>
+				<CodeIcon />
+			</Button>
 			<Select value={getActiveList()} onValueChange={handleListChange}>
 				<SelectTrigger
 					asChild
-					className="w-min rounded border border-0 border-l"
+					className="w-min rounded border border-0 border-l bg-transparent"
 				>
 					<Button
 						size="icon"
 						variant="ghost"
-						className="flex gap-1 rounded-l-none text-sm font-normal text-muted-foreground"
+						className="flex gap-1 rounded-none text-sm font-normal text-muted-foreground"
 					>
 						<SelectValue
 							placeholder={<List className="h-4 w-4" />}
 							className="min-h-4 min-w-4"
 						/>
-						<ChevronDownIcon />
 					</Button>
 				</SelectTrigger>
 				<SelectContent
