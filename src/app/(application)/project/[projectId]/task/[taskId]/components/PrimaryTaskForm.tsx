@@ -4,16 +4,13 @@ import React, {
 	useCallback,
 	useEffect,
 	useMemo,
-	useRef,
 	useState,
 } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type MDXEditorMethods } from "@mdxeditor/editor";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { UseMutationResult } from "@tanstack/react-query";
 import _debounce from "lodash/debounce";
-import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -22,23 +19,11 @@ import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)
 import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Skeleton } from "~/components/ui/skeleton";
 import type { NewTask, Task } from "~/server/db/schema";
 
+import Tiptap from "./editor/TipTap";
 import TaskHistoryItem, { type TaskHistoryWithUser } from "./HistoryItem";
 import PullRequest from "./PullRequest";
-import Tiptap from "./TipTap";
-
-const Editor = dynamic(
-	() =>
-		import(
-			"~/app/(application)/project/[projectId]/task/[taskId]/components/TextEditor"
-		),
-	{
-		ssr: false,
-		loading: () => <Skeleton className="h-[95.5px]" />,
-	},
-);
 
 interface TaskWithComments extends Task {
 	taskHistory: TaskHistoryWithUser[];
@@ -96,8 +81,6 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 		[],
 	);
 
-	const editorRef = useRef<MDXEditorMethods>(null);
-
 	const [showAllHistory, setShowAllHistory] = useState(false);
 
 	const displayedHistory = useMemo(
@@ -121,15 +104,6 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 				{...form.register("title")}
 				onChangeCapture={debouncedHandleChange}
 			/>
-			{/* <Editor
-				editorRef={editorRef}
-				markdown={form.watch("description")}
-				onChange={(content) => {
-					console.log(content);
-					form.setValue("description", content);
-					debouncedHandleChange();
-				}}
-			/> */}
 			<div className="p-2 border rounded">
 				<Tiptap
 					content={form.watch("description")}
