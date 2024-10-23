@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-	useCallback,
-	useEffect,
-	useMemo,
-	useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
@@ -104,7 +99,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 				{...form.register("title")}
 				onChangeCapture={debouncedHandleChange}
 			/>
-			<div className="p-2 border rounded">
+			<div className="rounded border p-2">
 				<Tiptap
 					content={form.watch("description")}
 					onChange={(content: string) => {

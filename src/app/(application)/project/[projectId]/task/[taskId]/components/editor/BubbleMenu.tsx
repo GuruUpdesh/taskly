@@ -9,11 +9,11 @@ import {
 	Link1Icon,
 	LinkBreak1Icon,
 	CodeIcon,
-	PilcrowIcon,
 	LetterCaseToggleIcon,
 	ChevronDownIcon,
 } from "@radix-ui/react-icons";
 import { type Editor, BubbleMenu as TipTapBubbleMenu } from "@tiptap/react";
+import { List, ListChecks, ListOrdered } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -87,6 +87,35 @@ const BubbleMenu = ({ editor }: Props) => {
 					: editor.isActive("heading", { level: 3 })
 						? "3"
 						: "";
+	}, [editor]);
+
+	const handleListChange = useCallback(
+		(listType: "bullet-list" | "ordered-list" | "checklist") => {
+			switch (listType) {
+				case "bullet-list":
+					editor.chain().focus().toggleBulletList().run();
+					break;
+				case "ordered-list":
+					editor.chain().focus().toggleOrderedList().run();
+					break;
+				case "checklist":
+					editor.chain().focus().toggleTaskList().run();
+					break;
+				default:
+					break;
+			}
+		},
+		[editor],
+	);
+
+	const getActiveList = useCallback(() => {
+		return editor.isActive("bulletList")
+			? "bullet-list"
+			: editor.isActive("orderedList")
+				? "ordered-list"
+				: editor.isActive("taskList")
+					? "checklist"
+					: "";
 	}, [editor]);
 
 	return (
@@ -230,6 +259,38 @@ const BubbleMenu = ({ editor }: Props) => {
 					<LinkBreak1Icon />
 				</Button>
 			) : null}
+			<Select value={getActiveList()} onValueChange={handleListChange}>
+				<SelectTrigger
+					asChild
+					className="w-min rounded border border-0 border-l"
+				>
+					<Button
+						size="icon"
+						variant="ghost"
+						className="flex gap-1 rounded-l-none text-sm font-normal text-muted-foreground"
+					>
+						<SelectValue
+							placeholder={<List className="h-4 w-4" />}
+							className="min-h-4 min-w-4"
+						/>
+						<ChevronDownIcon />
+					</Button>
+				</SelectTrigger>
+				<SelectContent
+					portal={false}
+					onCloseAutoFocus={(e) => e.preventDefault()}
+				>
+					<SelectItem value="bullet-list">
+						<List className="h-4 w-4" />
+					</SelectItem>
+					<SelectItem value="ordered-list">
+						<ListOrdered className="h-4 w-4" />
+					</SelectItem>
+					<SelectItem value="checklist">
+						<ListChecks className="h-4 w-4" />
+					</SelectItem>
+				</SelectContent>
+			</Select>
 		</TipTapBubbleMenu>
 	);
 };

@@ -3,9 +3,12 @@
 import Highlight from "@tiptap/extension-highlight";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
+import TaskItem from "@tiptap/extension-task-item";
+import TaskList from "@tiptap/extension-task-list";
 import Typography from "@tiptap/extension-typography";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+
 import "./tiptap.css";
 import BubbleMenu from "./BubbleMenu";
 
@@ -29,6 +32,10 @@ const Tiptap = ({ content, onChange }: Props) => {
 			Placeholder.configure({
 				placeholder: "Add a description...",
 			}),
+			TaskList,
+			TaskItem.configure({
+				nested: true,
+			}),
 		],
 		content: JSON.parse(content) as string,
 		onUpdate: (e) => {
@@ -39,57 +46,6 @@ const Tiptap = ({ content, onChange }: Props) => {
 	return (
 		<>
 			{editor && <BubbleMenu editor={editor} />}
-
-			{/* {editor && (
-				<FloatingMenu
-					className="floating-menu"
-					tippyOptions={{ duration: 100 }}
-					editor={editor}
-				>
-					<button
-						onClick={() =>
-							editor
-								.chain()
-								.focus()
-								.toggleHeading({ level: 1 })
-								.run()
-						}
-						className={
-							editor.isActive("heading", { level: 1 })
-								? "is-active"
-								: ""
-						}
-					>
-						H1
-					</button>
-					<button
-						onClick={() =>
-							editor
-								.chain()
-								.focus()
-								.toggleHeading({ level: 2 })
-								.run()
-						}
-						className={
-							editor.isActive("heading", { level: 2 })
-								? "is-active"
-								: ""
-						}
-					>
-						H2
-					</button>
-					<button
-						onClick={() =>
-							editor.chain().focus().toggleBulletList().run()
-						}
-						className={
-							editor.isActive("bulletList") ? "is-active" : ""
-						}
-					>
-						Bullet list
-					</button>
-				</FloatingMenu>
-			)} */}
 			<EditorContent editor={editor} />
 		</>
 	);
