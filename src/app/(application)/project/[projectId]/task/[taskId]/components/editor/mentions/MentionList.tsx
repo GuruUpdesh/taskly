@@ -91,6 +91,6 @@ const MentionList = forwardRef(
 	},
 );
 
-MentionList.displayName = "Dropdown";
+MentionList.displayName = "MentionList";
 
 export default MentionList;
