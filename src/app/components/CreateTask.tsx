@@ -46,6 +46,7 @@ import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
 import SimpleTooltip from "./SimpleTooltip";
+import Tiptap from "../(application)/project/[projectId]/task/[taskId]/components/editor/TipTap";
 
 type FormProps = {
 	onSubmit: (newTask: TaskFormType) => void;
@@ -127,11 +128,11 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 				autoFocus
 				autoComplete="off"
 			/>
-			<Textarea
-				className="m-0 resize-none border-none bg-transparent p-0 ring-offset-transparent focus-visible:ring-transparent"
-				placeholder="Add a description..."
-				rows={2}
-				{...form.register("description")}
+			<Tiptap
+				content={form.watch("description")}
+				onChange={(content: string) => {
+					form.setValue("description", content);
+				}}
 			/>
 			<div
 				className={cn(

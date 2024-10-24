@@ -1,6 +1,8 @@
 /* Basic editor styles */
 .tiptap {
 	outline: none;
+	min-height: 80px;
+
 
 	:first-child {
 		margin-top: 0;
