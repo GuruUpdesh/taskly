@@ -10,6 +10,7 @@ import {
 	LinkBreak1Icon,
 	CodeIcon,
 	LetterCaseToggleIcon,
+	UnderlineIcon,
 } from "@radix-ui/react-icons";
 import { type Editor, BubbleMenu as TipTapBubbleMenu } from "@tiptap/react";
 import { List, ListChecks, ListOrdered } from "lucide-react";
@@ -150,6 +151,20 @@ const BubbleMenu = ({ editor }: Props) => {
 				)}
 			>
 				<FontItalicIcon />
+			</Button>
+			<Button
+				type="button"
+				size="icon"
+				variant="ghost"
+				onClick={() => editor.chain().focus().toggleUnderline().run()}
+				className={cn(
+					"rounded-none",
+					editor.isActive("underline")
+						? "bg-accent hover:bg-accent/75"
+						: "text-muted-foreground",
+				)}
+			>
+				<UnderlineIcon />
 			</Button>
 			<Button
 				type="button"

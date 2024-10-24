@@ -65,6 +65,10 @@
 		font-size: 1rem;
 	}
 
+	u {
+		text-decoration: underline;
+	}
+
 	/* Code and preformatted text styles */
 	code {
 		background-color: hsl(var(--border));

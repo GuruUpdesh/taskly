@@ -24,7 +24,7 @@ const RenderCommandOptions: SuggestionOptions["render"] = () => {
 				return;
 			}
 
-			const bodyElement = document.querySelector("body");
+			const bodyElement = document.querySelector(".tiptap");
 			if (!bodyElement) return;
 
 			popup = tippy(document.body, {

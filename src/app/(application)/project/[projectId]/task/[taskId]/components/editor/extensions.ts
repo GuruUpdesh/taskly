@@ -1,8 +1,8 @@
-import Highlight from "@tiptap/extension-highlight";
 import Link from "@tiptap/extension-link";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import Typography from "@tiptap/extension-typography";
+import Underline from "@tiptap/extension-underline";
 import StarterKit from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 
@@ -12,7 +12,6 @@ import RenderCommandOptions from "./commands/RenderCommandOptions";
 
 const extensions = [
 	StarterKit,
-	Highlight,
 	Typography,
 	Link.configure({
 		openOnClick: false,
@@ -33,6 +32,7 @@ const extensions = [
 		transformPastedText: true,
 		transformCopiedText: true,
 	}),
+	Underline,
 ];
 
 export default extensions;
