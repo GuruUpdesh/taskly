@@ -67,7 +67,6 @@
 	code {
 		background-color: hsl(var(--border));
 		border-radius: 0.4rem;
-		color: var(--black);
 		font-size: 0.85rem;
 		padding: 0.25em 0.3em;
 	}
@@ -110,7 +109,7 @@
 	}
 
 	p.is-editor-empty:first-child::before {
-		color: hsl(var(--foreground) / 0.60);
+		color: hsl(var(--foreground) / 0.6);
 		content: attr(data-placeholder);
 		float: left;
 		height: 0;
@@ -147,10 +146,12 @@
 	}
 
 	.mention {
-		background-color: var(--purple-light);
-		border-radius: 0.4rem;
 		box-decoration-break: clone;
-		color: var(--purple);
-		padding: 0.1rem 0.3rem;
+
+		background-color: #0a163f;
+		color: #4da6ff;
+		border-radius: 0.4rem;
+		font-size: 0.85rem;
+		padding: 0.25em 0.3em;
 	}
 }

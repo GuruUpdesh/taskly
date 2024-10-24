@@ -10,7 +10,6 @@ import {
 	LinkBreak1Icon,
 	CodeIcon,
 	LetterCaseToggleIcon,
-	ChevronDownIcon,
 } from "@radix-ui/react-icons";
 import { type Editor, BubbleMenu as TipTapBubbleMenu } from "@tiptap/react";
 import { List, ListChecks, ListOrdered } from "lucide-react";
