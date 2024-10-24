@@ -5,6 +5,9 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { UseMutationResult } from "@tanstack/react-query";
+import Mention from "@tiptap/extension-mention";
+import Placeholder from "@tiptap/extension-placeholder";
+import { EditorContent, useEditor } from "@tiptap/react";
 import _debounce from "lodash/debounce";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,10 +18,14 @@ import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import type { NewTask, Task } from "~/server/db/schema";
+import { useRealtimeStore } from "~/store/realtime";
 
-import Tiptap from "./editor/TipTap";
+import BubbleMenu from "./editor/BubbleMenu";
+import extensions from "./editor/extensions";
+import RenderMentionOptions from "./editor/mentions/RenderMentionOptions";
 import TaskHistoryItem, { type TaskHistoryWithUser } from "./HistoryItem";
 import PullRequest from "./PullRequest";
+import "../components/editor/tiptap.css";
 
 interface TaskWithComments extends Task {
 	taskHistory: TaskHistoryWithUser[];
@@ -85,6 +92,42 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 		[task.taskHistory, showAllHistory],
 	);
 
+	const assignees = useRealtimeStore((state) => state.assignees);
+	const editor = useEditor({
+		immediatelyRender: false,
+		extensions: [
+			...extensions,
+			Placeholder.configure({
+				placeholder: "Add a description...",
+			}),
+			Mention.configure({
+				HTMLAttributes: {
+					class: "mention",
+				},
+				suggestion: {
+					items: ({ query }) => {
+						return assignees
+							.filter((user) =>
+								user.username
+									.toLowerCase()
+									.startsWith(query.toLowerCase()),
+							)
+							.slice(0, 5);
+					},
+					render: RenderMentionOptions,
+				},
+			}),
+		],
+		content: form.watch("description"),
+		onUpdate: (e) => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+			const content = e.editor.storage.markdown.getMarkdown();
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+			form.setValue("description", content);
+			debouncedHandleChange();
+		},
+	});
+
 	return (
 		<form
 			onSubmit={form.handleSubmit(onSubmit)}
@@ -100,13 +143,8 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 				onChangeCapture={debouncedHandleChange}
 			/>
 			<div className="rounded border p-2">
-				<Tiptap
-					content={form.watch("description")}
-					onChange={(content: string) => {
-						form.setValue("description", content);
-						debouncedHandleChange();
-					}}
-				/>
+				{editor && <BubbleMenu editor={editor} />}
+				<EditorContent editor={editor} />
 			</div>
 			<div className="py-4">
 				<div className="flex flex-col gap-2 overflow-hidden">

@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Mention from "@tiptap/extension-mention";
+import Placeholder from "@tiptap/extension-placeholder";
+import { EditorContent, useEditor } from "@tiptap/react";
 import { motion } from "framer-motion";
 import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
 import { useForm, type UseFormReturn } from "react-hook-form";
@@ -24,7 +27,6 @@ import {
 	DialogTrigger,
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/config/aiLimit";
 import {
 	type StatefulTask,
@@ -46,7 +48,10 @@ import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
 import SimpleTooltip from "./SimpleTooltip";
-import Tiptap from "../(application)/project/[projectId]/task/[taskId]/components/editor/TipTap";
+import BubbleMenu from "../(application)/project/[projectId]/task/[taskId]/components/editor/BubbleMenu";
+import extensions from "../(application)/project/[projectId]/task/[taskId]/components/editor/extensions";
+import RenderMentionOptions from "../(application)/project/[projectId]/task/[taskId]/components/editor/mentions/RenderMentionOptions";
+import "../(application)/project/[projectId]/task/[taskId]/components/editor/tiptap.css";
 
 type FormProps = {
 	onSubmit: (newTask: TaskFormType) => void;
@@ -117,6 +122,43 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 		}
 	};
 
+	const editor = useEditor({
+		immediatelyRender: false,
+		extensions: [
+			...extensions,
+			Placeholder.configure({
+				placeholder: "Add a description...",
+			}),
+			Mention.configure({
+				HTMLAttributes: {
+					class: "mention",
+				},
+				suggestion: {
+					items: ({ query }) => {
+						return assignees
+							.filter((user) =>
+								user.username
+									.toLowerCase()
+									.startsWith(query.toLowerCase()),
+							)
+							.slice(0, 5);
+					},
+					render: RenderMentionOptions,
+				},
+			}),
+		],
+		content: form.watch("description"),
+		onUpdate: (e) => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+			const content = e.editor.storage.markdown.getMarkdown();
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+			form.setValue("description", content, {
+				shouldDirty: true,
+				shouldValidate: true,
+			});
+		},
+	});
+
 	return (
 		<form className="px-4" onSubmit={form.handleSubmit(onSubmit)}>
 			<input type="hidden" {...form.register("projectId")} />
@@ -128,12 +170,8 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 				autoFocus
 				autoComplete="off"
 			/>
-			<Tiptap
-				content={form.watch("description")}
-				onChange={(content: string) => {
-					form.setValue("description", content);
-				}}
-			/>
+			{editor && <BubbleMenu editor={editor} />}
+			<EditorContent editor={editor} />
 			<div
 				className={cn(
 					"flex gap-2",

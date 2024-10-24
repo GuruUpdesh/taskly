@@ -1,16 +1,21 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Mention from "@tiptap/extension-mention";
+import Placeholder from "@tiptap/extension-placeholder";
+import { EditorContent, useEditor } from "@tiptap/react";
 import { ChevronRight, Loader2Icon, MessageSquareIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "~/components/ui/button";
-import { Form, FormControl, FormField, FormItem } from "~/components/ui/form";
+import { Form } from "~/components/ui/form";
 import { useRealtimeStore } from "~/store/realtime";
 
-import TextAreaWithMentions from "./TextAreaWithMentions";
+import BubbleMenu from "../editor/BubbleMenu";
+import extensions from "../editor/extensions";
+import RenderMentionOptions from "../editor/mentions/RenderMentionOptions";
 
 type Props = {
 	taskId: number;
@@ -22,8 +27,6 @@ const formSchema = z.object({
 });
 
 const CommentForm = ({ taskId, createComment }: Props) => {
-	const assignees = useRealtimeStore((state) => state.assignees);
-
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -34,10 +37,46 @@ const CommentForm = ({ taskId, createComment }: Props) => {
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		await createComment(values.comment, taskId);
 		form.reset();
+		editor?.commands.clearContent();
 		toast.success("Comment added", {
 			icon: <MessageSquareIcon className="h-4 w-4" />,
 		});
 	}
+
+	const assignees = useRealtimeStore((state) => state.assignees);
+	const editor = useEditor({
+		immediatelyRender: false,
+		extensions: [
+			...extensions,
+			Placeholder.configure({
+				placeholder: "Add a comment...",
+			}),
+			Mention.configure({
+				HTMLAttributes: {
+					class: "mention",
+				},
+				suggestion: {
+					items: ({ query }) => {
+						return assignees
+							.filter((user) =>
+								user.username
+									.toLowerCase()
+									.startsWith(query.toLowerCase()),
+							)
+							.slice(0, 5);
+					},
+					render: RenderMentionOptions,
+				},
+			}),
+		],
+		content: form.watch("comment"),
+		onUpdate: (e) => {
+			form.setValue("comment", JSON.stringify(e.editor.getJSON()), {
+				shouldDirty: true,
+				shouldValidate: true,
+			});
+		},
+	});
 
 	return (
 		<Form {...form}>
@@ -46,20 +85,10 @@ const CommentForm = ({ taskId, createComment }: Props) => {
 				className="sticky bottom-0 w-full"
 			>
 				<div className="pointer-events-none absolute -bottom-1 left-0 -z-10 h-[135%] w-full bg-gradient-to-b from-transparent to-background-dialog to-25%" />
-				<FormField
-					control={form.control}
-					name="comment"
-					render={({ field }) => (
-						<FormItem>
-							<FormControl>
-								<TextAreaWithMentions
-									assignees={assignees}
-									field={field}
-								/>
-							</FormControl>
-						</FormItem>
-					)}
-				/>
+				<div className="rounded border bg-background/50 px-3 py-2 ring-offset-background focus-within:outline-none  focus-within:ring focus-within:ring-ring focus-within:ring-offset-1">
+					{editor && <BubbleMenu editor={editor} />}
+					<EditorContent editor={editor} />
+				</div>
 				<Button
 					className="absolute bottom-1.5 right-1.5 text-xs"
 					variant="secondary"

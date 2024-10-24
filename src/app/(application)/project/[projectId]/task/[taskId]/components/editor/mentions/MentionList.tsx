@@ -72,6 +72,7 @@ const MentionList = forwardRef(
 				{props.items.length ? (
 					props.items.map((item, index) => (
 						<button
+							type="button"
 							className={cn(
 								"flex w-full items-center gap-2 rounded bg-transparent px-2 py-1 text-left",
 								index === selectedIndex ? "bg-border" : "",

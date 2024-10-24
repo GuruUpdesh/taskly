@@ -124,6 +124,7 @@ const BubbleMenu = ({ editor }: Props) => {
 			editor={editor}
 		>
 			<Button
+				type="button"
 				size="icon"
 				variant="ghost"
 				onClick={() => editor.chain().focus().toggleBold().run()}
@@ -137,6 +138,7 @@ const BubbleMenu = ({ editor }: Props) => {
 				<FontBoldIcon />
 			</Button>
 			<Button
+				type="button"
 				size="icon"
 				variant="ghost"
 				onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -150,6 +152,7 @@ const BubbleMenu = ({ editor }: Props) => {
 				<FontItalicIcon />
 			</Button>
 			<Button
+				type="button"
 				size="icon"
 				variant="ghost"
 				onClick={() => editor.chain().focus().toggleStrike().run()}
@@ -171,6 +174,7 @@ const BubbleMenu = ({ editor }: Props) => {
 					className="w-min rounded border border-0 border-r bg-transparent"
 				>
 					<Button
+						type="button"
 						size="icon"
 						variant="ghost"
 						className="flex gap-1 rounded-none text-sm font-normal text-muted-foreground"
@@ -199,6 +203,7 @@ const BubbleMenu = ({ editor }: Props) => {
 			<Popover onOpenChange={openLinkPopover}>
 				<PopoverTrigger asChild>
 					<Button
+						type="button"
 						size="icon"
 						variant="ghost"
 						className={cn(
@@ -216,6 +221,7 @@ const BubbleMenu = ({ editor }: Props) => {
 						className="flex w-full gap-2"
 						onSubmit={(e) => {
 							e.preventDefault();
+							e.stopPropagation();
 							setLink();
 						}}
 					>
@@ -231,6 +237,7 @@ const BubbleMenu = ({ editor }: Props) => {
 			</Popover>
 			{editor.isActive("link") ? (
 				<Button
+					type="button"
 					size="icon"
 					variant="ghost"
 					onClick={() => editor.chain().focus().unsetLink().run()}
@@ -245,6 +252,7 @@ const BubbleMenu = ({ editor }: Props) => {
 				</Button>
 			) : null}
 			<Button
+				type="button"
 				size="icon"
 				variant="ghost"
 				onClick={() => editor.chain().focus().toggleCode().run()}
@@ -263,6 +271,7 @@ const BubbleMenu = ({ editor }: Props) => {
 					className="w-min rounded border border-0 border-l bg-transparent"
 				>
 					<Button
+						type="button"
 						size="icon"
 						variant="ghost"
 						className="flex gap-1 rounded-none text-sm font-normal text-muted-foreground"
