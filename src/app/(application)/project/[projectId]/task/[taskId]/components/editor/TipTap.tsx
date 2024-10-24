@@ -9,6 +9,7 @@ import TaskList from "@tiptap/extension-task-list";
 import Typography from "@tiptap/extension-typography";
 import { useEditor, EditorContent, type Content } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { Markdown } from 'tiptap-markdown';
 import "./tiptap.css";
 
 import { useRealtimeStore } from "~/store/realtime";
@@ -25,14 +26,6 @@ type Props = {
 };
 
 const Tiptap = ({ content, onChange }: Props) => {
-	function getContent() {
-		try {
-			return JSON.parse(content) as Content;
-		} catch (e) {
-			return "";
-		}
-	}
-
 	// TODO
 	// TODO: implement this https://github.com/troop-dev/tiptap-react-render
 	// we can  use this for SSR
@@ -80,10 +73,15 @@ const Tiptap = ({ content, onChange }: Props) => {
 					render: RenderCommandOptions,
 				},
 			}),
+			Markdown.configure({
+				transformPastedText: true,
+				transformCopiedText: true,
+			})
 		],
-		content: getContent(),
+		content: content,
 		onUpdate: (e) => {
-			onChange(JSON.stringify(e.editor.getJSON()));
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+			onChange(e.editor.storage.markdown.getMarkdown());
 		},
 	});
 
