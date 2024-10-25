@@ -21,7 +21,6 @@ import {
 	readAllNotifications,
 } from "~/features/notifications/actions/notification-actions";
 
-
 type Props = {
 	user: string;
 };

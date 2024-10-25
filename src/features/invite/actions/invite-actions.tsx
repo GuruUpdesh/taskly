@@ -17,7 +17,6 @@ import { createNotification } from "~/features/notifications/actions/notificatio
 import { db } from "~/server/db";
 import { invites, users, usersToProjects } from "~/server/db/schema";
 
-
 const getInviteSchema = z.object({
 	userId: z.string(),
 	projectId: z.number(),
