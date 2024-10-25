@@ -14,8 +14,6 @@ import { useRouter } from "next/navigation";
 import { getPanelElement } from "react-resizable-panels";
 import { toast } from "sonner";
 
-import { createComment } from "~/actions/application/comment-actions";
-import { getPRStatusFromGithubRepo } from "~/actions/application/github-actions";
 import {
 	deleteTask,
 	getTask,
@@ -43,14 +41,16 @@ import {
 } from "~/components/ui/resizable";
 import { Separator } from "~/components/ui/separator";
 import { getRefetchIntervals } from "~/config/refetchIntervals";
+import { createComment } from "~/features/comments/actions/create-comment";
+import { getPRStatusFromGithubRepo } from "~/features/github-integration/actions/get-pr-status-from-github-repo";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 import { useLayoutStore } from "~/store/layout";
 
-import Comments from "./comments/Comments";
 import LoadingPage from "./LoadingPage";
 import PrimaryTaskForm from "./PrimaryTaskForm";
 import TaskState from "./TaskState";
 import { type UpdateTask } from "../../../(views)/components/TasksContainer";
+import Comments from "../../../../../../../features/comments/components/Comments";
 
 type Props = {
 	taskId: number;

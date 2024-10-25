@@ -4,8 +4,8 @@ import React, { useState } from "react";
 
 import { Loader2 } from "lucide-react";
 
-import { addPendingIntegration } from "~/actions/application/github-actions";
 import { Button } from "~/components/ui/button";
+import { addPendingIntegration } from "~/features/github-integration/actions/add-pending-integration";
 
 type Props = {
 	projectId: number;

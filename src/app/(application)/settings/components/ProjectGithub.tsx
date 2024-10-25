@@ -7,14 +7,12 @@ import { and, eq } from "drizzle-orm";
 import Image from "next/image";
 import Link from "next/link";
 
-import {
-	cancelPendingIntegration,
-	getConnectedGithubRepo,
-} from "~/actions/application/github-actions";
 import Message from "~/app/components/Message";
 import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
+import { cancelPendingIntegration } from "~/features/github-integration/actions/cancel-pending-integration";
+import { getConnectedGithubRepo } from "~/features/github-integration/actions/get-connected-github-repo";
 import { cn } from "~/lib/utils";
 import { db } from "~/server/db";
 import { projectToIntegrations, type Project } from "~/server/db/schema";

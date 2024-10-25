@@ -12,11 +12,12 @@ import _debounce from "lodash/debounce";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { type getPRStatusFromGithubRepo } from "~/actions/application/github-actions";
 import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)/components/TasksContainer";
 import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { type getPRStatusFromGithubRepo } from "~/features/github-integration/actions/get-pr-status-from-github-repo";
+import PullRequest from "~/features/github-integration/components/PullRequest";
 import BubbleMenu from "~/features/text-editor/components/BubbleMenu";
 import RenderMentionOptions from "~/features/text-editor/components/RenderMentionOptions";
 import extensions from "~/features/text-editor/extensions";
@@ -24,7 +25,6 @@ import type { NewTask, Task } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
 
 import TaskHistoryItem, { type TaskHistoryWithUser } from "./HistoryItem";
-import PullRequest from "./PullRequest";
 import "~/features/text-editor/tiptap.css";
 
 interface TaskWithComments extends Task {

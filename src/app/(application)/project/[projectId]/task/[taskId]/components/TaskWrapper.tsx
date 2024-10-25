@@ -5,8 +5,8 @@ import {
 } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 
-import { getPRStatusFromGithubRepo } from "~/actions/application/github-actions";
 import { getTask } from "~/actions/application/task-actions";
+import { getPRStatusFromGithubRepo } from "~/features/github-integration/actions/get-pr-status-from-github-repo";
 
 import Task from "./Task";
 

@@ -1,14 +1,13 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
+import { createNotification } from "~/actions/notification-actions";
+import { authenticate } from "~/actions/security/authenticate";
+import { checkPermissions } from "~/actions/security/permissions";
 import { db } from "~/server/db";
 import { comments } from "~/server/db/schema";
-
-import { createNotification } from "../notification-actions";
-import { authenticate } from "../security/authenticate";
-import { checkPermissions } from "../security/permissions";
 
 export async function createComment(comment: string, taskId: number) {
 	const userId = authenticate();
@@ -65,14 +64,5 @@ export async function createComment(comment: string, taskId: number) {
 		userId,
 		insertedDate: new Date(),
 	});
-	revalidatePath("/");
-}
-
-export async function deleteComment(commentId: number) {
-	const userId = authenticate();
-
-	await db
-		.delete(comments)
-		.where(and(eq(comments.id, commentId), eq(comments.userId, userId)));
 	revalidatePath("/");
 }

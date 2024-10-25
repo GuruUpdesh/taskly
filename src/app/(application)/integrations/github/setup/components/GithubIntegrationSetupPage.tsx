@@ -8,8 +8,8 @@ import { stringifyError } from "next/dist/shared/lib/utils";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
-import { resolvePendingIntegration } from "~/actions/application/github-actions";
 import { Button } from "~/components/ui/button";
+import { resolvePendingIntegration } from "~/features/github-integration/actions/resolve-pending-integration";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 

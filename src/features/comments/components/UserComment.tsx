@@ -10,7 +10,6 @@ import { motion } from "framer-motion";
 import { Trash, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 
-import { deleteComment } from "~/actions/application/comment-actions";
 import UserProfilePicture from "~/app/components/UserProfilePicture";
 import { Button } from "~/components/ui/button";
 import {
@@ -19,11 +18,12 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { deleteComment } from "~/features/comments/actions/delete-comment";
 import { cn } from "~/lib/utils";
 import { type Comment, type User } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
 
-import getHTMLfromJSON from "../../../../../../../../features/text-editor/utils/getHTMLfromJSON";
+import getHTMLfromJSON from "../../text-editor/utils/getHTMLfromJSON";
 
 export interface CommentWithUser extends Comment {
 	user: User;

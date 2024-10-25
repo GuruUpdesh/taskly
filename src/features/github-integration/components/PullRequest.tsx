@@ -10,8 +10,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import { type getPRStatusFromGithubRepo } from "~/actions/application/github-actions";
 import SimpleTooltip from "~/app/components/SimpleTooltip";
+import { type getPRStatusFromGithubRepo } from "~/features/github-integration/actions/get-pr-status-from-github-repo";
 
 type Props = {
 	pullRequest: NonNullable<
