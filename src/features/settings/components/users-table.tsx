@@ -6,10 +6,6 @@ import { Icon } from "@radix-ui/react-select";
 import { ChevronDown, Delete } from "lucide-react";
 
 import { type UserWithRole } from "~/actions/application/project-actions";
-import {
-	editUserRole,
-	removeUserFromProject,
-} from "~/actions/settings/settings-actions";
 import UserProfilePicture from "~/app/components/UserProfilePicture";
 import { Button } from "~/components/ui/button";
 import {
@@ -38,6 +34,10 @@ import {
 	TableRow,
 	TableCell,
 } from "~/components/ui/table";
+import {
+	editUserRole,
+	removeUserFromProject,
+} from "~/features/settings/actions/settings-actions";
 import { cn } from "~/lib/utils";
 import { userRoles } from "~/server/db/schema";
 

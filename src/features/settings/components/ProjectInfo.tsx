@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { handleProjectInfo } from "~/actions/settings/settings-actions";
 import { Button } from "~/components/ui/button";
 import {
 	Form,
@@ -22,6 +21,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
+import { handleProjectInfo } from "~/features/settings/actions/settings-actions";
 import safeAsync from "~/lib/safe-action";
 import { cn } from "~/lib/utils";
 import { type Project } from "~/server/db/schema";

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 
-import { leaveProject } from "~/actions/settings/settings-actions";
 import Message from "~/app/components/Message";
 import { Button } from "~/components/ui/button";
 import {
@@ -17,13 +16,14 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { handleDeleteProject } from "~/features/settings/actions/settings-actions";
 
 type Props = {
 	projectName: string;
 	projectId: number;
 };
 
-function LeaveProjectButton({ projectName, projectId }: Props) {
+function DeleteProjectButton({ projectName, projectId }: Props) {
 	const [inputValue, setInputValue] = useState("");
 	const [isMatch, setIsMatch] = useState(false);
 
@@ -33,11 +33,12 @@ function LeaveProjectButton({ projectName, projectId }: Props) {
 		setIsMatch(value === projectName);
 	};
 
-	const handleLeaveProject = async () => {
+	const deleteProject = async () => {
 		if (isMatch) {
-			await leaveProject(projectId);
+			await handleDeleteProject(projectId);
 		}
 	};
+
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -48,21 +49,22 @@ function LeaveProjectButton({ projectName, projectId }: Props) {
 					}
 					style={{ width: "fit-content" }}
 				>
-					Leave Project
+					Delete Project
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-md">
 				<DialogHeader>
-					<DialogTitle>
-						Leave {projectName ? projectName : "error"}?
+					<DialogTitle className="mb-4">
+						Delete {projectName ? projectName : "error"}?
 					</DialogTitle>
 					<Message type="warning" className="w-full text-sm">
 						Warning this action cannot be undone!
 					</Message>
 					<DialogDescription>
-						Leaving the project will revoke your access and set all
-						your currently assigned tasks to unassigned. You will
-						need to be re-invited to rejoin the project.
+						This will permanently delete the project{" "}
+						<b>{projectName ? projectName : "error"}</b>. This
+						includes all tasks, comments, activity, etc. Deletion
+						will not affect data related to 3rd party integrations.
 					</DialogDescription>
 				</DialogHeader>
 				<Label>
@@ -83,11 +85,11 @@ function LeaveProjectButton({ projectName, projectId }: Props) {
 							type="submit"
 							variant="destructive"
 							size="sm"
-							onClick={handleLeaveProject}
+							onClick={deleteProject}
 							disabled={!isMatch}
 							className="w-full"
 						>
-							I understand the consequences, leave project
+							I understand the consequences, delete project
 						</Button>
 					</DialogClose>
 				</DialogFooter>
@@ -96,4 +98,4 @@ function LeaveProjectButton({ projectName, projectId }: Props) {
 	);
 }
 
-export default LeaveProjectButton;
+export default DeleteProjectButton;

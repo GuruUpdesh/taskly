@@ -25,8 +25,6 @@ import {
 	createProject,
 } from "~/actions/onboarding/create-project";
 import { sendEmailInvites } from "~/actions/onboarding/invite-actions";
-import SprintOptions from "~/app/(application)/settings/components/sprint-options/sprint-options";
-import { type ProjectSprintOptions } from "~/app/(application)/settings/components/sprint-options/sprint-options-form";
 import EmailInviteForm from "~/app/components/invite/by-email/email-invite-form";
 import InviteLink from "~/app/components/invite/invite-link";
 import { Button } from "~/components/ui/button";
@@ -41,6 +39,8 @@ import {
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
+import SprintOptions from "~/features/settings/components/sprint-options/sprint-options";
+import { type ProjectSprintOptions } from "~/features/settings/components/sprint-options/sprint-options-form";
 
 import Step from "./form-steps/Step";
 import StepButton from "./form-steps/StepButton";

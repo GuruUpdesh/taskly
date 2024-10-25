@@ -9,9 +9,9 @@ import sharp from "sharp";
 
 import { createSprintForProject } from "~/actions/application/sprint-actions";
 import { authenticate } from "~/actions/security/authenticate";
-import { autoColor } from "~/actions/settings/settings-actions";
 import { addUserToProject } from "~/actions/user-actions";
 import { env } from "~/env.mjs";
+import { autoColor } from "~/features/settings/actions/settings-actions";
 import { db } from "~/server/db";
 import {
 	type NewProject,

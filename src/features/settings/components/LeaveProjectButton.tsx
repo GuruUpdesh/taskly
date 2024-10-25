@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 
-import { handleDeleteProject } from "~/actions/settings/settings-actions";
 import Message from "~/app/components/Message";
 import { Button } from "~/components/ui/button";
 import {
@@ -17,13 +16,14 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { leaveProject } from "~/features/settings/actions/settings-actions";
 
 type Props = {
 	projectName: string;
 	projectId: number;
 };
 
-function DeleteProjectButton({ projectName, projectId }: Props) {
+function LeaveProjectButton({ projectName, projectId }: Props) {
 	const [inputValue, setInputValue] = useState("");
 	const [isMatch, setIsMatch] = useState(false);
 
@@ -33,12 +33,11 @@ function DeleteProjectButton({ projectName, projectId }: Props) {
 		setIsMatch(value === projectName);
 	};
 
-	const deleteProject = async () => {
+	const handleLeaveProject = async () => {
 		if (isMatch) {
-			await handleDeleteProject(projectId);
+			await leaveProject(projectId);
 		}
 	};
-
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -49,22 +48,21 @@ function DeleteProjectButton({ projectName, projectId }: Props) {
 					}
 					style={{ width: "fit-content" }}
 				>
-					Delete Project
+					Leave Project
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-md">
 				<DialogHeader>
-					<DialogTitle className="mb-4">
-						Delete {projectName ? projectName : "error"}?
+					<DialogTitle>
+						Leave {projectName ? projectName : "error"}?
 					</DialogTitle>
 					<Message type="warning" className="w-full text-sm">
 						Warning this action cannot be undone!
 					</Message>
 					<DialogDescription>
-						This will permanently delete the project{" "}
-						<b>{projectName ? projectName : "error"}</b>. This
-						includes all tasks, comments, activity, etc. Deletion
-						will not affect data related to 3rd party integrations.
+						Leaving the project will revoke your access and set all
+						your currently assigned tasks to unassigned. You will
+						need to be re-invited to rejoin the project.
 					</DialogDescription>
 				</DialogHeader>
 				<Label>
@@ -85,11 +83,11 @@ function DeleteProjectButton({ projectName, projectId }: Props) {
 							type="submit"
 							variant="destructive"
 							size="sm"
-							onClick={deleteProject}
+							onClick={handleLeaveProject}
 							disabled={!isMatch}
 							className="w-full"
 						>
-							I understand the consequences, delete project
+							I understand the consequences, leave project
 						</Button>
 					</DialogClose>
 				</DialogFooter>
@@ -98,4 +96,4 @@ function DeleteProjectButton({ projectName, projectId }: Props) {
 	);
 }
 
-export default DeleteProjectButton;
+export default LeaveProjectButton;

@@ -11,10 +11,6 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { generateAndUpdateProjectImage } from "~/actions/onboarding/create-project";
-import {
-	autoColor,
-	handleProjectTheme,
-} from "~/actions/settings/settings-actions";
 import ImageUploadArea from "~/app/components/ImageUploadArea";
 import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
@@ -35,6 +31,10 @@ import {
 } from "~/components/ui/popover";
 import { Skeleton } from "~/components/ui/skeleton";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/config/aiLimit";
+import {
+	autoColor,
+	handleProjectTheme,
+} from "~/features/settings/actions/settings-actions";
 import safeAsync from "~/lib/safe-action";
 import { cn } from "~/lib/utils";
 import { type Project } from "~/server/db/schema";

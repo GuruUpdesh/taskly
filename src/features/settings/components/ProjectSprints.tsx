@@ -3,7 +3,7 @@ import React from "react";
 import { format, isAfter, isBefore } from "date-fns";
 import { ArrowRightIcon } from "lucide-react";
 
-import SprintOptionsForm from "~/app/(application)/settings/components/sprint-options/sprint-options-form";
+import SprintOptionsForm from "~/features/settings/components/sprint-options/sprint-options-form";
 import { cn } from "~/lib/utils";
 import { type Project, type Sprint } from "~/server/db/schema";
 
