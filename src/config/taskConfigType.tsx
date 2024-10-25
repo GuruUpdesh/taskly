@@ -60,7 +60,6 @@ type StaticProperty = Extract<
 	| "insertedDate"
 	| "lastEditedAt"
 	| "projectId"
-	| "boardOrder"
 	| "backlogOrder"
 	| "branchName"
 >;
@@ -84,7 +83,6 @@ export const taskProperties: TaskProperty[] = [
 	"lastEditedAt",
 	"insertedDate",
 	"projectId",
-	"boardOrder",
 	"backlogOrder",
 	"branchName",
 ] as const;
@@ -544,12 +542,6 @@ export const taskConfig: TaskConfig = {
 		icon: <Dot className="h-4 w-4" />,
 		type: "static",
 	},
-	boardOrder: {
-		key: "boardOrder",
-		displayName: "Board Order",
-		icon: <Dot className="h-4 w-4" />,
-		type: "static",
-	},
 	backlogOrder: {
 		key: "backlogOrder",
 		displayName: "Backlog Order",
@@ -678,7 +670,6 @@ export const schemaValidators = {
 		.max(225, "Assignee must be at most 225 characters long."),
 	projectId: z.number().min(1),
 	sprintId: z.string(),
-	boardOrder: z.number().min(0),
 	backlogOrder: z.number().min(0),
 	lastEditedAt: selectTaskSchema.shape.lastEditedAt,
 	insertedDate: selectTaskSchema.shape.insertedDate,
@@ -706,7 +697,6 @@ export const defaultValues = {
 	sprintId: "-1",
 	id: 0,
 	projectId: 0,
-	boardOrder: 0,
 	backlogOrder: 0,
 	lastEditedAt: new Date(),
 	insertedDate: new Date(),
@@ -734,6 +724,5 @@ export const CreateTaskSchema = z.object({
 	projectId: schemaValidators.projectId,
 	sprintId: schemaValidators.sprintId.transform((val) => parseInt(val)),
 	backlogOrder: schemaValidators.backlogOrder,
-	boardOrder: schemaValidators.boardOrder,
 	branchName: schemaValidators.branchName,
 });

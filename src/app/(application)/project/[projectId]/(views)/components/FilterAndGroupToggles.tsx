@@ -58,20 +58,8 @@ const properties = [
 const GroupButton = () => {
 	const [open, setOpen] = React.useState(false);
 
-	const [
-		groupByBacklog,
-		setGroupByBacklog,
-		groupByBoard,
-		setGroupByBoard,
-		viewMode,
-	] = useAppStore(
-		useShallow((state) => [
-			state.groupByBacklog,
-			state.setGroupByBacklog,
-			state.groupByBoard,
-			state.setGroupByBoard,
-			state.viewMode,
-		]),
+	const [groupByBacklog, setGroupByBacklog] = useAppStore(
+		useShallow((state) => [state.groupByBacklog, state.setGroupByBacklog]),
 	);
 
 	const [assignees, sprints] = useRealtimeStore(
@@ -79,8 +67,8 @@ const GroupButton = () => {
 	);
 
 	const groupBy = useMemo(() => {
-		return viewMode === "backlog" ? groupByBacklog : groupByBoard;
-	}, [groupByBacklog, groupByBoard, viewMode]);
+		return groupByBacklog;
+	}, [groupByBacklog]);
 
 	const config = useMemo(() => {
 		if (!groupBy || !assignees[0]) return null;
@@ -88,9 +76,8 @@ const GroupButton = () => {
 	}, [groupBy, assignees, sprints]);
 
 	function handleGroupChange(value: string) {
-		const setGroupBy =
-			viewMode === "backlog" ? setGroupByBacklog : setGroupByBoard;
-		if (value === "none" && viewMode === "backlog") {
+		const setGroupBy = setGroupByBacklog;
+		if (value === "none") {
 			setGroupByBacklog(null);
 		} else if (properties.includes(value as TaskProperty)) {
 			setGroupBy(value as TaskProperty);
@@ -131,19 +118,17 @@ const GroupButton = () => {
 				</Button>
 			</SelectTrigger>
 			<SelectContent>
-				{viewMode == "backlog" && (
-					<SelectItem
-						value="none"
-						className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
-					>
-						<div className="flex min-w-[8rem] items-center gap-2">
-							<span className="text-muted-foreground">
-								<MinusIcon />
-							</span>
-							<p>No Grouping</p>
-						</div>
-					</SelectItem>
-				)}
+				<SelectItem
+					value="none"
+					className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
+				>
+					<div className="flex min-w-[8rem] items-center gap-2">
+						<span className="text-muted-foreground">
+							<MinusIcon />
+						</span>
+						<p>No Grouping</p>
+					</div>
+				</SelectItem>
 				{properties.map((property) => {
 					const config = getPropertyConfig(
 						property,

@@ -8,15 +8,12 @@ import {
 	type DroppableProvided,
 	type DroppableStateSnapshot,
 } from "@hello-pangea/dnd";
-import { DragHandleDots2Icon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { DragHandleDots2Icon } from "@radix-ui/react-icons";
 import { type UseMutationResult } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { useShallow } from "zustand/react/shallow";
 
 import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)/components/TasksContainer";
-import CreateTask from "~/app/components/CreateTask";
 import Task from "~/app/components/task/Task";
-import { Button } from "~/components/ui/button";
 import { type StatefulTask } from "~/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
@@ -30,7 +27,6 @@ type Props = {
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 	projectId: string;
-	variant?: "backlog" | "board";
 };
 
 const TaskList = ({
@@ -41,15 +37,12 @@ const TaskList = ({
 	addTaskMutation,
 	deleteTaskMutation,
 	projectId,
-	variant = "backlog",
 }: Props) => {
-	const [groupByBacklog, groupByBoard] = useAppStore(
-		useShallow((state) => [state.groupByBacklog, state.groupByBoard]),
-	);
+	const groupByBacklog = useAppStore((state) => state.groupByBacklog);
 
 	const groupBy = useMemo(() => {
-		return variant === "backlog" ? groupByBacklog : groupByBoard;
-	}, [variant, groupByBacklog, groupByBoard]);
+		return groupByBacklog;
+	}, [groupByBacklog]);
 
 	if (!tasks) {
 		return null;
@@ -67,8 +60,6 @@ const TaskList = ({
 					className={cn("min-h-2", {
 						"bg-background/50":
 							snapshot.isDraggingOver && listId !== "tasks",
-						"flex h-full flex-col overflow-y-scroll p-1":
-							variant === "board",
 					})}
 				>
 					<AnimatePresence initial={false}>
@@ -142,8 +133,6 @@ const TaskList = ({
 																.isNew &&
 															!task.options
 																.isPending,
-														"mb-2":
-															variant === "board",
 													},
 												)}
 												{...provided.draggableProps}
@@ -167,7 +156,6 @@ const TaskList = ({
 														deleteTaskMutation
 													}
 													projectId={projectId}
-													variant={variant}
 													listId={listId}
 												/>
 											</div>
@@ -178,25 +166,6 @@ const TaskList = ({
 						})}
 						{provided.placeholder}
 					</AnimatePresence>
-					{variant === "board" && (
-						<CreateTask
-							projectId={projectId}
-							overrideDefaultValues={
-								groupBy
-									? {
-											[groupBy]: listId,
-										}
-									: {}
-							}
-						>
-							<Button
-								variant="secondary"
-								className="flex items-center justify-center border bg-accent/25 text-muted-foreground opacity-0 transition-opacity group-hover/list:opacity-100"
-							>
-								<PlusCircledIcon />
-							</Button>
-						</CreateTask>
-					)}
 				</div>
 			)}
 		</Droppable>

@@ -48,10 +48,8 @@ export async function createTask(data: CreateTaskData) {
 			maxBacklogOrder[0].backlogOrder !== null
 		) {
 			newTask.backlogOrder = maxBacklogOrder[0].backlogOrder + 1;
-			newTask.boardOrder = maxBacklogOrder[0].backlogOrder + 1;
 		} else {
 			newTask.backlogOrder = 0;
-			newTask.boardOrder = 0;
 		}
 
 		newTask.branchName = taskNameToBranchName(newTask.title);
@@ -159,19 +157,9 @@ export async function deleteTask(id: number) {
 		});
 		if (!task) return;
 
-		// update the boardOrder and backlogOrder of the tasks
+		// update backlogOrder of the tasks
 		await db.transaction(async (tx) => {
 			await tx.delete(notifications).where(eq(notifications.taskId, id));
-			await tx
-				.update(tasks)
-				.set({ boardOrder: sql`${tasks.boardOrder} - 1` })
-				.where(
-					and(
-						eq(tasks.projectId, task.projectId),
-						gt(tasks.boardOrder, task.boardOrder),
-						ne(tasks.id, id),
-					),
-				);
 			await tx
 				.update(tasks)
 				.set({ backlogOrder: sql`${tasks.backlogOrder} - 1` })
@@ -304,7 +292,6 @@ async function createTaskUpdateNotification(
 			const excludedKeys = [
 				"lastEditedAt",
 				"insertedDate",
-				"boardOrder",
 				"backlogOrder",
 				"id",
 				"title",

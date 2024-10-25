@@ -58,13 +58,8 @@ export default function TasksContainer({ projectId }: Props) {
 	/**
 	 * Get the assignees and sprints
 	 */
-	const [filters, groupByBacklog, groupByBoard, viewMode] = useAppStore(
-		useShallow((state) => [
-			state.filters,
-			state.groupByBacklog,
-			state.groupByBoard,
-			state.viewMode,
-		]),
+	const [filters, groupByBacklog] = useAppStore(
+		useShallow((state) => [state.filters, state.groupByBacklog]),
 	);
 
 	const [assignees, sprints] = useRealtimeStore(
@@ -72,8 +67,8 @@ export default function TasksContainer({ projectId }: Props) {
 	);
 
 	const groupBy = useMemo(() => {
-		return viewMode === "backlog" ? groupByBacklog : groupByBoard;
-	}, [viewMode, groupByBacklog, groupByBoard]);
+		return groupByBacklog;
+	}, [groupByBacklog]);
 
 	/**
 	 * Fetch the tasks from the server and handle optimistic updates
@@ -314,28 +309,12 @@ export default function TasksContainer({ projectId }: Props) {
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
-			<div
-				className={cn({
-					"grid max-w-full flex-1 gap-2 overflow-y-hidden overflow-x-scroll px-4":
-						viewMode === "board",
-				})}
-				style={
-					viewMode === "board"
-						? {
-								gridTemplateColumns: `repeat(${options?.length}, minmax(350px, 1fr))`,
-							}
-						: {}
-				}
-			>
+			<div>
 				{groupBy && options ? (
 					options.map((option) => (
 						<div
 							key={option.key}
 							className={cn(
-								{
-									"group/list overflow-y-scroll p-1 pt-0":
-										viewMode === "board",
-								},
 								taskVariants({
 									color: option.color,
 									hover: false,
@@ -343,14 +322,7 @@ export default function TasksContainer({ projectId }: Props) {
 								}),
 							)}
 						>
-							<div
-								className={cn("w-full", {
-									"flex items-center gap-2 px-4 py-2 pb-0":
-										viewMode === "backlog",
-									"sticky top-0 z-10 flex items-center gap-2 px-1 py-2 pt-3":
-										viewMode === "board",
-								})}
-							>
+							<div className="flex w-full items-center gap-2 px-4 py-2 pb-0">
 								{option.icon}
 								{option.displayName}
 								<div className="flex-grow" />
@@ -379,7 +351,6 @@ export default function TasksContainer({ projectId }: Props) {
 									addTaskMutation={editTaskMutation}
 									deleteTaskMutation={deleteTaskMutation}
 									projectId={projectId}
-									variant={viewMode}
 								/>
 							</div>
 						</div>
@@ -393,7 +364,6 @@ export default function TasksContainer({ projectId }: Props) {
 						addTaskMutation={editTaskMutation}
 						deleteTaskMutation={deleteTaskMutation}
 						projectId={projectId}
-						variant={viewMode}
 					/>
 				)}
 			</div>

@@ -91,7 +91,6 @@ const AiDialog = ({ projectId }: Props) => {
 			createTask({
 				...task,
 				projectId: parseInt(projectId),
-				boardOrder: 1000000,
 				backlogOrder: 1000000,
 				insertedDate: new Date(),
 				lastEditedAt: null,

@@ -70,7 +70,6 @@ export const taskFormSchema = buildValidator([
 	"assignee",
 	"sprintId",
 	"backlogOrder",
-	"boardOrder",
 	"branchName",
 ])
 	.refine((data) => !(data.status === "backlog" && data.sprintId !== "-1"), {
@@ -307,7 +306,6 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 				: defaultValues.sprintId,
 			projectId: parseInt(projectId),
 			backlogOrder: 1000000,
-			boardOrder: 1000000,
 			branchName: null,
 		},
 		mode: "onChange",
