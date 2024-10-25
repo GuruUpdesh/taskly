@@ -34,6 +34,9 @@ import {
 	getPropertyConfig,
 	taskProperties,
 } from "~/config/taskConfigType";
+import BubbleMenu from "~/features/text-editor/components/BubbleMenu";
+import RenderMentionOptions from "~/features/text-editor/components/RenderMentionOptions";
+import extensions from "~/features/text-editor/extensions";
 import useValidationErrors from "~/hooks/useValidationErrors";
 import { cn } from "~/lib/utils";
 import {
@@ -47,10 +50,7 @@ import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
 import SimpleTooltip from "./SimpleTooltip";
-import BubbleMenu from "../(application)/project/[projectId]/task/[taskId]/components/editor/BubbleMenu";
-import extensions from "../(application)/project/[projectId]/task/[taskId]/components/editor/extensions";
-import RenderMentionOptions from "../(application)/project/[projectId]/task/[taskId]/components/editor/mentions/RenderMentionOptions";
-import "../(application)/project/[projectId]/task/[taskId]/components/editor/tiptap.css";
+import "~/features/text-editor/tiptap.css";
 
 type FormProps = {
 	onSubmit: (newTask: TaskFormType) => void;

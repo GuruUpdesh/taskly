@@ -23,7 +23,7 @@ import { cn } from "~/lib/utils";
 import { type Comment, type User } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
 
-import getHTMLfromJSON from "../editor/getHTMLfromJSON";
+import getHTMLfromJSON from "../../../../../../../../features/text-editor/utils/getHTMLfromJSON";
 
 export interface CommentWithUser extends Comment {
 	user: User;

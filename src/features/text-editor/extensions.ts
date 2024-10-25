@@ -6,9 +6,9 @@ import Underline from "@tiptap/extension-underline";
 import StarterKit from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 
-import commands from "./commands/commands";
-import getSuggestionItems from "./commands/items";
-import RenderCommandOptions from "./commands/RenderCommandOptions";
+import commands_extension from "~/features/text-editor/commands-extension";
+import getSuggestionItems from "~/features/text-editor/components/items";
+import RenderCommandOptions from "~/features/text-editor/components/RenderCommandOptions";
 
 const extensions = [
 	StarterKit,
@@ -22,7 +22,7 @@ const extensions = [
 	TaskItem.configure({
 		nested: true,
 	}),
-	commands.configure({
+	commands_extension.configure({
 		suggestion: {
 			items: getSuggestionItems,
 			render: RenderCommandOptions,

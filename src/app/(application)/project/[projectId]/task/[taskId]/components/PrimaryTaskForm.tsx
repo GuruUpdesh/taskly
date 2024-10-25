@@ -17,15 +17,15 @@ import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)
 import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import BubbleMenu from "~/features/text-editor/components/BubbleMenu";
+import RenderMentionOptions from "~/features/text-editor/components/RenderMentionOptions";
+import extensions from "~/features/text-editor/extensions";
 import type { NewTask, Task } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
 
-import BubbleMenu from "./editor/BubbleMenu";
-import extensions from "./editor/extensions";
-import RenderMentionOptions from "./editor/mentions/RenderMentionOptions";
 import TaskHistoryItem, { type TaskHistoryWithUser } from "./HistoryItem";
 import PullRequest from "./PullRequest";
-import "../components/editor/tiptap.css";
+import "~/features/text-editor/tiptap.css";
 
 interface TaskWithComments extends Task {
 	taskHistory: TaskHistoryWithUser[];

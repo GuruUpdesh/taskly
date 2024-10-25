@@ -3,8 +3,8 @@ import { generateHTML, type JSONContent } from "@tiptap/react";
 
 import { type User } from "~/server/db/schema";
 
-import extensions from "./extensions";
-import RenderMentionOptions from "./mentions/RenderMentionOptions";
+import RenderMentionOptions from "../components/RenderMentionOptions";
+import extensions from "../extensions";
 
 export default function getHTMLfromJSON(
 	jsonStringified: string,

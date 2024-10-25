@@ -2,7 +2,7 @@ import { Extension } from "@tiptap/core";
 import { type Range, type Editor } from "@tiptap/react";
 import Suggestion from "@tiptap/suggestion";
 
-import { type Item } from "./items";
+import { type Item } from "./components/items";
 
 export default Extension.create({
 	name: "commands",

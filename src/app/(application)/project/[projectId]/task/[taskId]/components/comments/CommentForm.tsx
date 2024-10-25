@@ -11,11 +11,10 @@ import { z } from "zod";
 
 import { Button } from "~/components/ui/button";
 import { Form } from "~/components/ui/form";
+import BubbleMenu from "~/features/text-editor/components/BubbleMenu";
+import RenderMentionOptions from "~/features/text-editor/components/RenderMentionOptions";
+import extensions from "~/features/text-editor/extensions";
 import { useRealtimeStore } from "~/store/realtime";
-
-import BubbleMenu from "../editor/BubbleMenu";
-import extensions from "../editor/extensions";
-import RenderMentionOptions from "../editor/mentions/RenderMentionOptions";
 
 type Props = {
 	taskId: number;
