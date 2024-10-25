@@ -1,4 +1,4 @@
-import { filterTasks } from "../src/utils/filter";
+import { filterTasks } from "../src/features/tasks/utils/filter";
 
 test("filterTasks filters tasks", () => {
 	const task = {
