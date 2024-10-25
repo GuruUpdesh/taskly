@@ -124,7 +124,7 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 		extensions: [
 			...extensions,
 			Placeholder.configure({
-				placeholder: "Add a description...",
+				placeholder: "Add a description or type '/' for commands...",
 			}),
 			Mention.configure({
 				HTMLAttributes: {
@@ -157,54 +157,50 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 	});
 
 	return (
-		<form className="px-4" onSubmit={form.handleSubmit(onSubmit)}>
+		<form className="flex-1 px-4" onSubmit={form.handleSubmit(onSubmit)}>
 			<input type="hidden" {...form.register("projectId")} />
 			<Input
 				type="text"
 				className="m-0 border-none bg-transparent p-0 text-lg ring-offset-transparent focus-visible:ring-transparent"
-				placeholder="Task Title"
+				placeholder="New Task"
 				{...form.register("title")}
 				autoFocus
 				autoComplete="off"
 			/>
-			{editor && <BubbleMenu editor={editor} />}
-			<EditorContent editor={editor} />
+			<div className="max-h-[60vh] flex-1 overflow-scroll">
+				{editor && <BubbleMenu editor={editor} />}
+				<EditorContent editor={editor} />
+			</div>
 			<div
 				className={cn(
-					"flex gap-2",
+					"mt-2 flex gap-2",
 					isLoading ? "pointer-events-none opacity-50" : "",
 				)}
 				aria-disabled={isLoading}
 			>
 				{(form.watch("title") || form.watch("description")) &&
 				project?.isAiEnabled ? (
-					<motion.div
-						className="h-[30px] origin-left"
-						initial={{ opacity: 0, scaleX: 0 }}
-						animate={{ opacity: 1, scaleX: 1 }}
-						transition={transition}
-					>
-						<SimpleTooltip label="Autocomplete Properties">
-							<Button
-								disabled={isLoading}
-								type="button"
-								size="icon"
-								className="h-[30px] w-[30px]"
-								onClick={() =>
-									aiAutoComplete(
-										form.watch("title"),
-										form.watch("description"),
-									)
-								}
-							>
-								{isLoading ? (
-									<Loader2 className="h-4 w-4 animate-spin" />
-								) : (
-									<SparkleIcon className="h-4 w-4" />
-								)}
-							</Button>
-						</SimpleTooltip>
-					</motion.div>
+					<SimpleTooltip label="Smart Properties">
+						<Button
+							disabled={isLoading}
+							type="button"
+							size="icon"
+							variant="outline"
+							className="h-[30px] w-[30px] bg-transparent"
+							onClick={() =>
+								aiAutoComplete(
+									form.watch("title"),
+									form.watch("description"),
+								)
+							}
+						>
+							{isLoading ? (
+								<Loader2 className="h-4 w-4 animate-spin" />
+							) : (
+								<SparkleIcon className="h-4 w-4" />
+							)}
+						</Button>
+					</SimpleTooltip>
 				) : null}
 				{taskProperties.map((property) => {
 					const config = getPropertyConfig(
@@ -368,18 +364,16 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className="min-w-[600px] max-w-fit p-0">
+			<DialogContent className="flex w-[600px] min-w-[600px] max-w-fit flex-col justify-between p-0">
 				<DialogHeader className="px-4 pt-4">
 					<DialogTitle className="flex items-center gap-[0.5ch]">
 						{project ? (
 							<div className="flex items-center gap-[0.5ch] text-sm">
-								<p className="rounded-sm bg-accent px-2 py-1 font-bold">
-									{project.name} ({project.id})
+								<p className="rounded-sm bg-accent px-2 py-1">
+									{project.name}
 								</p>
-								<ChevronRight className="my-1 h-3 w-3 text-muted-foreground" />
 							</div>
 						) : null}
-						New Task
 					</DialogTitle>
 				</DialogHeader>
 				<TaskCreateForm
