@@ -2,7 +2,7 @@ import React from "react";
 
 import { formatDistanceToNow, subMinutes } from "date-fns";
 
-import UserProfilePicture from "~/app/components/UserProfilePicture";
+import UserProfilePicture from "~/components/UserProfilePicture";
 import { cn } from "~/lib/utils";
 
 const initialComments = [

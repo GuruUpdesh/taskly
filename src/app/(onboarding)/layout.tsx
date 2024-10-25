@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 
-import Footer from "~/app/components/Footer";
-import BackButton from "~/app/components/layout/navbar/back-button";
+import Footer from "~/components/Footer";
+import BackButton from "~/components/layout/navbar/back-button";
 
 import GridWrapper from "../(landing)/components/grid/GridWrapper";
 

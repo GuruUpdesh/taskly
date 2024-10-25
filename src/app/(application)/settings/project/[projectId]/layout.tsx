@@ -3,7 +3,7 @@ import React from "react";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-import { getProject } from "~/actions/application/project-actions";
+import { getProject } from "~/actions/project-actions";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 type Params = {

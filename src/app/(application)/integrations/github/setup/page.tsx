@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 
-import GithubIntegrationSetupPage from "./components/GithubIntegrationSetupPage";
+import GithubIntegrationSetupPage from "~/features/github-integration/components/GithubIntegrationSetupPage";
 
 const Page = () => {
 	return (
