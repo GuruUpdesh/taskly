@@ -7,7 +7,7 @@ import {
 	type Option,
 	taskVariants,
 	type VariantPropsType as TaskVariantsProps,
-} from "~/config/taskConfigType";
+} from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
 
 const propertyVariants = cva(["flex items-center gap-2"], {

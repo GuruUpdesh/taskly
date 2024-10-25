@@ -5,7 +5,7 @@ import { kv } from "@vercel/kv";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { AIDAILYLIMIT } from "~/config/aiLimit";
+import { AIDAILYLIMIT } from "~/features/ai/utils/aiLimit";
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
 

@@ -2,8 +2,8 @@ import React from "react";
 
 import type { UseFormReturn } from "react-hook-form";
 
-import { type getPropertyConfig } from "~/config/taskConfigType";
 import { type TaskFormType } from "~/features/tasks/components/CreateTask";
+import { type getPropertyConfig } from "~/features/tasks/config/taskConfigType";
 
 import PropertySelect from "./PropertySelect";
 import PropertyStatic from "./PropertyStatic";

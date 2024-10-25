@@ -19,15 +19,15 @@ import {
 } from "~/actions/task-actions";
 import Message from "~/components/Message";
 import { Button } from "~/components/ui/button";
-import { getRefetchIntervals } from "~/config/refetchIntervals";
+import CreateTask from "~/features/tasks/components/CreateTask";
+import { TaskStatus } from "~/features/tasks/components/RecentTasks";
 import {
 	type StatefulTask,
 	getPropertyConfig,
 	taskVariants,
-} from "~/config/taskConfigType";
-import CreateTask from "~/features/tasks/components/CreateTask";
-import { TaskStatus } from "~/features/tasks/components/RecentTasks";
+} from "~/features/tasks/config/taskConfigType";
 import { updateOrder } from "~/features/tasks/utils/order";
+import { getRefetchIntervals } from "~/lib/refetchIntervals";
 import { cn } from "~/lib/utils";
 import type { Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";

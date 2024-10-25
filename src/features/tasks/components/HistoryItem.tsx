@@ -10,7 +10,7 @@ import SimpleTooltip from "~/components/SimpleTooltip";
 import {
 	type TaskProperty as TaskPropertyType,
 	getPropertyConfig,
-} from "~/config/taskConfigType";
+} from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { type TaskHistory, type User } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";

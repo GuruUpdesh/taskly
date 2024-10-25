@@ -4,8 +4,8 @@ import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 
 import { getMostRecentTasks } from "~/actions/task-views-actions";
-import { getEnumOptionByKey } from "~/config/taskConfigType";
 import PropertyBadge from "~/features/tasks/components/property/PropertyBadge";
+import { getEnumOptionByKey } from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { type Task as TaskType } from "~/server/db/schema";
 

@@ -21,7 +21,10 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Textarea } from "~/components/ui/textarea";
 import UserProfilePicture from "~/components/UserProfilePicture";
-import { type Color, taskVariants } from "~/config/taskConfigType";
+import {
+	type Color,
+	taskVariants,
+} from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
 
 type ButtonType = {

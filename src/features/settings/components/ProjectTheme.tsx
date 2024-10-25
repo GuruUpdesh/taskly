@@ -30,7 +30,7 @@ import {
 	PopoverTrigger,
 } from "~/components/ui/popover";
 import { Skeleton } from "~/components/ui/skeleton";
-import { AIDAILYLIMIT, timeTillNextReset } from "~/config/aiLimit";
+import { AIDAILYLIMIT, timeTillNextReset } from "~/features/ai/utils/aiLimit";
 import {
 	autoColor,
 	handleProjectTheme,

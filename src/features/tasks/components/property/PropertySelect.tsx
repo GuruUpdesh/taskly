@@ -13,8 +13,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import { type getPropertyConfig, taskVariants } from "~/config/taskConfigType";
 import { type TaskFormType } from "~/features/tasks/components/CreateTask";
+import {
+	type getPropertyConfig,
+	taskVariants,
+} from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
 
 type DataCellProps = {

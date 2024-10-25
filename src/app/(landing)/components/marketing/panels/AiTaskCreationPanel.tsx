@@ -18,9 +18,9 @@ import {
 	CardTitle,
 } from "~/components/ui/card";
 import { Textarea } from "~/components/ui/textarea";
-import { type StatefulTask } from "~/config/taskConfigType";
 import Task from "~/features/tasks/components/backlog/Task";
 import { type UpdateTask } from "~/features/tasks/components/backlog/TasksContainer";
+import { type StatefulTask } from "~/features/tasks/config/taskConfigType";
 import { type User } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
 

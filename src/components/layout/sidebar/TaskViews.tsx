@@ -5,7 +5,7 @@ import React from "react";
 import { ListTodo } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
-import { filteredTaskViews } from "~/config/filteredTaskViews";
+import { filteredTaskViews } from "~/features/tasks/config/filteredTaskViews";
 import { useAppStore } from "~/store/app";
 
 import NestedSidebarButton from "./NestedSidebarButton";

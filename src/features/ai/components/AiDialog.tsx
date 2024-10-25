@@ -24,9 +24,9 @@ import {
 } from "~/components/ui/dialog";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Textarea } from "~/components/ui/textarea";
-import { AIDAILYLIMIT, timeTillNextReset } from "~/config/aiLimit";
-import { schemaValidators } from "~/config/taskConfigType";
 import { aiGenerateTask } from "~/features/ai/actions/ai-action";
+import { AIDAILYLIMIT, timeTillNextReset } from "~/features/ai/utils/aiLimit";
+import { schemaValidators } from "~/features/tasks/config/taskConfigType";
 import { taskNameToBranchName } from "~/features/tasks/utils/task-name-branch-converters";
 import { useRealtimeStore } from "~/store/realtime";
 import { useUserStore } from "~/store/user";

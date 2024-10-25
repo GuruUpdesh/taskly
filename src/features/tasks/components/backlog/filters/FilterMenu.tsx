@@ -30,7 +30,7 @@ import {
 	type TaskProperty,
 	getPropertyConfig,
 	taskVariants,
-} from "~/config/taskConfigType";
+} from "~/features/tasks/config/taskConfigType";
 import { renderFilterValues } from "~/features/tasks/utils/filter-values";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";

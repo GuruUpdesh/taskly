@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 
-import { type settingsConfig } from "~/config/settingsConfig";
+import { type settingsConfig } from "~/features/settings/settingsConfig";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 

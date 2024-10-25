@@ -24,16 +24,16 @@ import {
 	DialogTrigger,
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
-import { AIDAILYLIMIT, timeTillNextReset } from "~/config/aiLimit";
+import { aiAction } from "~/features/ai/actions/ai-action";
+import { AIDAILYLIMIT, timeTillNextReset } from "~/features/ai/utils/aiLimit";
+import PropertySelect from "~/features/tasks/components/property/PropertySelect";
 import {
 	type StatefulTask,
 	buildValidator,
 	defaultValues,
 	getPropertyConfig,
 	taskProperties,
-} from "~/config/taskConfigType";
-import { aiAction } from "~/features/ai/actions/ai-action";
-import PropertySelect from "~/features/tasks/components/property/PropertySelect";
+} from "~/features/tasks/config/taskConfigType";
 import useValidationErrors from "~/features/tasks/hooks/useValidationErrors";
 import BubbleMenu from "~/features/text-editor/components/BubbleMenu";
 import RenderMentionOptions from "~/features/text-editor/components/RenderMentionOptions";

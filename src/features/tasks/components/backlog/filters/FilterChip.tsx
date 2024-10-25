@@ -7,7 +7,7 @@ import { Lock } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 import SimpleTooltip from "~/components/SimpleTooltip";
-import { getPropertyConfig } from "~/config/taskConfigType";
+import { getPropertyConfig } from "~/features/tasks/config/taskConfigType";
 import { renderFilterValues } from "~/features/tasks/utils/filter-values";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";

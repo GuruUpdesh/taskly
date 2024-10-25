@@ -6,9 +6,9 @@ import { z } from "zod";
 
 import { getAssigneesForProject } from "~/actions/project-actions";
 import { getSprintsForProject } from "~/actions/sprint-actions";
-import { schemaValidators } from "~/config/taskConfigType";
 import { env } from "~/env.mjs";
 import { getTaskAiSchema } from "~/features/ai/utils/ai-context";
+import { schemaValidators } from "~/features/tasks/config/taskConfigType";
 import { type User } from "~/server/db/schema";
 
 import { isAiLimitReached } from "./ai-limit-actions";

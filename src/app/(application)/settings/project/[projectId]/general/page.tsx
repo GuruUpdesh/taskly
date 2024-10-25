@@ -8,7 +8,6 @@ import { redirect } from "next/navigation";
 import { getAllUsersInProject, getProject } from "~/actions/project-actions";
 import { getSprintsForProject } from "~/actions/sprint-actions";
 import Permission from "~/components/Permission";
-import { generalSettings } from "~/config/settingsConfig";
 import { getAiLimitCount } from "~/features/ai/actions/ai-limit-actions";
 import ProjectDangerZone from "~/features/settings/components/ProjectDangerZone";
 import ProjectGithub from "~/features/settings/components/ProjectGithub";
@@ -18,6 +17,7 @@ import ProjectSprints from "~/features/settings/components/ProjectSprints";
 import ProjectTheme from "~/features/settings/components/ProjectTheme";
 import SettingsSection from "~/features/settings/components/SettingsSection";
 import UsersTable from "~/features/settings/components/users-table";
+import { generalSettings } from "~/features/settings/settingsConfig";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 type Params = {

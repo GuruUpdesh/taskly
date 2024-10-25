@@ -35,12 +35,12 @@ import {
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
 import { Separator } from "~/components/ui/separator";
-import { getRefetchIntervals } from "~/config/refetchIntervals";
 import { createComment } from "~/features/comments/actions/create-comment";
 import Comments from "~/features/comments/components/Comments";
 import { getPRStatusFromGithubRepo } from "~/features/github-integration/actions/get-pr-status-from-github-repo";
 import Task from "~/features/tasks/components/backlog/Task";
 import { type UpdateTask } from "~/features/tasks/components/backlog/TasksContainer";
+import { getRefetchIntervals } from "~/lib/refetchIntervals";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 import { useLayoutStore } from "~/store/layout";
 

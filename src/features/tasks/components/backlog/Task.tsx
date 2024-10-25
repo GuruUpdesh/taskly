@@ -10,12 +10,15 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
 
-import { type TaskProperty, getPropertyConfig } from "~/config/taskConfigType";
 import type { UpdateTask } from "~/features/tasks/components/backlog/TasksContainer";
 import {
 	taskFormSchema,
 	type TaskFormType,
 } from "~/features/tasks/components/CreateTask";
+import {
+	type TaskProperty,
+	getPropertyConfig,
+} from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { type Task as TaskType } from "~/server/db/schema";
 import { usePointStore } from "~/store/point";

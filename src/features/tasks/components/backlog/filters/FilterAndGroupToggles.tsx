@@ -14,7 +14,10 @@ import {
 	SelectItem,
 	SelectTrigger,
 } from "~/components/ui/select";
-import { type TaskProperty, getPropertyConfig } from "~/config/taskConfigType";
+import {
+	type TaskProperty,
+	getPropertyConfig,
+} from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
 import { useRealtimeStore } from "~/store/realtime";

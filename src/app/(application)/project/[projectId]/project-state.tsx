@@ -17,11 +17,11 @@ import { useShallow } from "zustand/react/shallow";
 import { getAssigneesForProject, getProject } from "~/actions/project-actions";
 import { updateProjectApplicationData } from "~/actions/redis-actions";
 import { getSprintsForProject } from "~/actions/sprint-actions";
-import { getRefetchIntervals } from "~/config/refetchIntervals";
 import {
 	type NotificationWithTask,
 	getAllNotifications,
 } from "~/features/notifications/actions/notification-actions";
+import { getRefetchIntervals } from "~/lib/refetchIntervals";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 import { useRealtimeStore } from "~/store/realtime";
 import { useUserStore } from "~/store/user";

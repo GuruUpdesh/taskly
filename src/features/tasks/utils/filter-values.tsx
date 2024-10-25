@@ -1,6 +1,9 @@
 import pluralize from "pluralize";
 
-import { type getPropertyConfig, taskVariants } from "~/config/taskConfigType";
+import {
+	type getPropertyConfig,
+	taskVariants,
+} from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
 
 export function renderFilterValues(
