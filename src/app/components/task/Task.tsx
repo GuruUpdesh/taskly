@@ -27,7 +27,6 @@ const taskVariants = cva(["flex items-center gap-2"], {
 			backlog:
 				"flex items-center justify-between border-b border-border/50 py-2 hover:bg-accent-foreground/5",
 			list: "",
-			board: "flex flex-col p-2 rounded-md border bg-accent/25 hover:bg-accent/50 transition-color w-full max-w-full overflow-hidden group",
 		},
 	},
 	defaultVariants: {
@@ -62,20 +61,6 @@ const orders: Record<
 			{ key: "type", size: "default" },
 			{ key: "sprintId", size: "default" },
 			{ key: "priority", size: "default" },
-		],
-	],
-	board: [
-		[
-			{ key: "title", size: "default" },
-			{ key: "assignee", size: "icon" },
-		],
-		[{ key: "description", size: "icon" }],
-		[
-			{ key: "status", size: "icon" },
-			{ key: "priority", size: "icon" },
-			{ key: "points", size: "icon" },
-			{ key: "sprintId", size: "icon" },
-			{ key: "type", size: "default" },
 		],
 	],
 };
@@ -169,8 +154,6 @@ const Task = ({
 					"flex flex-shrink items-center gap-2 text-foreground first:min-w-0 first:flex-grow first:pl-4 last:pr-4":
 						variant === "backlog",
 					"flex w-full flex-col gap-2": variant === "list",
-					"flex w-full flex-shrink items-center gap-2 text-foreground first:justify-between last:flex-wrap":
-						variant === "board",
 				})}
 			>
 				{group.map((item, idx) => {
@@ -203,29 +186,12 @@ const Task = ({
 		);
 	}
 
-	if (variant === "board") {
-		return (
-			<TaskDropDownMenu
-				deleteTaskMutation={deleteTaskMutation}
-				task={task}
-			>
-				<Link
-					href={
-						disableNavigation
-							? ""
-							: `/project/${projectId}/task/${task.id}`
-					}
-				>
-					<div className={taskVariants({ variant: variant })}>
-						{renderProperties()}
-					</div>
-				</Link>
-			</TaskDropDownMenu>
-		);
-	}
-
 	return (
-		<TaskDropDownMenu deleteTaskMutation={deleteTaskMutation} task={task}>
+		<TaskDropDownMenu
+			deleteTaskMutation={deleteTaskMutation}
+			task={task}
+			onSubmit={onSubmit}
+		>
 			<Link
 				href={
 					disableNavigation
