@@ -8,8 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Mention from "@tiptap/extension-mention";
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
-import { motion } from "framer-motion";
-import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
+import { Loader2, SparkleIcon } from "lucide-react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
@@ -86,12 +85,6 @@ export type TaskFormType = Omit<NewTask, "sprintId"> & { sprintId: string };
 const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 	const project = useRealtimeStore((state) => state.project);
 	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
-
-	// Framer motion transition
-	const transition = {
-		duration: 0.2,
-		ease: [0.075, 0.82, 0.165, 1],
-	};
 
 	const [isLoading, setIsLoading] = useState(false);
 
