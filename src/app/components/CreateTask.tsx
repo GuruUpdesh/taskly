@@ -116,9 +116,6 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 			if (userName) {
 				form.setValue("assignee", userName);
 			}
-			if (airesponse.title) {
-				form.setValue("title", airesponse.title);
-			}
 		}
 	};
 
@@ -179,7 +176,8 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 				)}
 				aria-disabled={isLoading}
 			>
-				{form.watch("description") && project?.isAiEnabled ? (
+				{(form.watch("title") || form.watch("description")) &&
+				project?.isAiEnabled ? (
 					<motion.div
 						className="h-[30px] origin-left"
 						initial={{ opacity: 0, scaleX: 0 }}
