@@ -3,8 +3,8 @@ import React from "react";
 import { getAssigneesForProject } from "~/actions/application/project-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
 import { getTasksFromProject } from "~/actions/application/task-actions";
-import TaskProperty from "~/app/(application)/project/[projectId]/task/[taskId]/components/TaskProperty";
 import { getPropertyConfig, taskProperties } from "~/config/taskConfigType";
+import PropertyBadge from "~/features/tasks/components/property/PropertyBadge";
 
 type Params = {
 	params: {
@@ -56,7 +56,7 @@ async function TaskPage({ params: { projectId } }: Params) {
 									</h1>
 									{options.map((option) => {
 										return (
-											<TaskProperty
+											<PropertyBadge
 												key={option.key}
 												option={option}
 												size="default"

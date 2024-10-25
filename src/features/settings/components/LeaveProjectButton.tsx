@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-import Message from "~/app/components/Message";
+import Message from "~/components/Message";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,

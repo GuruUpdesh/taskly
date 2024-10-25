@@ -11,7 +11,7 @@ import {
 	getProject,
 } from "~/actions/application/project-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
-import Permission from "~/app/components/Permission";
+import Permission from "~/components/Permission";
 import { generalSettings } from "~/config/settingsConfig";
 import ProjectDangerZone from "~/features/settings/components/ProjectDangerZone";
 import ProjectGithub from "~/features/settings/components/ProjectGithub";

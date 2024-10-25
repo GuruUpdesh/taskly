@@ -4,7 +4,7 @@ import React from "react";
 
 import { GearIcon } from "@radix-ui/react-icons";
 
-import SidebarButton from "~/app/components/layout/sidebar/sidebar-button";
+import SidebarButton from "~/components/layout/sidebar/sidebar-button";
 import { useRealtimeStore } from "~/store/realtime";
 
 const ProjectSettings = () => {

@@ -3,9 +3,9 @@
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-import { createNotification } from "~/actions/notification-actions";
 import { authenticate } from "~/actions/security/authenticate";
 import { checkPermissions } from "~/actions/security/permissions";
+import { createNotification } from "~/features/notifications/actions/notification-actions";
 import { db } from "~/server/db";
 import { comments } from "~/server/db/schema";
 

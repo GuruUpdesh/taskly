@@ -6,13 +6,13 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 
-import { createNotification } from "~/actions/notification-actions";
-import { type TaskFormType as CreateTaskData } from "~/app/components/CreateTask";
 import {
 	type StatefulTask,
 	CreateTaskSchema,
 	getPropertyConfig,
 } from "~/config/taskConfigType";
+import { createNotification } from "~/features/notifications/actions/notification-actions";
+import { type TaskFormType as CreateTaskData } from "~/features/tasks/components/CreateTask";
 import { db } from "~/server/db";
 import {
 	comments,

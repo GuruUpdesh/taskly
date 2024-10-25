@@ -16,9 +16,9 @@ import {
 	getProject,
 } from "~/actions/application/project-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
-import { getAllNotifications } from "~/actions/notification-actions";
-import Sidebar from "~/app/components/layout/sidebar/sidebar";
-import SidebarPanel from "~/app/components/layout/sidebar/sidebar-panel";
+import Sidebar from "~/components/layout/sidebar/sidebar";
+import SidebarPanel from "~/components/layout/sidebar/sidebar-panel";
+import { getAllNotifications } from "~/features/notifications/actions/notification-actions";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 import ProjectState from "./project-state";

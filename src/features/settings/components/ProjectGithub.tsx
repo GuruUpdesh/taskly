@@ -7,8 +7,8 @@ import { and, eq } from "drizzle-orm";
 import Image from "next/image";
 import Link from "next/link";
 
-import Message from "~/app/components/Message";
-import SimpleTooltip from "~/app/components/SimpleTooltip";
+import Message from "~/components/Message";
+import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { cancelPendingIntegration } from "~/features/github-integration/actions/cancel-pending-integration";

@@ -10,7 +10,6 @@ import { motion } from "framer-motion";
 import { Trash, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 
-import UserProfilePicture from "~/app/components/UserProfilePicture";
 import { Button } from "~/components/ui/button";
 import {
 	DropdownMenu,
@@ -18,6 +17,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import UserProfilePicture from "~/components/UserProfilePicture";
 import { deleteComment } from "~/features/comments/actions/delete-comment";
 import { cn } from "~/lib/utils";
 import { type Comment, type User } from "~/server/db/schema";

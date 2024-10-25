@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { type Metadata } from "next";
 
-import { TaskWrapper } from "~/app/(application)/project/[projectId]/task/[taskId]/components/TaskWrapper";
+import { TaskPageWrapper } from "~/features/tasks/components/page/TaskPageWrapper";
 import { db } from "~/server/db";
 import { tasks } from "~/server/db/schema";
 
@@ -40,5 +40,5 @@ export async function generateMetadata({
 }
 
 export default function TaskPage({ params: { taskId, projectId } }: Params) {
-	return <TaskWrapper taskId={taskId} projectId={projectId} />;
+	return <TaskPageWrapper taskId={taskId} projectId={projectId} />;
 }

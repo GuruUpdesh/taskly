@@ -3,7 +3,7 @@ import React from "react";
 import { PersonIcon } from "@radix-ui/react-icons";
 import dynamic from "next/dynamic";
 
-import SidebarButton from "~/app/components/layout/sidebar/sidebar-button";
+import SidebarButton from "~/components/layout/sidebar/sidebar-button";
 const ProjectSettings = dynamic(() => import("./ProjectSettings"), {
 	ssr: false,
 });

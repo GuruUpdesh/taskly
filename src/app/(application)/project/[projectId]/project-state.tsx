@@ -20,11 +20,11 @@ import {
 } from "~/actions/application/project-actions";
 import { updateProjectApplicationData } from "~/actions/application/redis-actions";
 import { getSprintsForProject } from "~/actions/application/sprint-actions";
+import { getRefetchIntervals } from "~/config/refetchIntervals";
 import {
 	type NotificationWithTask,
 	getAllNotifications,
-} from "~/actions/notification-actions";
-import { getRefetchIntervals } from "~/config/refetchIntervals";
+} from "~/features/notifications/actions/notification-actions";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 import { useRealtimeStore } from "~/store/realtime";
 import { useUserStore } from "~/store/user";

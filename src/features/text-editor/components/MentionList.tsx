@@ -5,7 +5,7 @@ import React, {
 	useState,
 } from "react";
 
-import UserProfilePicture from "~/app/components/UserProfilePicture";
+import UserProfilePicture from "~/components/UserProfilePicture";
 import { cn } from "~/lib/utils";
 import { type User } from "~/server/db/schema";
 

@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import SimpleTooltip from "~/app/components/SimpleTooltip";
+import SimpleTooltip from "~/components/SimpleTooltip";
 import { type getPRStatusFromGithubRepo } from "~/features/github-integration/actions/get-pr-status-from-github-repo";
 
 type Props = {

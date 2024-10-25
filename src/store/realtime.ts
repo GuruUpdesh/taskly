@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { type NotificationWithTask } from "~/actions/notification-actions";
+import { type NotificationWithTask } from "~/features/notifications/actions/notification-actions";
 import {
 	type Project,
 	type Task,

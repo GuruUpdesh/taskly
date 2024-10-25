@@ -11,8 +11,8 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { generateAndUpdateProjectImage } from "~/actions/onboarding/create-project";
-import ImageUploadArea from "~/app/components/ImageUploadArea";
-import SimpleTooltip from "~/app/components/SimpleTooltip";
+import ImageUploadArea from "~/components/ImageUploadArea";
+import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import {
 	Form,

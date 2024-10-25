@@ -25,8 +25,8 @@ import {
 	createProject,
 } from "~/actions/onboarding/create-project";
 import { sendEmailInvites } from "~/actions/onboarding/invite-actions";
-import EmailInviteForm from "~/app/components/invite/by-email/email-invite-form";
-import InviteLink from "~/app/components/invite/invite-link";
+import EmailInviteForm from "~/components/invite/by-email/email-invite-form";
+import InviteLink from "~/components/invite/invite-link";
 import { Button } from "~/components/ui/button";
 import {
 	Form,

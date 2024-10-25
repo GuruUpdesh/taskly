@@ -6,7 +6,6 @@ import { Icon } from "@radix-ui/react-select";
 import { ChevronDown, Delete } from "lucide-react";
 
 import { type UserWithRole } from "~/actions/application/project-actions";
-import UserProfilePicture from "~/app/components/UserProfilePicture";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -34,6 +33,7 @@ import {
 	TableRow,
 	TableCell,
 } from "~/components/ui/table";
+import UserProfilePicture from "~/components/UserProfilePicture";
 import {
 	editUserRole,
 	removeUserFromProject,

@@ -8,9 +8,7 @@ import { endOfDay, startOfDay } from "date-fns";
 import { ChevronRight, Loader2, SparklesIcon } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
-import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)/components/TasksContainer";
-import SimpleTooltip from "~/app/components/SimpleTooltip";
-import Task from "~/app/components/task/Task";
+import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import {
 	Card,
@@ -21,6 +19,8 @@ import {
 } from "~/components/ui/card";
 import { Textarea } from "~/components/ui/textarea";
 import { type StatefulTask } from "~/config/taskConfigType";
+import Task from "~/features/tasks/components/backlog/Task";
+import { type UpdateTask } from "~/features/tasks/components/backlog/TasksContainer";
 import { type User } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
 

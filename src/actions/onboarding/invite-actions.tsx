@@ -16,7 +16,7 @@ import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { invites, users, usersToProjects } from "~/server/db/schema";
 
-import { createNotification } from "../notification-actions";
+import { createNotification } from "../../features/notifications/actions/notification-actions";
 
 const getInviteSchema = z.object({
 	userId: z.string(),

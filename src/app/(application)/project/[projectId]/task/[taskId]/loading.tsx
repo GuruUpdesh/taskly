@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-import LoadingPage from "./components/LoadingPage";
+import LoadingPage from "../../../../../../features/tasks/components/page/LoadingPage";
 
 export default function Loading() {
 	const layout = cookies().get("react-resizable-panels:task-layout");
