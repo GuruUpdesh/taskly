@@ -1,19 +1,14 @@
 "use client";
 
-import React, {
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type MDXEditorMethods } from "@mdxeditor/editor";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { UseMutationResult } from "@tanstack/react-query";
+import Mention from "@tiptap/extension-mention";
+import Placeholder from "@tiptap/extension-placeholder";
+import { EditorContent, useEditor } from "@tiptap/react";
 import _debounce from "lodash/debounce";
-import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -22,22 +17,15 @@ import { type UpdateTask } from "~/app/(application)/project/[projectId]/(views)
 import SimpleTooltip from "~/app/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Skeleton } from "~/components/ui/skeleton";
 import type { NewTask, Task } from "~/server/db/schema";
+import { useRealtimeStore } from "~/store/realtime";
 
+import BubbleMenu from "./editor/BubbleMenu";
+import extensions from "./editor/extensions";
+import RenderMentionOptions from "./editor/mentions/RenderMentionOptions";
 import TaskHistoryItem, { type TaskHistoryWithUser } from "./HistoryItem";
 import PullRequest from "./PullRequest";
-
-const Editor = dynamic(
-	() =>
-		import(
-			"~/app/(application)/project/[projectId]/task/[taskId]/components/TextEditor"
-		),
-	{
-		ssr: false,
-		loading: () => <Skeleton className="h-[95.5px]" />,
-	},
-);
+import "../components/editor/tiptap.css";
 
 interface TaskWithComments extends Task {
 	taskHistory: TaskHistoryWithUser[];
@@ -95,8 +83,6 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 		[],
 	);
 
-	const editorRef = useRef<MDXEditorMethods>(null);
-
 	const [showAllHistory, setShowAllHistory] = useState(false);
 
 	const displayedHistory = useMemo(
@@ -105,6 +91,42 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 
 		[task.taskHistory, showAllHistory],
 	);
+
+	const assignees = useRealtimeStore((state) => state.assignees);
+	const editor = useEditor({
+		immediatelyRender: false,
+		extensions: [
+			...extensions,
+			Placeholder.configure({
+				placeholder: "Add a description...",
+			}),
+			Mention.configure({
+				HTMLAttributes: {
+					class: "mention",
+				},
+				suggestion: {
+					items: ({ query }) => {
+						return assignees
+							.filter((user) =>
+								user.username
+									.toLowerCase()
+									.startsWith(query.toLowerCase()),
+							)
+							.slice(0, 5);
+					},
+					render: RenderMentionOptions,
+				},
+			}),
+		],
+		content: form.watch("description"),
+		onUpdate: (e) => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+			const content = e.editor.storage.markdown.getMarkdown();
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+			form.setValue("description", content);
+			debouncedHandleChange();
+		},
+	});
 
 	return (
 		<form
@@ -120,15 +142,10 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 				{...form.register("title")}
 				onChangeCapture={debouncedHandleChange}
 			/>
-			<Editor
-				editorRef={editorRef}
-				markdown={form.watch("description")}
-				onChange={(content) => {
-					console.log(content);
-					form.setValue("description", content);
-					debouncedHandleChange();
-				}}
-			/>
+			<div className="rounded border p-2">
+				{editor && <BubbleMenu editor={editor} />}
+				<EditorContent editor={editor} />
+			</div>
 			<div className="py-4">
 				<div className="flex flex-col gap-2 overflow-hidden">
 					<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">

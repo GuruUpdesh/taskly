@@ -21,6 +21,9 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { cn } from "~/lib/utils";
 import { type Comment, type User } from "~/server/db/schema";
+import { useRealtimeStore } from "~/store/realtime";
+
+import getHTMLfromJSON from "../editor/getHTMLfromJSON";
 
 export interface CommentWithUser extends Comment {
 	user: User;
@@ -41,6 +44,7 @@ const UserComment = ({
 }: Props) => {
 	const { user } = useUser();
 	const commentRef = useRef<HTMLDivElement | null>(null);
+	const assignees = useRealtimeStore((state) => state.assignees);
 
 	useEffect(() => {
 		if (isLastComment && commentRef.current) {
@@ -71,39 +75,6 @@ const UserComment = ({
 		await deleteComment(comment.id);
 		toast.error("Comment deleted", {
 			icon: <Trash className="h-4 w-4" />,
-		});
-	}
-
-	function parseCommentForMentions(comment: string) {
-		const words = comment.split(" ");
-		const new_words = words.map((word) => {
-			if (word.startsWith("@[")) {
-				return {
-					word: "@" + word.slice(2).split("]", 1)[0] + " ",
-					isMention: true,
-				};
-			}
-			return { word: word + " ", isMention: false };
-		});
-
-		return new_words.map((word, index) => {
-			if (word.isMention) {
-				return (
-					<span
-						key={index}
-						className="font-bold text-accent"
-						style={{ color: "white" }}
-						suppressHydrationWarning
-					>
-						{word.word}
-					</span>
-				);
-			}
-			return (
-				<span key={index} suppressHydrationWarning>
-					{word.word}
-				</span>
-			);
 		});
 	}
 
@@ -168,9 +139,12 @@ const UserComment = ({
 						) : null}
 					</div>
 				</div>
-				<p className="mt-2 break-words text-sm leading-6">
-					{parseCommentForMentions(comment.comment)}
-				</p>
+				<div
+					className="tiptap mt-2 break-words text-sm leading-6"
+					dangerouslySetInnerHTML={{
+						__html: getHTMLfromJSON(comment.comment, assignees),
+					}}
+				></div>
 			</div>
 		</motion.div>
 	);

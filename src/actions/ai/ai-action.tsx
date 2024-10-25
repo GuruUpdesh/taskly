@@ -1,6 +1,7 @@
 "use server";
 
 import OpenAI from "openai";
+import { zodResponseFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
 import { getAssigneesForProject } from "~/actions/application/project-actions";
@@ -25,62 +26,48 @@ export async function aiAction(
 	if (await isAiLimitReached()) {
 		return;
 	}
-	const users = assignees.map((user) => user.username).join(", ");
-	const gptResponse = await openai.chat.completions.create({
-		messages: [
-			{
-				role: "assistant",
-				content: `
-            RESPOND IN JSON FORMAT!
 
-            A user is trying to create a new task with the title "${title}".
-
-            Create a new task for the user with the title "${title}" and the description "${description}" that they provided.
-
-            Provide the following details:
-            - status: [Specify the status, "backlog", "todo", "inprogress", "inreview", or "done"]
-			- points: [Specify the points "0", "1", "2", "3", "4", or "5"] as a string
-            - priority: [Specify the priority "none", "low", "medium", "high", or "critical"]
-            - type: [Specity the type of task "task", "bug", "feature", "improvement", "research", or "testing"]
-            - assignee: ${users}
-
-			If no title was provided but a description was provided, use also generate a concise title for the task.
-
-            Example:
-            Status: In Progress
-			Points: 3
-            Priority: Medium
-            Type: Feature
-            Assignee: user1
-
-            Users will send you a title and description and you are to return a JSON object with these fields.
-            `,
-			},
-		],
-		model: "gpt-4o",
-	});
-	if (!gptResponse.choices[0]?.message.content) {
-		return;
-	}
-	const response = JSON.parse(
-		gptResponse.choices[0]?.message.content,
-	) as unknown;
-	console.log(response);
-	const validationSchema = z.object({
-		title: schemaValidators.title,
-		description: schemaValidators.description,
+	const TaskProperties = z.object({
 		status: schemaValidators.status,
 		points: schemaValidators.points,
 		priority: schemaValidators.priority,
 		type: schemaValidators.type,
-		assignee: schemaValidators.assignee,
+		assignee: z.string(),
 	});
-	const results = validationSchema.safeParse(response);
-	if (!results.success) {
-		console.error(results.error);
+
+	const users = assignees.map((user) => user.username).join(", ");
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+	const completion = await openai.beta.chat.completions.parse({
+		model: "gpt-4o-2024-08-06",
+		messages: [
+			{
+				role: "system",
+				content: `You are an expert in evaluating task information and assigning appropriate properties. The potential values for assignee are: ${users}`,
+			},
+			{
+				role: "user",
+				content: `What properties should I assign my task "${title}" which is described as: "${description}".`,
+			},
+		],
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+		response_format: zodResponseFormat(TaskProperties, "task_properties"),
+	});
+
+	try {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+		const task_properties = completion.choices[0]?.message.parsed;
+
+		if (!task_properties) {
+			console.error("task properties not returned from OpenAI");
+			return;
+		}
+
+		const validated_properties = TaskProperties.parse(task_properties);
+		return validated_properties;
+	} catch (e) {
+		console.error(e);
 		return;
 	}
-	return results.data;
 }
 
 const truncateDescription = (description: string, maxLength: number) => {

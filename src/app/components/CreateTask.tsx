@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Mention from "@tiptap/extension-mention";
+import Placeholder from "@tiptap/extension-placeholder";
+import { EditorContent, useEditor } from "@tiptap/react";
 import { motion } from "framer-motion";
 import { ChevronRight, Loader2, SparkleIcon } from "lucide-react";
 import { useForm, type UseFormReturn } from "react-hook-form";
@@ -24,7 +27,6 @@ import {
 	DialogTrigger,
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/config/aiLimit";
 import {
 	type StatefulTask,
@@ -46,6 +48,10 @@ import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
 import SimpleTooltip from "./SimpleTooltip";
+import BubbleMenu from "../(application)/project/[projectId]/task/[taskId]/components/editor/BubbleMenu";
+import extensions from "../(application)/project/[projectId]/task/[taskId]/components/editor/extensions";
+import RenderMentionOptions from "../(application)/project/[projectId]/task/[taskId]/components/editor/mentions/RenderMentionOptions";
+import "../(application)/project/[projectId]/task/[taskId]/components/editor/tiptap.css";
 
 type FormProps = {
 	onSubmit: (newTask: TaskFormType) => void;
@@ -110,11 +116,45 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 			if (userName) {
 				form.setValue("assignee", userName);
 			}
-			if (airesponse.title) {
-				form.setValue("title", airesponse.title);
-			}
 		}
 	};
+
+	const editor = useEditor({
+		immediatelyRender: false,
+		extensions: [
+			...extensions,
+			Placeholder.configure({
+				placeholder: "Add a description...",
+			}),
+			Mention.configure({
+				HTMLAttributes: {
+					class: "mention",
+				},
+				suggestion: {
+					items: ({ query }) => {
+						return assignees
+							.filter((user) =>
+								user.username
+									.toLowerCase()
+									.startsWith(query.toLowerCase()),
+							)
+							.slice(0, 5);
+					},
+					render: RenderMentionOptions,
+				},
+			}),
+		],
+		content: form.watch("description"),
+		onUpdate: (e) => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+			const content = e.editor.storage.markdown.getMarkdown();
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+			form.setValue("description", content, {
+				shouldDirty: true,
+				shouldValidate: true,
+			});
+		},
+	});
 
 	return (
 		<form className="px-4" onSubmit={form.handleSubmit(onSubmit)}>
@@ -127,12 +167,8 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 				autoFocus
 				autoComplete="off"
 			/>
-			<Textarea
-				className="m-0 resize-none border-none bg-transparent p-0 ring-offset-transparent focus-visible:ring-transparent"
-				placeholder="Add a description..."
-				rows={2}
-				{...form.register("description")}
-			/>
+			{editor && <BubbleMenu editor={editor} />}
+			<EditorContent editor={editor} />
 			<div
 				className={cn(
 					"flex gap-2",
@@ -140,7 +176,8 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 				)}
 				aria-disabled={isLoading}
 			>
-				{form.watch("description") && project?.isAiEnabled ? (
+				{(form.watch("title") || form.watch("description")) &&
+				project?.isAiEnabled ? (
 					<motion.div
 						className="h-[30px] origin-left"
 						initial={{ opacity: 0, scaleX: 0 }}
