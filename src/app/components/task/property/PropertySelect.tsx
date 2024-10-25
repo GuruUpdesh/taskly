@@ -85,7 +85,7 @@ function PropertySelect({
 						>
 							<SelectTrigger
 								className={cn(
-									"h-min overflow-hidden",
+									"h-min overflow-hidden saturate-[95%]",
 									{
 										"aspect-square max-h-[30px] w-[30px] justify-center":
 											size === "icon",
