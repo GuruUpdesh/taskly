@@ -43,26 +43,25 @@ const orders: Record<
 > = {
 	backlog: [
 		[
-			{ key: "priority", size: "icon" },
-			{ key: "points", size: "icon" },
 			{ key: "status", size: "icon" },
+			{ key: "points", size: "icon" },
 			{ key: "title", size: "default" },
-			{ key: "description", size: "icon" },
 		],
 		[
 			{ key: "type", size: "default" },
 			{ key: "assignee", size: "icon" },
 			{ key: "sprintId", size: "icon" },
+			{ key: "priority", size: "icon" },
 		],
 	],
 	list: [
 		[
-			{ key: "priority", size: "default" },
-			{ key: "points", size: "default" },
 			{ key: "status", size: "default" },
-			{ key: "type", size: "default" },
 			{ key: "assignee", size: "default" },
+			{ key: "points", size: "default" },
+			{ key: "type", size: "default" },
 			{ key: "sprintId", size: "default" },
+			{ key: "priority", size: "default" },
 		],
 	],
 	board: [
@@ -181,51 +180,17 @@ const Task = ({
 						assignees,
 						sprints,
 					);
-					switch (variant) {
-						case "backlog":
-							return (
-								<Property
-									key={idx}
-									config={config}
-									form={form}
-									onSubmit={onSubmit}
-									variant={variant}
-									size={item.size}
-								/>
-							);
-						case "list":
-							return (
-								<div
-									className="grid w-full grid-cols-3"
-									key={idx}
-								>
-									<p className="col-span-1 capitalize">
-										{config.displayName}
-									</p>
-									<Property
-										config={config}
-										form={form}
-										onSubmit={onSubmit}
-										size={item.size}
-										variant={variant}
-										className="col-span-2"
-									/>
-								</div>
-							);
-						case "board":
-							return (
-								<Property
-									key={idx}
-									config={config}
-									form={form}
-									onSubmit={onSubmit}
-									variant={variant}
-									size={item.size}
-								/>
-							);
-						default:
-							return null;
-					}
+
+					return (
+						<Property
+							key={idx}
+							config={config}
+							form={form}
+							onSubmit={onSubmit}
+							variant={variant}
+							size={item.size}
+						/>
+					);
 				})}
 			</div>
 		));
