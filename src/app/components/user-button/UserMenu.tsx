@@ -70,48 +70,6 @@ const UserMenu = ({ children }: Props) => {
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
-				<DropdownMenuGroup>
-					<Link
-						href={`/settings/project/${project?.id}/general`}
-						target="_blank"
-					>
-						<DropdownMenuItem>
-							Project Settings
-							<DropdownMenuShortcut>
-								<Folder className="h-4 w-4" />
-							</DropdownMenuShortcut>
-						</DropdownMenuItem>
-					</Link>
-					<Link href="/create-project">
-						<DropdownMenuItem>
-							New Project
-							<DropdownMenuShortcut>
-								<PlusIcon />
-							</DropdownMenuShortcut>
-						</DropdownMenuItem>
-					</Link>
-				</DropdownMenuGroup>
-				<DropdownMenuSeparator />
-				<Link
-					href="https://github.com/GuruUpdesh/taskly"
-					target="_blank"
-				>
-					<DropdownMenuItem>
-						GitHub
-						<DropdownMenuShortcut>
-							<GitHubLogoIcon />
-						</DropdownMenuShortcut>
-					</DropdownMenuItem>
-				</Link>
-				<Link href="https://docs.tasklypm.com" target="_blank">
-					<DropdownMenuItem>
-						Documentation
-						<DropdownMenuShortcut>
-							<ReaderIcon />
-						</DropdownMenuShortcut>
-					</DropdownMenuItem>
-				</Link>
-				<DropdownMenuSeparator />
 				<DropdownMenuItem
 					onClick={() => signOut(() => router.push("/sign-in"))}
 				>

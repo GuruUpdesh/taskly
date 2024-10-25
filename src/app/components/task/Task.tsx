@@ -25,7 +25,7 @@ const taskVariants = cva(["flex items-center gap-2"], {
 	variants: {
 		variant: {
 			backlog:
-				"flex items-center justify-between border-b border-border/50 py-2 hover:bg-accent-foreground/5",
+				"flex items-center justify-between border-b border-border/50 py-2 hover:bg-accent-foreground/5 group",
 			list: "",
 			board: "flex flex-col p-2 rounded-md border bg-accent/25 hover:bg-accent/50 transition-color w-full max-w-full overflow-hidden group",
 		},
@@ -43,16 +43,15 @@ const orders: Record<
 > = {
 	backlog: [
 		[
-			{ key: "priority", size: "icon" },
-			{ key: "points", size: "icon" },
 			{ key: "status", size: "icon" },
+			{ key: "points", size: "icon" },
 			{ key: "title", size: "default" },
-			{ key: "description", size: "icon" },
 		],
 		[
 			{ key: "type", size: "default" },
 			{ key: "assignee", size: "icon" },
 			{ key: "sprintId", size: "icon" },
+			{ key: "priority", size: "icon" },
 		],
 	],
 	list: [

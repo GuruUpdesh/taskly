@@ -4,6 +4,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { GearIcon, ReaderIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { LayoutGrid } from "lucide-react";
 import dynamic from "next/dynamic";
+import { Sora } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -18,12 +19,15 @@ const UserButton = dynamic(
 );
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
+import { cn } from "~/lib/utils";
 
 import InboxSidebarButton from "./InboxSidebarButton";
 import SelectProject from "./select project/select-project";
 import SidebarButton from "./sidebar-button";
 import SidebarSearch from "./sidebar-search";
 import TaskViews from "./TaskViews";
+
+const sora = Sora({ subsets: ["latin"] });
 
 interface SidebarProps {
 	projectId: string;
@@ -32,7 +36,12 @@ interface SidebarProps {
 const Sidebar = async ({ projectId }: SidebarProps) => {
 	const user = await currentUser();
 	return (
-		<div className="relative h-full bg-background @container">
+		<div
+			className={cn(
+				"relative h-full bg-background @container",
+				sora.className,
+			)}
+		>
 			<div className="flex h-full flex-col px-1.5 pb-2 @sidebar:px-4">
 				<div className="flex min-h-[57px] items-center justify-center @sidebar:justify-start">
 					<div className="hidden @sidebar:block">

@@ -3,7 +3,7 @@
 import React from "react";
 
 import { useUser } from "@clerk/nextjs";
-import { DotsVerticalIcon } from "@radix-ui/react-icons";
+import { ChevronRightIcon } from "@radix-ui/react-icons";
 
 import UserProfilePicture from "~/app/components/UserProfilePicture";
 import { Button } from "~/components/ui/button";
@@ -29,21 +29,13 @@ const UserButton = ({ size = "default" }: Props) => {
 				<div className="z-10 flex min-w-full items-center justify-between rounded-md border-b bg-[#111111] px-2 py-2">
 					<div className="flex min-w-0 flex-grow items-center gap-2">
 						<UserProfilePicture src={user.imageUrl} size={30} />
-						<SimpleTooltip
-							label={user.username ? user.username : ""}
-						>
-							<h4 className="max-w-full truncate overflow-ellipsis whitespace-nowrap text-lg font-semibold">
-								{user.username}
+						<div className=" flex w-full items-center justify-between">
+							<h4 className="max-w-full truncate overflow-ellipsis whitespace-nowrap text-lg font-normal">
+								Account
 							</h4>
-						</SimpleTooltip>
+							<ChevronRightIcon />
+						</div>
 					</div>
-					<Button
-						variant="ghost"
-						size="iconSm"
-						className="h-[30px] w-[30px] flex-shrink-0"
-					>
-						<DotsVerticalIcon />
-					</Button>
 				</div>
 			</UserMenu>
 		);

@@ -13,7 +13,7 @@ interface FilteredTaskViews {
 
 export const filteredTaskViews: FilteredTaskViews[] = [
 	{
-		label: "Me",
+		label: "My Stuff",
 		icon: <PersonIcon className="h-4 w-4 min-w-4 bg-background" />,
 		filters: (_, username) => {
 			if (!username) {
@@ -31,7 +31,7 @@ export const filteredTaskViews: FilteredTaskViews[] = [
 		},
 	},
 	{
-		label: "Active",
+		label: "Current Things",
 		icon: <Activity className="h-4 w-4 min-w-4 bg-background" />,
 		filters: () => {
 			return [
@@ -45,7 +45,7 @@ export const filteredTaskViews: FilteredTaskViews[] = [
 		},
 	},
 	{
-		label: "Current Sprint",
+		label: "Sprint",
 		icon: <Clock className="h-4 w-4 min-w-4 bg-background" />,
 		filters: (sprints) => {
 			if (!sprints) {

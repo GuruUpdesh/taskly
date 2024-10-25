@@ -4,8 +4,14 @@ import React from "react";
 
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import type { UseMutationResult } from "@tanstack/react-query";
-import { Priority } from "kbar";
-import { Trash, Trash2Icon } from "lucide-react";
+import {
+	Copy,
+	GitBranch,
+	GitPullRequestArrow,
+	Link,
+	Trash,
+	Trash2Icon,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -13,8 +19,13 @@ import {
 	ContextMenuContent,
 	ContextMenuItem,
 	ContextMenuShortcut,
+	ContextMenuSub,
 	ContextMenuTrigger,
+	ContextMenuSubContent,
+	ContextMenuSubTrigger,
+	ContextMenuSeparator,
 } from "~/components/ui/context-menu";
+import { taskConfig } from "~/config/taskConfigType";
 import type { Task } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
 
@@ -32,24 +43,6 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 
 	const actions = [
 		{
-			id: "gitbranch",
-			name: "Copy Branch Name",
-			icon: <GitHubLogoIcon className="h-4 w-4" />,
-			shortcut: ["b"],
-			perform: () => {
-				if (!task.branchName) return;
-
-				void navigator.clipboard.writeText(task.branchName);
-
-				toast.info(`Copied branch name to clipboard`, {
-					description: `Branch name: ${task.branchName}`,
-					icon: <GitHubLogoIcon className="h-4 w-4" />,
-				});
-			},
-			priority: Priority.HIGH,
-			section: `Actions - ${task.title}`,
-		},
-		{
 			id: "delete",
 			name: "Delete",
 			icon: <Trash2Icon className="h-4 w-4" />,
@@ -61,7 +54,6 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 					icon: <Trash className="h-4 w-4" />,
 				});
 			},
-			priority: Priority.HIGH,
 			section: `Actions - ${task.title}`,
 		},
 	];
@@ -75,20 +67,70 @@ const TaskDropDownMenu = ({ task, children, deleteTaskMutation }: Props) => {
 			>
 				{children}
 			</ContextMenuTrigger>
-			<ContextMenuContent className="border-foreground/10 bg-background/75 backdrop-blur-xl">
-				{actions.map((action) => (
-					<ContextMenuItem
-						key={action.id}
-						onClick={action.perform}
-						className="gap-2"
-					>
-						{action.icon}
-						{action.name}
-						<ContextMenuShortcut>
-							{action.shortcut?.join(" + ")}
-						</ContextMenuShortcut>
-					</ContextMenuItem>
-				))}
+			<ContextMenuContent>
+				<ContextMenuSub>
+					<ContextMenuSubTrigger className="gap-2">
+						{taskConfig.status.icon}
+						{task.status}
+					</ContextMenuSubTrigger>
+					<ContextMenuSubContent></ContextMenuSubContent>
+				</ContextMenuSub>
+				<ContextMenuSub>
+					<ContextMenuSubTrigger className="gap-2">
+						{taskConfig.points.icon}
+						Points
+					</ContextMenuSubTrigger>
+					<ContextMenuSubContent></ContextMenuSubContent>
+				</ContextMenuSub>
+				<ContextMenuSub>
+					<ContextMenuSubTrigger className="gap-2">
+						{taskConfig.priority.icon}
+						Priority
+					</ContextMenuSubTrigger>
+					<ContextMenuSubContent></ContextMenuSubContent>
+					<ContextMenuSub>
+						<ContextMenuSubTrigger className="gap-2">
+							{taskConfig.type.icon}
+							Type
+						</ContextMenuSubTrigger>
+						<ContextMenuSubContent></ContextMenuSubContent>
+					</ContextMenuSub>
+				</ContextMenuSub>
+				<ContextMenuSeparator />
+				<ContextMenuSub>
+					<ContextMenuSubTrigger className="gap-2">
+						<GitHubLogoIcon className="h-4 w-4" />
+						Git
+					</ContextMenuSubTrigger>
+					<ContextMenuSubContent></ContextMenuSubContent>
+				</ContextMenuSub>
+				<ContextMenuSeparator />
+				<ContextMenuItem key="github-redirect" className="gap-2">
+					<Link className="h-4 w-4" />
+					Copy Link
+					<ContextMenuShortcut>{"p"}</ContextMenuShortcut>
+				</ContextMenuItem>
+				<ContextMenuItem key="duplicate" className="gap-2">
+					<Copy className="h-4 w-4" />
+					Duplicate
+					<ContextMenuShortcut>{"d"}</ContextMenuShortcut>
+				</ContextMenuItem>
+
+				<ContextMenuItem
+					key="delete"
+					onClick={() => {
+						if (!deleteTaskMutation) return;
+						deleteTaskMutation.mutate(task.id);
+						toast.error("Task deleted", {
+							icon: <Trash className="h-4 w-4" />,
+						});
+					}}
+					className="gap-2"
+				>
+					<Trash className="h-4 w-4" />
+					Delete
+					<ContextMenuShortcut>{"d"}</ContextMenuShortcut>
+				</ContextMenuItem>
 			</ContextMenuContent>
 		</ContextMenu>
 	);

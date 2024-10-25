@@ -85,7 +85,7 @@ function PropertySelect({
 						>
 							<SelectTrigger
 								className={cn(
-									"h-min overflow-hidden",
+									"h-min overflow-hidden saturate-[95%]",
 									{
 										"aspect-square max-h-[30px] w-[30px] justify-center":
 											size === "icon",
@@ -101,6 +101,9 @@ function PropertySelect({
 										hover: true,
 									}),
 									"flex items-center space-x-2 whitespace-nowrap rounded-sm py-1 pl-2 pr-3",
+									config.key === "type"
+										? "rounded-full"
+										: "",
 								)}
 							>
 								<SelectValue asChild>

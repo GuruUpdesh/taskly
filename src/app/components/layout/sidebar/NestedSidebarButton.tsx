@@ -64,13 +64,13 @@ const NestedSidebarButton = ({
 					variant="ghost"
 					size="sm"
 					className={cn(
-						"group relative w-full justify-center gap-2 !bg-transparent p-0 font-semibold opacity-75 @sidebar:justify-start @sidebar:px-4",
+						"group relative w-full justify-center gap-2 !bg-transparent p-0 opacity-75 @sidebar:justify-start @sidebar:px-4",
 						active && "opacity-100",
 					)}
 					onClick={handleClick}
 				>
 					{icon ? icon : null}
-					<span className="hidden flex-1 whitespace-nowrap @sidebar:inline-flex">
+					<span className="hidden font-medium flex-1 whitespace-nowrap @sidebar:inline-flex">
 						{label}
 					</span>
 					<div className="absolute right-2 bg-gradient-to-r from-transparent to-background to-25% p-1 pl-0 pr-2 opacity-0 transition-all  group-hover:right-0  group-hover:opacity-100">

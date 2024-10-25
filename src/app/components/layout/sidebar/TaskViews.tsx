@@ -38,7 +38,6 @@ const TaskViews = ({ projectId, username }: Props) => {
 					<NestedSidebarButton
 						key={view.label}
 						label={view.label}
-						icon={view.icon}
 						filters={view.filters}
 						url={`/project/${projectId}/tasks`}
 						username={username}

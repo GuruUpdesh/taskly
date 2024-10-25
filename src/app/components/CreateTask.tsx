@@ -167,8 +167,6 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 				autoFocus
 				autoComplete="off"
 			/>
-			{editor && <BubbleMenu editor={editor} />}
-			<EditorContent editor={editor} />
 			<div
 				className={cn(
 					"flex gap-2",
@@ -231,6 +229,10 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 							/>
 						);
 				})}
+			</div>
+			<div className="mt-2">
+				{editor && <BubbleMenu editor={editor} />}
+				<EditorContent editor={editor} className="" />
 			</div>
 		</form>
 	);
@@ -368,8 +370,16 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className="min-w-[600px] max-w-fit p-0">
-				<DialogHeader className="px-4 pt-4">
+			<DialogContent className="flex min-h-[50%] min-w-[600px] max-w-fit flex-col p-0">
+				<DialogHeader className="px-4 pt-4"></DialogHeader>
+				<TaskCreateForm
+					onSubmit={handleSubmit}
+					form={form}
+					assignees={assignees}
+					sprints={sprints}
+				/>
+				<div className="flex-1" />
+				<DialogFooter className="px-4 py-2">
 					<DialogTitle className="flex items-center gap-[0.5ch]">
 						{project ? (
 							<div className="flex items-center gap-[0.5ch] text-sm">
@@ -381,14 +391,6 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 						) : null}
 						New Task
 					</DialogTitle>
-				</DialogHeader>
-				<TaskCreateForm
-					onSubmit={handleSubmit}
-					form={form}
-					assignees={assignees}
-					sprints={sprints}
-				/>
-				<DialogFooter className="border-t px-4 py-2">
 					<Button
 						size="sm"
 						onClick={() => form.handleSubmit(handleSubmit)()}
