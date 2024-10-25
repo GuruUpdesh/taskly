@@ -124,7 +124,6 @@ const Task = ({
 			sprintId: String(task.sprintId),
 			projectId: parseInt(projectId),
 			backlogOrder: task.backlogOrder,
-			boardOrder: task.boardOrder,
 		};
 	}, [JSON.stringify(task)]);
 

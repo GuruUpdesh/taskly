@@ -11,14 +11,12 @@ import CreateTask from "~/app/components/CreateTask";
 import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
 import { Button } from "~/components/ui/button";
-import { Separator } from "~/components/ui/separator";
 
 import AiDialog from "../components/AiDialog";
 import CreateGithubTicket from "../components/CreateGithubTicket";
 import Filters from "../components/filter/Filters";
 import FilterAndGroupToggles from "../components/FilterAndGroupToggles";
 import TasksContainer from "../components/TasksContainer";
-import ViewModeToggle from "../components/ViewModeToggle";
 
 export const metadata: Metadata = {
 	title: "Tasks",
@@ -46,10 +44,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<BreadCrumbs />
 				</div>
 				<div className="flex h-9 items-center gap-2">
-					<ViewModeToggle />
-					<Separator orientation="vertical" />
 					<FilterAndGroupToggles />
-					<Separator orientation="vertical" />
 					<AiDialog projectId={projectId} />
 					<CreateTask projectId={projectId}>
 						<Button

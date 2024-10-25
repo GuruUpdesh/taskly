@@ -48,7 +48,6 @@ export const tasks = pgTable("tasks", {
 	points: PointsEnum("points").default("0").notNull(),
 	priority: PriorityEnum("priority").default("low").notNull(),
 	type: TypeEnum("type").default("task").notNull(),
-	boardOrder: integer("board_order").notNull().default(0),
 	backlogOrder: integer("backlog_order").notNull().default(0),
 	lastEditedAt: timestamp("last_edit", { precision: 6, withTimezone: true }),
 	insertedDate: timestamp("insert_date", { precision: 6, withTimezone: true })
@@ -73,7 +72,6 @@ export const insertTaskSchema__required = insertTaskSchema.required({
 	projectId: true,
 	sprintId: true,
 	backlogOrder: true,
-	boardOrder: true,
 });
 
 // types
