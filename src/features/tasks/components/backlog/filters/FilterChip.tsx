@@ -8,10 +8,10 @@ import { useShallow } from "zustand/react/shallow";
 
 import SimpleTooltip from "~/components/SimpleTooltip";
 import { getPropertyConfig } from "~/config/taskConfigType";
+import { renderFilterValues } from "~/features/tasks/utils/filter-values";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
 import { useRealtimeStore } from "~/store/realtime";
-import { renderFilterValues } from "~/utils/filter-values";
 
 import FilterMenu from "./FilterMenu";
 

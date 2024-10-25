@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { type Metadata } from "next";
 
-import { getTasksFromProject } from "~/actions/application/task-actions";
+import { getTasksFromProject } from "~/actions/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import { Button } from "~/components/ui/button";
@@ -15,8 +15,8 @@ import Filters from "~/features/tasks/components/backlog/filters/Filters";
 import TasksContainer from "~/features/tasks/components/backlog/TasksContainer";
 import CreateTask from "~/features/tasks/components/CreateTask";
 
-import AiDialog from "../../../../../components/AiDialog";
 import CreateGithubTicket from "../../../../../components/CreateGithubTicket";
+import AiDialog from "../../../../../features/ai/components/AiDialog";
 
 export const metadata: Metadata = {
 	title: "Tasks",

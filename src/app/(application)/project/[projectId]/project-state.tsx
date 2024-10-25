@@ -14,12 +14,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
-import {
-	getAssigneesForProject,
-	getProject,
-} from "~/actions/application/project-actions";
-import { updateProjectApplicationData } from "~/actions/application/redis-actions";
-import { getSprintsForProject } from "~/actions/application/sprint-actions";
+import { getAssigneesForProject, getProject } from "~/actions/project-actions";
+import { updateProjectApplicationData } from "~/actions/redis-actions";
+import { getSprintsForProject } from "~/actions/sprint-actions";
 import { getRefetchIntervals } from "~/config/refetchIntervals";
 import {
 	type NotificationWithTask,

@@ -20,13 +20,7 @@ import { GoPeople } from "react-icons/go";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import {
-	type CreateForm,
-	createProject,
-} from "~/actions/onboarding/create-project";
-import { sendEmailInvites } from "~/actions/onboarding/invite-actions";
-import EmailInviteForm from "~/components/invite/by-email/email-invite-form";
-import InviteLink from "~/components/invite/invite-link";
+import { type CreateForm, createProject } from "~/actions/create-project";
 import { Button } from "~/components/ui/button";
 import {
 	Form,
@@ -39,6 +33,9 @@ import {
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
+import { sendEmailInvites } from "~/features/invite/actions/invite-actions";
+import EmailInviteForm from "~/features/invite/components/by-email/email-invite-form";
+import InviteLink from "~/features/invite/components/invite-link";
 import SprintOptions from "~/features/settings/components/sprint-options/sprint-options";
 import { type ProjectSprintOptions } from "~/features/settings/components/sprint-options/sprint-options-form";
 

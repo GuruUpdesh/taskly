@@ -15,9 +15,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { type StatefulTask } from "~/config/taskConfigType";
 import Task from "~/features/tasks/components/backlog/Task";
 import { type UpdateTask } from "~/features/tasks/components/backlog/TasksContainer";
+import { filterTasks } from "~/features/tasks/utils/filter";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
-import { filterTasks } from "~/utils/filter";
 
 type Props = {
 	listId: string;

@@ -5,7 +5,7 @@ import React from "react";
 import { Icon } from "@radix-ui/react-select";
 import { ChevronDown, Delete } from "lucide-react";
 
-import { type UserWithRole } from "~/actions/application/project-actions";
+import { type UserWithRole } from "~/actions/project-actions";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,

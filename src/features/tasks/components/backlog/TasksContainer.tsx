@@ -16,7 +16,7 @@ import {
 	deleteTask,
 	getTasksFromProject,
 	updateTask,
-} from "~/actions/application/task-actions";
+} from "~/actions/task-actions";
 import Message from "~/components/Message";
 import { Button } from "~/components/ui/button";
 import { getRefetchIntervals } from "~/config/refetchIntervals";
@@ -27,11 +27,11 @@ import {
 } from "~/config/taskConfigType";
 import CreateTask from "~/features/tasks/components/CreateTask";
 import { TaskStatus } from "~/features/tasks/components/RecentTasks";
+import { updateOrder } from "~/features/tasks/utils/order";
 import { cn } from "~/lib/utils";
 import type { Task as TaskType } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
 import { useRealtimeStore } from "~/store/realtime";
-import { updateOrder } from "~/utils/order";
 
 import TaskList from "./TaskList";
 import LoadingTaskList from "../LoadingTaskList";

@@ -10,8 +10,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { aiGenerateTask } from "~/actions/ai/ai-action";
-import { createTask } from "~/actions/application/task-actions";
+import { createTask } from "~/actions/task-actions";
 import Message from "~/components/Message";
 import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
@@ -27,9 +26,10 @@ import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Textarea } from "~/components/ui/textarea";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/config/aiLimit";
 import { schemaValidators } from "~/config/taskConfigType";
+import { aiGenerateTask } from "~/features/ai/actions/ai-action";
+import { taskNameToBranchName } from "~/features/tasks/utils/task-name-branch-converters";
 import { useRealtimeStore } from "~/store/realtime";
 import { useUserStore } from "~/store/user";
-import { taskNameToBranchName } from "~/utils/task-name-branch-converters";
 
 type Props = {
 	projectId: string;

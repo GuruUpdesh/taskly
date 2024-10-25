@@ -7,10 +7,11 @@ import { revalidatePath } from "next/cache";
 import OpenAI from "openai";
 import sharp from "sharp";
 
-import { createSprintForProject } from "~/actions/application/sprint-actions";
 import { authenticate } from "~/actions/security/authenticate";
+import { createSprintForProject } from "~/actions/sprint-actions";
 import { addUserToProject } from "~/actions/user-actions";
 import { env } from "~/env.mjs";
+import { createInvite } from "~/features/invite/actions/invite-actions";
 import { autoColor } from "~/features/settings/actions/settings-actions";
 import { db } from "~/server/db";
 import {
@@ -18,8 +19,6 @@ import {
 	projects,
 	insertProjectSchema,
 } from "~/server/db/schema";
-
-import { createInvite } from "./invite-actions";
 
 type ProjectResponse = {
 	newProjectId: number;

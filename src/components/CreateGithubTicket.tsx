@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { createTicket } from "~/actions/application/ticket-action";
+import { createTicket } from "~/actions/ticket-action";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,

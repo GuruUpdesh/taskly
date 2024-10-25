@@ -31,10 +31,10 @@ import {
 	getPropertyConfig,
 	taskVariants,
 } from "~/config/taskConfigType";
+import { renderFilterValues } from "~/features/tasks/utils/filter-values";
 import { cn } from "~/lib/utils";
 import { useAppStore, type Filter } from "~/store/app";
 import { useRealtimeStore } from "~/store/realtime";
-import { renderFilterValues } from "~/utils/filter-values";
 
 type Props = {
 	children: (menuOpen: boolean) => React.ReactNode;

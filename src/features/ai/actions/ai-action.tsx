@@ -4,15 +4,15 @@ import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
-import { getAssigneesForProject } from "~/actions/application/project-actions";
-import { getSprintsForProject } from "~/actions/application/sprint-actions";
+import { getAssigneesForProject } from "~/actions/project-actions";
+import { getSprintsForProject } from "~/actions/sprint-actions";
 import { schemaValidators } from "~/config/taskConfigType";
 import { env } from "~/env.mjs";
+import { getTaskAiSchema } from "~/features/ai/utils/ai-context";
 import { type User } from "~/server/db/schema";
-import { getTaskAiSchema } from "~/utils/ai-context";
 
 import { isAiLimitReached } from "./ai-limit-actions";
-import { getMostRecentTasks } from "../application/task-views-actions";
+import { getMostRecentTasks } from "../../../actions/task-views-actions";
 
 const openai = new OpenAI({
 	apiKey: env.OPENAI_API_KEY,

@@ -13,8 +13,7 @@ import { useForm, type UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
-import { aiAction } from "~/actions/ai/ai-action";
-import { createTask } from "~/actions/application/task-actions";
+import { createTask } from "~/actions/task-actions";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -33,11 +32,12 @@ import {
 	getPropertyConfig,
 	taskProperties,
 } from "~/config/taskConfigType";
+import { aiAction } from "~/features/ai/actions/ai-action";
 import PropertySelect from "~/features/tasks/components/property/PropertySelect";
+import useValidationErrors from "~/features/tasks/hooks/useValidationErrors";
 import BubbleMenu from "~/features/text-editor/components/BubbleMenu";
 import RenderMentionOptions from "~/features/text-editor/components/RenderMentionOptions";
 import extensions from "~/features/text-editor/extensions";
-import useValidationErrors from "~/hooks/useValidationErrors";
 import { cn } from "~/lib/utils";
 import {
 	type NewTask,

@@ -4,7 +4,7 @@ import React from "react";
 
 import { auth } from "@clerk/nextjs/server";
 
-import { getAllProjects } from "~/actions/application/project-actions";
+import { getAllProjects } from "~/actions/project-actions";
 import { throwServerError } from "~/utils/errors";
 
 import ProjectCombobox from "./project-combobox";

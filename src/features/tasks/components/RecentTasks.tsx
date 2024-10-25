@@ -3,7 +3,7 @@ import React from "react";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 
-import { getMostRecentTasks } from "~/actions/application/task-views-actions";
+import { getMostRecentTasks } from "~/actions/task-views-actions";
 import { getEnumOptionByKey } from "~/config/taskConfigType";
 import PropertyBadge from "~/features/tasks/components/property/PropertyBadge";
 import { cn } from "~/lib/utils";

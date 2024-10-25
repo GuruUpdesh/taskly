@@ -1,8 +1,8 @@
 import React from "react";
 
-import { getAssigneesForProject } from "~/actions/application/project-actions";
-import { getSprintsForProject } from "~/actions/application/sprint-actions";
-import { getTasksFromProject } from "~/actions/application/task-actions";
+import { getAssigneesForProject } from "~/actions/project-actions";
+import { getSprintsForProject } from "~/actions/sprint-actions";
+import { getTasksFromProject } from "~/actions/task-actions";
 import { getPropertyConfig, taskProperties } from "~/config/taskConfigType";
 import PropertyBadge from "~/features/tasks/components/property/PropertyBadge";
 

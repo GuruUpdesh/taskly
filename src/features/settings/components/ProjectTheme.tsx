@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { generateAndUpdateProjectImage } from "~/actions/onboarding/create-project";
+import { generateAndUpdateProjectImage } from "~/actions/create-project";
 import ImageUploadArea from "~/components/ImageUploadArea";
 import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";

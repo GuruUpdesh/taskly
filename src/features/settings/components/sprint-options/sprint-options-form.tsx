@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { updateSprintsForProject } from "~/actions/application/sprint-actions";
+import { updateSprintsForProject } from "~/actions/sprint-actions";
 import { Button } from "~/components/ui/button";
 import { type Project } from "~/server/db/schema";
 

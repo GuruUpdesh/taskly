@@ -14,11 +14,7 @@ import { useRouter } from "next/navigation";
 import { getPanelElement } from "react-resizable-panels";
 import { toast } from "sonner";
 
-import {
-	deleteTask,
-	getTask,
-	updateTask,
-} from "~/actions/application/task-actions";
+import { deleteTask, getTask, updateTask } from "~/actions/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import Message from "~/components/Message";

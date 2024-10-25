@@ -39,6 +39,10 @@ import { z } from "zod";
 
 import UserProfilePicture from "~/components/UserProfilePicture";
 import {
+	getClockIconForSprintProgress,
+	getSprintProgress,
+} from "~/features/tasks/utils/getSprintIcon";
+import {
 	type User,
 	type Task,
 	type Sprint,
@@ -48,10 +52,6 @@ import {
 	getCurrentSprintId,
 	helperIsSprintActive,
 } from "~/utils/getCurrentSprintId";
-import {
-	getClockIconForSprintProgress,
-	getSprintProgress,
-} from "~/utils/getSprintIcon";
 
 export type TaskProperty = keyof Task;
 type StaticProperty = Extract<

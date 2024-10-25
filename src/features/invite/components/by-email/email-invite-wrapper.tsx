@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { sendEmailInvites } from "~/actions/onboarding/invite-actions";
 import { Button } from "~/components/ui/button";
+import { sendEmailInvites } from "~/features/invite/actions/invite-actions";
 import { useRealtimeStore } from "~/store/realtime";
 
 import EmailInviteForm from "./email-invite-form";

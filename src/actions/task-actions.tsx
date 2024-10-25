@@ -13,6 +13,7 @@ import {
 } from "~/config/taskConfigType";
 import { createNotification } from "~/features/notifications/actions/notification-actions";
 import { type TaskFormType as CreateTaskData } from "~/features/tasks/components/CreateTask";
+import { taskNameToBranchName } from "~/features/tasks/utils/task-name-branch-converters";
 import { db } from "~/server/db";
 import {
 	comments,
@@ -25,7 +26,6 @@ import {
 } from "~/server/db/schema";
 import { type Task } from "~/server/db/schema";
 import { throwServerError } from "~/utils/errors";
-import { taskNameToBranchName } from "~/utils/task-name-branch-converters";
 
 import { getCurrentSprintForProject } from "./sprint-actions";
 import {

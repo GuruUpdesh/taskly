@@ -5,14 +5,11 @@ import React from "react";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-import { getAiLimitCount } from "~/actions/ai/ai-limit-actions";
-import {
-	getAllUsersInProject,
-	getProject,
-} from "~/actions/application/project-actions";
-import { getSprintsForProject } from "~/actions/application/sprint-actions";
+import { getAllUsersInProject, getProject } from "~/actions/project-actions";
+import { getSprintsForProject } from "~/actions/sprint-actions";
 import Permission from "~/components/Permission";
 import { generalSettings } from "~/config/settingsConfig";
+import { getAiLimitCount } from "~/features/ai/actions/ai-limit-actions";
 import ProjectDangerZone from "~/features/settings/components/ProjectDangerZone";
 import ProjectGithub from "~/features/settings/components/ProjectGithub";
 import ProjectInfo from "~/features/settings/components/ProjectInfo";

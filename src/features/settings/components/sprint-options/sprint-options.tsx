@@ -7,7 +7,7 @@ import { ChevronDown } from "lucide-react";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Controller, type UseFormReturn } from "react-hook-form";
 
-import type { CreateForm } from "~/actions/onboarding/create-project";
+import type { CreateForm } from "~/actions/create-project";
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
 import { Label } from "~/components/ui/label";
