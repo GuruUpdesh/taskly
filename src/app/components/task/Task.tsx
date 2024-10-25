@@ -180,51 +180,16 @@ const Task = ({
 						assignees,
 						sprints,
 					);
-					switch (variant) {
-						case "backlog":
-							return (
-								<Property
-									key={idx}
-									config={config}
-									form={form}
-									onSubmit={onSubmit}
-									variant={variant}
-									size={item.size}
-								/>
-							);
-						case "list":
-							return (
-								<div
-									className="grid w-full grid-cols-3"
-									key={idx}
-								>
-									<p className="col-span-1 capitalize">
-										{config.displayName}
-									</p>
-									<Property
-										config={config}
-										form={form}
-										onSubmit={onSubmit}
-										size={item.size}
-										variant={variant}
-										className="col-span-2"
-									/>
-								</div>
-							);
-						case "board":
-							return (
-								<Property
-									key={idx}
-									config={config}
-									form={form}
-									onSubmit={onSubmit}
-									variant={variant}
-									size={item.size}
-								/>
-							);
-						default:
-							return null;
-					}
+					return (
+						<Property
+							key={idx}
+							config={config}
+							form={form}
+							onSubmit={onSubmit}
+							variant={variant}
+							size={item.size}
+						/>
+					)
 				})}
 			</div>
 		));

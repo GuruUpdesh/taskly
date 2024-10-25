@@ -49,10 +49,10 @@ const FilterChip = ({ filter }: Props) => {
 							},
 						)}
 					>
-						<span className="flex items-center gap-1">
+						{/* <span className="flex items-center gap-1">
 							{config?.icon} {config?.displayName}{" "}
 							{filter.is ? "is" : "is not"}
-						</span>
+						</span> */}
 						<span>{renderValues()}</span>
 					</button>
 				)}
