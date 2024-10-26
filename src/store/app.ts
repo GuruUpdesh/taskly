@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { type TaskProperty } from "~/config/taskConfigType";
+import { type TaskProperty } from "~/features/tasks/config/taskConfigType";
 
 export type Filter = {
 	property: TaskProperty | "";

@@ -17,11 +17,14 @@ import {
 } from "lucide-react";
 import { TbHexagon, TbHexagonNumber3 } from "react-icons/tb";
 
-import UserProfilePicture from "~/app/components/UserProfilePicture";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Textarea } from "~/components/ui/textarea";
-import { type Color, taskVariants } from "~/config/taskConfigType";
+import UserProfilePicture from "~/components/UserProfilePicture";
+import {
+	type Color,
+	taskVariants,
+} from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
 
 type ButtonType = {

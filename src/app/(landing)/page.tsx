@@ -13,7 +13,7 @@ import { Poppins } from "next/font/google";
 import { Sora } from "next/font/google";
 import Image from "next/image";
 
-import Footer from "~/app/components/Footer";
+import Footer from "~/components/Footer";
 import { cn } from "~/lib/utils";
 
 import ButtonOptions from "./components/ButtonOptions";

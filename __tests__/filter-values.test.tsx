@@ -1,4 +1,4 @@
-import { renderFilterValues } from "../src/utils/filter-values";
+import { renderFilterValues } from "../src/features/tasks/utils/filter-values";
 
 test("renderFilterValues renders filter values", () => {
 	const values = ["unassigned"];

@@ -2,10 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { type Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import {
-	getAllProjects,
-	initAction,
-} from "~/actions/application/project-actions";
+import { getAllProjects, initAction } from "~/actions/project-actions";
 
 import ProjectCreateForm from "../components/CreateProjectForm";
 

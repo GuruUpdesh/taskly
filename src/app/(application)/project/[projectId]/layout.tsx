@@ -10,15 +10,12 @@ import { type Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { getAiLimitCount } from "~/actions/ai/ai-limit-actions";
-import {
-	getAssigneesForProject,
-	getProject,
-} from "~/actions/application/project-actions";
-import { getSprintsForProject } from "~/actions/application/sprint-actions";
-import { getAllNotifications } from "~/actions/notification-actions";
-import Sidebar from "~/app/components/layout/sidebar/sidebar";
-import SidebarPanel from "~/app/components/layout/sidebar/sidebar-panel";
+import { getAssigneesForProject, getProject } from "~/actions/project-actions";
+import { getSprintsForProject } from "~/actions/sprint-actions";
+import Sidebar from "~/components/layout/sidebar/sidebar";
+import SidebarPanel from "~/components/layout/sidebar/sidebar-panel";
+import { getAiLimitCount } from "~/features/ai/actions/ai-limit-actions";
+import { getAllNotifications } from "~/features/notifications/actions/notification-actions";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 import ProjectState from "./project-state";

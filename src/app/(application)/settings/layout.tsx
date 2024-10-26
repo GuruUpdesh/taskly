@@ -2,7 +2,7 @@ import React from "react";
 
 import { type Metadata } from "next";
 
-import SettingsNavigation from "./components/SettingsNavigation";
+import SettingsNavigation from "../../../features/settings/components/SettingsNavigation";
 
 export const metadata: Metadata = {
 	title: "Settings",

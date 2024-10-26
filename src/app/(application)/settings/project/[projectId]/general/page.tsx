@@ -5,22 +5,19 @@ import React from "react";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-import { getAiLimitCount } from "~/actions/ai/ai-limit-actions";
-import {
-	getAllUsersInProject,
-	getProject,
-} from "~/actions/application/project-actions";
-import { getSprintsForProject } from "~/actions/application/sprint-actions";
-import ProjectDangerZone from "~/app/(application)/settings/components/ProjectDangerZone";
-import ProjectGithub from "~/app/(application)/settings/components/ProjectGithub";
-import ProjectInfo from "~/app/(application)/settings/components/ProjectInfo";
-import ProjectInvite from "~/app/(application)/settings/components/ProjectInvite";
-import ProjectSprints from "~/app/(application)/settings/components/ProjectSprints";
-import ProjectTheme from "~/app/(application)/settings/components/ProjectTheme";
-import SettingsSection from "~/app/(application)/settings/components/SettingsSection";
-import UsersTable from "~/app/(application)/settings/components/users-table";
-import Permission from "~/app/components/Permission";
-import { generalSettings } from "~/config/settingsConfig";
+import { getAllUsersInProject, getProject } from "~/actions/project-actions";
+import { getSprintsForProject } from "~/actions/sprint-actions";
+import Permission from "~/components/Permission";
+import { getAiLimitCount } from "~/features/ai/actions/ai-limit-actions";
+import ProjectDangerZone from "~/features/settings/components/ProjectDangerZone";
+import ProjectGithub from "~/features/settings/components/ProjectGithub";
+import ProjectInfo from "~/features/settings/components/ProjectInfo";
+import ProjectInvite from "~/features/settings/components/ProjectInvite";
+import ProjectSprints from "~/features/settings/components/ProjectSprints";
+import ProjectTheme from "~/features/settings/components/ProjectTheme";
+import SettingsSection from "~/features/settings/components/SettingsSection";
+import UsersTable from "~/features/settings/components/users-table";
+import { generalSettings } from "~/features/settings/settingsConfig";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 type Params = {

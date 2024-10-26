@@ -8,7 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistSans } from "geist/font/sans";
 import dynamic from "next/dynamic";
 
-import KBar from "~/app/components/Kbar";
+import KBar from "~/components/Kbar";
 import { Toaster } from "~/components/ui/sonner";
 import KBarProvider from "~/lib/kbar-provider";
 import ReactQueryProvider from "~/lib/react-query-provider";

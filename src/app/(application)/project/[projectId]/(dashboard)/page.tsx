@@ -3,11 +3,9 @@ import React, { Suspense } from "react";
 import { currentUser } from "@clerk/nextjs/server";
 import { type Metadata } from "next";
 
-import { getAllNotifications } from "~/actions/notification-actions";
-import BreadCrumbs from "~/app/components/layout/breadcrumbs/breadcrumbs";
-import ToggleSidebarButton from "~/app/components/layout/sidebar/toggle-sidebar-button";
-import Message from "~/app/components/Message";
-import RecentTasks from "~/app/components/RecentTasks";
+import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import Message from "~/components/Message";
 import {
 	Card,
 	CardContent,
@@ -15,10 +13,12 @@ import {
 	CardHeader,
 } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
+import { getAllNotifications } from "~/features/notifications/actions/notification-actions";
+import RecentTasks from "~/features/tasks/components/RecentTasks";
 
-import CurrentSprintGraph from "./components/CurrentSprintGraph";
-import Figures from "./components/Figures";
-import UserGreeting from "./components/UserGreeting";
+import CurrentSprintGraph from "../../../../../features/dashboard/components/CurrentSprintGraph";
+import Figures from "../../../../../features/dashboard/components/Figures";
+import UserGreeting from "../../../../../features/dashboard/components/UserGreeting";
 
 export const metadata: Metadata = {
 	title: "Dashboard",

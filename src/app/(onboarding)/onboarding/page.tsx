@@ -1,4 +1,4 @@
-import { initAction } from "~/actions/application/project-actions";
+import { initAction } from "~/actions/project-actions";
 
 import CreateProjectForm from "../components/CreateProjectForm";
 

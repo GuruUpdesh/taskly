@@ -1,4 +1,4 @@
-import { timeTillNextReset } from '../src/config/aiLimit';
+import { timeTillNextReset } from "../src/features/ai/utils/aiLimit";
 import { advanceTo, clear } from 'jest-date-mock';
 
 describe("ai limit > timeTillNextReset", () => {
