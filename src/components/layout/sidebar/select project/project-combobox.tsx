@@ -3,7 +3,6 @@
 import React, { useMemo, useRef } from "react";
 
 import { PlusIcon } from "@radix-ui/react-icons";
-import { useRegisterActions } from "kbar";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,7 +24,7 @@ import {
 	PopoverTrigger,
 } from "~/components/ui/popover";
 import { Skeleton } from "~/components/ui/skeleton";
-// import { env } from "~/env.mjs";
+import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
 import { cn } from "~/lib/utils";
 import type { Project } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
@@ -36,9 +35,6 @@ type Props = {
 };
 
 function getProjectImageURL(url: string) {
-	// if (env.NEXT_PUBLIC_NODE_ENV === "development") {
-	// 	return "/static/placeholder.png";
-	// }
 	return url;
 }
 
@@ -83,16 +79,16 @@ const ProjectCombobox = ({ projects, projectId }: Props) => {
 	}
 
 	const router = useRouter();
-	useRegisterActions(
+	useRegisterCommands(
 		projects.map((project, idx) => ({
-			id: String(project.id),
-			name: project.name,
-			icon: renderProjectImage(project),
-			shortcut: idx + 1 < 10 ? ["p", String(idx + 1)] : [],
-			perform: () => router.push(`/project/${project.id}`),
-			section: "Projects",
+			id: "project" + project.id,
+			label: project.name,
+			icon: <>{renderProjectImage(project)}</>,
+			shortcut: [],
+			action: () => router.push(`/project/${project.id}`),
+			group: "Projects",
+			priority: -1 - idx,
 		})) ?? [],
-		[projects, project],
 	);
 
 	return (

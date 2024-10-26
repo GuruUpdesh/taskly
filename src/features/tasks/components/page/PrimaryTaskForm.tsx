@@ -87,7 +87,9 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 
 	const displayedHistory = useMemo(
 		() =>
-			showAllHistory ? task.taskHistory : task.taskHistory.slice(0, 10),
+			showAllHistory
+				? task.taskHistory.reverse()
+				: task.taskHistory.reverse().slice(0, 10),
 
 		[task.taskHistory, showAllHistory],
 	);

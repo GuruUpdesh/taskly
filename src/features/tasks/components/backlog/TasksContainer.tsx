@@ -5,9 +5,7 @@ import React, { useEffect, useMemo } from "react";
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRegisterActions } from "kbar";
 import { find } from "lodash";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
@@ -20,7 +18,6 @@ import {
 import Message from "~/components/Message";
 import { Button } from "~/components/ui/button";
 import CreateTask from "~/features/tasks/components/CreateTask";
-import { TaskStatus } from "~/features/tasks/components/RecentTasks";
 import {
 	type StatefulTask,
 	getPropertyConfig,
@@ -273,22 +270,6 @@ export default function TasksContainer({ projectId }: Props) {
 		if (config.type !== "enum" && config.type !== "dynamic") return null;
 		return config.options;
 	}, [groupBy, assignees, sprints]);
-
-	/**
-	 * Kbar
-	 */
-	const router = useRouter();
-	useRegisterActions(
-		result?.data?.map((task, idx) => ({
-			id: String(task.id),
-			name: task.title,
-			icon: <TaskStatus status={task.status} />,
-			shortcut: idx + 1 < 10 ? ["t", String(idx + 1)] : [],
-			perform: () => router.push(`/project/${projectId}/task/${task.id}`),
-			section: "Tasks",
-		})) ?? [],
-		[result.data],
-	);
 
 	if (!result.data || (taskOrder.length === 0 && result.data.length !== 0))
 		return <LoadingTaskList />;

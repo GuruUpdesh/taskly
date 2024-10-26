@@ -36,6 +36,7 @@ import {
 } from "~/components/ui/dialog";
 import { aiAction } from "~/features/ai/actions/ai-action";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/features/ai/utils/aiLimit";
+import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
 import {
 	getPropertyConfig,
 	taskProperties,
@@ -44,6 +45,7 @@ import {
 import { cn } from "~/lib/utils";
 import type { Sprint, Task, User } from "~/server/db/schema";
 import { useAppStore } from "~/store/app";
+import { type Cmd } from "~/store/cmd";
 import { useRealtimeStore } from "~/store/realtime";
 import { useUserStore } from "~/store/user";
 import { stringifyValue } from "~/utils/stringify-value";
@@ -63,11 +65,79 @@ const TaskDropDownMenu = ({
 	deleteTaskMutation,
 	onSubmit,
 }: Props) => {
-	const setHoveredTaskId = useAppStore((state) => state.setHoveredTaskId);
+	const [hoveredTaskId, setHoveredTaskId] = useAppStore(
+		useShallow((state) => [state.hoveredTaskId, state.setHoveredTaskId]),
+	);
 	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
 	const [smartPropertiesDialog, setSmartPropertiesDialog] = useState(false);
 	const [assignees, sprints] = useRealtimeStore(
 		useShallow((state) => [state.assignees, state.sprints]),
+	);
+
+	const SmartPropertiesCommand: Cmd = {
+		id: task.id + "smart-properties",
+		label: "Apply Smart Properties",
+		icon: <SparkleIcon className="h-4 w-4" />,
+		priority: 4,
+		action: () => {
+			setSmartPropertiesDialog(true);
+		},
+		shortcut: [],
+		group: "Task Commands",
+	};
+
+	const commands: Cmd[] = [
+		{
+			id: task.id + "copy-branch-name",
+			label: "Copy Branch Name",
+			icon: <GitBranch className="h-4 w-4" />,
+			priority: 3,
+			action: () => {
+				if (!task.branchName) return;
+				void navigator.clipboard.writeText(task.branchName);
+				toast.info("Copied branch name to clipboard", {
+					icon: <GitHubLogoIcon className="h-4 w-4" />,
+				});
+			},
+			shortcut: [],
+			group: "Task Commands",
+		},
+		{
+			id: task.id + "copy-link",
+			label: "Copy Link",
+			icon: <Link className="h-4 w-4" />,
+			priority: 2,
+			action: () => {
+				const protocol = window.location.protocol;
+				void navigator.clipboard.writeText(
+					`${protocol}//${window.location.host}/project/${task.projectId}/task/${task.id}`,
+				);
+				toast.info("Task link copied to clipboard", {
+					icon: <ClipboardCopy className="h-4 w-4" />,
+				});
+			},
+			shortcut: [],
+			group: "Task Commands",
+		},
+		{
+			id: task.id + "delete",
+			label: "Delete",
+			icon: <Trash className="h-4 w-4" />,
+			priority: 1,
+			action: () => {
+				if (deleteTaskMutation) deleteTaskMutation.mutate(task.id);
+				toast.error("Task deleted", {
+					icon: <Trash className="h-4 w-4" />,
+				});
+			},
+			shortcut: [],
+			group: "Task Commands",
+		},
+	];
+
+	useRegisterCommands(
+		[...commands, SmartPropertiesCommand],
+		hoveredTaskId === task.id,
 	);
 
 	return (
@@ -170,60 +240,16 @@ const TaskDropDownMenu = ({
 						sprints={sprints}
 					/>
 					<ContextMenuSeparator />
-					<ContextMenuItem
-						key="copy-git-branch"
-						className="gap-2"
-						onClick={() => {
-							if (!task.branchName) return;
-
-							void navigator.clipboard.writeText(task.branchName);
-
-							toast.info(`Copied branch name to clipboard`, {
-								description: `Branch name: ${task.branchName}`,
-								icon: <GitHubLogoIcon className="h-4 w-4" />,
-							});
-						}}
-					>
-						<GitBranch className="h-4 w-4" />
-						Copy Branch Name
-						{/* <ContextMenuShortcut>B</ContextMenuShortcut> */}
-					</ContextMenuItem>
-					<ContextMenuSeparator />
-					<ContextMenuItem
-						key="copy-link"
-						className="gap-2"
-						onClick={async () => {
-							const protocol = window.location.protocol;
-							await navigator.clipboard.writeText(
-								protocol +
-									"//" +
-									window.location.host +
-									`/project/${task.projectId}/task/${task.id}`,
-							);
-							toast.info("Task link copied to clipboard", {
-								icon: <ClipboardCopy className="h-4 w-4" />,
-							});
-						}}
-					>
-						<Link className="h-4 w-4" />
-						Copy Link
-						{/* <ContextMenuShortcut>L</ContextMenuShortcut> */}
-					</ContextMenuItem>
-					<ContextMenuItem
-						key="delete"
-						onClick={() => {
-							if (!deleteTaskMutation) return;
-							deleteTaskMutation.mutate(task.id);
-							toast.error("Task deleted", {
-								icon: <Trash className="h-4 w-4" />,
-							});
-						}}
-						className="gap-2"
-					>
-						<Trash className="h-4 w-4" />
-						Delete
-						{/* <ContextMenuShortcut>D</ContextMenuShortcut> */}
-					</ContextMenuItem>
+					{commands.map((cmd) => (
+						<ContextMenuItem
+							key={cmd.label}
+							className="gap-2"
+							onClick={cmd.action}
+						>
+							{cmd.icon}
+							{cmd.label}
+						</ContextMenuItem>
+					))}
 				</ContextMenuContent>
 			</ContextMenu>
 		</>

@@ -62,7 +62,7 @@ module.exports = {
 				},
 			},
 			ease: {
-				slow: "cubic-bezier(0.6, 0.6, 0, 1)"
+				slow: "cubic-bezier(0.6, 0.6, 0, 1)",
 			},
 			brightness: {
 				75: "0.75",
@@ -110,12 +110,12 @@ module.exports = {
 				},
 				loadBackground: {
 					"0%": {
-						backgroundPosition: "left"
+						backgroundPosition: "left",
 					},
 					"100%": {
-						backgroundPosition: "right"
+						backgroundPosition: "right",
 					},
-       			},
+				},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
@@ -126,12 +126,17 @@ module.exports = {
 				"fade-down":
 					"fade-down 0.5s cubic-bezier(0.075, 0.82, 0.165, 1) forwards",
 				gradient: "gradient 15s ease infinite",
-        "load_background": "loadBackground 1.5s linear forwards"
+				load_background: "loadBackground 1.5s linear forwards",
 			},
 			containers: {
 				sidebar: "60px",
 			},
 		},
 	},
-	plugins: [require("tailwindcss-animate"), containerQueriesPlugin, require("tailwind-gradient-mask-image")],
+	plugins: [
+		require("postcss-nesting"),
+		require("tailwindcss-animate"),
+		containerQueriesPlugin,
+		require("tailwind-gradient-mask-image"),
+	],
 };

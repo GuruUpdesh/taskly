@@ -7,16 +7,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { cva, type VariantProps } from "class-variance-authority";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
 
+import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
 import type { UpdateTask } from "~/features/tasks/components/backlog/TasksContainer";
 import {
 	taskFormSchema,
 	type TaskFormType,
 } from "~/features/tasks/components/CreateTask";
 import {
+	type Option,
 	type TaskProperty,
+	getEnumOptionByKey,
 	getPropertyConfig,
 } from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
@@ -26,6 +30,7 @@ import { useRealtimeStore } from "~/store/realtime";
 
 import TaskDropDownMenu from "./TaskDropDownMenu";
 import Property from "../property/Property";
+import PropertyBadge from "../property/PropertyBadge";
 
 const taskVariants = cva(["flex items-center gap-2"], {
 	variants: {
@@ -183,6 +188,34 @@ const Task = ({
 			</div>
 		));
 	}, [JSON.stringify(task), variant, assignees, sprints]);
+
+	const router = useRouter();
+	useRegisterCommands([
+		{
+			id: task.id + "open",
+			label: task.title,
+			icon: (
+				<>
+					{getEnumOptionByKey(task.status) ? (
+						<PropertyBadge
+							option={
+								getEnumOptionByKey(
+									task.status,
+								) as Option<string>
+							}
+							size="iconXs"
+						/>
+					) : null}
+				</>
+			),
+			priority: 0,
+			action: () => {
+				router.push(`/project/${task.projectId}/task/${task.id}`);
+			},
+			shortcut: [],
+			group: "Tasks",
+		},
+	]);
 
 	if (variant === "list") {
 		return (

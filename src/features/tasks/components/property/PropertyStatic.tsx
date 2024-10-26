@@ -35,7 +35,7 @@ const PropertyStatic = ({
 					{
 						"min-w-[2ch] opacity-80": property === "description",
 						"min-w-fit font-medium": property === "title",
-						"min-w-0": property === "title" && variant === "board",
+						"min-w-0": property === "title",
 					},
 					className,
 				)}
