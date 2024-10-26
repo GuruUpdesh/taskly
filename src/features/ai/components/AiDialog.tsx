@@ -26,6 +26,7 @@ import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Textarea } from "~/components/ui/textarea";
 import { aiGenerateTask } from "~/features/ai/actions/ai-action";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/features/ai/utils/aiLimit";
+import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
 import { schemaValidators } from "~/features/tasks/config/taskConfigType";
 import { taskNameToBranchName } from "~/features/tasks/utils/task-name-branch-converters";
 import { useRealtimeStore } from "~/store/realtime";
@@ -43,6 +44,19 @@ const AiDialog = ({ projectId }: Props) => {
 	const [open, setOpen] = useState(false);
 	const project = useRealtimeStore((state) => state.project);
 	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
+
+	useRegisterCommands([
+		{
+			id: "ai-task-creation",
+			label: "AI Task Creation",
+			icon: <SparklesIcon className="h-4 w-4" />,
+			priority: 4,
+			shortcut: [],
+			action: () => {
+				setOpen(true);
+			},
+		},
+	]);
 
 	function resetForm() {
 		form.reset({

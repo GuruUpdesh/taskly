@@ -8,7 +8,6 @@ import {
 	GearIcon,
 } from "@radix-ui/react-icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRegisterActions } from "kbar";
 import { BellIcon, ListTodo } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -17,6 +16,7 @@ import { useShallow } from "zustand/react/shallow";
 import { getAssigneesForProject, getProject } from "~/actions/project-actions";
 import { updateProjectApplicationData } from "~/actions/redis-actions";
 import { getSprintsForProject } from "~/actions/sprint-actions";
+import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
 import {
 	type NotificationWithTask,
 	getAllNotifications,
@@ -173,43 +173,44 @@ const ProjectState = ({ projectId, userId, aiUsageCount }: Props) => {
 		setAiUsageCount(aiUsageCount);
 	}, [aiUsageCount]);
 
-	const actions = [
+	useRegisterCommands([
 		{
 			id: "dashboard",
-			name: "Dashboard",
+			label: "Dashboard",
 			icon: <DashboardIcon />,
-			shortcut: ["g", "d"],
-			perform: () => router.push(`/project/${projectId}`),
-			section: "Navigation",
+			shortcut: [],
+			action: () => router.push(`/project/${projectId}`),
+			group: "Navigation",
+			priority: -4,
 		},
 		{
 			id: "inbox",
-			name: "Inbox",
+			label: "Inbox",
 			icon: <EnvelopeClosedIcon />,
-			shortcut: ["g", "i"],
-			perform: () => router.push(`/project/${projectId}/inbox`),
-			section: "Navigation",
+			shortcut: [],
+			action: () => router.push(`/project/${projectId}/inbox`),
+			group: "Navigation",
+			priority: -5,
 		},
 		{
 			id: "tasks",
-			name: "Tasks",
+			label: "Tasks",
 			icon: <ListTodo className="h-4 w-4" />,
-			shortcut: ["g", "l"],
-			perform: () => router.push(`/project/${projectId}/tasks`),
-			section: "Navigation",
+			shortcut: [],
+			action: () => router.push(`/project/${projectId}/tasks`),
+			group: "Navigation",
+			priority: -6,
 		},
 		{
 			id: "settings",
-			name: "Settings",
+			label: "Settings",
 			icon: <GearIcon />,
-			shortcut: ["g", "s"],
-			perform: () =>
-				router.push(`/settings/project/${projectId}/general`),
-			section: "Navigation",
+			shortcut: [],
+			action: () => router.push(`/settings/project/${projectId}/general`),
+			group: "Navigation",
+			priority: -7,
 		},
-	];
-
-	useRegisterActions(actions, [projectId]);
+	]);
 
 	return null;
 };

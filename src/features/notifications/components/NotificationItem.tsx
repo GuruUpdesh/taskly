@@ -5,7 +5,6 @@ import React, { useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
-import { Priority } from "kbar";
 import { BellIcon, Mail, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -28,8 +27,6 @@ import { TaskStatus } from "~/features/tasks/components/RecentTasks";
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
 import typography from "~/styles/typography";
-
-import NotificationKBarUpdater from "./NotificationKBarUpdater";
 
 type Props = {
 	notification: NotificationWithTask;
@@ -131,7 +128,6 @@ const NotificationItem = ({ notification, projectId }: Props) => {
 					perform: () => {
 						toggleReadNotificationMutation.mutate(notification.id);
 					},
-					priority: Priority.HIGH,
 					section: `Notification`,
 				}
 			: null,
@@ -143,7 +139,6 @@ const NotificationItem = ({ notification, projectId }: Props) => {
 			perform: () => {
 				deleteNotificationMutation.mutate(notification.id);
 			},
-			priority: Priority.HIGH,
 			section: `Notification`,
 		},
 	];
@@ -152,10 +147,6 @@ const NotificationItem = ({ notification, projectId }: Props) => {
 
 	return (
 		<ContextMenu>
-			<NotificationKBarUpdater
-				actions={actions}
-				notificationId={notification.id}
-			/>
 			<ContextMenuTrigger asChild>
 				<motion.div
 					initial={{ height: 0, opacity: 0 }}

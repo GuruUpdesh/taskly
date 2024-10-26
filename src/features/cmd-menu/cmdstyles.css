@@ -1,0 +1,109 @@
+.cmd [cmdk-root] {
+	max-width: 640px;
+	width: 100%;
+	border-radius: 8px;
+	overflow: hidden;
+	padding: 0;
+	outline: none;
+}
+
+.cmd [cmdk-shortcuts] {
+	display: flex;
+	margin-left: auto;
+	gap: 8px;
+}
+
+.cmd [cmdk-shortcuts] kbd {
+	font-size: 13px;
+	color: hsl(var(--muted-foreground));
+}
+
+.cmd [cmdk-input] {
+	border: none;
+	width: 100%;
+	font-size: 18px;
+	padding: 20px;
+	outline: none;
+	background: hsl(var(--border));
+	color: hsl(var(--foreground));
+	border-radius: 0;
+	border-bottom: 1px solid hsl(var(--border));
+	caret-color: hsl(var(--foreground));
+	margin: 0;
+}
+.cmd [cmdk-input]::placeholder {
+	color: hsl(var(--muted-foreground));
+}
+.cmd [cmdk-item] {
+	content-visibility: auto;
+	cursor: pointer;
+	height: 48px;
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 0 16px;
+	color: hsl(var(--foreground));
+	user-select: none;
+	will-change: background, color;
+	transition: all 150ms ease;
+	transition-property: none;
+	position: relative;
+}
+.cmd [cmdk-item][data-selected="true"] {
+	background: hsl(var(--background));
+}
+.cmd [cmdk-item][data-selected="true"] svg {
+	color: white;
+}
+.cmd [cmdk-item][data-selected="true"]:after {
+	content: "";
+	position: absolute;
+	left: 0;
+	z-index: 123;
+	width: 3px;
+	height: 100%;
+	background: hsl(var(--foreground));
+}
+.cmd [cmdk-item][data-disabled="true"] {
+	color: var(--muted-foreground);
+	cursor: not-allowed;
+}
+.cmd [cmdk-item]:active {
+	transition-property: background;
+	background: hsl(var(--background) / 0.5);
+}
+.cmd [cmdk-item] + [cmdk-item] {
+	margin-top: 4px;
+}
+.cmd [cmdk-item] svg {
+	width: 16px;
+	height: 16px;
+	color: hsl(var(--foreground));
+}
+.cmd [cmdk-list] {
+	height: 300px;
+	max-height: 400px;
+	overflow: auto;
+	overscroll-behavior: contain;
+	transition: 100ms ease;
+	transition-property: height;
+}
+.cmd [cmdk-group-heading] {
+	user-select: none;
+	font-size: 12px;
+	padding: 0 8px;
+	display: flex;
+	align-items: center;
+	text-transform: capitalize;
+}
+
+.cmd [cmdk-empty] {
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 64px;
+	white-space: pre-wrap;
+	color: hsl(var(--foreground));
+}

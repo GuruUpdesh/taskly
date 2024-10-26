@@ -19,6 +19,7 @@ import {
 	taskVariants,
 } from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
+import { stringifyValue } from "~/utils/stringify-value";
 
 type DataCellProps = {
 	config: ReturnType<typeof getPropertyConfig>;
@@ -39,15 +40,6 @@ function PropertySelect({
 	className = "",
 	autoFocus = false,
 }: DataCellProps) {
-	// Ensures any value is returned as a string
-	const stringifyValue = (value: string | number | null): string => {
-		if (value === null || value === undefined) {
-			console.warn("PropertySelect: Value is null or undefined");
-			return "unknown";
-		}
-		return value.toString();
-	};
-
 	const getOptionByStringValue = (value: string) => {
 		if (config.type !== "enum" && config.type !== "dynamic") return null;
 		return config.options.find(

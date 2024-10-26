@@ -17,6 +17,7 @@ const propertyVariants = cva(["flex items-center gap-2"], {
 			sm: "rounded-sm px-3 text-sm",
 			icon: "h-10 w-10 flex items-center justify-center rounded-full",
 			iconSm: "h-6 w-6 flex items-center justify-center rounded-full",
+			iconXs: "h-4 w-4 flex items-center justify-center rounded-full",
 		},
 	},
 	defaultVariants: {
@@ -52,7 +53,7 @@ const PropertyBadge = ({
 				)}
 			>
 				{option.icon}
-				{size === "icon" || size === "iconSm"
+				{size === "icon" || size === "iconSm" || size === "iconXs"
 					? null
 					: option.displayName}
 			</div>

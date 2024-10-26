@@ -8,9 +8,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistSans } from "geist/font/sans";
 import dynamic from "next/dynamic";
 
-import KBar from "~/components/Kbar";
 import { Toaster } from "~/components/ui/sonner";
-import KBarProvider from "~/lib/kbar-provider";
+import CommandMenu from "~/features/cmd-menu/CommandMenu";
 import ReactQueryProvider from "~/lib/react-query-provider";
 const GlobalToastHandler = dynamic(
 	() => import("~/lib/toast/global-toast-handler"),
@@ -45,29 +44,27 @@ export default function RootLayout({
 				},
 			}}
 		>
-			<KBarProvider>
-				<KBar />
-				<html lang="en" suppressHydrationWarning>
-					<body
-						className={cn(
-							"!m-0 min-h-screen bg-background bg-gradient-to-b font-sans antialiased",
-							GeistSans.className,
-						)}
-					>
-						<Suspense>
-							<GlobalToastHandler />
-						</Suspense>
-						<ReactQueryProvider>
-							<main className="relative flex min-h-screen flex-col">
-								{children}
-							</main>
-						</ReactQueryProvider>
-						<Toaster richColors />
-						<SpeedInsights />
-					</body>
-					<Analytics />
-				</html>
-			</KBarProvider>
+			<html lang="en" suppressHydrationWarning>
+				<body
+					className={cn(
+						"!m-0 min-h-screen bg-background bg-gradient-to-b font-sans antialiased",
+						GeistSans.className,
+					)}
+				>
+					<Suspense>
+						<GlobalToastHandler />
+					</Suspense>
+					<CommandMenu />
+					<ReactQueryProvider>
+						<main className="relative flex min-h-screen flex-col">
+							{children}
+						</main>
+					</ReactQueryProvider>
+					<Toaster richColors />
+					<SpeedInsights />
+				</body>
+				<Analytics />
+			</html>
 		</ClerkProvider>
 	);
 }

@@ -4,6 +4,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Mention from "@tiptap/extension-mention";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -14,6 +15,7 @@ import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
 import { createTask } from "~/actions/task-actions";
+import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -26,6 +28,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { aiAction } from "~/features/ai/actions/ai-action";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/features/ai/utils/aiLimit";
+import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
 import PropertySelect from "~/features/tasks/components/property/PropertySelect";
 import {
 	type StatefulTask,
@@ -49,7 +52,7 @@ import { useRealtimeStore } from "~/store/realtime";
 import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
-import SimpleTooltip from "../../../components/SimpleTooltip";
+
 import "~/features/text-editor/tiptap.css";
 
 type FormProps = {
@@ -236,6 +239,19 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 	);
 	const [open, setOpen] = useState(false);
 	const queryClient = useQueryClient();
+
+	useRegisterCommands([
+		{
+			id: "create-task",
+			label: "Create Task",
+			icon: <PlusCircledIcon />,
+			priority: 5,
+			shortcut: [],
+			action: () => {
+				setOpen(true);
+			},
+		},
+	]);
 
 	const addTaskMutation = useMutation({
 		mutationFn: ({ data }: { data: TaskFormType }) => createTask(data),

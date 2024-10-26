@@ -4,11 +4,15 @@ import React, { useEffect } from "react";
 
 import {
 	ArrowLeftIcon,
-	GitHubLogoIcon,
 	TrashIcon,
 } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ChevronRight, ClipboardCopy, Link as LinkIcon } from "lucide-react";
+import {
+	ChevronRight,
+	ClipboardCopy,
+	GitBranch,
+	Link as LinkIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getPanelElement } from "react-resizable-panels";
@@ -258,13 +262,13 @@ const TaskPage = ({
 														result.data.data
 															.branchName,
 													icon: (
-														<GitHubLogoIcon className="h-4 w-4" />
+														<GitBranch className="h-4 w-4" />
 													),
 												},
 											);
 										}}
 									>
-										<GitHubLogoIcon />
+										<GitBranch className="h-4 w-4" />
 									</Button>
 								</SimpleTooltip>
 								<div className="flex-1" />
