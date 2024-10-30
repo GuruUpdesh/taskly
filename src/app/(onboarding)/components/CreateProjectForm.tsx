@@ -5,18 +5,9 @@ import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { endOfYesterday, isMonday, nextMonday } from "date-fns";
-import {
-	ChevronLeft,
-	ChevronRight,
-	Clock,
-	Loader2,
-	Folder,
-	SparkleIcon,
-	Sprout,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, SparkleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type UseFormReturn, useForm } from "react-hook-form";
-import { GoPeople } from "react-icons/go";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -38,6 +29,7 @@ import EmailInviteForm from "~/features/invite/components/by-email/email-invite-
 import InviteLink from "~/features/invite/components/invite-link";
 import SprintOptions from "~/features/settings/components/sprint-options/sprint-options";
 import { type ProjectSprintOptions } from "~/features/settings/components/sprint-options/sprint-options-form";
+import { cn } from "~/lib/utils";
 
 import Step from "./form-steps/Step";
 import StepButton from "./form-steps/StepButton";
@@ -52,7 +44,11 @@ const CreateProjectSchema = z.object({
 	timezoneOffset: z.number(),
 });
 
-const CreateProjectForm = () => {
+type Props = {
+	className?: string;
+};
+
+const CreateProjectForm = ({ className }: Props) => {
 	const router = useRouter();
 
 	const form = useForm<CreateForm>({
@@ -146,51 +142,7 @@ const CreateProjectForm = () => {
 	}
 
 	return (
-		<div className="flex min-h-[500px] rounded-lg border bg-background-dialog shadow-xl backdrop-blur-lg">
-			<div className="m-4 mr-0 flex flex-col gap-8 rounded-lg border bg-background/50 p-4 pr-8">
-				<StepButton
-					step={1}
-					currentStep={formStep}
-					setStep={setFormStep}
-					disabled={formStep > 2}
-					stepTitle="Create Project"
-				>
-					<Sprout className="h-3.5 w-3.5" />
-				</StepButton>
-				<StepButton
-					step={2}
-					currentStep={formStep}
-					setStep={setFormStep}
-					disabled={!isStepValid(1) || formStep > 2}
-					stepTitle="Configure Sprints"
-				>
-					<Clock className="h-3.5 w-3.5" />
-				</StepButton>
-				<div className="flex w-full flex-grow flex-col items-center justify-center gap-3 overflow-hidden">
-					<Separator orientation="vertical" />
-					<div>
-						<StepButton
-							step={3}
-							currentStep={formStep}
-							setStep={setFormStep}
-							disabled={true}
-							stepTitle="Initialize Project"
-						>
-							<Folder className="h-3.5 w-3.5" />
-						</StepButton>
-					</div>
-					<Separator orientation="vertical" />
-				</div>
-				<StepButton
-					step={4}
-					currentStep={formStep}
-					setStep={setFormStep}
-					disabled={!isStepValid(4)}
-					stepTitle="Invite Your Team"
-				>
-					<GoPeople className="h-3.5 w-3.5" />
-				</StepButton>
-			</div>
+		<div className={cn("flex min-h-[500px]", className)}>
 			<Form {...form}>
 				<form
 					className="flex w-[600px] flex-col p-8"
@@ -207,9 +159,7 @@ const CreateProjectForm = () => {
 							header="Create a Project"
 							description="Projects are a shared space for your team to
 									collaborate on tasks."
-						>
-							<Sprout />
-						</StepHeader>
+						/>
 						<section className="flex flex-col gap-4">
 							<FormField
 								control={form.control}
@@ -263,9 +213,7 @@ const CreateProjectForm = () => {
 						<StepHeader
 							header="Configure Sprints"
 							description="Sprints are a vital part of any project management system. Configure your sprints to match your team's workflow."
-						>
-							<Clock />
-						</StepHeader>
+						/>
 						<SprintOptions
 							form={
 								form as unknown as UseFormReturn<ProjectSprintOptions>
@@ -283,9 +231,7 @@ const CreateProjectForm = () => {
 						<StepHeader
 							header="Invite Your Team"
 							description="Project management is a team sport. Invite your team to collaborate on this project."
-						>
-							<GoPeople />
-						</StepHeader>
+						/>
 						<section className="flex flex-col gap-4">
 							<div>
 								<FormLabel className="flex items-center gap-1 font-bold">
@@ -346,6 +292,42 @@ const CreateProjectForm = () => {
 					</div>
 				</form>
 			</Form>
+			<div className="m-4 ml-0 flex flex-col gap-8 rounded-lg border bg-background/50 p-4 pr-8">
+				<StepButton
+					step={1}
+					currentStep={formStep}
+					setStep={setFormStep}
+					disabled={formStep > 2}
+					stepTitle="Create Project"
+				/>
+				<StepButton
+					step={2}
+					currentStep={formStep}
+					setStep={setFormStep}
+					disabled={!isStepValid(1) || formStep > 2}
+					stepTitle="Configure Sprints"
+				/>
+				<div className="flex w-full flex-grow flex-col items-center justify-center gap-3 overflow-hidden">
+					<Separator orientation="vertical" />
+					<div>
+						<StepButton
+							step={3}
+							currentStep={formStep}
+							setStep={setFormStep}
+							disabled={true}
+							stepTitle="Initialize Project"
+						/>
+					</div>
+					<Separator orientation="vertical" />
+				</div>
+				<StepButton
+					step={4}
+					currentStep={formStep}
+					setStep={setFormStep}
+					disabled={!isStepValid(4)}
+					stepTitle="Invite Your Team"
+				/>
+			</div>
 		</div>
 	);
 };

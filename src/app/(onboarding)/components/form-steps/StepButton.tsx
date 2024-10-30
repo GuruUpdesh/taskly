@@ -10,7 +10,6 @@ interface Props {
 	setStep: (step: number) => void;
 	stepTitle: string;
 	disabled: boolean;
-	children: React.ReactNode;
 }
 
 const StepButton = ({
@@ -19,7 +18,6 @@ const StepButton = ({
 	setStep,
 	stepTitle,
 	disabled,
-	children,
 }: Props) => {
 	return (
 		<div className="flex gap-4">
@@ -43,7 +41,7 @@ const StepButton = ({
 						"flex items-center gap-2 text-xs",
 					)}
 				>
-					{children} Step {step}
+					Step {step}
 				</p>
 				<p className="whitespace-nowrap">{stepTitle}</p>
 			</div>

@@ -6,10 +6,9 @@ import typography from "~/styles/typography";
 type Props = {
 	header: string;
 	description: string;
-	children: React.ReactNode;
 };
 
-const StepHeader = ({ header, description, children }: Props) => {
+const StepHeader = ({ header, description }: Props) => {
 	return (
 		<div className="mb-8">
 			<h1
@@ -18,7 +17,6 @@ const StepHeader = ({ header, description, children }: Props) => {
 					"flex items-center gap-2 border-none",
 				)}
 			>
-				{children}
 				{header}
 			</h1>
 			<p className={typography.paragraph.p_muted}>{description}</p>

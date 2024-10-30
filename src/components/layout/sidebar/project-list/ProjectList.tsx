@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { DiamondPlus, Users } from "lucide-react";
+import { DiamondPlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,8 @@ import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
 import { cn } from "~/lib/utils";
 import type { Project } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
+
+import CreateProjectDialog from "./CreateProjectDialog";
 
 type Props = {
 	projects: Project[];
@@ -66,14 +68,11 @@ const ProjectList = ({ projects }: Props) => {
 			<div className="sticky top-0 z-10 flex items-center justify-between bg-background">
 				<p className="text-sm uppercase">Projects</p>
 				<div className="flex flex-nowrap">
-					<Button variant="ghost" size="icon">
-						<Users className="h-4 w-4" />
-					</Button>
-					<Link href="/create-project">
+					<CreateProjectDialog>
 						<Button variant="ghost" size="icon">
 							<DiamondPlus className="h-4 w-4" />
 						</Button>
-					</Link>
+					</CreateProjectDialog>
 				</div>
 			</div>
 			{projects.map((project) => {
