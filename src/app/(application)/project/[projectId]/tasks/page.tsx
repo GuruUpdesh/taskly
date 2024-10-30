@@ -1,3 +1,4 @@
+import { currentUser } from "@clerk/nextjs/server";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import {
 	dehydrate,
@@ -35,10 +36,11 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 		queryKey: ["tasks", projectId],
 		queryFn: () => getTasksFromProject(parseInt(projectId)),
 	});
+	const user = await currentUser();
 
 	return (
 		<div className="relative flex max-h-screen flex-1 flex-col overflow-y-scroll">
-			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b px-4 pb-2 pt-2 backdrop-blur-xl @container">
+			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 bg-background px-4 pb-2 pt-2 backdrop-blur-xl @container">
 				<div className="flex items-center gap-2">
 					<ToggleSidebarButton />
 					<BreadCrumbs />
@@ -59,7 +61,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 				</div>
 			</header>
 			<section className="flex flex-1 flex-col">
-				<Filters />
+				<Filters username={user?.username} />
 				<HydrationBoundary state={dehydrate(queryClient)}>
 					<TasksContainer projectId={projectId} />
 				</HydrationBoundary>

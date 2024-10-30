@@ -2,10 +2,7 @@
 
 import React, { useEffect } from "react";
 
-import {
-	ArrowLeftIcon,
-	TrashIcon,
-} from "@radix-ui/react-icons";
+import { ArrowLeftIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
 	ChevronRight,

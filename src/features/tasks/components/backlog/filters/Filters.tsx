@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
+import FilterViewsToggleButton from "~/features/tasks/components/backlog/filters/FilterViewsToggleButton";
+import { filteredTaskViews } from "~/features/tasks/config/filteredTaskViews";
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
 
@@ -15,7 +17,11 @@ import FilterMenu from "./FilterMenu";
 const filterContainer =
 	"rounded-full border bg-accent/25 p-1 transition-all hover:bg-accent h-[30px]";
 
-const Filters = () => {
+type Props = {
+	username?: string | null;
+};
+
+const Filters = ({ username }: Props) => {
 	const [isFiltersOpen, filters] = useAppStore(
 		useShallow((state) => [state.isFiltersOpen, state.filters]),
 	);
@@ -57,6 +63,21 @@ const Filters = () => {
 						</div>
 					)}
 				</FilterMenu>
+				<div className="flex-1" />
+				<div className="overflow-hidden rounded-lg border">
+					<FilterViewsToggleButton
+						label={"All"}
+						username={username}
+					/>
+					{filteredTaskViews.map((view) => (
+						<FilterViewsToggleButton
+							key={view.label}
+							label={view.label}
+							filters={view.filters}
+							username={username}
+						/>
+					))}
+				</div>
 			</div>
 		</motion.div>
 	);
