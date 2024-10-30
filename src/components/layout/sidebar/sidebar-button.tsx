@@ -2,10 +2,10 @@
 
 import React, { useMemo } from "react";
 
+import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
@@ -39,28 +39,32 @@ const SidebarButton = ({
 		return Array.isArray(url) ? url.includes(pathname) : pathname === url;
 	}, [pathname, url]);
 	return (
-		<SimpleTooltip label={label} side="right">
-			<Link
-				href={Array.isArray(url) ? url[0]! : url}
-				target={openInNewTab ? "_blank" : ""}
-				className={cn("flex-1 @sidebar:block", hidden && "hidden")}
+		<Link
+			href={Array.isArray(url) ? url[0]! : url}
+			target={openInNewTab ? "_blank" : ""}
+			className={cn("mb-2 flex-1 @sidebar:block", hidden && "hidden")}
+		>
+			<Button
+				variant="ghost"
+				size="sm"
+				className={cn(
+					"group/button relative w-full justify-center gap-2 p-0 font-medium text-foreground opacity-50 transition-all hover:opacity-100 @sidebar:justify-start @sidebar:px-4",
+					active &&
+						"opacity-100 before:absolute before:-left-3 before:top-[50%] before:h-[80%] before:w-1 before:translate-y-[-50%] before:rounded-r before:bg-foreground before:content-['']",
+				)}
+				onClick={callback}
 			>
-				<Button
-					variant="ghost"
-					size="sm"
-					className={cn(
-						"relative w-full justify-center gap-2 p-0  font-semibold opacity-75 @sidebar:justify-start @sidebar:px-4",
-						active &&
-							"border-b border-foreground/15 bg-foreground/5 opacity-100",
-					)}
-					onClick={callback}
-				>
-					{icon ? icon : null}
-					<span className="hidden @sidebar:inline-flex">{label}</span>
-					{children}
-				</Button>
-			</Link>
-		</SimpleTooltip>
+				{icon ? icon : null}
+				<span className="hidden @sidebar:inline-flex">{label}</span>
+				{children}
+				{openInNewTab && (
+					<>
+						<span className="flex-1" />
+						<ExternalLink className="h-4 w-4 opacity-0 transition-all group-hover/button:opacity-100" />
+					</>
+				)}
+			</Button>
+		</Link>
 	);
 };
 

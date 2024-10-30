@@ -8,7 +8,7 @@ export default async function onboardingPage() {
 	return (
 		<div className="flex justify-center">
 			<div className="flex flex-col gap-4">
-				<CreateProjectForm />
+				<CreateProjectForm className="rounded-lg border bg-background-dialog shadow-xl backdrop-blur-lg" />
 			</div>
 		</div>
 	);

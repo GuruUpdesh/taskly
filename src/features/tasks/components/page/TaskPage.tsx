@@ -2,10 +2,7 @@
 
 import React, { useEffect } from "react";
 
-import {
-	ArrowLeftIcon,
-	TrashIcon,
-} from "@radix-ui/react-icons";
+import { ArrowLeftIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
 	ChevronRight,
@@ -20,7 +17,6 @@ import { toast } from "sonner";
 
 import { deleteTask, getTask, updateTask } from "~/actions/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import Message from "~/components/Message";
 import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
@@ -39,6 +35,7 @@ import {
 	ResizablePanelGroup,
 } from "~/components/ui/resizable";
 import { Separator } from "~/components/ui/separator";
+import { SidebarTrigger } from "~/components/ui/sidebar";
 import { createComment } from "~/features/comments/actions/create-comment";
 import Comments from "~/features/comments/components/Comments";
 import { getPRStatusFromGithubRepo } from "~/features/github-integration/actions/get-pr-status-from-github-repo";
@@ -176,11 +173,11 @@ const TaskPage = ({
 					order={0}
 				>
 					<div className="flex max-h-screen flex-col overflow-y-scroll">
-						<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b px-4 py-2 pb-2 pt-2 backdrop-blur-xl">
+						<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b bg-background px-4 py-2 pb-2 pt-2 backdrop-blur-xl">
 							<div className="flex items-center gap-2">
 								{context === "page" && (
 									<>
-										<ToggleSidebarButton />
+										<SidebarTrigger />
 										<Link
 											href={`/project/${projectId}/tasks`}
 										>

@@ -7,13 +7,9 @@ import { auth } from "@clerk/nextjs/server";
 import { getAllProjects } from "~/actions/project-actions";
 import { throwServerError } from "~/utils/errors";
 
-import ProjectCombobox from "./project-combobox";
+import ProjectList from "./ProjectList";
 
-type Props = {
-	projectId: string;
-};
-
-async function SelectProject({ projectId }: Props) {
+async function ProjectListWrapper() {
 	const { userId }: { userId: string | null } = auth();
 	if (!userId) return null;
 	const projects = await getAllProjects(userId);
@@ -22,7 +18,7 @@ async function SelectProject({ projectId }: Props) {
 		return;
 	}
 
-	return <ProjectCombobox projects={projects} projectId={projectId} />;
+	return <ProjectList projects={projects} />;
 }
 
-export default SelectProject;
+export default ProjectListWrapper;

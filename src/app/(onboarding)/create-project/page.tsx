@@ -27,7 +27,7 @@ export default async function createProjectPage() {
 	return (
 		<div className="flex justify-center">
 			<div className="flex flex-col gap-4">
-				<ProjectCreateForm />
+				<ProjectCreateForm className="rounded-lg border bg-background-dialog shadow-xl backdrop-blur-lg" />
 			</div>
 		</div>
 	);

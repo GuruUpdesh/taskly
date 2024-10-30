@@ -52,7 +52,6 @@ import { useRealtimeStore } from "~/store/realtime";
 import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
-
 import "~/features/text-editor/tiptap.css";
 
 type FormProps = {

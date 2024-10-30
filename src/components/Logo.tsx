@@ -17,7 +17,6 @@ const Logo = () => {
 		>
 			<MarketingTaskChips />
 			<h1 className="text-2xl font-medium">Taskly</h1>
-			<span className="ml-1 text-2xl opacity-90">pm</span>
 		</Link>
 	);
 };
