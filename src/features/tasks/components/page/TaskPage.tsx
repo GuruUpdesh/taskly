@@ -173,7 +173,7 @@ const TaskPage = ({
 					order={0}
 				>
 					<div className="flex max-h-screen flex-col overflow-y-scroll">
-						<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b px-4 py-2 pb-2 pt-2 backdrop-blur-xl bg-background">
+						<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b bg-background px-4 py-2 pb-2 pt-2 backdrop-blur-xl">
 							<div className="flex items-center gap-2">
 								{context === "page" && (
 									<>

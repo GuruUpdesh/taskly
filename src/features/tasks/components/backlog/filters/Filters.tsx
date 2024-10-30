@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Plus, X } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
+import { Button } from "~/components/ui/button";
 import FilterViewsToggleButton from "~/features/tasks/components/backlog/filters/FilterViewsToggleButton";
 import { filteredTaskViews } from "~/features/tasks/config/filteredTaskViews";
 import { cn } from "~/lib/utils";
@@ -13,7 +14,6 @@ import { useAppStore } from "~/store/app";
 
 import FilterChip from "./FilterChip";
 import FilterMenu from "./FilterMenu";
-import { Button } from "~/components/ui/button";
 
 const filterContainer =
 	"rounded-full border bg-accent/25 p-1 transition-all hover:bg-accent h-[30px]";

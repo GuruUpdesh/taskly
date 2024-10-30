@@ -7,7 +7,6 @@ import {
 	QueryClient,
 } from "@tanstack/react-query";
 import { type Metadata } from "next";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getAssigneesForProject, getProject } from "~/actions/project-actions";
@@ -79,13 +78,6 @@ export default async function ApplicationLayout({
 		},
 	});
 
-	// get the layout from cookies (for consistent ssr)
-	const layout = cookies().get("react-resizable-panels:layout");
-	let defaultLayout;
-	if (layout) {
-		defaultLayout = JSON.parse(layout.value) as number[] | undefined;
-	}
-
 	const aiUsageCount = await getAiLimitCount();
 
 	return (
@@ -95,14 +87,8 @@ export default async function ApplicationLayout({
 				userId={user.id}
 				aiUsageCount={aiUsageCount}
 			/>
-			{/* <SidebarPanel
-				sidebarComponent={<Sidebar projectId={projectId} />}
-				defaultLayout={defaultLayout}
-			> */}
-			{/* </SidebarPanel> */}
 			<SidebarProvider>
 				<AppSidebar projectId={projectId} />
-				{/* <Sidebar projectId={projectId} /> */}
 				<main className="flex h-full w-full flex-1 flex-col bg-accent/25">
 					{children}
 				</main>
