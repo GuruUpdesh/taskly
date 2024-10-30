@@ -48,7 +48,7 @@ const SidebarButton = ({
 				variant="ghost"
 				size="sm"
 				className={cn(
-					"group relative w-full justify-center gap-2 p-0 font-medium text-foreground opacity-50 transition-all hover:opacity-100 @sidebar:justify-start @sidebar:px-4",
+					"group/button relative w-full justify-center gap-2 p-0 font-medium text-foreground opacity-50 transition-all hover:opacity-100 @sidebar:justify-start @sidebar:px-4",
 					active &&
 						"opacity-100 before:absolute before:-left-3 before:top-[50%] before:h-[80%] before:w-1 before:translate-y-[-50%] before:rounded-r before:bg-foreground before:content-['']",
 				)}
@@ -60,7 +60,7 @@ const SidebarButton = ({
 				{openInNewTab && (
 					<>
 						<span className="flex-1" />
-						<ExternalLink className="h-4 w-4 opacity-0 transition-all group-hover:opacity-100" />
+						<ExternalLink className="h-4 w-4 opacity-0 transition-all group-hover/button:opacity-100" />
 					</>
 				)}
 			</Button>

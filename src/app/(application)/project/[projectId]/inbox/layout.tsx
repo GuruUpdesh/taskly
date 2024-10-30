@@ -3,7 +3,7 @@ import React from "react";
 import { currentUser } from "@clerk/nextjs/server";
 import { cookies } from "next/headers";
 
-import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
+import { SidebarTrigger } from "~/components/ui/sidebar";
 import InboxButtons from "~/features/notifications/components/InboxButtons";
 import InboxPanel from "~/features/notifications/components/InboxPanel";
 import NotificationList from "~/features/notifications/components/NotificationList";
@@ -37,7 +37,7 @@ export default async function InboxLayout({
 				<div className="flex max-h-screen min-h-screen flex-col">
 					<header className="flex items-center justify-between gap-2 border-b px-4 py-2">
 						<div className="flex items-center gap-2">
-							<ToggleSidebarButton />
+							<SidebarTrigger />
 							<h3 className="scroll-m-20 text-2xl font-bold tracking-tight">
 								Inbox
 							</h3>

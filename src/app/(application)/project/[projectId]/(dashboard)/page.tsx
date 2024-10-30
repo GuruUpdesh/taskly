@@ -4,7 +4,6 @@ import { currentUser } from "@clerk/nextjs/server";
 import { type Metadata } from "next";
 
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import Message from "~/components/Message";
 import {
 	Card,
@@ -12,6 +11,7 @@ import {
 	CardDescription,
 	CardHeader,
 } from "~/components/ui/card";
+import { SidebarTrigger } from "~/components/ui/sidebar";
 import { Skeleton } from "~/components/ui/skeleton";
 import { getAllNotifications } from "~/features/notifications/actions/notification-actions";
 import RecentTasks from "~/features/tasks/components/RecentTasks";
@@ -55,9 +55,9 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 
 	return (
 		<div className="max-h-screen overflow-y-scroll pt-2">
-			<header className="flex items-center justify-between gap-2 border-b px-4 pb-2">
+			<header className="flex items-center justify-between gap-2 border-b bg-background px-4 pb-2">
 				<div className="flex items-center gap-2">
-					<ToggleSidebarButton />
+					<SidebarTrigger />
 					<BreadCrumbs />
 				</div>
 				<div className="flex items-center gap-2"></div>

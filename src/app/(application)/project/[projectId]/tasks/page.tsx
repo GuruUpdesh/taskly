@@ -9,8 +9,8 @@ import { type Metadata } from "next";
 
 import { getTasksFromProject } from "~/actions/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
-import ToggleSidebarButton from "~/components/layout/sidebar/toggle-sidebar-button";
 import { Button } from "~/components/ui/button";
+import { SidebarTrigger } from "~/components/ui/sidebar";
 import FilterAndGroupToggles from "~/features/tasks/components/backlog/filters/FilterAndGroupToggles";
 import Filters from "~/features/tasks/components/backlog/filters/Filters";
 import TasksContainer from "~/features/tasks/components/backlog/TasksContainer";
@@ -40,9 +40,9 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 
 	return (
 		<div className="relative flex max-h-screen flex-1 flex-col overflow-y-scroll">
-			<header className="sticky top-0 z-50 flex items-center justify-between gap-2 bg-background px-4 pb-2 pt-2 backdrop-blur-xl @container">
+			<header className="sticky top-0 z-20 flex items-center justify-between gap-2 border-b bg-background px-4 pb-2 pt-2 backdrop-blur-xl @container">
 				<div className="flex items-center gap-2">
-					<ToggleSidebarButton />
+					<SidebarTrigger />
 					<BreadCrumbs />
 				</div>
 				<div className="flex h-9 items-center gap-2">

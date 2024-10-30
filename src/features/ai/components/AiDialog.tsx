@@ -152,6 +152,7 @@ const AiDialog = ({ projectId }: Props) => {
 							className="bg-transparent"
 						>
 							<SparklesIcon className="h-4 w-4" />
+							<span className="sr-only">Open AI Task Creation</span>
 						</Button>
 					</DialogTrigger>
 				</SimpleTooltip>

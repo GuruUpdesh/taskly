@@ -12,8 +12,8 @@ import { redirect } from "next/navigation";
 
 import { getAssigneesForProject, getProject } from "~/actions/project-actions";
 import { getSprintsForProject } from "~/actions/sprint-actions";
-import Sidebar from "~/components/layout/sidebar/sidebar";
-import SidebarPanel from "~/components/layout/sidebar/sidebar-panel";
+import AppSidebar from "~/components/layout/sidebar/AppSidebar";
+import { SidebarProvider } from "~/components/ui/sidebar";
 import { getAiLimitCount } from "~/features/ai/actions/ai-limit-actions";
 import { getAllNotifications } from "~/features/notifications/actions/notification-actions";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
@@ -95,14 +95,18 @@ export default async function ApplicationLayout({
 				userId={user.id}
 				aiUsageCount={aiUsageCount}
 			/>
-			<SidebarPanel
+			{/* <SidebarPanel
 				sidebarComponent={<Sidebar projectId={projectId} />}
 				defaultLayout={defaultLayout}
-			>
+			> */}
+			{/* </SidebarPanel> */}
+			<SidebarProvider>
+				<AppSidebar projectId={projectId} />
+				{/* <Sidebar projectId={projectId} /> */}
 				<main className="flex h-full w-full flex-1 flex-col bg-accent/25">
 					{children}
 				</main>
-			</SidebarPanel>
+			</SidebarProvider>
 		</HydrationBoundary>
 	);
 }

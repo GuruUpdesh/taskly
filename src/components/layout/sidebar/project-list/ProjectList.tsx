@@ -71,6 +71,7 @@ const ProjectList = ({ projects }: Props) => {
 					<CreateProjectDialog>
 						<Button variant="ghost" size="icon">
 							<DiamondPlus className="h-4 w-4" />
+							<span className="sr-only">New Project</span>
 						</Button>
 					</CreateProjectDialog>
 				</div>
