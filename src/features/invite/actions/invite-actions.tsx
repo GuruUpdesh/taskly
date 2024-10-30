@@ -23,7 +23,7 @@ const getInviteSchema = z.object({
 });
 
 export async function createInvite(projectId: number) {
-	const userId = authenticate();
+	const userId = await authenticate();
 	await checkPermissions(userId, projectId);
 
 	const dataObject = { userId: userId, projectId: projectId };
@@ -66,7 +66,7 @@ export async function createInvite(projectId: number) {
 }
 
 export async function joinProject(token: string) {
-	const userId = authenticate();
+	const userId = await authenticate();
 
 	const requestInvite = await db
 		.selectDistinct()
@@ -127,7 +127,7 @@ export async function sendEmailInvites(
 	emails: string[],
 	projectName = "",
 ) {
-	const { userId } = auth();
+	const { userId } = await auth();
 	if (!userId) {
 		return {
 			newProjectId: -1,
@@ -145,7 +145,8 @@ export async function sendEmailInvites(
 		};
 	}
 	const inviteToken = await createInvite(projectId);
-	const user = await clerkClient.users.getUser(userId);
+	const client = await clerkClient();
+	const user = await client.users.getUser(userId);
 
 	if (!inviteToken || !user?.username) {
 		return {

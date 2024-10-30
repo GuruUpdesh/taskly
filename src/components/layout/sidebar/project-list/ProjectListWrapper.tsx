@@ -10,7 +10,7 @@ import { throwServerError } from "~/utils/errors";
 import ProjectList from "./ProjectList";
 
 async function ProjectListWrapper() {
-	const { userId }: { userId: string | null } = auth();
+	const { userId }: { userId: string | null } = await auth();
 	if (!userId) return null;
 	const projects = await getAllProjects(userId);
 	if (!projects) {

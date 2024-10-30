@@ -15,7 +15,7 @@ export async function addPendingIntegration(
 	projectId: number,
 	integrationId: string,
 ) {
-	const userId = authenticate();
+	const userId = await authenticate();
 	const data = { projectId, integrationId, userId };
 
 	console.log("GitHub Integration: addPendingIntegration", data);

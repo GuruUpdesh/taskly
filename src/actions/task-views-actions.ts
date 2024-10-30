@@ -33,7 +33,7 @@ export async function updateOrInsertTaskView(taskId: number, userId: string) {
 }
 
 export async function getMostRecentTasks(projectId: number, number = 5) {
-	const userId = authenticate();
+	const userId = await authenticate();
 	if (!userId) return [];
 
 	const { recentlyViewed, recentlyEdited, recentlyCreated } =
@@ -132,7 +132,7 @@ export async function getMostRecentTasks(projectId: number, number = 5) {
 }
 
 export async function deleteViewsForTask(taskId: number) {
-	const userId = authenticate();
+	const userId = await authenticate();
 	if (!userId) return;
 
 	await db

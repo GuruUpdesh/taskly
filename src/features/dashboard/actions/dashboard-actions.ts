@@ -20,7 +20,7 @@ type GetUserFailure = {
 export type GetUserResponse = GetUserSuccess | GetUserFailure;
 
 export async function getUser(): Promise<GetUserResponse> {
-	const userId = authenticate();
+	const userId = await authenticate();
 	if (!userId) {
 		return { success: false, message: "User not authenticated" };
 	}

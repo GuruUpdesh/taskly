@@ -113,8 +113,9 @@ async function onSessionCreated(payload: WebhookEvent) {
 		.where(eq(users.userId, userId));
 
 	// if not, create a new user
+	const client = await clerkClient();
 	if (user.length === 0) {
-		const user = await clerkClient.users.getUser(userId);
+		const user = await client.users.getUser(userId);
 		if (!user) {
 			console.error(
 				"🪩 Clerk Webhook: onSessionCreated > User not found",
@@ -136,7 +137,7 @@ async function onSessionCreated(payload: WebhookEvent) {
 		await helperCreateUser(userId, user.username, user.imageUrl);
 	} else if (user[0]) {
 		// check that the username still matches
-		const clerkUser = await clerkClient.users.getUser(userId);
+		const clerkUser = await client.users.getUser(userId);
 		if (!clerkUser.username) {
 			console.error(
 				"🪩 Clerk Webhook: onSessionCreated > User does not have a username",
@@ -168,7 +169,8 @@ async function onUserUpdated(payload: WebhookEvent) {
 		return;
 	}
 
-	const clerkUser = await clerkClient.users.getUser(userId);
+	const client = await clerkClient();
+	const clerkUser = await client.users.getUser(userId);
 
 	if (!clerkUser) {
 		console.error("🪩 Clerk Webhook: onUserUpdated > User not found");
