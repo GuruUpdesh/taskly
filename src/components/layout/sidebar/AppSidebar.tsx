@@ -88,7 +88,7 @@ const AppSidebar = ({ projectId }: SidebarProps) => {
 				<div className="min-h-20 shrink overflow-x-hidden overflow-y-scroll">
 					<ProjectListWrapper />
 				</div>
-				<SidebarFooter className="pb-4">
+				<SidebarFooter className="p-0 pb-4">
 					<UserButton size="large" />
 				</SidebarFooter>
 			</SidebarContent>

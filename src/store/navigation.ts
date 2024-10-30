@@ -4,10 +4,6 @@ import { persist } from "zustand/middleware";
 interface SettingsNavigationState {
 	lastApplicationPathname: string | null;
 	updateLastApplicationPathname: (newBackURL: string) => void;
-	isSideBarCollapsed: boolean;
-	setSideBarCollapsed: (value: boolean) => void;
-	expandSideBar: () => void;
-	setExpandSideBar: (callback: () => void) => void;
 	settingsOptions: Record<string, boolean>;
 	updateSettingOption: (
 		key: keyof SettingsNavigationState["settingsOptions"],
@@ -21,14 +17,6 @@ const useNavigationStore = create<SettingsNavigationState>()(
 			lastApplicationPathname: null,
 			updateLastApplicationPathname: (newApplicationPathname) =>
 				set({ lastApplicationPathname: newApplicationPathname }),
-			isSideBarCollapsed: false,
-			setSideBarCollapsed: (val) =>
-				set(() => ({ isSideBarCollapsed: val })),
-			expandSideBar: () => {
-				console.warn("expandSideBar is not implemented");
-			},
-			setExpandSideBar: (callback) =>
-				set(() => ({ expandSideBar: callback })),
 			settingsOptions: {
 				"project-info": false,
 				theme: false,
