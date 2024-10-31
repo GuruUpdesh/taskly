@@ -8,7 +8,7 @@ const LoadingFilters = () => {
 	const filtersOpen = cookies().get("filters:state")?.value === "true";
 
 	if (!filtersOpen) return;
-    
+
 	return (
 		<div className="border-b bg-background/75 backdrop-blur-xl">
 			<div className="flex flex-wrap items-center gap-2 px-4 py-2 text-muted-foreground">

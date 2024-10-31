@@ -1,5 +1,3 @@
-import { cookies } from "next/headers";
-
 import { Skeleton } from "~/components/ui/skeleton";
 import LoadingFilters from "~/features/tasks/components/backlog/filters/LoadingFilters";
 import LoadingTaskList from "~/features/tasks/components/LoadingTaskList";

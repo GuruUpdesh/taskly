@@ -10,7 +10,7 @@ const LoadingTaskList = () => {
 				.map((_, i) => (
 					<div
 						key={i}
-						className="border-b border-border/50 flex h-[47px] items-center justify-between py-2 "
+						className="flex h-[47px] items-center justify-between border-b border-border/50 py-2 "
 					>
 						<div className="flex h-full w-[70%] items-center gap-2 pl-4">
 							<Skeleton className="aspect-square h-full max-w-[30px] flex-1" />

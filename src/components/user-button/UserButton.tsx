@@ -30,7 +30,7 @@ const UserButton = ({ size = "default" }: Props) => {
 					<div className="flex min-w-0 flex-grow items-center gap-2">
 						<UserProfilePicture src={user.imageUrl} size={36} />
 						<div className="truncate">
-							<p className="truncate overflow-ellipsis capitalize text-sm">
+							<p className="truncate overflow-ellipsis text-sm capitalize">
 								{user.fullName ? user.fullName : user.username}
 							</p>
 							<p className="truncate overflow-ellipsis text-xs text-muted-foreground">

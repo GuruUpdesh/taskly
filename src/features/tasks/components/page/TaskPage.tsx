@@ -10,13 +10,14 @@ import {
 	GitBranch,
 	Link as LinkIcon,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getPanelElement } from "react-resizable-panels";
 import { toast } from "sonner";
 
 import { deleteTask, getTask, updateTask } from "~/actions/task-actions";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import LoadingBreadCrumbs from "~/components/layout/breadcrumbs/LoadingBreadCrumbs";
 import Message from "~/components/Message";
 import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
@@ -48,6 +49,14 @@ import { useLayoutStore } from "~/store/layout";
 import LoadingPage from "./LoadingPage";
 import PrimaryTaskForm from "./PrimaryTaskForm";
 import TaskState from "./TaskState";
+
+const BreadCrumbs = dynamic(
+	() => import("~/components/layout/breadcrumbs/breadcrumbs"),
+	{
+		ssr: false,
+		loading: () => <LoadingBreadCrumbs />,
+	},
+);
 
 type Props = {
 	taskId: number;
