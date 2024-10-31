@@ -3,13 +3,14 @@
 import React from "react";
 
 import { useUser } from "@clerk/nextjs";
-import { DotsHorizontalIcon, DotsVerticalIcon } from "@radix-ui/react-icons";
+import { DotsVerticalIcon } from "@radix-ui/react-icons";
 
 import { Button } from "~/components/ui/button";
 import UserProfilePicture from "~/components/UserProfilePicture";
 import { cn } from "~/lib/utils";
 
 import UserMenu from "./UserMenu";
+import { Skeleton } from "../ui/skeleton";
 
 type Props = {
 	size?: "icon" | "large" | "default";
@@ -19,7 +20,7 @@ const UserButton = ({ size = "default" }: Props) => {
 	const { user } = useUser();
 
 	if (!user) {
-		return null;
+		return <Skeleton className="h-[52px] rounded-full" />;
 	}
 
 	if (size === "large") {
