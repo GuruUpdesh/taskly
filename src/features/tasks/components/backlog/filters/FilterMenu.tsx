@@ -167,7 +167,7 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 											<SelectValue placeholder="Select Property..." />
 											<ChevronDown className="ml-2 h-4 w-4" />
 										</SelectTrigger>
-										<SelectContent>
+										<SelectContent className="bg-accent/50 backdrop-blur-lg">
 											{properties
 												.filter((p) => {
 													if (
@@ -284,7 +284,7 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 									<ChevronDown className="ml-2 h-4 w-4" />
 								</button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent className="w-[286px] bg-popover/50 shadow-md backdrop-blur-lg">
+							<DropdownMenuContent className="w-[286px] bg-accent/50 shadow-md backdrop-blur-lg">
 								{(currentConfig?.type === "enum" ||
 									currentConfig?.type === "dynamic") &&
 									currentConfig?.options.map((option) => (

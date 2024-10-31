@@ -120,7 +120,7 @@ const GroupButton = () => {
 					</span>
 				</Button>
 			</SelectTrigger>
-			<SelectContent>
+			<SelectContent className="bg-accent/50 backdrop-blur-lg">
 				<SelectItem
 					value="none"
 					className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"

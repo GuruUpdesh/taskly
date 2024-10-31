@@ -112,6 +112,7 @@ function PropertySelect({
 								)}
 							</SelectTrigger>
 							<SelectContent
+								className="bg-accent/50 backdrop-blur-lg"
 								onCloseAutoFocus={(e) => {
 									if (!autoFocus) {
 										e.preventDefault();
