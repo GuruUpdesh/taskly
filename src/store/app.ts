@@ -31,7 +31,11 @@ const useAppStore = create<AppState>()(
 		(set) => ({
 			isFiltersOpen: true,
 			toggleFilters: () =>
-				set((state) => ({ isFiltersOpen: !state.isFiltersOpen })),
+				set((state) => {
+					const cookieValue = `filters:state=${!state.isFiltersOpen ? "true" : "false"}`;
+					document.cookie = `${cookieValue}; SameSite=Lax`;
+					return { isFiltersOpen: !state.isFiltersOpen };
+				}),
 			filters: [],
 			updateFilters: (filters) => set({ filters }),
 			addFilter: (filter) =>

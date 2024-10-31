@@ -7,6 +7,7 @@ import {
 	QueryClient,
 } from "@tanstack/react-query";
 import { type Metadata } from "next";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getAssigneesForProject, getProject } from "~/actions/project-actions";
@@ -18,7 +19,6 @@ import { getAllNotifications } from "~/features/notifications/actions/notificati
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 import ProjectState from "./project-state";
-import { cookies } from "next/headers";
 
 type Params = {
 	children: React.ReactNode;
@@ -91,7 +91,7 @@ export default async function ApplicationLayout({
 				aiUsageCount={aiUsageCount}
 			/>
 			<SidebarProvider defaultOpen={defaultOpen}>
-				<AppSidebar projectId={projectId} defaultOpen={defaultOpen} />
+				<AppSidebar projectId={projectId} />
 				<main className="flex h-svh w-full flex-1 flex-col bg-accent/25">
 					{children}
 				</main>

@@ -6,13 +6,16 @@ import {
 	QueryClient,
 } from "@tanstack/react-query";
 import { type Metadata } from "next";
+import dynamic from "next/dynamic";
+import { cookies } from "next/headers";
 
 import { getTasksFromProject } from "~/actions/task-actions";
 import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
 import { Button } from "~/components/ui/button";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 import FilterAndGroupToggles from "~/features/tasks/components/backlog/filters/FilterAndGroupToggles";
-import Filters from "~/features/tasks/components/backlog/filters/Filters";
+// import Filters from "~/features/tasks/components/backlog/filters/Filters";
+import LoadingFilters from "~/features/tasks/components/backlog/filters/LoadingFilters";
 import TasksContainer from "~/features/tasks/components/backlog/TasksContainer";
 import CreateTask from "~/features/tasks/components/CreateTask";
 
@@ -22,6 +25,14 @@ import AiDialog from "../../../../../features/ai/components/AiDialog";
 export const metadata: Metadata = {
 	title: "Tasks",
 };
+
+const Filters = dynamic(
+	() => import("~/features/tasks/components/backlog/filters/Filters"),
+	{
+		ssr: false,
+		loading: () => <LoadingFilters />,
+	},
+);
 
 type Params = {
 	params: {
