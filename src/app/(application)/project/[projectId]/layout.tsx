@@ -18,6 +18,7 @@ import { getAllNotifications } from "~/features/notifications/actions/notificati
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 import ProjectState from "./project-state";
+import { cookies } from "next/headers";
 
 type Params = {
 	children: React.ReactNode;
@@ -80,6 +81,8 @@ export default async function ApplicationLayout({
 
 	const aiUsageCount = await getAiLimitCount();
 
+	const defaultOpen = cookies().get("sidebar:state")?.value === "true";
+
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
 			<ProjectState
@@ -87,8 +90,8 @@ export default async function ApplicationLayout({
 				userId={user.id}
 				aiUsageCount={aiUsageCount}
 			/>
-			<SidebarProvider>
-				<AppSidebar projectId={projectId} />
+			<SidebarProvider defaultOpen={defaultOpen}>
+				<AppSidebar projectId={projectId} defaultOpen={defaultOpen} />
 				<main className="flex h-svh w-full flex-1 flex-col bg-accent/25">
 					{children}
 				</main>
