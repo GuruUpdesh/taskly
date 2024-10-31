@@ -7,6 +7,7 @@ import {
 	QueryClient,
 } from "@tanstack/react-query";
 import { type Metadata } from "next";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getAssigneesForProject, getProject } from "~/actions/project-actions";
@@ -80,6 +81,8 @@ export default async function ApplicationLayout({
 
 	const aiUsageCount = await getAiLimitCount();
 
+	const defaultOpen = cookies().get("sidebar:state")?.value === "true";
+
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
 			<ProjectState
@@ -87,7 +90,7 @@ export default async function ApplicationLayout({
 				userId={user.id}
 				aiUsageCount={aiUsageCount}
 			/>
-			<SidebarProvider>
+			<SidebarProvider defaultOpen={defaultOpen}>
 				<AppSidebar projectId={projectId} />
 				<main className="flex h-svh w-full flex-1 flex-col bg-accent/25">
 					{children}

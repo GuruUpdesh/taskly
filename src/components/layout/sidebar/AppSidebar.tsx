@@ -10,7 +10,7 @@ const UserButton = dynamic(
 	() => import("~/components/user-button/UserButton"),
 	{
 		ssr: false,
-		loading: () => <Skeleton className="h-[46px] rounded-md" />,
+		loading: () => <Skeleton className="h-[52px] rounded-full" />,
 	},
 );
 import { Button } from "~/components/ui/button";

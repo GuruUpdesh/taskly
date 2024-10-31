@@ -1,6 +1,6 @@
 import { Skeleton } from "~/components/ui/skeleton";
-
-import LoadingTaskList from "../../../../../features/tasks/components/LoadingTaskList";
+import LoadingFilters from "~/features/tasks/components/backlog/filters/LoadingFilters";
+import LoadingTaskList from "~/features/tasks/components/LoadingTaskList";
 
 export default function Loading() {
 	return (
@@ -9,6 +9,7 @@ export default function Loading() {
 				<Skeleton className="h-[20px] w-[25%]" />
 				<Skeleton className="h-[36px] w-[25%]" />
 			</header>
+			<LoadingFilters />
 			<LoadingTaskList />
 		</div>
 	);

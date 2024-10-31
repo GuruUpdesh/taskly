@@ -2,8 +2,9 @@ import React, { Suspense } from "react";
 
 import { currentUser } from "@clerk/nextjs/server";
 import { type Metadata } from "next";
+import dynamic from "next/dynamic";
 
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import LoadingBreadCrumbs from "~/components/layout/breadcrumbs/LoadingBreadCrumbs";
 import Message from "~/components/Message";
 import {
 	Card,
@@ -13,12 +14,19 @@ import {
 } from "~/components/ui/card";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 import { Skeleton } from "~/components/ui/skeleton";
+import CurrentSprintGraph from "~/features/dashboard/components/CurrentSprintGraph";
+import Figures from "~/features/dashboard/components/Figures";
+import UserGreeting from "~/features/dashboard/components/UserGreeting";
 import { getAllNotifications } from "~/features/notifications/actions/notification-actions";
 import RecentTasks from "~/features/tasks/components/RecentTasks";
 
-import CurrentSprintGraph from "../../../../../features/dashboard/components/CurrentSprintGraph";
-import Figures from "../../../../../features/dashboard/components/Figures";
-import UserGreeting from "../../../../../features/dashboard/components/UserGreeting";
+const BreadCrumbs = dynamic(
+	() => import("~/components/layout/breadcrumbs/breadcrumbs"),
+	{
+		ssr: false,
+		loading: () => <LoadingBreadCrumbs />,
+	},
+);
 
 export const metadata: Metadata = {
 	title: "Dashboard",

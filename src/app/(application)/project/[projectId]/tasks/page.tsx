@@ -6,22 +6,37 @@ import {
 	QueryClient,
 } from "@tanstack/react-query";
 import { type Metadata } from "next";
+import dynamic from "next/dynamic";
 
 import { getTasksFromProject } from "~/actions/task-actions";
-import BreadCrumbs from "~/components/layout/breadcrumbs/breadcrumbs";
+import CreateGithubTicket from "~/components/CreateGithubTicket";
+import LoadingBreadCrumbs from "~/components/layout/breadcrumbs/LoadingBreadCrumbs";
 import { Button } from "~/components/ui/button";
 import { SidebarTrigger } from "~/components/ui/sidebar";
+import AiDialog from "~/features/ai/components/AiDialog";
 import FilterAndGroupToggles from "~/features/tasks/components/backlog/filters/FilterAndGroupToggles";
-import Filters from "~/features/tasks/components/backlog/filters/Filters";
+import LoadingFilters from "~/features/tasks/components/backlog/filters/LoadingFilters";
 import TasksContainer from "~/features/tasks/components/backlog/TasksContainer";
 import CreateTask from "~/features/tasks/components/CreateTask";
-
-import CreateGithubTicket from "../../../../../components/CreateGithubTicket";
-import AiDialog from "../../../../../features/ai/components/AiDialog";
 
 export const metadata: Metadata = {
 	title: "Tasks",
 };
+
+const BreadCrumbs = dynamic(
+	() => import("~/components/layout/breadcrumbs/breadcrumbs"),
+	{
+		ssr: false,
+		loading: () => <LoadingBreadCrumbs />,
+	},
+);
+const Filters = dynamic(
+	() => import("~/features/tasks/components/backlog/filters/Filters"),
+	{
+		ssr: false,
+		loading: () => <LoadingFilters />,
+	},
+);
 
 type Params = {
 	params: {

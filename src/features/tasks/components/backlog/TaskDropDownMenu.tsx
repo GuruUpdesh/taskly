@@ -221,7 +221,7 @@ const TaskDropDownMenu = ({
 				>
 					{children}
 				</ContextMenuTrigger>
-				<ContextMenuContent>
+				<ContextMenuContent className="bg-accent/50 backdrop-blur-lg">
 					<ContextMenuItem
 						key="smart-properties"
 						className="gap-2"

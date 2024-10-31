@@ -27,7 +27,7 @@ const UserMenu = ({ children }: Props) => {
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
 			<DropdownMenuContent
-				className="w-56 bg-background/75 p-2 backdrop-blur-lg"
+				className="w-56 bg-accent/50 p-2 backdrop-blur-lg"
 				onCloseAutoFocus={(e) => e.preventDefault()}
 				align="end"
 			>
