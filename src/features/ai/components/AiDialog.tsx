@@ -9,6 +9,7 @@ import { ChevronRight, Loader2, SparklesIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useShallow } from "zustand/react/shallow";
 
 import { createTask } from "~/actions/task-actions";
 import Message from "~/components/Message";
@@ -27,7 +28,6 @@ import { Textarea } from "~/components/ui/textarea";
 import { aiGenerateTask } from "~/features/ai/actions/ai-action";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/features/ai/utils/aiLimit";
 import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
-import { schemaValidators } from "~/features/tasks/config/taskConfigType";
 import { taskNameToBranchName } from "~/features/tasks/utils/task-name-branch-converters";
 import { useRealtimeStore } from "~/store/realtime";
 import { useUserStore } from "~/store/user";
@@ -42,7 +42,9 @@ const formSchema = z.object({
 
 const AiDialog = ({ projectId }: Props) => {
 	const [open, setOpen] = useState(false);
-	const project = useRealtimeStore((state) => state.project);
+	const [project, assignees] = useRealtimeStore(
+		useShallow((state) => [state.project, state.assignees]),
+	);
 	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
 
 	useRegisterCommands([
@@ -72,34 +74,18 @@ const AiDialog = ({ projectId }: Props) => {
 	});
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		const result = await aiGenerateTask(
+		const tasks = await aiGenerateTask(
 			values.description,
 			parseInt(projectId),
+			assignees,
 		);
 
-		if (!result) {
+		if (!tasks) {
 			toast.error(
 				`AI daily limit reached. Please try again in ${timeTillNextReset()} hours.`,
 			);
 			return;
 		}
-
-		const jsonResult = JSON.parse(result) as unknown;
-
-		const schema = z.array(
-			z.object({
-				title: schemaValidators.title,
-				description: schemaValidators.description,
-				status: schemaValidators.status,
-				points: schemaValidators.points,
-				priority: schemaValidators.priority,
-				type: schemaValidators.type,
-				assignee: schemaValidators.assignee,
-				sprintId: schemaValidators.sprintId,
-			}),
-		);
-
-		const tasks = schema.parse(jsonResult);
 
 		const createTasksPromises = tasks.map((task) =>
 			createTask({
