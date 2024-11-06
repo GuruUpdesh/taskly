@@ -22,12 +22,13 @@ export default function LandingLayout({
 				<div className="pointer-events-none absolute h-full w-full backdrop-grayscale" />
 				<div className="absolute z-[-1] h-full w-full fade-in-5">
 					<GridWrapper />
-					<img
-						className="absolute h-full w-full opacity-75"
-						src="/static/auth.gif"
-						alt="backdrop"
-					/>
-					<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent to-background" />
+					<div >
+						<img
+							className="absolute h-full w-full opacity-75 blur-2xl "
+							src="/static/auth.gif"
+							alt="backdrop"
+						/>
+					</div>
 				</div>
 				<div className="mt-24">{children}</div>
 			</div>
