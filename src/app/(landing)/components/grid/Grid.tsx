@@ -67,7 +67,7 @@ const Grid = ({
 			return (
 				<div
 					key={index}
-					className="m-[1px] aspect-square bg-[#020817] opacity-75"
+					className="m-[1px] aspect-square bg-background"
 					style={{
 						width: `${cellSize.width}px`,
 						height: `${cellSize.height}px`,
@@ -79,7 +79,7 @@ const Grid = ({
 
 	return (
 		<div
-			className="absolute top-0 z-10 grid h-full w-full overflow-hidden backdrop-blur-[200px]"
+			className="absolute top-0 z-10 grid h-full w-full overflow-hidden"
 			style={{
 				gridTemplateColumns: `repeat(${cols}, 1fr)`,
 				gridTemplateRows: `repeat(${rows}, 1fr)`,

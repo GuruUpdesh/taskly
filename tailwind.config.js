@@ -152,6 +152,7 @@ module.exports = {
     		animation: {
     			'accordion-down': 'accordion-down 0.2s ease-out',
     			'accordion-up': 'accordion-up 0.2s ease-out',
+				"spin-slow": "spin 8s linear infinite",
     			'to-bottom-infinite': 'to-bottom-infinite 10s linear infinite',
     			'fade-in': 'fade-in 5s cubic-bezier(0.075, 0.82, 0.165, 1) forwards',
     			'fade-down': 'fade-down 0.5s cubic-bezier(0.075, 0.82, 0.165, 1) forwards',

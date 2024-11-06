@@ -12,11 +12,11 @@ const panelVariants = cva(
 	{
 		variants: {
 			color: {
-				indigo: "border-indigo-400/15 bg-indigo-800/10 hover:bg-indigo-400/15",
-				red: "border-red-400/15 bg-red-800/10 hover:bg-red-400/15",
-				green: "border-green-400/15 bg-green-800/10 hover:bg-green-400/15",
-				blue: "border-sky-400/15 bg-sky-800/10 hover:bg-sky-400/15",
-				yellow: "border-yellow-400/15 bg-yellow-800/10 hover:bg-yellow-400/15",
+				indigo: "border-indigo-400/15 bg-indigo-800/10 ",
+				red: "border-red-400/15 bg-red-800/10",
+				green: "border-green-400/15 bg-green-800/10",
+				blue: "border-sky-400/15 bg-sky-800/10",
+				yellow: "border-yellow-400/15 bg-yellow-800/10",
 			},
 		},
 		defaultVariants: {
@@ -48,36 +48,40 @@ interface Props extends VariantProps<typeof panelVariants> {
 	icon: React.ReactNode;
 	description: string;
 	className?: string;
+	children?: React.ReactElement;
 }
 
-const Panel = ({ title, icon, description, color, className }: Props) => {
+const Panel = ({
+	title,
+	icon,
+	description,
+	color,
+	className,
+	children,
+}: Props) => {
 	return (
 		<div className={cn(panelVariants({ color: color }), className)}>
-			<div className="flex h-full w-full flex-col gap-4 rounded-md px-4 py-[12px]">
-				<h3
-					className={cn(
-						typography.headers.h2,
-						"border-none pb-0 text-2xl font-semibold lg:text-3xl",
-					)}
-				>
-					{title}
-				</h3>
+			<div className="flex h-full w-full flex-col gap-3 rounded-md px-4 py-[12px]">
+				<div className="flex items-center gap-3">
+					<div className={iconVariants({ color: color })}>{icon}</div>
+					<h3
+						className={cn(
+							typography.headers.h2,
+							"mb-0 border-none pb-0 text-2xl font-medium",
+						)}
+					>
+						{title}
+					</h3>
+				</div>
 				<p
 					className={cn(
 						typography.paragraph.p_muted,
-						"!m-0 text-foreground",
+						"!m-0 text-sm text-foreground",
 					)}
 				>
 					{description}
 				</p>
-				<div className="flex-1" />
-				<div className="flex w-full justify-between">
-					<div className={iconVariants({ color: color })}>{icon}</div>
-					<Button variant="ghost">
-						Learn More
-						<ChevronRight className="h-4 w-4" />
-					</Button>
-				</div>
+				{children}
 			</div>
 		</div>
 	);

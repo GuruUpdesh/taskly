@@ -1,42 +1,33 @@
 import React from "react";
 
-import { ChevronRight } from "lucide-react";
+import { ArrowUpRightIcon, ChevronRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "~/components/ui/button";
 
 const ButtonOptions = () => {
 	return (
-		<div className="flex w-full items-center justify-between gap-4">
-			<div>
-				<Link
-					href="https://www.youtube.com/watch?v=2JG1OJx5DK8"
-					target="_blank"
-				>
-					<Button
-						variant="outline"
-						className="mr-4 rounded-full bg-transparent backdrop-blur-lg"
-					>
-						Watch a Demo
-					</Button>
-				</Link>
-				<Link href="https://docs.tasklypm.com" target="_blank">
-					<Button
-						variant="outline"
-						className="rounded-full bg-transparent backdrop-blur-lg"
-					>
-						Documentation
-					</Button>
-				</Link>
-			</div>
+		<Button
+			className="z-10 group rounded-full  font-bold relative p-0"
+			asChild
+		>
 			<Link href="/app">
-				<Button className="group rounded-full bg-gradient-to-r font-bold hover:from-green-600 hover:to-green-400 hover:text-foreground">
-					<span className="flex items-center">
-						Get Started <ChevronRight className="h-4 w-4" />
-					</span>
-				</Button>
+				<span className="flex items-center z-10 bg-foreground h-full w-full px-2 rounded-sm">
+					Get Started <ArrowUpRightIcon className="w-5 h-5 ml-4"/>
+				</span>
+				<div className="absolute top-[-1px] h-[102%] w-full overflow-clip rounded-sm blur-sm">
+					<div className="absolute left-0 top-0 h-[200%] w-full scale-[3] ">
+						<Image
+							fill
+							src="/static/icon.png"
+							alt=""
+							className="animate-spin-slow"
+						/>
+					</div>
+				</div>
 			</Link>
-		</div>
+		</Button>
 	);
 };
 

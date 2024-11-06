@@ -25,8 +25,9 @@ import AiTaskCreationPanel from "./components/marketing/panels/AiTaskCreationPan
 import CommunicationPanel from "./components/marketing/panels/CommunicationPanel";
 import NotificationPanel from "./components/marketing/panels/NotificationPanel";
 import TextCycleWrapper from "./components/text-cycle/TextCycleWrapper";
+import ExampleTextEditor from "./components/ExampleTextEditor";
 
-const poppins = Poppins({ weight: "600", subsets: ["latin"] });
+const poppins = Poppins({ weight: "500", subsets: ["latin"] });
 const sora = Sora({ subsets: ["latin"] });
 
 export const dynamic = "force-static";
@@ -34,14 +35,14 @@ export const dynamic = "force-static";
 export default function HomePage() {
 	return (
 		<div className={cn(sora.className, "flex flex-1 flex-col")}>
-			<div className="absolute top-0 z-[-1] h-full w-full fade-in-5">
-				<GridWrapper />
+			<div className="absolute top-0 z-[-1] h-svh w-full overflow-hidden fade-in-5">
+				{/* <GridWrapper /> */}
 				<img
-					className="absolute h-full w-full opacity-100"
-					src="/static/auth.gif"
+					className="absolute h-full w-full opacity-25 blur-2xl"
+					src="/static/auth-slow.gif"
 					alt="backdrop"
 				/>
-				<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent to-background" />
+				<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent from-[1%] to-background to-[80%]" />
 			</div>
 			<div className="flex-1 px-4 lg:px-8">
 				<section className="z-10 mb-32 mt-32 flex flex-col items-center justify-center">
@@ -49,18 +50,17 @@ export default function HomePage() {
 						<h1
 							className={cn(
 								poppins.className,
-								"-mb-5 -translate-y-1 scroll-m-20 text-center text-5xl font-bold leading-[1.1] drop-shadow-md sm:text-6xl lg:text-7xl",
+								"-translate-y-1 scroll-m-20 text-center text-5xl font-medium uppercase drop-shadow-md sm:text-6xl lg:text-7xl",
 							)}
 							data-testid="marketing-title"
 						>
 							Taskly simplifies
 							<TextCycleWrapper />
+							<div className="absolute top-0 -z-10 h-full w-full scale-150 bg-background blur-[8rem]" />
 						</h1>
-						<p className="sm:text-md mb-6 mt-6 max-w-[800px] text-center text-sm leading-7 opacity-75 lg:text-lg">
-							Simplify success and confidently finish your
+						<p className="sm:text-md z-20 mb-12 mt-2 max-w-[800px] text-center text-sm leading-7 lg:text-lg">
+							Built for small teams to simplify success and finish
 							projects.
-							<br />
-							Built for small teams and startups.
 						</p>
 						<ButtonOptions />
 					</div>
@@ -68,49 +68,43 @@ export default function HomePage() {
 				<section className="mb-16 flex flex-col items-center justify-center">
 					<div className="grid max-w-[1400px] gap-4 pb-8 md:max-h-[667px] md:grid-cols-2 lg:px-0 xl:grid-cols-4 xl:grid-rows-2">
 						<Panel
-							title="AI Features"
-							description="Enhance your workflow with cutting-edge AI. Our
-							machine learning algorithms adapt to your
-							project needs, streamlining tasks and boosting
-							productivity."
-							icon={<Brain size={24} />}
+							title="Global Search"
+							description="Get things done without touching your mouse."
+							icon={<Brain size={16} />}
 							className="md:col-span-2 xl:col-span-1 xl:row-span-2"
 						/>
 						<Panel
-							title="Fast & Realtime"
-							description="Speed up your work with our seamless user
-							experience. Gain a competitive edge with instant
-							a task management system thats easy for
-							everyone."
-							icon={<Rabbit size={24} />}
+							title="Text Editor"
+							description="Use a notion like markdown editor to describe tasks."
+							icon={<Rabbit size={16} />}
 							className="xl:col-span-2"
 							color="red"
-						/>
+						>
+							<ExampleTextEditor />
+						</Panel>
 						<Panel
-							title="Simple"
-							description="Intuitive for all skill levels. Navigate your
-						projects with an interface designed for
-						simplicity, backed by powerful technology."
-							icon={<LampDesk size={24} />}
+							title="GitHub Integration"
+							description="Save time and automatically update task statuses."
+							icon={<LampDesk size={16} />}
 							className="xl:row-span-2"
 							color="yellow"
 						/>
 						<Panel
-							title="Stay Notified"
-							description="Taskly provides seamless notification integration and a UI which helps you catch up quickly."
-							icon={<Bell size={24} />}
+							title="60 Second Setup"
+							description="Get your whole team on Taskly fast."
+							icon={<Bell size={16} />}
 							color="green"
 						/>
 						<Panel
 							title="Documentation"
-							description="Get started quickly with comprehensive guides.
-						Our detailed documentation provides all you need
-						to harness the power of simplified project
-						management."
-							icon={<BookIcon size={24} />}
+							description="Get confused? Our user guides are here to help!"
+							icon={<BookIcon size={16} />}
 							color="blue"
 						/>
 					</div>
+				</section>
+				<section className="flex mb-32 mt-32 items-center justify-center w-full">
+					<AiAutocompletePropertiesPanel />
 				</section>
 				<section className="mb-32 flex flex-col items-center justify-center px-0 pb-0 xl:px-16">
 					<div className="relative mb-4 w-full max-w-[1400px] rounded-lg">
@@ -121,69 +115,13 @@ export default function HomePage() {
 						<div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
 							<AiTaskCreationPanel />
 							<Image
-								src="/static/marketing/taskboard.webp"
+								src="/static/marketing/taskboard.png"
 								fill
 								alt="Taskly Taskboard"
 								quality={100}
 								className="aspect-[16/9] w-full"
 								priority
-								unoptimized
 							/>
-						</div>
-					</div>
-					<div className="grid w-full max-w-[1400px] grid-cols-12 gap-4">
-						<div className="group z-10 col-span-12 flex flex-col overflow-hidden rounded-lg border bg-background/25 p-1 backdrop-blur-xl sm:col-span-6 lg:col-span-4">
-							<div className="radial-gradient-mask flex flex-1 items-center justify-center overflow-hidden p-4">
-								<AiAutocompletePropertiesPanel />
-							</div>
-							<div className="flex flex-col items-center rounded-lg border bg-accent/25 p-2 backdrop-blur-xl">
-								<div className="flex items-center gap-1">
-									<Check className="h-4 w-4" />
-									<h3 className="font-semibold">
-										Autocomplete Properties
-									</h3>
-								</div>
-								<p className="opacity-75">Move faster</p>
-							</div>
-						</div>
-						<div className="group z-10 col-span-12 flex flex-col overflow-hidden rounded-lg border bg-background/25 p-1 backdrop-blur-xl sm:col-span-6 lg:col-span-3">
-							<div className="gradient-mask-t-80">
-								<div className="gradient-mask-l-80">
-									<div className="gradient-mask-r-80">
-										<div className="p-3 gradient-mask-b-80">
-											<NotificationPanel />
-										</div>
-									</div>
-								</div>
-							</div>
-							<div className="flex-1" />
-							<div className="alert-block flex flex-col items-center rounded-lg border bg-accent/25 p-2 backdrop-blur-xl">
-								<div className="flex items-center gap-1">
-									<AlertTriangleIcon className="h-4 w-4" />
-									<h3 className="font-semibold">
-										Alerts for Everything
-									</h3>
-								</div>
-								<p className="opacity-75">Stay in the know</p>
-							</div>
-						</div>
-						<div className="group z-10 col-span-12 flex flex-col overflow-hidden rounded-lg border bg-background/25 p-1 backdrop-blur-xl lg:col-span-5">
-							<div className=" flex-1 p-3 gradient-mask-b-90">
-								<div className="max-h-[264px]">
-									<CommunicationPanel />
-								</div>
-							</div>
-							<div className="flex flex-col items-center rounded-lg border bg-accent/25 p-2">
-								<div className="flex items-center gap-1">
-									<MessageCircle className="h-4 w-4" />
-									<h3 className="font-semibold">
-										Collaborate & Communicate
-									</h3>
-								</div>
-								<p className="opacity-75">
-									Talk with your team
-								</p>
-							</div>
 						</div>
 					</div>
 				</section>

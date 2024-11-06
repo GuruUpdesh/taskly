@@ -101,7 +101,7 @@
 	top: -1px;
 	left: -1px;
 	position: absolute;
-	background: conic-gradient(from var(--rotate), hsl(var(--border)) 0deg 300deg, #4eb875 320deg, #dc6262 340deg, #7578e4 360deg);
+	background: conic-gradient(from var(--rotate), hsl(var(--border)) 0deg 300deg, hsl(var(--foreground) / 0.8) 320deg, hsl(var(--foreground) / 0.8) 340deg, hsl(var(--border))360deg);
 	animation: rotation 10s linear infinite;
 	border-radius: inherit;
 	z-index: -1;

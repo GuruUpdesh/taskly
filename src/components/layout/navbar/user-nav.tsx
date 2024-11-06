@@ -26,24 +26,14 @@ const UserNav = () => {
 			</SignedIn>
 			<SignedOut>
 				<div className="flex items-center gap-4">
-					<Link href="/sign-in">
-						<Button
-							variant="outline"
-							size="sm"
-							className="whitespace-nowrap rounded-full bg-foreground/5"
-						>
-							Sign In
-						</Button>
-					</Link>
-					<Link href="/sign-up">
-						<Button
-							size="sm"
-							className="items-center gap-1 whitespace-nowrap rounded-full bg-gradient-to-r hover:from-green-600 hover:to-green-400 hover:text-foreground"
-						>
-							Sign Up
-							<ChevronRight className="h-4 w-4" />
-						</Button>
-					</Link>
+					<Button
+						variant="outline"
+						size="sm"
+						className="whitespace-nowrap rounded-full bg-foreground/5 shadow-none"
+						asChild
+					>
+						<Link href="/sign-in">Sign In</Link>
+					</Button>
 				</div>
 			</SignedOut>
 		</div>

@@ -26,6 +26,7 @@ import {
 	taskVariants,
 } from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
+import Image from "next/image";
 
 type ButtonType = {
 	icon: React.ReactNode;
@@ -79,19 +80,29 @@ const buttons: ButtonType[] = [
 
 const AiAutocompletePropertiesPanel = () => {
 	return (
-		<Card
-			className="group/card fadeInUp autocomplete-properties relative overflow-hidden border-foreground/10 bg-accent/50 p-2 shadow-lg"
-			style={{ animationDelay: "0.1s" }}
-		>
-			<CardContent className="px-2 py-1">
+		<div className="relative">
+			<div className="absolute top-[-1px] h-full w-full overflow-clip rounded-sm blur-3xl">
+				<div className="absolute left-0 top-0 h-[200%] w-full">
+					<Image
+						fill
+						src="/static/icon.png"
+						alt=""
+						className="animate-spin-slow"
+					/>
+				</div>
+			</div>
+			<Card
+				className="group/card autocomplete-properties relative z-10 w-[600px] overflow-hidden border-foreground/10 bg-background-dialog p-2 shadow-lg"
+				style={{ animationDelay: "0.1s" }}
+			>
 				<CardHeader className="mb-4 p-0">
 					<div className="flex items-center justify-between">
 						<CardTitle className="text-md flex items-center gap-2">
 							<span className="rounded bg-foreground/10 px-2">
-								Project
+								Examples
 							</span>
 							<ChevronRight className="h-4 w-4" />
-							New Task
+							Smart Properties
 						</CardTitle>
 					</div>
 				</CardHeader>
@@ -148,8 +159,8 @@ const AiAutocompletePropertiesPanel = () => {
 						})}
 					</div>
 				</CardContent>
-			</CardContent>
-		</Card>
+			</Card>
+		</div>
 	);
 };
 

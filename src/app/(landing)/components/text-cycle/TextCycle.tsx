@@ -58,7 +58,7 @@ const TextCycle = ({ defaultTextHeight = 0 }: Props) => {
 
 	return (
 		<div
-			className="cycle-text-container text-3xl sm:text-6xl lg:text-7xl"
+			className="cycle-text-container text-3xl sm:text-6xl lg:text-7xl mt-4"
 			style={{
 				height: `${defaultTextHeight}px`,
 			}}
