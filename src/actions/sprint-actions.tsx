@@ -58,7 +58,7 @@ export async function updateSprintsForProject(
 	sprintStart: Date,
 ) {
 	// authenticate
-	const { userId } = auth();
+	const { userId } = await auth();
 	if (!userId) {
 		return false;
 	}

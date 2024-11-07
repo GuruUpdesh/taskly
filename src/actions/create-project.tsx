@@ -40,7 +40,7 @@ export async function createProject(
 	data: CreateForm,
 ): Promise<ProjectResponse> {
 	try {
-		const userId = authenticate();
+		const userId = await authenticate();
 
 		// modify project data to account for timezone
 		data.sprintStart = addMinutes(

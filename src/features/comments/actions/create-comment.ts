@@ -10,7 +10,7 @@ import { db } from "~/server/db";
 import { comments } from "~/server/db/schema";
 
 export async function createComment(comment: string, taskId: number) {
-	const userId = authenticate();
+	const userId = await authenticate();
 
 	let commentWithUsers: string = comment;
 
