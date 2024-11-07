@@ -1,9 +1,7 @@
 import React from "react";
 
 import { type VariantProps, cva } from "class-variance-authority";
-import { ChevronRight } from "lucide-react";
 
-import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 
@@ -63,7 +61,7 @@ const Panel = ({
 		<div className={cn(panelVariants({ color: color }), className)}>
 			<div className="flex h-full w-full flex-col gap-3 rounded-md">
 				<div className="px-4 py-[12px]">
-					<div className="flex items-center gap-3 mb-2">
+					<div className="mb-2 flex items-center gap-3">
 						<div className={iconVariants({ color: color })}>
 							{icon}
 						</div>

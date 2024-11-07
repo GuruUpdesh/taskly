@@ -15,6 +15,7 @@ import {
 	Loader2,
 	ChevronRight,
 } from "lucide-react";
+import Image from "next/image";
 import { TbHexagon, TbHexagonNumber3 } from "react-icons/tb";
 
 import { Button } from "~/components/ui/button";
@@ -26,7 +27,6 @@ import {
 	taskVariants,
 } from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
-import Image from "next/image";
 
 type ButtonType = {
 	icon: React.ReactNode;

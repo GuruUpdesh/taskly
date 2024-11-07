@@ -1,24 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
+import { CheckCircledIcon, PieChartIcon } from "@radix-ui/react-icons";
 import {
-	AlertTriangleIcon,
-	ArrowDown,
 	ArrowRight,
-	Bell,
 	BookIcon,
-	Brain,
-	Check,
-	CheckCheck,
 	GitMerge,
 	GitPullRequestArrow,
 	LampDesk,
-	Link2,
-	MessageCircle,
 	Rabbit,
 	Search,
 	Text,
 } from "lucide-react";
 import { Poppins } from "next/font/google";
-import { Sora } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -26,37 +18,19 @@ import Footer from "~/components/Footer";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
-import ButtonOptions from "./components/ButtonOptions";
 import ExampleTextEditor from "./components/ExampleTextEditor";
+import GetStartedButton from "./components/GetStartedButton";
 import GlobalSearch from "./components/GlobalSearchExample";
-import GridWrapper from "./components/grid/GridWrapper";
 import Panel from "./components/marketing/Panel";
 import "~/styles/homepage.css";
 import AiAutocompletePropertiesPanel from "./components/marketing/panels/AiAutocompletePropertiesPanel";
-import AiTaskCreationPanel from "./components/marketing/panels/AiTaskCreationPanel";
-import CommunicationPanel from "./components/marketing/panels/CommunicationPanel";
-import NotificationPanel from "./components/marketing/panels/NotificationPanel";
 import TextCycleWrapper from "./components/text-cycle/TextCycleWrapper";
 import styles from "./landing.module.css";
-import PullRequest, {
-	renderPullRequestState,
-} from "~/features/github-integration/components/PullRequest";
-import { addDays } from "date-fns";
-import PropertyBadge from "~/features/tasks/components/property/PropertyBadge";
-import { TaskStatus } from "~/features/tasks/components/RecentTasks";
-import {
-	CheckCircledIcon,
-	GitHubLogoIcon,
-	PieChartIcon,
-} from "@radix-ui/react-icons";
 
 const poppins = Poppins({
 	weight: ["400", "500", "600", "700"],
 	subsets: ["latin"],
 });
-const sora = Sora({ subsets: ["latin"] });
-
-export const dynamic = "force-static";
 
 export default function HomePage() {
 	return (
@@ -70,7 +44,7 @@ export default function HomePage() {
 				<p className="sm:text-md mb-12 mt-2 max-w-[800px] text-center text-sm leading-7 lg:text-lg">
 					A project management tool built for small teams.
 				</p>
-				<ButtonOptions />
+				<GetStartedButton />
 			</section>
 			<div className="absolute top-0 z-[-1] h-[900px] w-full overflow-hidden fade-in-5">
 				<img
@@ -222,12 +196,6 @@ export default function HomePage() {
 					</Panel>
 				</div>
 			</section>
-			{/* <section className={styles.section}>
-				<h3 className="mb-8 w-full text-4xl text-foreground">
-					Smart Properties
-				</h3>
-				<AiAutocompletePropertiesPanel />
-			</section> */}
 			<section className={styles.section}>
 				<div className="flex w-full items-center justify-between rounded-3xl bg-foreground/5 p-8">
 					<div>

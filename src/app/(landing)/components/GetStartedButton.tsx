@@ -1,12 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 
 import { ArrowUpRightIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "~/components/ui/button";
 
-const ButtonOptions = () => {
+const GetStartedButton = () => {
 	return (
 		<Button
 			className="group relative z-10  rounded-full p-0 font-bold"
@@ -30,4 +30,4 @@ const ButtonOptions = () => {
 	);
 };
 
-export default ButtonOptions;
+export default GetStartedButton;

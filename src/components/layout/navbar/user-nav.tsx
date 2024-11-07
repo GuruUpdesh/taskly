@@ -3,7 +3,6 @@
 import React from "react";
 
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "~/components/ui/button";

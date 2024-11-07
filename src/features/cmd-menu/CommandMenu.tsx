@@ -2,11 +2,10 @@
 
 import React from "react";
 
-import { Command } from "cmdk";
 import { useShallow } from "zustand/react/shallow";
 
 import { Dialog, DialogContent } from "~/components/ui/dialog";
-import { type Cmd, useCmdStore } from "~/store/cmd";
+import { useCmdStore } from "~/store/cmd";
 
 import "./cmdstyles.css";
 import Commands from "./Commands";

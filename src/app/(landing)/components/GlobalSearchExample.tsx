@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-import CommandMenu from "~/features/cmd-menu/CommandMenu";
 import Commands from "~/features/cmd-menu/Commands";
 import "~/features/cmd-menu/cmdstyles.css";
 import { type Cmd } from "~/store/cmd";
@@ -67,7 +66,6 @@ const commands: Cmd[] = [
 		shortcut: [],
 		group: "Task Commands",
 	},
-	
 ];
 const GlobalSearch = () => {
 	return (
