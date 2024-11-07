@@ -13,7 +13,7 @@ type Props = {
 };
 
 const InviteLinkWrapper = async ({ projectId }: Props) => {
-	const { userId }: { userId: string | null } = auth();
+	const { userId }: { userId: string | null } = await auth();
 	if (!userId) return null;
 	const token = await createInvite(projectId);
 	if (token === false) return null;

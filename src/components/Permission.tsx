@@ -18,7 +18,7 @@ async function Permission({
 	projectId,
 	any = false,
 }: PermissionProps) {
-	const { userId }: { userId: string | null } = auth();
+	const { userId }: { userId: string | null } = await auth();
 
 	if (!userId) return null;
 	if (any) return <>{children}</>;

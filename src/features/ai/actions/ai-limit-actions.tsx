@@ -16,7 +16,7 @@ const UserAiLimitSchema = z.object({
 
 export async function isAiLimitReached() {
 	console.log("Checking if AI limit is reached...");
-	const { userId } = auth();
+	const { userId } = await auth();
 	if (!userId) {
 		console.log("No user ID found.");
 		return true;
@@ -53,7 +53,7 @@ export async function isAiLimitReached() {
 }
 
 export async function getAiLimitCount() {
-	const { userId } = auth();
+	const { userId } = await auth();
 	if (!userId) {
 		console.log("No user ID found.");
 		return 0;

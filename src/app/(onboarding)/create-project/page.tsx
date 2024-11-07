@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function createProjectPage() {
 	await initAction();
-	const user = auth();
+	const user = await auth();
 
 	if (!user || !user.userId) {
 		return null;

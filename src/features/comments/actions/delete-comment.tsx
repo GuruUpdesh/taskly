@@ -8,7 +8,7 @@ import { db } from "~/server/db";
 import { comments } from "~/server/db/schema";
 
 export async function deleteComment(commentId: number) {
-	const userId = authenticate();
+	const userId = await authenticate();
 
 	await db
 		.delete(comments)

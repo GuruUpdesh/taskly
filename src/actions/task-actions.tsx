@@ -357,7 +357,7 @@ async function createTaskUpdateNotification(
 
 export async function getTask(id: number) {
 	try {
-		const { userId }: { userId: string | null } = auth();
+		const { userId }: { userId: string | null } = await auth();
 		if (!userId) {
 			return { data: null, error: "UserId not found" };
 		}
