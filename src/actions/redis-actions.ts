@@ -10,7 +10,7 @@ import { type Project, selectProjectSchema } from "~/server/db/schema";
 import { getAllProjects } from "./project-actions";
 
 export async function updateUserApplicationData(pathname: string) {
-	const user = auth();
+	const user = await auth();
 
 	if (!user || !user.userId) {
 		return;
@@ -20,7 +20,7 @@ export async function updateUserApplicationData(pathname: string) {
 }
 
 export async function getUserApplicationData() {
-	const user = auth();
+	const user = await auth();
 
 	if (!user || !user.userId) {
 		return;
@@ -80,7 +80,7 @@ const UserApplicationDataSchema = z.object({
 });
 
 export async function updateProjectApplicationData(project: Project) {
-	const userId = authenticate();
+	const userId = await authenticate();
 	if (!userId) {
 		return;
 	}
@@ -89,7 +89,7 @@ export async function updateProjectApplicationData(project: Project) {
 }
 
 export async function getProjectApplicationData() {
-	const userId = authenticate();
+	const userId = await authenticate();
 	if (!userId) {
 		return;
 	}

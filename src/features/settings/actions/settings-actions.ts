@@ -26,7 +26,7 @@ export async function handleProjectInfo(
 	projectId: number,
 	updatedValues: Partial<Project>,
 ) {
-	const userId = authenticate();
+	const userId = await authenticate();
 	await checkPermissions(userId, projectId, ["owner", "admin"]);
 
 	await db
@@ -41,7 +41,7 @@ export async function handleProjectTheme(
 	projectId: number,
 	updatedValues: { color: string; image: string },
 ) {
-	const userId = authenticate();
+	const userId = await authenticate();
 	await checkPermissions(userId, projectId, ["owner", "admin", "member"]);
 
 	await db
@@ -61,7 +61,7 @@ export async function autoColor(image: string) {
 }
 
 export async function handleDeleteProject(projectId: number) {
-	const userId = authenticate();
+	const userId = await authenticate();
 	await checkPermissions(userId, projectId, ["owner"]);
 
 	if (!projectId) {
@@ -111,12 +111,12 @@ export async function handleDeleteProject(projectId: number) {
 }
 
 export async function leaveProject(projectId: number) {
-	const userId = authenticate();
+	const userId = await authenticate();
 	await removeUserFromProject(projectId, userId);
 }
 
 export async function removeUserFromProject(projectId: number, userId: string) {
-	const activeUserId = authenticate();
+	const activeUserId = await authenticate();
 	if (activeUserId !== userId) {
 		await checkPermissions(activeUserId, projectId, ["owner", "admin"]);
 	}
@@ -140,7 +140,7 @@ export async function editUserRole(
 	projectId: number,
 	role: string,
 ) {
-	const userId = authenticate();
+	const userId = await authenticate();
 	await checkPermissions(userId, projectId, ["owner", "admin"]);
 
 	if (role !== "owner" && role !== "member" && role !== "admin") {

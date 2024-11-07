@@ -12,7 +12,7 @@ export async function resolvePendingIntegration(installationId: number) {
 		"GitHub Integration: resolvePendingIntegration",
 		installationId,
 	);
-	const userId = authenticate();
+	const userId = await authenticate();
 	const pendingIntegration = await db.query.projectToIntegrations.findFirst({
 		where: (projectToIntegrations) =>
 			eq(projectToIntegrations.userId, userId) &&
