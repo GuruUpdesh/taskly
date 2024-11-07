@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ArrowUpRightIcon, ChevronRight } from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,20 +9,19 @@ import { Button } from "~/components/ui/button";
 const ButtonOptions = () => {
 	return (
 		<Button
-			className="z-10 group rounded-full  font-bold relative p-0"
+			className="group relative z-10  rounded-full p-0 font-bold"
 			asChild
 		>
 			<Link href="/app">
-				<span className="flex items-center z-10 bg-foreground h-full w-full px-2 rounded-sm">
-					Get Started <ArrowUpRightIcon className="w-5 h-5 ml-4"/>
+				<span className="z-10 flex h-full w-full items-center rounded-xl border bg-background-dialog px-2 text-foreground">
+					Get Started <ArrowUpRightIcon className="ml-4 h-5 w-5" />
 				</span>
-				<div className="absolute top-[-1px] h-[102%] w-full overflow-clip rounded-sm blur-sm">
-					<div className="absolute left-0 top-0 h-[200%] w-full scale-[3] ">
-						<Image
-							fill
-							src="/static/icon.png"
-							alt=""
-							className="animate-spin-slow"
+				<div className="absolute left-[-1px] top-[-1px] h-[calc(100%+2px)] w-[calc(100%+2px)] overflow-clip rounded-xl blur-md">
+					<div className="absolute left-0 top-0 h-[150%] w-full">
+						<img
+							className="absolute h-full w-full"
+							src="/static/auth-slow.gif"
+							alt="backdrop"
 						/>
 					</div>
 				</div>

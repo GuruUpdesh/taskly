@@ -13,7 +13,7 @@ const Navbar = () => {
 		<header
 			className={cn(
 				sora.className,
-				"sticky top-0 z-40 flex justify-center border border-foreground/5 py-2 shadow-lg backdrop-blur-2xl",
+				"sticky top-0 z-40 flex justify-center py-2",
 			)}
 		>
 			<div className="container flex h-12 max-w-[1400px] items-center justify-between px-4 @container lg:px-8">

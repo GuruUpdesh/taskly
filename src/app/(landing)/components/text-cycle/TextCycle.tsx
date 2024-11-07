@@ -58,7 +58,7 @@ const TextCycle = ({ defaultTextHeight = 0 }: Props) => {
 
 	return (
 		<div
-			className="cycle-text-container text-3xl sm:text-6xl lg:text-7xl mt-4"
+			className="cycle-text-container mt-4 text-3xl sm:text-6xl lg:text-7xl"
 			style={{
 				height: `${defaultTextHeight}px`,
 			}}
@@ -76,19 +76,19 @@ const TextCycle = ({ defaultTextHeight = 0 }: Props) => {
 				animate={cycleControls}
 			>
 				<p className="bg-gradient-to-r from-indigo-300 to-indigo-700 bg-clip-text tracking-tighter text-transparent">
-					agile project management
+					project management
 				</p>
 				<p className="bg-gradient-to-r from-red-300 to-red-700 bg-clip-text tracking-tighter text-transparent">
-					collaboration and teamwork
+					collaboration
 				</p>
 				<p className="bg-gradient-to-r from-yellow-300 to-yellow-700 bg-clip-text tracking-tighter text-transparent">
-					task creation and sprints
+					task creation
 				</p>
 				<p className="bg-gradient-to-r from-green-300 to-green-700 bg-clip-text tracking-tighter text-transparent">
-					workflows and integrations
+					integrations
 				</p>
 				<p className="bg-gradient-to-r from-indigo-300 to-indigo-700 bg-clip-text tracking-tighter text-transparent">
-					agile project management
+					project management
 				</p>
 			</motion.div>
 		</div>

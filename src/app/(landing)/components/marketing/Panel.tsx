@@ -8,7 +8,7 @@ import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 
 const panelVariants = cva(
-	"rounded-lg p-[2px] group z-10 border overflow-hidden backdrop-blur-xl transition-colors",
+	"rounded-lg group z-10 border overflow-hidden backdrop-blur-xl transition-colors",
 	{
 		variants: {
 			color: {
@@ -61,26 +61,30 @@ const Panel = ({
 }: Props) => {
 	return (
 		<div className={cn(panelVariants({ color: color }), className)}>
-			<div className="flex h-full w-full flex-col gap-3 rounded-md px-4 py-[12px]">
-				<div className="flex items-center gap-3">
-					<div className={iconVariants({ color: color })}>{icon}</div>
-					<h3
+			<div className="flex h-full w-full flex-col gap-3 rounded-md">
+				<div className="px-4 py-[12px]">
+					<div className="flex items-center gap-3 mb-2">
+						<div className={iconVariants({ color: color })}>
+							{icon}
+						</div>
+						<h3
+							className={cn(
+								typography.headers.h2,
+								"border-none pb-0 text-2xl font-medium",
+							)}
+						>
+							{title}
+						</h3>
+					</div>
+					<p
 						className={cn(
-							typography.headers.h2,
-							"mb-0 border-none pb-0 text-2xl font-medium",
+							typography.paragraph.p_muted,
+							"!m-0 text-sm text-foreground",
 						)}
 					>
-						{title}
-					</h3>
+						{description}
+					</p>
 				</div>
-				<p
-					className={cn(
-						typography.paragraph.p_muted,
-						"!m-0 text-sm text-foreground",
-					)}
-				>
-					{description}
-				</p>
 				{children}
 			</div>
 		</div>
