@@ -67,6 +67,7 @@ const commands: Cmd[] = [
 		shortcut: [],
 		group: "Task Commands",
 	},
+	
 ];
 const GlobalSearch = () => {
 	return (

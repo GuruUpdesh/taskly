@@ -1,14 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
 import {
 	AlertTriangleIcon,
+	ArrowDown,
 	ArrowRight,
 	Bell,
 	BookIcon,
 	Brain,
 	Check,
+	CheckCheck,
+	GitMerge,
+	GitPullRequestArrow,
 	LampDesk,
+	Link2,
 	MessageCircle,
 	Rabbit,
+	Search,
+	Text,
 } from "lucide-react";
 import { Poppins } from "next/font/google";
 import { Sora } from "next/font/google";
@@ -31,6 +38,17 @@ import CommunicationPanel from "./components/marketing/panels/CommunicationPanel
 import NotificationPanel from "./components/marketing/panels/NotificationPanel";
 import TextCycleWrapper from "./components/text-cycle/TextCycleWrapper";
 import styles from "./landing.module.css";
+import PullRequest, {
+	renderPullRequestState,
+} from "~/features/github-integration/components/PullRequest";
+import { addDays } from "date-fns";
+import PropertyBadge from "~/features/tasks/components/property/PropertyBadge";
+import { TaskStatus } from "~/features/tasks/components/RecentTasks";
+import {
+	CheckCircledIcon,
+	GitHubLogoIcon,
+	PieChartIcon,
+} from "@radix-ui/react-icons";
 
 const poppins = Poppins({
 	weight: ["400", "500", "600", "700"],
@@ -98,7 +116,7 @@ export default function HomePage() {
 				</div>
 			</section>
 			<section className={styles.section}>
-				<h3 className="mb-4 w-full justify-self-start text-4xl text-foreground">
+				<h3 className="mb-8 w-full justify-self-start text-4xl text-foreground">
 					Onboard Quickly
 				</h3>
 				<div className="grid w-full max-w-[1400px] grid-cols-2 gap-4 md:max-h-[667px]">
@@ -139,48 +157,93 @@ export default function HomePage() {
 					<AiAutocompletePropertiesPanel />
 					</section> */}
 			</section>
-			<section>
-				<h3 className="mb-4 text-4xl text-foreground">
+			<section className={styles.section}>
+				<h3 className="mb-8 w-full text-4xl text-foreground">
 					A Simple Solution with <br /> Powerful Features
 				</h3>
-				<div className="grid max-w-[1400px] gap-4 pb-8 md:max-h-[667px] md:grid-cols-2 lg:px-0 xl:grid-cols-4 xl:grid-rows-2">
+				<div className="grid w-full max-w-[1400px] grid-cols-4 gap-4 pb-8 md:max-h-[667px]">
 					<Panel
 						title="Global Search"
-						description="Get things done without touching your mouse."
-						icon={<Brain size={16} />}
-						className="md:col-span-2 xl:col-span-1 xl:row-span-2"
+						description="Find what you are looking for."
+						icon={<Search size={16} />}
+						className=""
 					>
 						<GlobalSearch />
 					</Panel>
 					<Panel
 						title="Text Editor"
 						description="Use a notion like markdown editor to describe tasks."
-						icon={<Rabbit size={16} />}
-						className="xl:col-span-2"
+						icon={<Text size={16} />}
+						className="col-span-2"
 						color="red"
 					>
 						<ExampleTextEditor />
 					</Panel>
 					<Panel
 						title="GitHub Integration"
-						description="Save time and automatically update task statuses."
+						description="Save time and sync across platforms."
 						icon={<LampDesk size={16} />}
-						className="xl:row-span-2"
+						className=""
 						color="yellow"
-					/>
-					<Panel
-						title="60 Second Setup"
-						description="Get your whole team on Taskly fast."
-						icon={<Bell size={16} />}
-						color="green"
-					/>
-					<Panel
-						title="Documentation"
-						description="Get confused? Our user guides are here to help!"
-						icon={<BookIcon size={16} />}
-						color="blue"
-					/>
+					>
+						<div className="flex-1 pr-4">
+							<div className="h-full overflow-hidden rounded-tr-lg bg-yellow-800/25">
+								<div className="relative flex h-full flex-col items-center justify-between p-4">
+									<div className="flex w-full items-center justify-between">
+										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm">
+											<GitPullRequestArrow className="h-4 w-4" />
+											<span>Open</span>
+										</div>
+										<ArrowRight className="h-4 w-4" />
+										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm">
+											<GitMerge className="h-4 w-4" />
+											<span>Merged</span>
+										</div>
+									</div>
+									<div className="absolute top-[-40%] rounded-full border border-foreground/5 bg-foreground/5 p-12">
+										<div className="rounded-full border border-foreground/5 bg-foreground/5 p-12">
+											<div className="w-fit rounded-full border border-foreground/5 bg-foreground/5 p-12"></div>
+										</div>
+									</div>
+									<div className="flex w-full items-center justify-between">
+										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm">
+											<PieChartIcon className="h-4 w-4" />
+											<span>In Progress</span>
+										</div>
+										<ArrowRight className="h-4 w-4" />
+										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm">
+											<CheckCircledIcon className="h-4 w-4" />
+											<span>Done</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</Panel>
 				</div>
+			</section>
+			{/* <section className={styles.section}>
+				<h3 className="mb-8 w-full text-4xl text-foreground">
+					Smart Properties
+				</h3>
+				<AiAutocompletePropertiesPanel />
+			</section> */}
+			<section className={styles.section}>
+				<div className="flex w-full items-center justify-between rounded-3xl bg-foreground/5 p-8">
+					<div>
+						<h2 className="mb-8 w-full text-6xl text-foreground">
+							Work Smarter &<br /> Get more done.
+						</h2>
+						<p className="mb-8">
+							Perfect for small teams and startups.
+						</p>
+						<Button>Sign Up</Button>
+						<Button variant="ghost">Create a Project</Button>
+					</div>
+					<AiAutocompletePropertiesPanel />
+				</div>
+
+				<p className="mt-8 text-muted-foreground">Free & Open Source</p>
 			</section>
 			<Footer />
 		</div>
