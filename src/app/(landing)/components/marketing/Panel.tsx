@@ -12,11 +12,11 @@ const panelVariants = cva(
 	{
 		variants: {
 			color: {
-				indigo: "border-indigo-400/15 bg-indigo-800/10 ",
-				red: "border-red-400/15 bg-red-800/10",
-				green: "border-green-400/15 bg-green-800/10",
-				blue: "border-sky-400/15 bg-sky-800/10",
-				yellow: "border-yellow-400/15 bg-yellow-800/10",
+				indigo: "bg-foreground/5 ",
+				red: "bg-foreground/5 ",
+				green: "bg-foreground/5 ",
+				blue: "bg-foreground/5 ",
+				yellow: "bg-foreground/5 ",
 			},
 		},
 		defaultVariants: {
