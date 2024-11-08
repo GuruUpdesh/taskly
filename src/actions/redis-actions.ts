@@ -26,9 +26,8 @@ export async function getUserApplicationData() {
 		return;
 	}
 
-	console.log("Application Router > User", user);
-
 	const projectsForUser = await getAllProjects(user.userId);
+	console.log("Application Router > projects for user", user.userId, projectsForUser?.map((p) => p.id))
 	let validUrlPrefix = [] as string[];
 	if (projectsForUser) {
 		validUrlPrefix = projectsForUser.map(
