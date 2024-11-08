@@ -10,6 +10,7 @@ import {
 	Search,
 	Text,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { Poppins } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,7 +25,15 @@ import GlobalSearch from "./components/GlobalSearchExample";
 import Panel from "./components/marketing/Panel";
 import "~/styles/homepage.css";
 import AiAutocompletePropertiesPanel from "./components/marketing/panels/AiAutocompletePropertiesPanel";
-import WordRotate from "./components/WordRotate";
+// import WordRotate from "./components/WordRotate";
+const WordRotate = dynamic(() => import("./components/WordRotate"), {
+	ssr: false,
+	loading: () => (
+		<h1 className="bg-gradient-to-r from-indigo-300 to-indigo-700 bg-clip-text py-4 text-3xl font-medium leading-10 tracking-tighter text-transparent sm:text-6xl lg:text-7xl">
+			Project Management
+		</h1>
+	),
+});
 import styles from "./landing.module.css";
 
 const poppins = Poppins({
@@ -54,14 +63,18 @@ export default function HomePage() {
 						"from-green-300 to-green-700",
 					]}
 				/>
-				<p className="sm:text-md mb-12 mt-2 max-w-[800px] text-center text-sm leading-7 lg:text-lg">
-					A project management tool built for small teams.
+				<p className="sm:text-md mb-12 mt-2 max-w-[800px] text-center text-sm leading-7 text-muted-foreground lg:text-lg">
+					<span className="text-foreground">
+						A project management tool
+					</span>{" "}
+					built to get sh!t done.
 				</p>
 				<GetStartedButton />
+				<div className="absolute -z-10 h-full w-[50%] bg-background blur-[200px]" />
 			</section>
-			<div className="absolute top-0 z-[-1] h-[900px] w-full overflow-hidden fade-in-5">
+			<div className="absolute top-0 -z-20 h-[900px] w-full overflow-hidden fade-in-5">
 				<img
-					className="absolute h-full w-full opacity-10 blur-xl"
+					className="absolute h-full w-full opacity-25 blur-xl"
 					src="/static/auth-slow.gif"
 					alt="backdrop"
 				/>
@@ -81,10 +94,15 @@ export default function HomePage() {
 								priority
 							/>
 						</div>
+						<div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent from-[75%] to-background" />
 					</div>
 				</div>
 				<div className="sticky bottom-0 z-10 flex w-full justify-between px-8 pb-4 pt-12">
 					<div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent to-background to-[50%]" />
+					<div className="z-10 max-w-[250px]">
+						<h4 className="text-lg font-bold ">Fast Performance</h4>
+						<p>Collaborate and work in real time.</p>
+					</div>
 					<div className="z-10 max-w-[250px]">
 						<h4 className="text-lg font-bold">AI Tools</h4>
 						<p>Streamline tasks and boost productivity.</p>
@@ -92,10 +110,6 @@ export default function HomePage() {
 					<div className="z-10 max-w-[250px]">
 						<h4 className="text-lg font-bold ">Notifications</h4>
 						<p>Catch up on what you missed and stay in the know.</p>
-					</div>
-					<div className="z-10 max-w-[250px]">
-						<h4 className="text-lg font-bold ">Fast Performance</h4>
-						<p>Collaborate and work in real time.</p>
 					</div>
 				</div>
 			</section>

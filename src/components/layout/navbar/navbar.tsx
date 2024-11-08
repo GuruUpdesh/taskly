@@ -10,12 +10,7 @@ const sora = Sora({ subsets: ["latin"] });
 
 const Navbar = () => {
 	return (
-		<header
-			className={cn(
-				sora.className,
-				"sticky top-0 z-40 flex justify-center py-2",
-			)}
-		>
+		<header className={cn(sora.className, "z-40 flex justify-center py-2")}>
 			<div className="container flex h-12 max-w-[1400px] items-center justify-between px-4 @container lg:px-8">
 				<Logo />
 				<Suspense>

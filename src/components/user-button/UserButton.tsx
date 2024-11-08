@@ -7,7 +7,6 @@ import { DotsVerticalIcon } from "@radix-ui/react-icons";
 
 import { Button } from "~/components/ui/button";
 import UserProfilePicture from "~/components/UserProfilePicture";
-import { cn } from "~/lib/utils";
 
 import UserMenu from "./UserMenu";
 import { Skeleton } from "../ui/skeleton";
