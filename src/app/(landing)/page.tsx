@@ -24,7 +24,7 @@ import GlobalSearch from "./components/GlobalSearchExample";
 import Panel from "./components/marketing/Panel";
 import "~/styles/homepage.css";
 import AiAutocompletePropertiesPanel from "./components/marketing/panels/AiAutocompletePropertiesPanel";
-import TextCycleWrapper from "./components/text-cycle/TextCycleWrapper";
+import WordRotate from "./components/WordRotate";
 import styles from "./landing.module.css";
 
 const poppins = Poppins({
@@ -38,9 +38,22 @@ export default function HomePage() {
 			<section className={cn(styles.section, "mt-32")}>
 				<h1 className="-translate-y-1 scroll-m-20 text-center text-5xl font-medium capitalize sm:text-6xl lg:text-7xl">
 					Taskly simplifies
-					<TextCycleWrapper />
-					{/* <div className="absolute top-0 h-full -z-20 w-full scale-150 bg-background blur-[8rem]" /> */}
 				</h1>
+				<WordRotate
+					words={[
+						"Project Management",
+						"Collaboration",
+						"Task Creation",
+						"Integrations",
+					]}
+					className="bg-clip-text text-3xl leading-10 font-medium py-3 bg-gradient-to-r tracking-tighter text-transparent sm:text-6xl lg:text-7xl"
+					styles={[
+						"from-indigo-300 to-indigo-700",
+						"from-red-300 to-red-700",
+						"from-yellow-300 to-yellow-700",
+						"from-green-300 to-green-700",
+					]}
+				/>
 				<p className="sm:text-md mb-12 mt-2 max-w-[800px] text-center text-sm leading-7 lg:text-lg">
 					A project management tool built for small teams.
 				</p>
@@ -78,7 +91,7 @@ export default function HomePage() {
 						<div className="absolute left-0 top-0 h-full w-full rounded-lg backdrop-blur-xl"></div>
 						<div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
 							<Image
-								src="/static/marketing/taskboard.png"
+								src="/static/marketing/taskboard.webp"
 								fill
 								alt="Taskly Taskboard"
 								quality={100}

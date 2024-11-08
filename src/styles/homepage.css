@@ -77,14 +77,12 @@
 	}
 }
 
-.cycle-text-container {
-	height: 111px;
-	overflow: hidden;
+.word-rotate {
 	mask-image: linear-gradient(
 		to bottom,
 		transparent,
-		white 10%,
-		white 98%,
+		white 25%,
+		white 90%,
 		transparent
 	);
 }
