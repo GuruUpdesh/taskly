@@ -17,7 +17,7 @@ const UserProfilePicture = ({ src, size = 20 }: Props) => {
 				src={src}
 				fill
 				style={{ objectFit: "cover" }}
-				className="rounded-full"
+				className="rounded-xl"
 				alt=""
 			/>
 		</div>

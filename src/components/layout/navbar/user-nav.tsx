@@ -16,9 +16,9 @@ const UserNav = () => {
 					<Button
 						variant="outline"
 						size="sm"
-						className="whitespace-nowrap rounded-full bg-foreground/5"
+						className="whitespace-nowrap rounded-xl bg-background-dialog shadow-none"
 					>
-						Application
+						Dashboard
 					</Button>
 				</Link>
 				<UserButton size="icon" />
@@ -28,10 +28,10 @@ const UserNav = () => {
 					<Button
 						variant="outline"
 						size="sm"
-						className="whitespace-nowrap rounded-full bg-foreground/5 shadow-none"
+						className="whitespace-nowrap rounded-xl bg-background-dialog shadow-none"
 						asChild
 					>
-						<Link href="/sign-in">Sign In</Link>
+						<Link href="/sign-in">Login</Link>
 					</Button>
 				</div>
 			</SignedOut>

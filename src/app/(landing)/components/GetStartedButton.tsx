@@ -20,7 +20,7 @@ const GetStartedButton = () => {
 				</div>
 			</div>
 			<Button
-				className="group relative rounded-xl bg-background-dialog p-0 px-2 font-bold text-foreground hover:text-background-dialog border"
+				className="group relative rounded-xl border bg-background-dialog p-0 px-2 font-bold text-foreground hover:text-background-dialog"
 				asChild
 			>
 				<Link href="/app">

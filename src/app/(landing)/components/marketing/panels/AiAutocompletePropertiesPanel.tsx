@@ -8,6 +8,7 @@ import {
 	PersonIcon,
 	PieChartIcon,
 } from "@radix-ui/react-icons";
+import { useInView } from "framer-motion";
 import {
 	CircleDashed,
 	LayoutList,
@@ -15,7 +16,6 @@ import {
 	Minus,
 	Feather,
 	Loader2,
-	ChevronRight,
 } from "lucide-react";
 import Image from "next/image";
 import { TbHexagon, TbHexagonNumber3 } from "react-icons/tb";
@@ -29,7 +29,6 @@ import {
 	taskVariants,
 } from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
-import { useInView } from "framer-motion";
 
 type ButtonType = {
 	icon: React.ReactNode;

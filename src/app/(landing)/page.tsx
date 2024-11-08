@@ -83,7 +83,7 @@ export default function HomePage() {
 						</div>
 					</div>
 				</div>
-				<div className="sticky bottom-0 z-10 flex w-full justify-between px-8 pt-12 pb-4">
+				<div className="sticky bottom-0 z-10 flex w-full justify-between px-8 pb-4 pt-12">
 					<div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent to-background to-[50%]" />
 					<div className="z-10 max-w-[250px]">
 						<h4 className="text-lg font-bold">AI Tools</h4>

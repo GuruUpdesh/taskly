@@ -10,7 +10,7 @@ const UserButton = dynamic(
 	() => import("~/components/user-button/UserButton"),
 	{
 		ssr: false,
-		loading: () => <Skeleton className="h-[52px] rounded-full" />,
+		loading: () => <Skeleton className="h-[52px] rounded-xl" />,
 	},
 );
 import { Button } from "~/components/ui/button";
@@ -49,12 +49,12 @@ const AppSidebar = ({ projectId }: SidebarProps) => {
 					<div className="flex min-h-[57px] items-center">
 						<Logo />
 					</div>
-					<div className="mb-4 mt-1 flex items-center gap-2">
+					<div className="mb-4 mt-1 flex items-center gap-1">
 						<SidebarSearch />
 						<div className="hidden @sidebar:block">
 							<CreateTask projectId={projectId}>
 								<Button
-									className="aspect-square h-[36px] w-[36px] border-none bg-foreground/10 font-bold"
+									className="aspect-square h-[36px] w-[36px] rounded-xl rounded-l-md bg-foreground/10"
 									variant="outline"
 									size="iconSm"
 								>
