@@ -46,7 +46,7 @@ export default function HomePage() {
 						"Task Creation",
 						"Integrations",
 					]}
-					className="bg-clip-text text-3xl leading-10 font-medium py-3 bg-gradient-to-r tracking-tighter text-transparent sm:text-6xl lg:text-7xl"
+					className="bg-gradient-to-r bg-clip-text py-3 text-3xl font-medium leading-10 tracking-tighter text-transparent sm:text-6xl lg:text-7xl"
 					styles={[
 						"from-indigo-300 to-indigo-700",
 						"from-red-300 to-red-700",
@@ -68,28 +68,10 @@ export default function HomePage() {
 				<div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent from-[1%] to-background to-[80%]" />
 			</div>
 			<section className={styles.section}>
-				<div className="absolute bottom-0 z-30 flex w-full justify-between px-8">
-					<div className="max-w-[250px]">
-						<h4 className="text-lg font-bold">AI Tools</h4>
-						<p>Streamline tasks and boost productivity.</p>
-					</div>
-					<div className="max-w-[250px]">
-						<h4 className="text-lg font-bold ">Notifications</h4>
-						<p>Catch up on what you missed and stay in the know.</p>
-					</div>
-					<div className="max-w-[250px]">
-						<h4 className="text-lg font-bold ">Fast Performance</h4>
-						<p>Collaborate and work in real time.</p>
-					</div>
-				</div>
-				<div className="relative max-h-[400px] w-full overflow-clip p-[1px]">
-					<div className="absolute left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent from-[50%] to-background" />
-					<div className="relative mb-4 w-full rounded-lg">
-						<div className="mix-blend-lighten">
-							<div className="animated-border absolute h-full w-full rounded-lg bg-background"></div>
-						</div>
-						<div className="absolute left-0 top-0 h-full w-full rounded-lg backdrop-blur-xl"></div>
-						<div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
+				<div className="relative max-h-[780px] w-full overflow-clip p-[1px]">
+					<div className="relative mb-4 w-full rounded-2xl">
+						<div className="animated-border absolute h-full w-full rounded-2xl bg-background"></div>
+						<div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
 							<Image
 								src="/static/marketing/taskboard.webp"
 								fill
@@ -99,6 +81,21 @@ export default function HomePage() {
 								priority
 							/>
 						</div>
+					</div>
+				</div>
+				<div className="sticky bottom-0 z-10 flex w-full justify-between px-8 pt-12 pb-4">
+					<div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent to-background to-[50%]" />
+					<div className="z-10 max-w-[250px]">
+						<h4 className="text-lg font-bold">AI Tools</h4>
+						<p>Streamline tasks and boost productivity.</p>
+					</div>
+					<div className="z-10 max-w-[250px]">
+						<h4 className="text-lg font-bold ">Notifications</h4>
+						<p>Catch up on what you missed and stay in the know.</p>
+					</div>
+					<div className="z-10 max-w-[250px]">
+						<h4 className="text-lg font-bold ">Fast Performance</h4>
+						<p>Collaborate and work in real time.</p>
 					</div>
 				</div>
 			</section>

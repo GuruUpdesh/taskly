@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useRef } from "react";
 
 import {
 	ArrowUpIcon,
@@ -27,6 +29,7 @@ import {
 	taskVariants,
 } from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
+import { useInView } from "framer-motion";
 
 type ButtonType = {
 	icon: React.ReactNode;
@@ -79,8 +82,12 @@ const buttons: ButtonType[] = [
 ];
 
 const AiAutocompletePropertiesPanel = () => {
+	const ref = useRef<HTMLDivElement>(null);
+
+	const inView = useInView(ref, {});
+
 	return (
-		<div className="relative">
+		<div className="relative" ref={ref}>
 			<div className="absolute top-[-1px] h-full w-full overflow-clip rounded-sm blur-3xl">
 				<div className="absolute left-0 top-0 h-[200%] w-full">
 					<Image
@@ -92,26 +99,30 @@ const AiAutocompletePropertiesPanel = () => {
 				</div>
 			</div>
 			<Card
-				className="group/card autocomplete-properties relative z-10 w-[600px] overflow-hidden border-foreground/10 bg-background-dialog p-2 shadow-lg"
+				className={cn(
+					"group/card autocomplete-properties relative z-10 w-[600px] overflow-hidden border-foreground/10 bg-background-dialog p-2 shadow-lg",
+					{ "autocomplete-properties-active": inView },
+				)}
 				style={{ animationDelay: "0.1s" }}
 			>
 				<CardHeader className="mb-4 p-0">
 					<div className="flex items-center justify-between">
 						<CardTitle className="text-md flex items-center gap-2">
 							<span className="rounded bg-foreground/10 px-2">
-								Examples
+								Smart Properties
 							</span>
-							<ChevronRight className="h-4 w-4" />
-							Smart Properties
 						</CardTitle>
 					</div>
 				</CardHeader>
 				<CardContent className="mb-2 p-0">
-					<h1 className="text-lg opacity-50">Task Title</h1>
+					<h1 className="text-lg">When creating a task...</h1>
 					<Textarea
 						placeholder="Add a description..."
 						className="pointer-events-none h-[80px] resize-none border-none !bg-transparent p-0"
 						readOnly
+						value={
+							"simply describe it and the properties can will autofill!"
+						}
 					/>
 					<div className="flex items-center gap-2 overflow-visible ">
 						{buttons.map((button, index) => {
