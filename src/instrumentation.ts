@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { env } from "~/env.mjs";
@@ -23,7 +24,7 @@ export async function register() {
 		username: string;
 		profilePicture: string;
 	}[];
-	const allUsers: Users = [];
+	const untrackedUsers: Users = [];
 
 	for (const key of clerkSecretKeys) {
 		if (key === undefined) {
@@ -46,7 +47,6 @@ export async function register() {
 		}
 
 		const data = (await result.json()) as unknown;
-
 		const returnData = dataSchema.parse(data);
 
 		const usersData = returnData.map((user) => ({
@@ -54,8 +54,15 @@ export async function register() {
 			username: user.username,
 			profilePicture: user.image_url,
 		}));
-		allUsers.push(...usersData);
+		untrackedUsers.push(...usersData);
 		console.log(`Inserting ${usersData.length} users into the database`);
 	}
-	await db.insert(users).values(allUsers).onConflictDoNothing();;
+	
+	await db
+		.insert(users)
+		.values(untrackedUsers)
+		.onConflictDoUpdate({
+			target: users.userId,
+			set: { username: sql`excluded.username` },
+		});
 }
