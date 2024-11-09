@@ -16,3 +16,7 @@
 	width: 100%;
     margin-bottom: 8rem;
 }
+
+.radial {
+	background: radial-gradient(black, transparent 75%);
+}

@@ -5,7 +5,6 @@ import Link from "next/link";
 
 import Logo from "~/components/Logo";
 import SimpleTooltip from "~/components/SimpleTooltip";
-import { Separator } from "~/components/ui/separator";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 
@@ -13,7 +12,7 @@ const Footer = () => {
 	return (
 		<footer
 			className={cn(
-				"flex justify-center border-t border-foreground/5 bg-background/5 py-8 backdrop-blur-xl",
+				"flex justify-center rounded-xl border-t bg-gradient-to-t from-background to-accent/10 py-8 backdrop-blur-xl",
 			)}
 		>
 			<div className="w-[1400px] max-w-[1400px] px-4">
@@ -26,12 +25,13 @@ const Footer = () => {
 								"mt-2 text-sm",
 							)}
 						>
-							Streamline your work, perfect for small teams and
-							startups.
+							Taskly is a streamlined project management tool,
+							<br />
+							perfect for small teams and startups.
 						</p>
 					</div>
 					<div className="grid grid-cols-3 gap-8 lg:col-span-3">
-						<div className="flex flex-col items-start">
+						<div className="flex flex-col items-start gap-2">
 							<p className="font-semibold">Application</p>
 							<Link
 								href="/app"
@@ -52,7 +52,7 @@ const Footer = () => {
 								Settings
 							</Link>
 						</div>
-						<div className="flex flex-col items-start">
+						<div className="flex flex-col items-start gap-2">
 							<p className="font-semibold">Support</p>
 							<Link
 								href="https://docs.tasklypm.com"
@@ -69,7 +69,7 @@ const Footer = () => {
 								GitHub
 							</Link>
 						</div>
-						<div className="flex flex-col items-start">
+						<div className="flex flex-col items-start gap-2">
 							<p className="font-semibold">Authentication</p>
 							<Link
 								href="/sign-in"
@@ -86,19 +86,18 @@ const Footer = () => {
 						</div>
 					</div>
 				</section>
-				<Separator className="my-4" />
 				<div className="flex items-center justify-between">
 					<p className={cn(typography.paragraph.p_muted, "text-sm")}>
-						Copyright © 2024 Taskly PM{" "}
+						Copyright © 2024 Taskly
 					</p>
-					<div className="flex items-center gap-1">
+					<div className="flex items-center gap-2">
 						<p
 							className={cn(
 								typography.paragraph.p_muted,
 								"mr-2 text-sm",
 							)}
 						>
-							A project by
+							Built by
 						</p>
 						<SimpleTooltip label="Guru Updesh Singh">
 							<Link

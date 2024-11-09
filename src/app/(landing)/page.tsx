@@ -1,11 +1,13 @@
-/* eslint-disable @next/next/no-img-element */
-import { CheckCircledIcon, PieChartIcon } from "@radix-ui/react-icons";
+import {
+	CheckCircledIcon,
+	GitHubLogoIcon,
+	PieChartIcon,
+} from "@radix-ui/react-icons";
 import {
 	ArrowRight,
 	BookIcon,
 	GitMerge,
 	GitPullRequestArrow,
-	LampDesk,
 	Rabbit,
 	Search,
 	Text,
@@ -25,7 +27,6 @@ import GlobalSearch from "./components/GlobalSearchExample";
 import Panel from "./components/marketing/Panel";
 import "~/styles/homepage.css";
 import AiAutocompletePropertiesPanel from "./components/marketing/panels/AiAutocompletePropertiesPanel";
-// import WordRotate from "./components/WordRotate";
 const WordRotate = dynamic(() => import("./components/WordRotate"), {
 	ssr: false,
 	loading: () => (
@@ -65,20 +66,27 @@ export default function HomePage() {
 				/>
 				<p className="sm:text-md mb-12 mt-2 max-w-[800px] text-center text-sm leading-7 text-muted-foreground lg:text-lg">
 					<span className="text-foreground">
-						A project management tool
+						A free project management tool
 					</span>{" "}
-					built to get sh!t done.
+					built from small teams.
 				</p>
 				<GetStartedButton />
-				<div className="absolute -z-10 h-full w-[50%] bg-background blur-[200px]" />
 			</section>
 			<div className="absolute top-0 -z-20 h-[900px] w-full overflow-hidden fade-in-5">
-				<img
+				<Image
 					className="absolute h-full w-full opacity-25 blur-xl"
 					src="/static/auth-slow.gif"
-					alt="backdrop"
+					alt=""
+					fill
+					unoptimized
 				/>
 				<div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent from-[1%] to-background to-[80%]" />
+				<div
+					className={cn(
+						styles.radial,
+						"radial-fade absolute h-full w-full",
+					)}
+				/>
 			</div>
 			<section className={styles.section}>
 				<div className="relative max-h-[780px] w-full overflow-clip p-[1px]">
@@ -142,7 +150,8 @@ export default function HomePage() {
 					>
 						<div className="flex items-center justify-end px-4 pb-4">
 							<Link
-								href="/create-project"
+								href="https://docs.tasklypm.com"
+								target="_blank"
 								className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
 							>
 								View
@@ -151,9 +160,6 @@ export default function HomePage() {
 						</div>
 					</Panel>
 				</div>
-				{/* <section className="mb-32 mt-32 flex w-full items-center justify-center">
-					<AiAutocompletePropertiesPanel />
-					</section> */}
 			</section>
 			<section className={styles.section}>
 				<h3 className="mb-8 w-full text-4xl text-foreground">
@@ -179,8 +185,8 @@ export default function HomePage() {
 					</Panel>
 					<Panel
 						title="GitHub Integration"
-						description="Save time and sync across platforms."
-						icon={<LampDesk size={16} />}
+						description="Automatically sync your tasks."
+						icon={<GitHubLogoIcon />}
 						className=""
 						color="yellow"
 					>
