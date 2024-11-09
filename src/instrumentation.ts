@@ -57,6 +57,5 @@ export async function register() {
 		allUsers.push(...usersData);
 		console.log(`Inserting ${usersData.length} users into the database`);
 	}
-	await db.delete(users);
-	await db.insert(users).values(allUsers);
+	await db.insert(users).values(allUsers).onConflictDoNothing();;
 }
