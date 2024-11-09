@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 
 export default function SignInPage() {
 	return (
-		<div className="text-foreground">
+		<div>
 			<ClerkLoading>
-				<Skeleton className="h-[459px] w-[400px] rounded-sm bg-background" />
+				<Skeleton className="h-[482px] w-[400px] rounded-xl" />
 			</ClerkLoading>
 			<SignIn path="/sign-in" />
 		</div>

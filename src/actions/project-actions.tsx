@@ -16,10 +16,6 @@ import { type NewProject } from "~/server/db/schema";
 import { type ActionReturnType } from "~/utils/actionReturnType";
 import { throwServerError } from "~/utils/errors";
 
-// top level await workaround from https://github.com/vercel/next.js/issues/54282
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-export async function initAction() {}
-
 export async function getAllProjects(userId: string) {
 	try {
 		const projectsQuery = await db.query.users.findMany({
@@ -32,15 +28,18 @@ export async function getAllProjects(userId: string) {
 				},
 			},
 		});
-		console.log("getAllProjects [project-actions] Query >", projectsQuery)
+		console.log("getAllProjects [project-actions] Query >", projectsQuery);
 		const allProjects = projectsQuery.flatMap((userToProject) =>
 			userToProject.usersToProjects.map((up) => up.project),
 		);
-		console.log("getAllProjects [project-actions] Flattened > ", allProjects)
+		console.log(
+			"getAllProjects [project-actions] Flattened > ",
+			allProjects,
+		);
 		return allProjects;
 	} catch (error) {
 		// if (error instanceof Error) throwServerError(error.message);
-		console.error(error)
+		console.error(error);
 	}
 }
 
