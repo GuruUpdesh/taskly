@@ -32,12 +32,15 @@ export async function getAllProjects(userId: string) {
 				},
 			},
 		});
+		console.log("getAllProjects [project-actions] Query >", projectsQuery)
 		const allProjects = projectsQuery.flatMap((userToProject) =>
 			userToProject.usersToProjects.map((up) => up.project),
 		);
+		console.log("getAllProjects [project-actions] Flattened > ", allProjects)
 		return allProjects;
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
+		// if (error instanceof Error) throwServerError(error.message);
+		console.error(error)
 	}
 }
 
