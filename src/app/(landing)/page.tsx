@@ -204,23 +204,23 @@ export default function HomePage() {
 					>
 						<div className="flex-1 pr-4">
 							<div className="h-full overflow-hidden rounded-tr-lg bg-yellow-800/25">
-								<div className="relative flex h-full flex-col items-center justify-between p-4">
+								<div className="relative flex h-full flex-col p-4">
+									<p className="mb-1 text-sm">
+										Pull Requests
+									</p>
 									<div className="flex w-full items-center justify-between">
-										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm">
+										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm backdrop-blur-md">
 											<GitPullRequestArrow className="h-4 w-4" />
 											<span>Open</span>
 										</div>
 										<ArrowRight className="h-4 w-4" />
-										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm">
+										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm backdrop-blur-md">
 											<GitMerge className="h-4 w-4" />
 											<span>Merged</span>
 										</div>
 									</div>
-									<div className="absolute top-[-40%] rounded-full border border-foreground/5 bg-foreground/5 p-12">
-										<div className="rounded-full border border-foreground/5 bg-foreground/5 p-12">
-											<div className="w-fit rounded-full border border-foreground/5 bg-foreground/5 p-12"></div>
-										</div>
-									</div>
+									<div className="flex-1" />
+									<p className="mb-1 text-sm">Tasks</p>
 									<div className="flex w-full items-center justify-between">
 										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm">
 											<PieChartIcon className="h-4 w-4" />
@@ -230,6 +230,19 @@ export default function HomePage() {
 										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm">
 											<CheckCircledIcon className="h-4 w-4" />
 											<span>Done</span>
+										</div>
+									</div>
+									<div className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] rounded-full border border-foreground/5 bg-foreground/[0.02] p-12 mix-blend-overlay">
+										<div className="rounded-full border border-foreground/5 bg-foreground/[0.02] p-12">
+											<div className="rounded-full border border-foreground/5 bg-foreground/[0.02] p-12">
+												<div className="rounded-full border border-foreground/5 bg-foreground/[0.02] p-12">
+													<div className="rounded-full border border-foreground/[0.02] bg-foreground/[0.02] p-12">
+														<div className="w-fit rounded-full border border-foreground/[0.02] bg-foreground/5 p-12">
+															<GitHubLogoIcon className="h-10 w-10 opacity-75" />
+														</div>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>

@@ -10,6 +10,20 @@ import extensions from "~/features/text-editor/extensions";
 
 import "~/features/text-editor/tiptap.css";
 
+const content = `
+### Type \`/\` for commands...
+- Make text **bold** or *italic* or like ~~<u>this</u>~~.
+- Embed [links](https://www.tasklypm.com/), \`code\`, quotes, and code blocks.
+- Use shortcuts, collaborate, and get tasks finished.
+
+### Try out
+- [x] Check lists
+- [x] @ Mentions
+- [ ] and more...
+
+All in Taskly's text editor.
+		`;
+
 const ExampleTextEditor = () => {
 	const editor = useEditor({
 		immediatelyRender: false,
@@ -19,27 +33,12 @@ const ExampleTextEditor = () => {
 				placeholder: "Add a description or type '/' for commands...",
 			}),
 		],
-		content: `
-### Type '/' for commands...
-- Highlight text to make it **bold** or *italic* or ~~<u>this</u>~~
-- Embed [links](https://www.tasklypm.com/) and \`code\`
-\`\`\`
-// code blocks
-function sortArray(arr) {
-	return arr.sort((a, b) => a - b);
-}
-\`\`\`
-		
-- [x] Check lists
-- [ ] And more!
-		`,
+		content: content,
 	});
 	return (
-		<div className="max-h-[60vh] flex-1 overflow-scroll bg-red-800/25 p-4">
-			<div className="mix-blend-overlay">
-				{editor && <BubbleMenu editor={editor} />}
-				<EditorContent editor={editor} />
-			</div>
+		<div className="max-h-[375px] flex-1 overflow-scroll bg-red-800/25 p-4">
+			{editor && <BubbleMenu editor={editor} />}
+			<EditorContent editor={editor} />
 		</div>
 	);
 };

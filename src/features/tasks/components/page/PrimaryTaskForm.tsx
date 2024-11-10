@@ -144,7 +144,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 				{...form.register("title")}
 				onChangeCapture={debouncedHandleChange}
 			/>
-			<div className="rounded border p-2">
+			<div>
 				{editor && <BubbleMenu editor={editor} />}
 				<EditorContent editor={editor} />
 			</div>
