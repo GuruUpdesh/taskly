@@ -108,9 +108,9 @@
 	background: conic-gradient(
 		from var(--rotate),
 		hsl(var(--border)) 0deg 300deg,
-		hsl(var(--foreground) / 0.3) 320deg,
-		hsl(var(--foreground) / 0.5) 340deg,
-		hsl(var(--foreground) / 1) 360deg
+		hsl(var(--foreground) / 0.1) 320deg,
+		hsl(var(--foreground) / 0.2) 340deg,
+		hsl(var(--foreground) / 0.5) 360deg
 	);
 	animation: rotation 10s linear infinite;
 	border-radius: inherit;

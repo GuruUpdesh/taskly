@@ -18,5 +18,5 @@
 }
 
 .radial {
-	background: radial-gradient(black, transparent 75%);
+	background: radial-gradient(hsl(var(--background)), transparent 75%);
 }

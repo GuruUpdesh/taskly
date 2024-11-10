@@ -45,9 +45,9 @@ const poppins = Poppins({
 export default function HomePage() {
 	return (
 		<div className={cn(poppins.className, styles.page)}>
-			<section className={cn(styles.section, "mt-32")}>
-				<h1 className="-translate-y-1 scroll-m-20 text-center text-5xl font-medium capitalize sm:text-6xl lg:text-7xl">
-					Taskly simplifies
+			<section className={cn(styles.section, "mt-36")}>
+				<h1 className="-translate-y-1 text-5xl font-medium sm:text-6xl lg:text-7xl">
+					Taskly Simplifies
 				</h1>
 				<WordRotate
 					words={[
@@ -64,7 +64,7 @@ export default function HomePage() {
 						"from-green-300 to-green-700",
 					]}
 				/>
-				<p className="sm:text-md mb-12 mt-2 max-w-[800px] text-center text-sm leading-7 text-muted-foreground lg:text-lg">
+				<p className="sm:text-md mb-12 mt-2 text-center text-sm leading-7 text-muted-foreground lg:text-lg">
 					<span className="text-foreground">
 						A free project management tool
 					</span>{" "}
@@ -91,22 +91,15 @@ export default function HomePage() {
 					)}
 				/>
 			</div>
-			<section className={styles.section}>
-				<div className="relative max-h-[780px] w-full overflow-clip p-[1px]">
-					<div className="relative mb-4 w-full rounded-2xl">
-						<div className="animated-border absolute h-full w-full rounded-2xl bg-background"></div>
-						<div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
-							<Image
-								src="/static/marketing/taskboard.webp"
-								fill
-								alt="Taskly Taskboard"
-								quality={100}
-								className="aspect-[16/9] w-full"
-								priority
-							/>
-						</div>
-						<div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent from-[75%] to-background" />
-					</div>
+			<section className={cn(styles.section, "mt-36")}>
+				<div className="relative h-[780px] w-full overflow-hidden rounded-2xl border">
+					<Image
+						src="/static/marketing/taskboard.webp"
+						fill
+						alt="Taskly Application Example, task board project management backlog for agile tool."
+						className="w-full"
+						priority
+					/>
 				</div>
 				<div className="sticky bottom-0 z-10 flex w-full justify-between px-8 pb-4 pt-12">
 					<div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent to-background to-[50%]" />
