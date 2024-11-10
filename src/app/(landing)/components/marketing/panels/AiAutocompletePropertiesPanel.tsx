@@ -12,16 +12,16 @@ import { useInView } from "framer-motion";
 import {
 	CircleDashed,
 	LayoutList,
-	SparklesIcon,
 	Minus,
 	Feather,
 	Loader2,
+	SparkleIcon,
 } from "lucide-react";
 import Image from "next/image";
 import { TbHexagon, TbHexagonNumber3 } from "react-icons/tb";
 
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Textarea } from "~/components/ui/textarea";
 import UserProfilePicture from "~/components/UserProfilePicture";
 import {
@@ -39,7 +39,7 @@ type ButtonType = {
 
 const buttons: ButtonType[] = [
 	{
-		icon: <SparklesIcon className="h-4 w-4" />,
+		icon: <SparkleIcon className="h-4 w-4" />,
 		variant: "default",
 		secondaryIcon: <Loader2 className="h-4 w-4 animate-spin" />,
 	},
@@ -104,23 +104,14 @@ const AiAutocompletePropertiesPanel = () => {
 				)}
 				style={{ animationDelay: "0.1s" }}
 			>
-				<CardHeader className="mb-4 p-0">
-					<div className="flex items-center justify-between">
-						<CardTitle className="text-md flex items-center gap-2">
-							<span className="rounded bg-foreground/10 px-2 text-sm font-normal">
-								Smart Properties
-							</span>
-						</CardTitle>
-					</div>
-				</CardHeader>
-				<CardContent className="mb-2 p-0">
-					<h1 className="text-lg">When creating a task...</h1>
+				<CardContent className="mb-2 p-2">
+					<h1 className="mb-2 text-lg">When creating a task</h1>
 					<Textarea
-						placeholder="Add a description..."
+						placeholder=""
 						className="pointer-events-none h-[80px] resize-none border-none !bg-transparent p-0"
 						readOnly
 						value={
-							"simply describe it and the properties will autofill!"
+							"Describe it and use smart properties to automatically pick the tasks properties using AI."
 						}
 					/>
 					<div className="flex items-center gap-2 overflow-visible ">
@@ -164,6 +155,9 @@ const AiAutocompletePropertiesPanel = () => {
 										</div>
 									</div>
 									{button.icon}
+									<span className="sr-only">
+										Task Property
+									</span>
 								</Button>
 							);
 						})}

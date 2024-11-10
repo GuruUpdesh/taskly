@@ -45,8 +45,10 @@ const poppins = Poppins({
 export default function HomePage() {
 	return (
 		<div className={cn(poppins.className, styles.page)}>
-			<section className={cn(styles.section, "mt-36")}>
-				<h1 className="-translate-y-1 text-5xl font-medium sm:text-6xl lg:text-7xl">
+			<section
+				className={cn(styles.section, "mt-36 px-8 md:px-4 2xl:px-0")}
+			>
+				<h1 className="-translate-y-1 whitespace-nowrap text-5xl font-medium sm:text-6xl lg:text-7xl">
 					Taskly Simplifies
 				</h1>
 				<WordRotate
@@ -58,7 +60,7 @@ export default function HomePage() {
 					]}
 					className="bg-gradient-to-r bg-clip-text py-3 text-5xl font-medium leading-10 tracking-tighter text-transparent sm:text-6xl lg:text-7xl"
 					styles={[
-						"to-indigo-300 from-indigo-400",
+						"to-indigo-300 from-indigo-400 text-4xl",
 						"to-red-300 from-red-400",
 						"to-yellow-300 from-yellow-400",
 						"to-green-300 from-green-400",
@@ -68,6 +70,7 @@ export default function HomePage() {
 					<span className="text-foreground">
 						A free project management tool
 					</span>{" "}
+					<br className="sm:hidden" />
 					built for small teams.
 				</p>
 				<GetStartedButton />
@@ -94,7 +97,7 @@ export default function HomePage() {
 			<section
 				className={cn(
 					styles.section,
-					"mt-32 overflow-x-hidden px-8 md:overflow-x-visible md:px-4 lg:px-0",
+					"mt-32 overflow-x-hidden px-8 md:overflow-x-visible md:px-4 2xl:px-0",
 				)}
 			>
 				<div className="relative aspect-video max-h-[780px] w-full rounded-xl border">
@@ -142,7 +145,7 @@ export default function HomePage() {
 					</div>
 				</div>
 			</section>
-			<section className={cn(styles.section, "px-8 md:px-4 lg:px-0")}>
+			<section className={cn(styles.section, "px-8 md:px-4 2xl:px-0")}>
 				<h3 className="mb-8 w-full justify-self-start text-4xl text-foreground">
 					Onboard Quickly
 				</h3>
@@ -182,16 +185,17 @@ export default function HomePage() {
 					</Panel>
 				</div>
 			</section>
-			<section className={cn(styles.section, "px-8 md:px-4 lg:px-0")}>
+			<section className={cn(styles.section, "px-8 md:px-4 2xl:px-0")}>
 				<h3 className="mb-8 w-full text-4xl text-foreground">
-					A Simple Solution with <br /> Powerful Features
+					A Simple Solution with <br className="hidden sm:block" />{" "}
+					Powerful Features
 				</h3>
-				<div className="grid w-full max-w-[1400px] grid-cols-1 gap-0 pb-8 sm:grid-cols-2 md:gap-4 lg:max-h-[667px] lg:grid-cols-4">
+				<div className="grid w-full max-w-[1400px] grid-cols-1 gap-0 pb-8 sm:grid-cols-2 sm:gap-4 lg:max-h-[667px] lg:grid-cols-4">
 					<Panel
 						title="Global Search"
 						description="Find what you are looking for."
 						icon={<Search size={16} />}
-						className="mb-4 sm:order-1 md:mb-0"
+						className="mb-4 sm:order-1 sm:mb-0"
 					>
 						<GlobalSearch />
 					</Panel>
@@ -199,7 +203,7 @@ export default function HomePage() {
 						title="Text Editor"
 						description="Use a notion like markdown editor to describe tasks."
 						icon={<Text size={16} />}
-						className="col-span-2 mb-4 sm:order-3 md:mb-0 lg:order-2"
+						className="col-span-2 mb-4 sm:order-3 sm:mb-0 lg:order-2"
 						color="red"
 					>
 						<ExampleTextEditor />
@@ -213,41 +217,51 @@ export default function HomePage() {
 					>
 						<div className="flex-1 pr-4">
 							<div className="h-full overflow-hidden rounded-tr-lg bg-yellow-800/35">
-								<div className="relative flex h-full flex-col p-4">
-									<p className="mb-1 text-sm">
+								<div className="relative flex h-full flex-row gap-4 p-4 sm:flex-col">
+									<p className="mb-1 hidden text-sm sm:block">
 										Pull Requests
 									</p>
-									<div className="flex w-full items-center justify-between">
-										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm backdrop-blur-md">
+									<div className="z-10 flex w-full items-center justify-between">
+										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm backdrop-blur-lg">
 											<GitPullRequestArrow className="h-4 w-4" />
-											<span>Open</span>
+											<span className="whitespace-nowrap">
+												Open
+											</span>
 										</div>
 										<ArrowRight className="h-4 w-4" />
-										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm backdrop-blur-md">
+										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm backdrop-blur-lg">
 											<GitMerge className="h-4 w-4" />
-											<span>Merged</span>
+											<span className="whitespace-nowrap">
+												Merged
+											</span>
 										</div>
 									</div>
 									<div className="flex-1" />
-									<p className="mb-1 text-sm">Tasks</p>
-									<div className="flex w-full items-center justify-between">
-										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm">
+									<p className="mb-1 hidden text-sm sm:block">
+										Tasks
+									</p>
+									<div className="z-10 flex w-full items-center justify-between">
+										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm backdrop-blur-lg">
 											<PieChartIcon className="h-4 w-4" />
-											<span>In Progress</span>
+											<span className="whitespace-nowrap">
+												In Progress
+											</span>
 										</div>
 										<ArrowRight className="h-4 w-4" />
-										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm">
+										<div className="flex items-center gap-2 rounded-full border border-foreground/5 bg-foreground/5 px-3 py-1 text-sm backdrop-blur-lg">
 											<CheckCircledIcon className="h-4 w-4" />
-											<span>Done</span>
+											<span className="whitespace-nowrap">
+												Done
+											</span>
 										</div>
 									</div>
-									<div className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] rounded-full border border-foreground/5 bg-foreground/[0.02] p-12 mix-blend-overlay">
+									<div className="absolute left-[50%] top-[50%] -z-10 translate-x-[-50%] translate-y-[-50%] rounded-full border border-foreground/5 bg-foreground/[0.02] p-12 mix-blend-overlay">
 										<div className="rounded-full border border-foreground/5 bg-foreground/[0.02] p-12">
 											<div className="rounded-full border border-foreground/5 bg-foreground/[0.02] p-12">
 												<div className="rounded-full border border-foreground/5 bg-foreground/[0.02] p-12">
 													<div className="rounded-full border border-foreground/[0.02] bg-foreground/[0.02] p-12">
 														<div className="w-fit rounded-full border border-foreground/[0.02] bg-foreground/5 p-12">
-															<GitHubLogoIcon className="h-10 w-10" />
+															<GitHubLogoIcon className="invisible h-10 w-10 sm:visible" />
 														</div>
 													</div>
 												</div>
@@ -260,30 +274,43 @@ export default function HomePage() {
 					</Panel>
 				</div>
 			</section>
-			<section className={cn(styles.section, "px-8 md:px-4 lg:px-0")}>
-				<div className="flex w-full flex-col justify-between rounded-3xl py-8 md:flex-row md:items-center">
-					<div className="mb-8 md:mb-0">
+			<section className={cn(styles.section, "px-8 md:px-4 2xl:px-0")}>
+				<div className="flex w-full flex-col gap-8 py-12 sm:py-16 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:py-20">
+					<div className="flex max-w-2xl flex-col">
 						<h2 className="mb-8 w-full text-5xl text-foreground">
-							Work Smarter &<br /> Get more done.
+							Work Smarter &<br className="hidden sm:block" /> Get
+							More Done.
 						</h2>
-						<p className="mb-8 text-muted-foreground">
-							<span className="text-foreground">
+
+						<p className="mb-8 text-muted-foreground sm:text-lg">
+							<span className="font-medium text-foreground">
 								Free & Open Source.
 							</span>{" "}
 							Perfect for small teams and startups.
 						</p>
-						<Button asChild>
-							<Link href="/sign-up" prefetch>
-								Sign Up
-							</Link>
-						</Button>
-						<Button variant="ghost" asChild>
-							<Link href="/create-project" prefetch>
-								Create a Project
-							</Link>
-						</Button>
+
+						<div className="flex flex-col gap-4 sm:flex-row">
+							<Button className="w-full sm:w-auto" asChild>
+								<Link href="/sign-up" prefetch>
+									Sign Up
+								</Link>
+							</Button>
+
+							<Button
+								variant="ghost"
+								className="w-full sm:w-auto"
+								asChild
+							>
+								<Link href="/create-project" prefetch>
+									Create a Project
+								</Link>
+							</Button>
+						</div>
 					</div>
-					<AiAutocompletePropertiesPanel />
+
+					<div className="w-full lg:w-auto">
+						<AiAutocompletePropertiesPanel />
+					</div>
 				</div>
 			</section>
 			<Footer />

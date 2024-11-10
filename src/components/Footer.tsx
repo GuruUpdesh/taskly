@@ -12,7 +12,7 @@ const Footer = () => {
 	return (
 		<footer
 			className={cn(
-				"flex w-full max-w-[1400px] justify-center rounded-xl border-t bg-gradient-to-t from-background to-accent/10 px-8 py-8 backdrop-blur-xl md:px-4 lg:px-0",
+				"flex w-full max-w-[1400px] justify-center rounded-xl border-t bg-gradient-to-t from-background to-accent/10 px-8 py-8 backdrop-blur-xl md:px-4 2xl:px-0",
 			)}
 		>
 			<div className="w-full px-4">
@@ -60,6 +60,13 @@ const Footer = () => {
 								className="p-0 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
 							>
 								Documentation
+							</Link>
+							<Link
+								href="/privacy"
+								target="_blank"
+								className="p-0 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
+							>
+								Privacy Policy
 							</Link>
 							<Link
 								href="https://github.com/GuruUpdesh/taskly"
