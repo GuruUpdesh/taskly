@@ -48,7 +48,10 @@ export default function HomePage() {
 			<section
 				className={cn(styles.section, "mt-36 px-8 md:px-4 2xl:px-0")}
 			>
-				<h1 className="-translate-y-1 whitespace-nowrap text-5xl font-medium sm:text-6xl lg:text-7xl">
+				<h1
+					className="-translate-y-1 whitespace-nowrap text-5xl font-medium sm:text-6xl lg:text-7xl"
+					data-testid="marketing-title"
+				>
 					Taskly Simplifies
 				</h1>
 				<WordRotate
