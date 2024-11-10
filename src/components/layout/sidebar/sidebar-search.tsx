@@ -12,7 +12,7 @@ const SidebarSearch = () => {
 	return (
 		<Button
 			variant="outline"
-			className="relative h-9 w-full justify-between border-none bg-foreground/10 pl-10 font-normal text-muted-foreground"
+			className="relative h-9 w-full justify-between rounded-xl rounded-r-md bg-foreground/10 pl-10 font-normal text-muted-foreground"
 			onClick={() => setOpen(true)}
 		>
 			<MagnifyingGlassIcon className="absolute left-3 top-[50%] h-4 w-4 translate-y-[-50%] " />

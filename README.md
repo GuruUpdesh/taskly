@@ -55,3 +55,9 @@ Agile project management tools often suffer from high complexity and difficult l
 - [Guru Updesh Singh](https://github.com/GuruUpdesh)
 - [Cameron Hollis](https://github.com/cameronhollis4)
 - [Yash Sankanagouda](https://github.com/sankanay)
+
+# License
+
+This project is licensed under the Apache License, Version 2.0 with Commons Clause - see the [LICENSE.md](LICENSE.md) file for details.
+
+⚠️ **Important:** This license includes the Commons Clause, which restricts commercial use of this software. You may not sell this software or use it in a commercial product without explicit permission.

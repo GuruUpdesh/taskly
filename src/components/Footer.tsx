@@ -5,7 +5,6 @@ import Link from "next/link";
 
 import Logo from "~/components/Logo";
 import SimpleTooltip from "~/components/SimpleTooltip";
-import { Separator } from "~/components/ui/separator";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 
@@ -13,10 +12,10 @@ const Footer = () => {
 	return (
 		<footer
 			className={cn(
-				"flex justify-center border-t border-foreground/5 bg-background/5 py-8 backdrop-blur-xl",
+				"flex w-full max-w-[1400px] justify-center rounded-xl border-t bg-gradient-to-t from-background to-accent/10 px-8 py-8 backdrop-blur-xl md:px-4 2xl:px-0",
 			)}
 		>
-			<div className="w-[1400px] max-w-[1400px] px-4">
+			<div className="w-full px-4">
 				<section className="grid grid-rows-2 lg:grid-cols-5 lg:gap-8">
 					<div className="col-span-2">
 						<Logo />
@@ -26,12 +25,13 @@ const Footer = () => {
 								"mt-2 text-sm",
 							)}
 						>
-							Streamline your work, perfect for small teams and
-							startups.
+							Taskly is a streamlined project management tool,
+							<br />
+							perfect for small teams and startups.
 						</p>
 					</div>
 					<div className="grid grid-cols-3 gap-8 lg:col-span-3">
-						<div className="flex flex-col items-start">
+						<div className="flex flex-col items-start gap-2">
 							<p className="font-semibold">Application</p>
 							<Link
 								href="/app"
@@ -52,7 +52,7 @@ const Footer = () => {
 								Settings
 							</Link>
 						</div>
-						<div className="flex flex-col items-start">
+						<div className="flex flex-col items-start gap-2">
 							<p className="font-semibold">Support</p>
 							<Link
 								href="https://docs.tasklypm.com"
@@ -62,6 +62,13 @@ const Footer = () => {
 								Documentation
 							</Link>
 							<Link
+								href="/privacy"
+								target="_blank"
+								className="p-0 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
+							>
+								Privacy Policy
+							</Link>
+							<Link
 								href="https://github.com/GuruUpdesh/taskly"
 								target="_blank"
 								className="p-0 text-sm opacity-75 transition-opacity hover:underline hover:opacity-100"
@@ -69,7 +76,7 @@ const Footer = () => {
 								GitHub
 							</Link>
 						</div>
-						<div className="flex flex-col items-start">
+						<div className="flex flex-col items-start gap-2">
 							<p className="font-semibold">Authentication</p>
 							<Link
 								href="/sign-in"
@@ -86,19 +93,18 @@ const Footer = () => {
 						</div>
 					</div>
 				</section>
-				<Separator className="my-4" />
-				<div className="flex items-center justify-between">
+				<div className="mt-8 flex items-center justify-between lg:mt-0">
 					<p className={cn(typography.paragraph.p_muted, "text-sm")}>
-						Copyright © 2024 Taskly PM{" "}
+						Copyright © 2024 Taskly
 					</p>
-					<div className="flex items-center gap-1">
+					<div className="flex items-center gap-2">
 						<p
 							className={cn(
 								typography.paragraph.p_muted,
 								"mr-2 text-sm",
 							)}
 						>
-							A project by
+							Built by
 						</p>
 						<SimpleTooltip label="Guru Updesh Singh">
 							<Link

@@ -35,15 +35,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<ClerkProvider
-			appearance={{
-				baseTheme: dark,
-				variables: {
-					colorBackground: "#000000",
-					colorInputBackground: "#1b1b1b",
-				},
-			}}
-		>
+		<ClerkProvider appearance={clerkAppearance}>
 			<html lang="en" suppressHydrationWarning>
 				<body
 					className={cn(
@@ -68,3 +60,16 @@ export default function RootLayout({
 		</ClerkProvider>
 	);
 }
+
+const clerkAppearance = {
+	baseTheme: dark,
+	elements: {
+		card: "bg-accent/25",
+		socialButtonsBlockButton:
+			"!bg-background-dialog hover:!bg-foreground hover:text-background",
+		input: "bg-background-dialog",
+		button: "rounded-xl",
+		formButtonPrimary: "px-2 py-2",
+		buttonArrowIcon: "hidden",
+	},
+};

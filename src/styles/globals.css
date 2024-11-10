@@ -25,7 +25,7 @@
 		--ring: 0 0% 83.1%;
 
 		--radius: 0.5rem;
-		
+
 		--sidebar-background: 240 5.9% 10%;
 		--sidebar-foreground: 240 4.8% 95.9%;
 		--sidebar-primary: 224.3 76.3% 48%;
@@ -110,4 +110,12 @@
 
 .cl-socialButtonsBlockButton:hover {
 	background-color: hsl(var(--accent));
+}
+
+.cl-internal-w4f4gh {
+	background: none;
+}
+
+.cl-internal-1dauvpw {
+	display: none;
 }

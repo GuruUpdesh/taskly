@@ -7,7 +7,6 @@ import { DotsVerticalIcon } from "@radix-ui/react-icons";
 
 import { Button } from "~/components/ui/button";
 import UserProfilePicture from "~/components/UserProfilePicture";
-import { cn } from "~/lib/utils";
 
 import UserMenu from "./UserMenu";
 import { Skeleton } from "../ui/skeleton";
@@ -20,13 +19,13 @@ const UserButton = ({ size = "default" }: Props) => {
 	const { user } = useUser();
 
 	if (!user) {
-		return <Skeleton className="h-[52px] rounded-full" />;
+		return <Skeleton className="h-[52px] rounded-xl" />;
 	}
 
 	if (size === "large") {
 		return (
 			<UserMenu>
-				<div className="z-10 flex min-w-full items-center justify-between rounded-full bg-foreground/10 p-2">
+				<div className="z-10 flex min-w-full items-center justify-between rounded-xl bg-foreground/10 p-2">
 					<div className="flex min-w-0 flex-grow items-center gap-2">
 						<UserProfilePicture src={user.imageUrl} size={36} />
 						<div className="truncate">
@@ -52,13 +51,7 @@ const UserButton = ({ size = "default" }: Props) => {
 
 	return (
 		<UserMenu>
-			<Button
-				variant="ghost"
-				size="icon"
-				className={cn("min-w-[30px]", {
-					"rounded-full": size === "icon",
-				})}
-			>
+			<Button variant="ghost" size="icon" className="min-w-[30px]">
 				<UserProfilePicture src={user.imageUrl} size={30} />
 			</Button>
 		</UserMenu>

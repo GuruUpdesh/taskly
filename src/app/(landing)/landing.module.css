@@ -1,0 +1,22 @@
+.page {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.section {
+    position: relative;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-items: center;
+
+	max-width: 1400px;
+	width: 100%;
+    margin-bottom: 8rem;
+}
+
+.radial {
+	background: radial-gradient(hsl(var(--background)), transparent 75%);
+}

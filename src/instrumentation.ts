@@ -57,7 +57,7 @@ export async function register() {
 		untrackedUsers.push(...usersData);
 		console.log(`Inserting ${usersData.length} users into the database`);
 	}
-	
+
 	await db
 		.insert(users)
 		.values(untrackedUsers)
