@@ -12,10 +12,10 @@ const Footer = () => {
 	return (
 		<footer
 			className={cn(
-				"flex justify-center rounded-xl border-t bg-gradient-to-t from-background to-accent/10 py-8 backdrop-blur-xl",
+				"flex w-full max-w-[1400px] justify-center rounded-xl border-t bg-gradient-to-t from-background to-accent/10 px-8 py-8 backdrop-blur-xl md:px-4 lg:px-0",
 			)}
 		>
-			<div className="w-[1400px] max-w-[1400px] px-4">
+			<div className="w-full px-4">
 				<section className="grid grid-rows-2 lg:grid-cols-5 lg:gap-8">
 					<div className="col-span-2">
 						<Logo />
@@ -86,7 +86,7 @@ const Footer = () => {
 						</div>
 					</div>
 				</section>
-				<div className="flex items-center justify-between">
+				<div className="mt-8 flex items-center justify-between lg:mt-0">
 					<p className={cn(typography.paragraph.p_muted, "text-sm")}>
 						Copyright © 2024 Taskly
 					</p>

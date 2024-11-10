@@ -44,7 +44,9 @@ const poppins = Poppins({
 
 export default function HomePage() {
 	return (
-		<div className={cn(poppins.className, styles.page)}>
+		<div
+			className={cn(poppins.className, styles.page, "overflow-x-hidden")}
+		>
 			<section className={cn(styles.section, "mt-36")}>
 				<h1 className="-translate-y-1 text-5xl font-medium sm:text-6xl lg:text-7xl">
 					Taskly Simplifies
@@ -79,7 +81,7 @@ export default function HomePage() {
 					controls={false}
 					muted
 					loop
-					className="absolute opacity-25 blur-xl"
+					className="absolute opacity-25 blur-lg md:blur-xl"
 					width="100%"
 					height="100%"
 				/>
@@ -91,7 +93,9 @@ export default function HomePage() {
 					)}
 				/>
 			</div>
-			<section className={cn(styles.section, "mt-32")}>
+			<section
+				className={cn(styles.section, "mt-32 px-8 md:px-4 lg:px-0")}
+			>
 				<div className="relative min-h-[780px] w-full rounded-xl border">
 					<Image
 						src="/static/marketing/taskboard.webp"
@@ -108,7 +112,7 @@ export default function HomePage() {
 						quality={10}
 					/>
 				</div>
-				<div className="sticky bottom-0 z-10 flex w-[1600px] max-w-[100vw] justify-center pb-4 pt-12">
+				<div className="sticky bottom-0 z-10 flex w-[1600px] max-w-[calc(100vw-2rem)] justify-center pb-4 pt-12 md:max-w-[calc(100vw-1rem)] lg:max-w-[100vw]">
 					<div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent to-background to-[50%]" />
 					<div className="flex w-full max-w-[1400px] justify-between px-8">
 						<div className="z-10 max-w-[250px]">
@@ -133,11 +137,11 @@ export default function HomePage() {
 					</div>
 				</div>
 			</section>
-			<section className={styles.section}>
+			<section className={cn(styles.section, "px-8 md:px-4 lg:px-0")}>
 				<h3 className="mb-8 w-full justify-self-start text-4xl text-foreground">
 					Onboard Quickly
 				</h3>
-				<div className="grid w-full max-w-[1400px] grid-cols-2 gap-4 md:max-h-[667px]">
+				<div className="grid w-full max-w-[1400px] grid-cols-1 gap-4 md:max-h-[667px] md:grid-cols-2">
 					<Panel
 						title="60 Second Setup"
 						description="Get your whole team on Taskly with ease."
@@ -173,16 +177,16 @@ export default function HomePage() {
 					</Panel>
 				</div>
 			</section>
-			<section className={styles.section}>
+			<section className={cn(styles.section, "px-8 md:px-4 lg:px-0")}>
 				<h3 className="mb-8 w-full text-4xl text-foreground">
 					A Simple Solution with <br /> Powerful Features
 				</h3>
-				<div className="grid w-full max-w-[1400px] grid-cols-4 gap-4 pb-8 md:max-h-[667px]">
+				<div className="grid w-full max-w-[1400px] grid-cols-1 gap-4 pb-8 sm:grid-cols-2 lg:max-h-[667px] lg:grid-cols-4">
 					<Panel
 						title="Global Search"
 						description="Find what you are looking for."
 						icon={<Search size={16} />}
-						className=""
+						className="sm:order-1"
 					>
 						<GlobalSearch />
 					</Panel>
@@ -190,7 +194,7 @@ export default function HomePage() {
 						title="Text Editor"
 						description="Use a notion like markdown editor to describe tasks."
 						icon={<Text size={16} />}
-						className="col-span-2"
+						className="col-span-2 sm:order-3 lg:order-2"
 						color="red"
 					>
 						<ExampleTextEditor />
@@ -199,7 +203,7 @@ export default function HomePage() {
 						title="GitHub Integration"
 						description="Automatically sync your tasks."
 						icon={<GitHubLogoIcon />}
-						className=""
+						className="sm:order-2 lg:order-3"
 						color="yellow"
 					>
 						<div className="flex-1 pr-4">
@@ -251,9 +255,9 @@ export default function HomePage() {
 					</Panel>
 				</div>
 			</section>
-			<section className={styles.section}>
-				<div className="flex w-full items-center justify-between rounded-3xl p-8">
-					<div>
+			<section className={cn(styles.section, "px-8 md:px-4 lg:px-0")}>
+				<div className="flex w-full flex-col justify-between rounded-3xl py-8 md:flex-row md:items-center">
+					<div className="mb-8 md:mb-0">
 						<h2 className="mb-8 w-full text-5xl text-foreground">
 							Work Smarter &<br /> Get more done.
 						</h2>
