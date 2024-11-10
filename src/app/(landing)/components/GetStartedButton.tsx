@@ -20,7 +20,7 @@ const GetStartedButton = () => {
 				</div>
 			</div>
 			<Button
-				className="rounded-xl border bg-background-dialog font-bold text-foreground hover:text-background-dialog"
+				className="rounded-xl border bg-background-dialog font-bold text-foreground hover:border-foreground hover:text-background-dialog"
 				asChild
 			>
 				<Link href="/sign-up" prefetch>

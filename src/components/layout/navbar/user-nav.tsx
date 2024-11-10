@@ -35,6 +35,15 @@ const UserNav = () => {
 							Login
 						</Link>
 					</Button>
+					<Button
+						size="sm"
+						className="whitespace-nowrap rounded-xl shadow-none"
+						asChild
+					>
+						<Link href="/sign-up" prefetch>
+							Sign Up
+						</Link>
+					</Button>
 				</div>
 			</SignedOut>
 		</div>

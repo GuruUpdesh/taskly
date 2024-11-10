@@ -36,7 +36,7 @@ const ExampleTextEditor = () => {
 		content: content,
 	});
 	return (
-		<div className="max-h-[375px] flex-1 overflow-scroll bg-red-800/25 p-4">
+		<div className="max-h-[375px] flex-1 overflow-scroll bg-red-800/35 p-4">
 			{editor && <BubbleMenu editor={editor} />}
 			<EditorContent editor={editor} />
 		</div>

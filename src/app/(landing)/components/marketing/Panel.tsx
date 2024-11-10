@@ -24,15 +24,15 @@ const panelVariants = cva(
 );
 
 const iconVariants = cva(
-	"flex aspect-square w-min items-center gap-2 rounded-lg p-2",
+	"flex aspect-square w-min items-center gap-2 rounded-md p-2",
 	{
 		variants: {
 			color: {
-				indigo: "bg-indigo-900 text-indigo-400",
-				red: "bg-red-900 text-red-400",
+				indigo: "bg-indigo-800/35 text-indigo-400",
+				red: "bg-red-800/35 text-red-300",
 				green: "bg-green-900 text-green-400",
 				blue: "bg-blue-900 text-blue-400",
-				yellow: "bg-yellow-900 text-yellow-400",
+				yellow: "bg-yellow-800/35 text-amber-300/75",
 			},
 		},
 		defaultVariants: {

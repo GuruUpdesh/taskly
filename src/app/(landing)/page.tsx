@@ -44,9 +44,7 @@ const poppins = Poppins({
 
 export default function HomePage() {
 	return (
-		<div
-			className={cn(poppins.className, styles.page, "overflow-x-hidden")}
-		>
+		<div className={cn(poppins.className, styles.page)}>
 			<section className={cn(styles.section, "mt-36")}>
 				<h1 className="-translate-y-1 text-5xl font-medium sm:text-6xl lg:text-7xl">
 					Taskly Simplifies
@@ -58,7 +56,7 @@ export default function HomePage() {
 						"Task Creation",
 						"Integrations",
 					]}
-					className="bg-gradient-to-r bg-clip-text py-3 text-3xl font-medium leading-10 tracking-tighter text-transparent sm:text-6xl lg:text-7xl"
+					className="bg-gradient-to-r bg-clip-text py-3 text-5xl font-medium leading-10 tracking-tighter text-transparent sm:text-6xl lg:text-7xl"
 					styles={[
 						"to-indigo-300 from-indigo-400",
 						"to-red-300 from-red-400",
@@ -94,14 +92,17 @@ export default function HomePage() {
 				/>
 			</div>
 			<section
-				className={cn(styles.section, "mt-32 px-8 md:px-4 lg:px-0")}
+				className={cn(
+					styles.section,
+					"mt-32 overflow-x-hidden px-8 md:overflow-x-visible md:px-4 lg:px-0",
+				)}
 			>
-				<div className="relative min-h-[780px] w-full rounded-xl border">
+				<div className="relative aspect-video max-h-[780px] w-full rounded-xl border">
 					<Image
 						src="/static/marketing/taskboard.webp"
 						fill
 						alt="Taskly Application Example, task board project management backlog for agile tool."
-						className="w-full rounded-2xl"
+						className="aspect-video w-full rounded-2xl"
 						priority
 					/>
 					<Image
@@ -112,24 +113,28 @@ export default function HomePage() {
 						quality={10}
 					/>
 				</div>
-				<div className="sticky bottom-0 z-10 flex w-[1600px] max-w-[calc(100vw-2rem)] justify-center pb-4 pt-12 md:max-w-[calc(100vw-1rem)] lg:max-w-[100vw]">
+				<div className="sticky bottom-0 z-10 flex w-[1600px] max-w-[calc(100vw-2rem)] justify-center pb-4 pt-12 md:max-w-[calc(100vw-1rem)] lg:max-w-[100vw-4px]">
 					<div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent to-background to-[50%]" />
-					<div className="flex w-full max-w-[1400px] justify-between px-8">
-						<div className="z-10 max-w-[250px]">
-							<h4 className="text-lg font-bold ">
+					<div className="flex w-full max-w-[1400px] flex-col justify-between gap-4 px-8 md:flex-row">
+						<div className="z-10 md:max-w-[250px]">
+							<h4 className="font-bold md:text-lg ">
 								Fast Performance
 							</h4>
-							<p>Collaborate and work in real time.</p>
+							<p className="text-sm md:text-base">
+								Collaborate and work in real time.
+							</p>
 						</div>
-						<div className="z-10 max-w-[250px]">
-							<h4 className="text-lg font-bold">AI Tools</h4>
-							<p>Streamline tasks and boost productivity.</p>
+						<div className="z-10 md:max-w-[250px]">
+							<h4 className="font-bold md:text-lg">AI Tools</h4>
+							<p className="text-sm md:text-base">
+								Streamline tasks and boost productivity.
+							</p>
 						</div>
-						<div className="z-10 max-w-[250px]">
-							<h4 className="text-lg font-bold ">
+						<div className="z-10 md:max-w-[250px]">
+							<h4 className="font-bold md:text-lg ">
 								Notifications
 							</h4>
-							<p>
+							<p className="text-sm md:text-base">
 								Catch up on what you missed and stay in the
 								know.
 							</p>
@@ -181,12 +186,12 @@ export default function HomePage() {
 				<h3 className="mb-8 w-full text-4xl text-foreground">
 					A Simple Solution with <br /> Powerful Features
 				</h3>
-				<div className="grid w-full max-w-[1400px] grid-cols-1 gap-4 pb-8 sm:grid-cols-2 lg:max-h-[667px] lg:grid-cols-4">
+				<div className="grid w-full max-w-[1400px] grid-cols-1 gap-0 pb-8 sm:grid-cols-2 md:gap-4 lg:max-h-[667px] lg:grid-cols-4">
 					<Panel
 						title="Global Search"
 						description="Find what you are looking for."
 						icon={<Search size={16} />}
-						className="sm:order-1"
+						className="mb-4 sm:order-1 md:mb-0"
 					>
 						<GlobalSearch />
 					</Panel>
@@ -194,7 +199,7 @@ export default function HomePage() {
 						title="Text Editor"
 						description="Use a notion like markdown editor to describe tasks."
 						icon={<Text size={16} />}
-						className="col-span-2 sm:order-3 lg:order-2"
+						className="col-span-2 mb-4 sm:order-3 md:mb-0 lg:order-2"
 						color="red"
 					>
 						<ExampleTextEditor />
@@ -207,7 +212,7 @@ export default function HomePage() {
 						color="yellow"
 					>
 						<div className="flex-1 pr-4">
-							<div className="h-full overflow-hidden rounded-tr-lg bg-yellow-800/25">
+							<div className="h-full overflow-hidden rounded-tr-lg bg-yellow-800/35">
 								<div className="relative flex h-full flex-col p-4">
 									<p className="mb-1 text-sm">
 										Pull Requests

@@ -66,7 +66,7 @@ const commands: Cmd[] = [
 const GlobalSearch = () => {
 	return (
 		<div className="pl-4">
-			<div className="overflow-hidden rounded-tl-lg bg-indigo-800/25">
+			<div className="overflow-hidden rounded-tl-lg bg-indigo-800/35">
 				<div className="z-10 mix-blend-screen">
 					<Commands commands={commands} />
 				</div>
