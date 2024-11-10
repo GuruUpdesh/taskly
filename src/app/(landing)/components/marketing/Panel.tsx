@@ -6,7 +6,7 @@ import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 
 const panelVariants = cva(
-	"rounded-lg group z-10 border overflow-hidden backdrop-blur-xl transition-colors",
+	"rounded-lg group z-10 overflow-hidden transition-colors",
 	{
 		variants: {
 			color: {

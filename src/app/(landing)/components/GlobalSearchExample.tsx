@@ -28,7 +28,6 @@ const commands: Cmd[] = [
 			});
 		},
 		shortcut: [],
-		group: "Task Commands",
 	},
 	{
 		id: 0 + "copy-link",
@@ -41,7 +40,6 @@ const commands: Cmd[] = [
 			});
 		},
 		shortcut: [],
-		group: "Task Commands",
 	},
 	{
 		id: 0 + "delete",
@@ -54,7 +52,6 @@ const commands: Cmd[] = [
 			});
 		},
 		shortcut: [],
-		group: "Task Commands",
 	},
 	{
 		id: 0 + "smart-properties",
@@ -64,14 +61,13 @@ const commands: Cmd[] = [
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		action: () => {},
 		shortcut: [],
-		group: "Task Commands",
 	},
 ];
 const GlobalSearch = () => {
 	return (
 		<div className="pl-4">
 			<div className="overflow-hidden rounded-tl-lg bg-indigo-800/25">
-				<div className="mix-blend-overlay">
+				<div className="z-10 mix-blend-screen">
 					<Commands commands={commands} />
 				</div>
 			</div>

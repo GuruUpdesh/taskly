@@ -99,7 +99,7 @@ const AiAutocompletePropertiesPanel = () => {
 			</div>
 			<Card
 				className={cn(
-					"group/card autocomplete-properties relative z-10 w-[600px] overflow-hidden border-foreground/10 bg-background-dialog p-2 shadow-lg",
+					"group/card autocomplete-properties relative z-10 w-[600px] overflow-hidden border-foreground/10 bg-background-dialog p-2 shadow-none",
 					{ "autocomplete-properties-active": inView },
 				)}
 				style={{ animationDelay: "0.1s" }}
@@ -107,7 +107,7 @@ const AiAutocompletePropertiesPanel = () => {
 				<CardHeader className="mb-4 p-0">
 					<div className="flex items-center justify-between">
 						<CardTitle className="text-md flex items-center gap-2">
-							<span className="rounded bg-foreground/10 px-2">
+							<span className="rounded bg-foreground/10 px-2 text-sm font-normal">
 								Smart Properties
 							</span>
 						</CardTitle>
@@ -120,7 +120,7 @@ const AiAutocompletePropertiesPanel = () => {
 						className="pointer-events-none h-[80px] resize-none border-none !bg-transparent p-0"
 						readOnly
 						value={
-							"simply describe it and the properties can will autofill!"
+							"simply describe it and the properties will autofill!"
 						}
 					/>
 					<div className="flex items-center gap-2 overflow-visible ">

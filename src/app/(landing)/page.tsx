@@ -91,7 +91,7 @@ export default function HomePage() {
 					)}
 				/>
 			</div>
-			<section className={cn(styles.section, "mt-36")}>
+			<section className={cn(styles.section, "mt-32")}>
 				<div className="relative min-h-[780px] w-full rounded-xl border">
 					<Image
 						src="/static/marketing/taskboard.webp"
@@ -238,7 +238,7 @@ export default function HomePage() {
 												<div className="rounded-full border border-foreground/5 bg-foreground/[0.02] p-12">
 													<div className="rounded-full border border-foreground/[0.02] bg-foreground/[0.02] p-12">
 														<div className="w-fit rounded-full border border-foreground/[0.02] bg-foreground/5 p-12">
-															<GitHubLogoIcon className="h-10 w-10 opacity-75" />
+															<GitHubLogoIcon className="h-10 w-10" />
 														</div>
 													</div>
 												</div>
@@ -252,21 +252,30 @@ export default function HomePage() {
 				</div>
 			</section>
 			<section className={styles.section}>
-				<div className="flex w-full items-center justify-between rounded-3xl bg-foreground/5 p-8">
+				<div className="flex w-full items-center justify-between rounded-3xl p-8">
 					<div>
-						<h2 className="mb-8 w-full text-6xl text-foreground">
+						<h2 className="mb-8 w-full text-5xl text-foreground">
 							Work Smarter &<br /> Get more done.
 						</h2>
-						<p className="mb-8">
+						<p className="mb-8 text-muted-foreground">
+							<span className="text-foreground">
+								Free & Open Source.
+							</span>{" "}
 							Perfect for small teams and startups.
 						</p>
-						<Button>Sign Up</Button>
-						<Button variant="ghost">Create a Project</Button>
+						<Button asChild>
+							<Link href="/sign-up" prefetch>
+								Sign Up
+							</Link>
+						</Button>
+						<Button variant="ghost" asChild>
+							<Link href="/create-project" prefetch>
+								Create a Project
+							</Link>
+						</Button>
 					</div>
 					<AiAutocompletePropertiesPanel />
 				</div>
-
-				<p className="mt-8 text-muted-foreground">Free & Open Source</p>
 			</section>
 			<Footer />
 		</div>
