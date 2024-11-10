@@ -58,10 +58,10 @@ export default function HomePage() {
 					]}
 					className="bg-gradient-to-r bg-clip-text py-3 text-3xl font-medium leading-10 tracking-tighter text-transparent sm:text-6xl lg:text-7xl"
 					styles={[
-						"from-indigo-300 to-indigo-700",
-						"from-red-300 to-red-700",
-						"from-yellow-300 to-yellow-700",
-						"from-green-300 to-green-700",
+						"to-indigo-300 from-indigo-400",
+						"to-red-300 from-red-400",
+						"to-yellow-300 from-yellow-400",
+						"to-green-300 from-green-400",
 					]}
 				/>
 				<p className="sm:text-md mb-12 mt-2 text-center text-sm leading-7 text-muted-foreground lg:text-lg">
@@ -92,28 +92,44 @@ export default function HomePage() {
 				/>
 			</div>
 			<section className={cn(styles.section, "mt-36")}>
-				<div className="relative h-[780px] w-full overflow-hidden rounded-2xl border">
+				<div className="relative min-h-[780px] w-full rounded-xl border">
 					<Image
 						src="/static/marketing/taskboard.webp"
 						fill
 						alt="Taskly Application Example, task board project management backlog for agile tool."
-						className="w-full"
+						className="w-full rounded-2xl"
 						priority
 					/>
+					<Image
+						src="/static/btn.webp"
+						fill
+						alt=""
+						className="-z-10 opacity-10 blur-2xl"
+						quality={10}
+					/>
 				</div>
-				<div className="sticky bottom-0 z-10 flex w-full justify-between px-8 pb-4 pt-12">
+				<div className="sticky bottom-0 z-10 flex w-[1600px] max-w-[100vw] justify-center pb-4 pt-12">
 					<div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent to-background to-[50%]" />
-					<div className="z-10 max-w-[250px]">
-						<h4 className="text-lg font-bold ">Fast Performance</h4>
-						<p>Collaborate and work in real time.</p>
-					</div>
-					<div className="z-10 max-w-[250px]">
-						<h4 className="text-lg font-bold">AI Tools</h4>
-						<p>Streamline tasks and boost productivity.</p>
-					</div>
-					<div className="z-10 max-w-[250px]">
-						<h4 className="text-lg font-bold ">Notifications</h4>
-						<p>Catch up on what you missed and stay in the know.</p>
+					<div className="flex w-full max-w-[1400px] justify-between px-8">
+						<div className="z-10 max-w-[250px]">
+							<h4 className="text-lg font-bold ">
+								Fast Performance
+							</h4>
+							<p>Collaborate and work in real time.</p>
+						</div>
+						<div className="z-10 max-w-[250px]">
+							<h4 className="text-lg font-bold">AI Tools</h4>
+							<p>Streamline tasks and boost productivity.</p>
+						</div>
+						<div className="z-10 max-w-[250px]">
+							<h4 className="text-lg font-bold ">
+								Notifications
+							</h4>
+							<p>
+								Catch up on what you missed and stay in the
+								know.
+							</p>
+						</div>
 					</div>
 				</div>
 			</section>

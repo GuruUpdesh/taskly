@@ -23,7 +23,7 @@ const GetStartedButton = () => {
 				className="rounded-xl border bg-background-dialog font-bold text-foreground hover:text-background-dialog"
 				asChild
 			>
-				<Link href="/app">
+				<Link href="/sign-up" prefetch>
 					Get Started <ArrowUpRightIcon className="ml-4 h-5 w-5" />
 				</Link>
 			</Button>

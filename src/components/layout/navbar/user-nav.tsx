@@ -12,7 +12,7 @@ const UserNav = () => {
 	return (
 		<div className="flex items-center gap-2">
 			<SignedIn>
-				<Link href="/app">
+				<Link href="/app" prefetch>
 					<Button
 						variant="outline"
 						size="sm"
@@ -31,7 +31,9 @@ const UserNav = () => {
 						className="whitespace-nowrap rounded-xl bg-background-dialog shadow-none"
 						asChild
 					>
-						<Link href="/sign-in">Login</Link>
+						<Link href="/sign-in" prefetch>
+							Login
+						</Link>
 					</Button>
 				</div>
 			</SignedOut>
