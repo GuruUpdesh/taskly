@@ -9,18 +9,18 @@ import { Button } from "~/components/ui/button";
 const GetStartedButton = () => {
 	return (
 		<div className="relative">
-			<div className="absolute left-[-1px] top-[-1px] h-[calc(100%+2px)] w-[calc(100%+2px)] overflow-clip rounded-xl blur-md">
+			<div className="absolute left-[-1px] top-[-1px] -z-10 h-[calc(100%+2px)] w-[calc(100%+2px)] overflow-clip rounded-xl bg-background blur-md">
 				<div className="absolute left-0 top-0 h-[150%] w-full">
 					<Image
-						className="absolute h-full w-full"
-						src="/static/auth-slow.gif"
+						className="absolute h-full w-full animate-spin-slow"
+						src="/static/btn.webp"
 						alt=""
 						fill
 					/>
 				</div>
 			</div>
 			<Button
-				className="group relative rounded-xl border bg-background-dialog p-0 px-2 font-bold text-foreground hover:text-background-dialog"
+				className="rounded-xl border bg-background-dialog font-bold text-foreground hover:text-background-dialog"
 				asChild
 			>
 				<Link href="/app">

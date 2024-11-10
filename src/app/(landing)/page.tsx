@@ -68,17 +68,20 @@ export default function HomePage() {
 					<span className="text-foreground">
 						A free project management tool
 					</span>{" "}
-					built from small teams.
+					built for small teams.
 				</p>
 				<GetStartedButton />
 			</section>
 			<div className="absolute top-0 -z-20 h-[900px] w-full overflow-hidden fade-in-5">
-				<Image
-					className="absolute h-full w-full opacity-25 blur-xl"
-					src="/static/auth-slow.gif"
-					alt=""
-					fill
-					unoptimized
+				<video
+					src="/static/background-lights.webm"
+					autoPlay
+					controls={false}
+					muted
+					loop
+					className="absolute opacity-25 blur-xl"
+					width="100%"
+					height="100%"
 				/>
 				<div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent from-[1%] to-background to-[80%]" />
 				<div
