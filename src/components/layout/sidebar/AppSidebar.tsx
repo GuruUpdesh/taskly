@@ -54,7 +54,7 @@ const AppSidebar = ({ projectId }: SidebarProps) => {
 						<div className="hidden @sidebar:block">
 							<CreateTask projectId={projectId}>
 								<Button
-									className="aspect-square h-[36px] w-[36px] rounded-xl rounded-l-md bg-foreground/10"
+									className="aspect-square h-[36px] w-[36px] rounded-md bg-foreground/10"
 									variant="outline"
 									size="iconSm"
 								>

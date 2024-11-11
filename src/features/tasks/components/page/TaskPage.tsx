@@ -193,7 +193,7 @@ const TaskPage = ({
 											<Button
 												size="sm"
 												variant="outline"
-												className="flex items-center gap-2 bg-transparent"
+												className="flex items-center gap-2 rounded-xl bg-background-dialog"
 											>
 												<ArrowLeftIcon />
 												Tasks

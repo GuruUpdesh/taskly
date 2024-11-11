@@ -126,7 +126,7 @@ const UserComment = ({
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent
-									className="w-56 bg-background/75 p-2 backdrop-blur-lg"
+									className="w-56 p-2"
 									onCloseAutoFocus={(e) => e.preventDefault()}
 									align="start"
 								>

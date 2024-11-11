@@ -43,7 +43,7 @@ const Filters = ({ username }: Props) => {
 			variants={variants}
 			transition={{ duration: 0.2, ease: [0.075, 0.82, 0.165, 1] }}
 			className={cn(
-				"sticky top-[57px] z-20 border-b bg-background/75 backdrop-blur-xl",
+				"sticky top-[57px] z-10 border-b bg-background/75 backdrop-blur-xl",
 				{
 					"pointer-events-none": !isFiltersOpen,
 				},

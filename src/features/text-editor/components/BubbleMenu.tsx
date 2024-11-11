@@ -120,7 +120,7 @@ const BubbleMenu = ({ editor }: Props) => {
 
 	return (
 		<TipTapBubbleMenu
-			className="bubble-menu flex rounded-sm border bg-background"
+			className="bubble-menu flex rounded-sm border bg-accent/50 backdrop-blur-lg"
 			tippyOptions={{ duration: 35 }}
 			editor={editor}
 		>

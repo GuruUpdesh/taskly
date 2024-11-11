@@ -14,7 +14,6 @@ import {
 	ContextMenu,
 	ContextMenuContent,
 	ContextMenuItem,
-	ContextMenuShortcut,
 	ContextMenuTrigger,
 } from "~/components/ui/context-menu";
 import {
@@ -226,7 +225,7 @@ const NotificationItem = ({ notification, projectId }: Props) => {
 					</Link>
 				</motion.div>
 			</ContextMenuTrigger>
-			<ContextMenuContent className="bg-accent/50 backdrop-blur-lg">
+			<ContextMenuContent>
 				{actions.map((action) => {
 					if (!action) return null;
 
@@ -238,9 +237,6 @@ const NotificationItem = ({ notification, projectId }: Props) => {
 						>
 							{action.icon}
 							{action.name}
-							<ContextMenuShortcut>
-								{action.shortcut?.join(" + ")}
-							</ContextMenuShortcut>
 						</ContextMenuItem>
 					);
 				})}
