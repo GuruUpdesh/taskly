@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 
 import { DialogTrigger } from "@radix-ui/react-dialog";
-import { HoverCardContent } from "@radix-ui/react-hover-card";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 import type { UseMutationResult } from "@tanstack/react-query";
 import {
 	ClipboardCopy,
@@ -37,8 +35,6 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "~/components/ui/dialog";
-import { HoverCard, HoverCardTrigger } from "~/components/ui/hover-card";
-import { Popover } from "~/components/ui/popover";
 import { aiAction } from "~/features/ai/actions/ai-action";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/features/ai/utils/aiLimit";
 import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
@@ -74,7 +70,6 @@ const TaskDropDownMenu = ({
 		useShallow((state) => [state.hoveredTaskId, state.setHoveredTaskId]),
 	);
 	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
-	const contextMenuRef = useRef<HTMLDivElement>(null);
 	const smartPropertiesDialogRef = useRef<HTMLButtonElement>(null);
 	const [assignees, sprints] = useRealtimeStore(
 		useShallow((state) => [state.assignees, state.sprints]),
@@ -181,12 +176,11 @@ const TaskDropDownMenu = ({
 	}
 
 	return (
-		<ContextMenu modal>
+		<ContextMenu>
 			<ContextMenuTrigger
 				asChild
 				onMouseEnter={() => setHoveredTaskId(task.id)}
 				className="group/context"
-				ref={contextMenuRef}
 			>
 				{children}
 			</ContextMenuTrigger>
