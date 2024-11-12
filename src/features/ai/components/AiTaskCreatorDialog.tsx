@@ -40,7 +40,7 @@ const formSchema = z.object({
 	description: z.string().max(1000),
 });
 
-const AiDialog = ({ projectId }: Props) => {
+const AiTaskCreatorDialog = ({ projectId }: Props) => {
 	const [open, setOpen] = useState(false);
 	const project = useRealtimeStore((state) => state.project);
 	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
@@ -151,8 +151,10 @@ const AiDialog = ({ projectId }: Props) => {
 							size="icon"
 							className="h-[36px] rounded-xl bg-background-dialog"
 						>
-							<Sparkle className="h-4 w-4" />
-							<span className="sr-only">Open Task Creator</span>
+							<Sparkle className="h-5 w-5" />
+							<span className="sr-only">
+								Open AI Task Creation
+							</span>
 						</Button>
 					</DialogTrigger>
 				</SimpleTooltip>
@@ -160,7 +162,7 @@ const AiDialog = ({ projectId }: Props) => {
 					<DialogHeader>
 						<DialogTitle className="flex items-center gap-2">
 							<Sparkle className="h-4 w-4" />
-							AI Task Creator
+							AI Task Creation
 						</DialogTitle>
 						{aiUsageCount >= AIDAILYLIMIT && (
 							<Message
@@ -182,7 +184,7 @@ const AiDialog = ({ projectId }: Props) => {
 									render={({ field }) => (
 										<FormItem>
 											<Textarea
-												placeholder="Describe the task/s you would like to create..."
+												placeholder="Describe the task or tasks you would like to create..."
 												className="h-[200px] max-h-[180px] bg-transparent"
 												{...field}
 											/>
@@ -239,4 +241,4 @@ const AiDialog = ({ projectId }: Props) => {
 	);
 };
 
-export default AiDialog;
+export default AiTaskCreatorDialog;

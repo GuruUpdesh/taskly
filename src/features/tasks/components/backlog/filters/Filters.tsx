@@ -14,6 +14,7 @@ import { useAppStore } from "~/store/app";
 
 import FilterChip from "./FilterChip";
 import FilterMenu from "./FilterMenu";
+import SimpleTooltip from "~/components/SimpleTooltip";
 
 const filterContainer =
 	"rounded-full border bg-accent/25 p-1 transition-all hover:bg-accent h-[30px]";
@@ -57,17 +58,20 @@ const Filters = ({ username }: Props) => {
 				<FilterMenu>
 					{(menuOpen) => (
 						<div>
-							<button
-								className={cn(
-									filterContainer,
-									"flex aspect-square items-center justify-center",
-									{
-										"bg-accent text-white": menuOpen,
-									},
-								)}
-							>
-								<Plus className="h-4 w-4" />
-							</button>
+							<SimpleTooltip label="Add Filter" side="right">
+								<button
+									className={cn(
+										filterContainer,
+										"flex aspect-square items-center justify-center",
+										{
+											"bg-accent text-white": menuOpen,
+										},
+									)}
+								>
+									<Plus className="h-4 w-4" />
+									<span className="sr-only">Add Filter</span>
+								</button>
+							</SimpleTooltip>
 						</div>
 					)}
 				</FilterMenu>

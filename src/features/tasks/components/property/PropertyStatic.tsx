@@ -1,6 +1,5 @@
 import React from "react";
 
-import markdownToTxt from "markdown-to-txt";
 import type { UseFormReturn } from "react-hook-form";
 
 import { type TaskFormType } from "~/features/tasks/components/CreateTask";
@@ -31,18 +30,11 @@ const PropertyStatic = ({
 			)}
 			<p
 				className={cn(
-					"flex-shrink overflow-hidden text-ellipsis whitespace-nowrap px-1 ",
-					{
-						"min-w-[2ch] opacity-80": property === "description",
-						"min-w-fit font-medium": property === "title",
-						"min-w-0": property === "title",
-					},
+					"min-w-0 flex-shrink overflow-hidden text-ellipsis whitespace-nowrap px-1 font-medium",
 					className,
 				)}
 			>
-				{property === "description"
-					? markdownToTxt(String(form.watch(property)))
-					: String(form.watch(property))}
+				{String(form.watch(property))}
 			</p>
 		</>
 	);
