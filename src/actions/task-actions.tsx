@@ -113,15 +113,21 @@ export async function getAllTasks() {
 
 export async function getTasksFromProject(projectId: number) {
 	try {
-		const allTasks: Task[] = await db
-			.select()
-			.from(tasks)
-			.where(eq(tasks.projectId, projectId));
+		const allTasks = await db.query.tasks.findMany({
+			where: (tasks) => eq(tasks.projectId, projectId),
+			with: {
+				comments: {},
+			},
+		});
 
-		const statefulTasks: StatefulTask[] = allTasks.map((task) => ({
-			...task,
-			options: {},
-		}));
+		const statefulTasks: StatefulTask[] = allTasks.map((task) => {
+			const { comments, ...taskWithoutComments } = task;
+			return {
+				...taskWithoutComments,
+				options: {},
+				comments: comments.length,
+			};
+		});
 
 		return statefulTasks;
 	} catch (error) {

@@ -3,20 +3,19 @@
 import React, { useEffect, useRef } from "react";
 
 import { useUser } from "@clerk/clerk-react";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { formatDistanceToNow } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
 import { Trash, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 
-import { Button } from "~/components/ui/button";
+import SimpleTooltip from "~/components/SimpleTooltip";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
+	ContextMenu,
+	ContextMenuContent,
+	ContextMenuItem,
+	ContextMenuTrigger,
+} from "~/components/ui/context-menu";
 import UserProfilePicture from "~/components/UserProfilePicture";
 import { deleteComment } from "~/features/comments/actions/delete-comment";
 import { cn } from "~/lib/utils";
@@ -31,16 +30,18 @@ export interface CommentWithUser extends Comment {
 
 type Props = {
 	comment: CommentWithUser;
-	isLastComment: boolean;
 	optimisticDeleteComment: (commentId: number) => void;
 	taskId: number;
+	isLastComment: boolean;
+	isLastInGroup: boolean;
 };
 
 const UserComment = ({
 	comment,
-	isLastComment,
 	optimisticDeleteComment,
 	taskId,
+	isLastComment,
+	isLastInGroup,
 }: Props) => {
 	const { user } = useUser();
 	const commentRef = useRef<HTMLDivElement | null>(null);
@@ -93,58 +94,82 @@ const UserComment = ({
 			animate={{ height: "auto", opacity: 1 }}
 		>
 			<div
-				className={cn(
-					"relative mb-2 overflow-hidden text-wrap rounded-lg border bg-background/50 p-4 py-2",
-					{
-						"mb-0": isLastComment,
-					},
-				)}
-				ref={commentRef}
+				className={cn("flex items-end gap-2", {
+					"flex-row-reverse": comment.userId === user?.id,
+					"mb-0": isLastComment || !isLastInGroup,
+					"mb-8": isLastInGroup,
+				})}
 			>
-				<div className="flex items-center justify-between gap-2 border-b pb-1 text-sm">
-					<div className="flex items-center gap-2">
-						<UserProfilePicture
-							src={comment.user.profilePicture}
-							size={25}
-						/>
-						<p className="pb-1 font-bold">
-							{comment.user.username}
-						</p>
-					</div>
-					<div className="flex items-center gap-2">
-						<p
-							className="whitespace-nowrap"
-							suppressHydrationWarning
-						>
-							{formatDistanceToNow(comment.insertedDate)}
-						</p>
-						{comment.userId === user?.id ? (
-							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
-									<Button variant="ghost" size="icon">
-										<DotsHorizontalIcon />
-									</Button>
-								</DropdownMenuTrigger>
-								<DropdownMenuContent
-									className="w-56 p-2"
-									onCloseAutoFocus={(e) => e.preventDefault()}
-									align="start"
+				{isLastInGroup ? (
+					<SimpleTooltip label={comment.user.username}>
+						<div className="mb-7">
+							<UserProfilePicture
+								src={comment.user.profilePicture}
+								size={30}
+							/>
+						</div>
+					</SimpleTooltip>
+				) : (
+					<div className="min-w-[30px]" />
+				)}
+				<ContextMenu>
+					<ContextMenuTrigger disabled={comment.userId !== user?.id}>
+						<div ref={commentRef}>
+							<div
+								className={cn(
+									"mb-2 flex flex-col gap-1 rounded-xl bg-accent px-4 py-2",
+									{
+										"rounded-br-none":
+											isLastInGroup &&
+											comment.userId === user?.id,
+										"rounded-bl-none":
+											isLastInGroup &&
+											comment.userId !== user?.id,
+										"bg-background":
+											comment.userId === user?.id,
+									},
+								)}
+							>
+								<div
+									className="tiptap tiptap-static break-words text-sm leading-6"
+									dangerouslySetInnerHTML={{
+										__html: getHTMLfromJSON(
+											comment.comment,
+											assignees,
+										),
+									}}
+								/>
+							</div>
+							{isLastInGroup && (
+								<SimpleTooltip
+									label={format(
+										new Date(comment.insertedDate),
+										"MMM dd, yyyy, h:mm:ss aa",
+									)}
 								>
-									<DropdownMenuItem onClick={handleDelete}>
-										<Trash2Icon className="mr-2 h-4 w-4" />
-										Delete
-									</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
-						) : null}
-					</div>
-				</div>
-				<div
-					className="tiptap mt-2 break-words text-sm leading-6"
-					dangerouslySetInnerHTML={{
-						__html: getHTMLfromJSON(comment.comment, assignees),
-					}}
-				></div>
+									<p
+										className="w-max whitespace-nowrap px-4 text-xs text-muted-foreground"
+										suppressHydrationWarning
+									>
+										{formatDistanceToNow(
+											comment.insertedDate,
+										)}
+									</p>
+								</SimpleTooltip>
+							)}
+						</div>
+					</ContextMenuTrigger>
+					<ContextMenuContent>
+						<ContextMenuItem
+							key="delete-comment"
+							className="gap-2"
+							onClick={handleDelete}
+						>
+							<Trash2Icon className="mr-2 h-4 w-4" />
+							Delete
+						</ContextMenuItem>
+					</ContextMenuContent>
+				</ContextMenu>
 			</div>
 		</motion.div>
 	);
