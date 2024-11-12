@@ -110,7 +110,7 @@ const UserComment = ({
 						</div>
 					</SimpleTooltip>
 				) : (
-					<div className="w-[30px]" />
+					<div className="min-w-[30px]" />
 				)}
 				<ContextMenu>
 					<ContextMenuTrigger disabled={comment.userId !== user?.id}>
