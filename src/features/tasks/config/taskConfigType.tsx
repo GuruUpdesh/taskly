@@ -52,6 +52,7 @@ import {
 	getCurrentSprintId,
 	helperIsSprintActive,
 } from "~/utils/getCurrentSprintId";
+import { getSprintDateRage } from "~/utils/getSprintDateRange";
 
 export type TaskProperty = keyof Task;
 type StaticProperty = Extract<
@@ -594,7 +595,7 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 
 			return {
 				key: sprint.id.toString(),
-				displayName: sprint.name,
+				displayName: `${sprint.name} [${getSprintDateRage(sprint)}]`,
 				icon: ClockIcon,
 				color: isActive ? "green" : ("orange" as Color),
 			};
