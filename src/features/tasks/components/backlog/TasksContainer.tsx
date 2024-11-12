@@ -305,9 +305,14 @@ export default function TasksContainer({ projectId }: Props) {
 						>
 							<div className="flex w-full items-center gap-2 px-4 py-2 pb-0">
 								{option.icon}
-								{option.displayName}
-								<div className="flex-grow" />
+								<p>
+									{option.displayName
+										.replace(/\[.*?\]/g, "")
+										.trim()}{" "}
+									-{" "}
+								</p>
 								<TotalTaskListPoints listId={option.key} />
+								<div className="flex-grow" />
 								<CreateTask
 									projectId={projectId}
 									overrideDefaultValues={{

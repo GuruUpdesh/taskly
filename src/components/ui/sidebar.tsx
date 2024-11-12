@@ -20,6 +20,8 @@ import {
 import { useIsMobile } from "~/hooks/use-mobile";
 import { cn } from "~/lib/utils";
 
+import SimpleTooltip from "../SimpleTooltip";
+
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";
@@ -282,21 +284,23 @@ const SidebarTrigger = React.forwardRef<
 	const { toggleSidebar } = useSidebar();
 
 	return (
-		<Button
-			ref={ref}
-			data-sidebar="trigger"
-			variant="ghost"
-			size="icon"
-			className={cn("h-7 w-7", className)}
-			onClick={(event) => {
-				onClick?.(event);
-				toggleSidebar();
-			}}
-			{...props}
-		>
-			<PanelLeft className="h-4 w-4" />
-			<span className="sr-only">Toggle Sidebar</span>
-		</Button>
+		<SimpleTooltip label="Toggle Sidebar" side="right">
+			<Button
+				ref={ref}
+				data-sidebar="trigger"
+				variant="ghost"
+				size="icon"
+				className={cn("h-7 w-7", className)}
+				onClick={(event) => {
+					onClick?.(event);
+					toggleSidebar();
+				}}
+				{...props}
+			>
+				<PanelLeft className="h-4 w-4" />
+				<span className="sr-only">Toggle Sidebar</span>
+			</Button>
+		</SimpleTooltip>
 	);
 });
 SidebarTrigger.displayName = "SidebarTrigger";

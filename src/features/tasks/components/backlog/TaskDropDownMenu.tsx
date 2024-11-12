@@ -218,6 +218,7 @@ const TaskDropDownMenu = ({
 				<ContextMenuTrigger
 					asChild
 					onMouseEnter={() => setHoveredTaskId(task.id)}
+					className="group/context"
 				>
 					{children}
 				</ContextMenuTrigger>

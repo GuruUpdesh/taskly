@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { ChevronRight, Loader2, SparklesIcon } from "lucide-react";
+import { ChevronRight, Loader2, Sparkle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -49,7 +49,7 @@ const AiDialog = ({ projectId }: Props) => {
 		{
 			id: "ai-task-creation",
 			label: "AI Task Creation",
-			icon: <SparklesIcon className="h-4 w-4" />,
+			icon: <Sparkle className="h-4 w-4" />,
 			priority: 4,
 			shortcut: [],
 			action: () => {
@@ -144,14 +144,14 @@ const AiDialog = ({ projectId }: Props) => {
 					setOpen(open);
 				}}
 			>
-				<SimpleTooltip label="AI Task Creation">
+				<SimpleTooltip label="AI Task Creation" side="right">
 					<DialogTrigger asChild>
 						<Button
 							variant="outline"
-							size="sm"
-							className="bg-transparent"
+							size="icon"
+							className="h-[36px] rounded-xl bg-background-dialog"
 						>
-							<SparklesIcon className="h-4 w-4" />
+							<Sparkle className="h-4 w-4" />
 							<span className="sr-only">
 								Open AI Task Creation
 							</span>
@@ -161,7 +161,7 @@ const AiDialog = ({ projectId }: Props) => {
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle className="flex items-center gap-2">
-							<SparklesIcon className="h-4 w-4" />
+							<Sparkle className="h-4 w-4" />
 							AI Task Creation
 						</DialogTitle>
 						{aiUsageCount >= AIDAILYLIMIT && (

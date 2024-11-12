@@ -3,7 +3,7 @@
 import React, { useMemo } from "react";
 
 import { Filter } from "lucide-react";
-import { Group, MinusIcon } from "lucide-react";
+import { MinusIcon } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 import SimpleTooltip from "~/components/SimpleTooltip";
@@ -28,8 +28,8 @@ const FilterAndGroupToggles = () => {
 	);
 
 	return (
-		<div className="flex overflow-hidden rounded border">
-			<SimpleTooltip label="Filters">
+		<div className="flex overflow-hidden rounded-xl border">
+			<SimpleTooltip label="Filters" side="left">
 				<Button
 					variant="outline"
 					onClick={toggleFilters}
@@ -42,7 +42,10 @@ const FilterAndGroupToggles = () => {
 					)}
 				>
 					<Filter className="h-4 w-4" />
-					<span className="hidden @3xl:block">Filters</span>
+					<span className="sr-only">Filters</span>
+					<span className="hidden @3xl:block">
+						{isFiltersOpen ? "Close" : "Open"}
+					</span>
 				</Button>
 			</SimpleTooltip>
 			<GroupButton />
@@ -112,21 +115,21 @@ const GroupButton = () => {
 						},
 					)}
 				>
-					<Group className="h-5 w-5" />
-					<span className="hidden @3xl:block">
-						{groupBy
-							? `Grouping by ${config?.displayName}`
-							: "Group"}
-					</span>
+					<span className="hidden @3xl:block">Group</span>
+					{config?.displayName && (
+						<span className="text-sm text-muted-foreground">
+							[{config.displayName}]
+						</span>
+					)}
 				</Button>
 			</SelectTrigger>
 			<SelectContent className="bg-accent/50 backdrop-blur-lg">
 				<SelectItem
 					value="none"
-					className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
+					className="group/select-item flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
 				>
 					<div className="flex min-w-[8rem] items-center gap-2">
-						<span className="text-muted-foreground">
+						<span className="text-muted-foreground group-data-[state=checked]/select-item:hidden">
 							<MinusIcon />
 						</span>
 						<p>No Grouping</p>
@@ -150,10 +153,10 @@ const GroupButton = () => {
 						<SelectItem
 							key={config.key}
 							value={config.key}
-							className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
+							className="group/select-item flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
 						>
 							<div className="flex min-w-[8rem] items-center gap-2">
-								<span className="text-muted-foreground">
+								<span className="text-muted-foreground group-data-[state=checked]/select-item:hidden">
 									{config.icon}
 								</span>
 								<p>{config.displayName}</p>

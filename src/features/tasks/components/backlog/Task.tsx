@@ -37,7 +37,7 @@ const taskVariants = cva(["flex items-center gap-2"], {
 	variants: {
 		variant: {
 			backlog:
-				"flex items-center justify-between border-b border-border/50 py-2 hover:bg-accent-foreground/5",
+				"flex items-center justify-between border-b border-border/50 py-2 hover:bg-accent-foreground/5 group-data-[state=open]/context:bg-accent-foreground/5 ",
 			list: "",
 		},
 	},

@@ -65,7 +65,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					<AiDialog projectId={projectId} />
 					<CreateTask projectId={projectId}>
 						<Button
-							className="gap-1 font-bold"
+							className="gap-1 rounded-xl font-bold"
 							size="sm"
 							variant="secondary"
 						>

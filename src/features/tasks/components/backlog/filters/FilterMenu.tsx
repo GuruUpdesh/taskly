@@ -206,13 +206,13 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 														return (
 															<SelectItem
 																key={config.key}
+																className="group/select-item flex items-center space-x-2 !pl-2 focus:bg-accent/50"
 																value={
 																	config.key
 																}
-																className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
 															>
 																<div className="flex min-w-[8rem] items-center gap-2">
-																	<span className="text-muted-foreground">
+																	<span className="text-muted-foreground group-data-[state=checked]/select-item:hidden">
 																		{
 																			config.icon
 																		}
@@ -232,15 +232,15 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 								</FormItem>
 							)}
 						/>
-						<div className="grid grid-flow-row grid-cols-2">
+						<div className="group grid grid-flow-row grid-cols-2">
 							<Button
 								type="button"
 								variant="outline"
 								size="sm"
 								className={cn(
-									"rounded-none border-none bg-accent/25 !ring-0 focus:ring-0",
+									"rounded-none border-none bg-accent/25 !ring-0 hover:bg-accent focus:ring-0",
 									{
-										"bg-accent": form.watch("is"),
+										"bg-accent/75": form.watch("is"),
 									},
 								)}
 								onClick={() =>
@@ -257,9 +257,9 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 								variant="outline"
 								size="sm"
 								className={cn(
-									"rounded-none border-none bg-accent/25 !ring-0 focus:ring-0",
+									"rounded-none border-none bg-accent/25 !ring-0 hover:bg-accent focus:ring-0",
 									{
-										"bg-accent": !form.watch("is"),
+										"bg-accent/75": !form.watch("is"),
 									},
 								)}
 								onClick={() =>

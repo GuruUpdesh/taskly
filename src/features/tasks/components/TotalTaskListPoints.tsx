@@ -26,12 +26,12 @@ const TotalTaskListPoints = ({ listId }: Props) => {
 	return (
 		<div
 			className={cn(
-				"flex items-center gap-2",
+				"flex items-center gap-1",
 				typography.paragraph.p_muted,
 			)}
 		>
+			<p>{totalPoints}</p>
 			<TbHexagon className="h-4 w-4" />
-			{totalPoints}
 		</div>
 	);
 };
