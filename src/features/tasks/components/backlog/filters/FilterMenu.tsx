@@ -163,11 +163,11 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 										onValueChange={field.onChange}
 										defaultValue={field.value}
 									>
-										<SelectTrigger className="max-w-[400px] rounded-none border-b border-l-0 border-r-0 border-t-0 bg-accent/25 hover:bg-accent/50 focus:bg-accent/50 focus:ring-0">
+										<SelectTrigger className="group/select max-w-[400px] rounded-none border-b border-l-0 border-r-0 border-t-0 bg-accent/25 hover:bg-accent/50 focus:bg-accent/50 focus:ring-0">
 											<SelectValue placeholder="Select Property..." />
-											<ChevronDown className="ml-2 h-4 w-4" />
+											<ChevronDown className="ml-2 h-4 w-4 transition-transform group-data-[state=open]/select:-rotate-180" />
 										</SelectTrigger>
-										<SelectContent className="bg-accent/50 backdrop-blur-lg">
+										<SelectContent>
 											{properties
 												.filter((p) => {
 													if (
@@ -206,7 +206,7 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 														return (
 															<SelectItem
 																key={config.key}
-																className="group/select-item flex items-center space-x-2 !pl-2 focus:bg-accent/50"
+																className="group/select-item flex items-center space-x-2 !pl-2 focus:bg-accent"
 																value={
 																	config.key
 																}
@@ -284,7 +284,7 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 									<ChevronDown className="ml-2 h-4 w-4" />
 								</button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent className="w-[286px] bg-accent/50 shadow-md backdrop-blur-lg">
+							<DropdownMenuContent className="w-[286px] bg-background-menu shadow-md">
 								{(currentConfig?.type === "enum" ||
 									currentConfig?.type === "dynamic") &&
 									currentConfig?.options.map((option) => (

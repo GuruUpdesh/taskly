@@ -68,7 +68,7 @@ const CommandList = forwardRef(
 		}));
 
 		return (
-			<div className="relative flex flex-col overflow-auto rounded border bg-accent/50 p-2 backdrop-blur-lg">
+			<div className="relative flex flex-col overflow-auto rounded border bg-background-menu p-2">
 				{props.items.length ? (
 					props.items.map((item, index) => (
 						<button

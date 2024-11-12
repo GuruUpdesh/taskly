@@ -144,7 +144,7 @@ const AiDialog = ({ projectId }: Props) => {
 					setOpen(open);
 				}}
 			>
-				<SimpleTooltip label="AI Task Creation" side="right">
+				<SimpleTooltip label="Task Creator">
 					<DialogTrigger asChild>
 						<Button
 							variant="outline"
