@@ -39,8 +39,8 @@ import { z } from "zod";
 
 import UserProfilePicture from "~/components/UserProfilePicture";
 import {
-	getClockIconForSprintProgress,
 	getSprintProgress,
+	SprintProgressCircle,
 } from "~/features/tasks/utils/getSprintIcon";
 import {
 	type User,
@@ -523,12 +523,12 @@ export const taskConfig: TaskConfig = {
 		key: "sprintId",
 		displayName: "Sprint",
 		type: "dynamic",
-		icon: <Clock className="h-4 w-4" />,
+		icon: <SprintProgressCircle progress={1} />,
 		options: [
 			{
 				key: "-1",
 				displayName: "No Sprint",
-				icon: <Clock className="h-4 w-4 opacity-50" />,
+				icon: <SprintProgressCircle progress={0} />,
 				color: "grey",
 			},
 		],
@@ -568,6 +568,8 @@ export const taskConfig: TaskConfig = {
 function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 	const config = _.cloneDeep(taskConfig);
 
+	const assigneeColor: Color = "grey";
+
 	config.assignee.options = [
 		...taskConfig.assignee.options,
 		...assignees.map((assignee) => ({
@@ -576,7 +578,7 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 			icon: (
 				<UserProfilePicture size={18} src={assignee.profilePicture} />
 			),
-			color: "grey" as Color,
+			color: assigneeColor,
 		})),
 	];
 
@@ -591,22 +593,20 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 	config.sprintId.options = [
 		...taskConfig.sprintId.options,
 		...sprintsToDisplay.map((sprint) => {
-			const isActive = helperIsSprintActive(sprint);
-			let ClockIcon = <Clock className="h-4 w-4" />;
-			if (isActive) {
-				const progress = getSprintProgress(sprint);
-				const dynamicIcon = getClockIconForSprintProgress(progress);
-				if (dynamicIcon) {
-					ClockIcon = dynamicIcon;
-				}
-			}
+			const progress = getSprintProgress(sprint);
 
+			const isActive = helperIsSprintActive(sprint);
 			const color: Color = isActive ? "teal" : "indigo";
 
 			return {
 				key: sprint.id.toString(),
 				displayName: `${sprint.name} [${getSprintDateRage(sprint)}]`,
-				icon: ClockIcon,
+				icon: (
+					<SprintProgressCircle
+						progress={progress}
+						className="h-4 w-4"
+					/>
+				),
 				color: color,
 			};
 		}),
