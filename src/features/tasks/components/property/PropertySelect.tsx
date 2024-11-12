@@ -94,7 +94,7 @@ function PropertySelect({
 										color: option?.color,
 										hover: true,
 									}),
-									"flex items-center space-x-2 whitespace-nowrap rounded-sm py-1 pl-2 pr-3",
+									"group/select flex items-center space-x-2 whitespace-nowrap rounded-sm py-1 pl-2 pr-3",
 								)}
 							>
 								<SelectValue asChild>
@@ -107,7 +107,7 @@ function PropertySelect({
 								</SelectValue>
 								{size === "icon" ? null : (
 									<SelectPrimitive.Icon asChild>
-										<ChevronDown className="h-4 w-4 opacity-50" />
+										<ChevronDown className="chevron h-4 w-4 opacity-50 transition-transform group-data-[state=open]/select:-rotate-180" />
 									</SelectPrimitive.Icon>
 								)}
 							</SelectTrigger>
@@ -126,13 +126,15 @@ function PropertySelect({
 												color: option.color,
 												hover: true,
 											}),
-											"flex items-center space-x-2 whitespace-nowrap rounded-sm border py-1 pl-2 pr-3",
+											"group/select-item flex items-center space-x-2 whitespace-nowrap rounded-sm border py-1 pl-2 pr-3",
 											"border-none bg-transparent !pl-2",
 										)}
 										value={stringifyValue(option.key)}
 									>
 										<div className="flex min-w-[8rem] items-center gap-2">
-											<span>{option.icon}</span>
+											<span className="group-data-[state=checked]/select-item:hidden">
+												{option.icon}
+											</span>
 											<p>{option.displayName}</p>
 										</div>
 									</SelectItem>
