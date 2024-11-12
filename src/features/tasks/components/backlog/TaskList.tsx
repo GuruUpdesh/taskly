@@ -157,6 +157,7 @@ const TaskList = ({
 													}
 													projectId={projectId}
 													listId={listId}
+													comments={task.comments}
 												/>
 											</div>
 										</motion.div>

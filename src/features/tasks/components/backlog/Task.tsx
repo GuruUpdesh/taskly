@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { cva, type VariantProps } from "class-variance-authority";
+import { MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -49,7 +50,7 @@ export type VariantPropsType = VariantProps<typeof taskVariants>;
 
 const orders: Record<
 	Exclude<VariantPropsType["variant"], null | undefined>,
-	{ key: TaskProperty; size: "default" | "icon" }[][]
+	{ key: TaskProperty | "comments"; size: "default" | "icon" }[][]
 > = {
 	backlog: [
 		[
@@ -58,6 +59,7 @@ const orders: Record<
 			{ key: "title", size: "default" },
 		],
 		[
+			{ key: "comments", size: "icon" },
 			{ key: "type", size: "default" },
 			{ key: "assignee", size: "icon" },
 			{ key: "sprintId", size: "icon" },
@@ -81,6 +83,7 @@ interface Props extends VariantPropsType {
 	addTaskMutation: UseMutationResult<void, Error, UpdateTask, unknown>;
 	deleteTaskMutation: UseMutationResult<void, Error, number, unknown>;
 	projectId: string;
+	comments?: number;
 	listId?: string;
 	disableNavigation?: boolean;
 }
@@ -92,6 +95,7 @@ const Task = ({
 	projectId,
 	variant = "backlog",
 	listId,
+	comments = -1,
 	disableNavigation = false,
 }: Props) => {
 	const [assignees, sprints] = useRealtimeStore(
@@ -168,6 +172,22 @@ const Task = ({
 				})}
 			>
 				{group.map((item, idx) => {
+					if (item.key === "comments") {
+						return (
+							<div
+								key={idx}
+								className="flex items-center px-2 text-xs text-muted-foreground"
+							>
+								{comments > 0 && (
+									<>
+										<MessageCircle className="mr-1 h-4 w-4" />
+										{comments}
+									</>
+								)}
+							</div>
+						);
+					}
+
 					const config = getPropertyConfig(
 						item.key,
 						assignees,

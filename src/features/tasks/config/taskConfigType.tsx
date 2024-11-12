@@ -709,6 +709,7 @@ type TaskOptions = {
 
 export interface StatefulTask extends Task {
 	options: TaskOptions;
+	comments: number;
 }
 
 export const CreateTaskSchema = z.object({

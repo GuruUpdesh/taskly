@@ -275,6 +275,7 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 						options: {
 							isPending: true,
 						},
+						comments: 0,
 					},
 				],
 			);
