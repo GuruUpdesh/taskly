@@ -330,9 +330,6 @@ const TaskPage = ({
 							/>
 						</section>
 						<Separator className="my-4 bg-foreground/10" />
-						<h3 className="scroll-m-20 px-4 text-xl font-semibold tracking-tight">
-							Comments
-						</h3>
 						<section className="comments-container mb-3 mt-2 flex max-w-full flex-grow flex-col gap-4 overflow-scroll px-4 pb-1">
 							<Comments
 								taskComments={result.data.data.comments}

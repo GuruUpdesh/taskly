@@ -7,6 +7,10 @@
 	}
 }
 
+.tiptap-static {
+	min-height: 0 !important;
+}
+
 /* Tip Tap Headers */
 .tiptap h1,
 .tiptap h2,
