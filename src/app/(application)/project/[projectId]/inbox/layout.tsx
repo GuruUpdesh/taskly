@@ -3,8 +3,6 @@ import React from "react";
 import { currentUser } from "@clerk/nextjs/server";
 
 import PageHeader from "~/components/layout/PageHeader";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import InboxButtons from "~/features/notifications/components/InboxButtons";
 import NotificationList from "~/features/notifications/components/NotificationList";
 

@@ -91,21 +91,14 @@ export const taskProperties: TaskProperty[] = [
 export const taskVariants = cva([], {
 	variants: {
 		color: {
-			null: "text-neutral-200 bg-neutral-900/50",
-			grey: "text-neutral-100 bg-neutral-800",
-			blue: "text-sky-300 bg-sky-700/80",
-			indigo: "text-[#C7D2FE] bg-[#1E1B4B]/80",
-			violet: "text-[#DDD6FE] bg-[#2E1065]/80",
-			teal: "text-[#AFECEF] bg-[#134E4A]/80",
-			cyan: "text-[#A5F3FC] bg-[#164E63]/80",
-			amber: "text-yellow-300 bg-yellow-700/80",
-			red: "text-[#FECACA] bg-[#7F1D1D]/80",
-			green: "text-lime-300 bg-lime-700/80",
-		},
-		hover: {
-			true: "",
-			false: "",
-			group: "",
+			grey: "text-neutral-100 bg-neutral-800 hover:text-neutral-50 focus:text-neutral-50 hover:bg-neutral-700/60 focus:bg-neutral-700/60 transition-all duration-200",
+			blue: "text-sky-300 bg-sky-700/80 hover:text-[#D7E6F5] focus:text-[#D7E6F5] hover:bg-[#1E3A8A]/60 focus:bg-[#1E3A8A]/60 transition-all duration-200",
+			violet: "text-indigo-300 bg-[#2E1065]/80 hover:text-[#EDE9FE] focus:text-[#EDE9FE] hover:bg-[#4C1D95]/60 focus:bg-[#4C1D95]/60 transition-all duration-200",
+			teal: "text-[#AFECEF] bg-[#134E4A]/80 hover:text-[#CCFBF1] focus:text-[#CCFBF1] hover:bg-[#115E59]/60 focus:bg-[#115E59]/60 transition-all duration-200",
+			cyan: "text-[#A5F3FC] bg-[#164E63]/80 hover:text-[#CFFAFE] focus:text-[#CFFAFE] hover:bg-[#155E75]/60 focus:bg-[#155E75]/60 transition-all duration-200",
+			amber: "text-yellow-300 bg-yellow-700/80 hover:text-[#FEF3C7] focus:text-[#FEF3C7] hover:bg-[#92400E]/60 focus:bg-[#92400E]/60 transition-all duration-200",
+			red: "text-[#FECACA] bg-[#7F1D1D]/80 hover:text-[#FEE2E2] focus:text-[#FEE2E2] hover:bg-[#991B1B]/60 focus:bg-[#991B1B]/60 transition-all duration-200",
+			green: "text-lime-300 bg-lime-700/80 hover:text-lime-50 focus:text-lime-50 hover:bg-lime-800/60 focus:bg-lime-800/60 transition-all duration-200",
 		},
 		context: {
 			default: "",
@@ -113,171 +106,50 @@ export const taskVariants = cva([], {
 		},
 	},
 	compoundVariants: [
-		// Null/Default variants
-		{
-			color: "null",
-			hover: true,
-			class: "hover:text-neutral-100 focus:text-neutral-100 hover:bg-neutral-800/60 focus:bg-neutral-800/60 transition-all duration-200",
-		},
-		{
-			color: "null",
-			hover: "group",
-			class: "group-hover:bg-neutral-800/60",
-		},
-
-		// Grey variants
-		{
-			color: "grey",
-			hover: true,
-			class: "hover:text-neutral-50 focus:text-neutral-50 hover:bg-neutral-700/60 focus:bg-neutral-700/60 transition-all duration-200",
-		},
-		{
-			color: "grey",
-			hover: "group",
-			class: "group-hover:bg-neutral-700/60",
-		},
-
-		// Blue variants
-		{
-			color: "blue",
-			hover: true,
-			class: "hover:text-[#D7E6F5] focus:text-[#D7E6F5] hover:bg-[#1E3A8A]/60 focus:bg-[#1E3A8A]/60 transition-all duration-200",
-		},
-		{
-			color: "blue",
-			hover: "group",
-			class: "group-hover:bg-[#1E3A8A]/60",
-		},
-
-		// Indigo variants
-		{
-			color: "indigo",
-			hover: true,
-			class: "hover:text-[#E0E7FF] focus:text-[#E0E7FF] hover:bg-[#312E81]/60 focus:bg-[#312E81]/60 transition-all duration-200",
-		},
-		{
-			color: "indigo",
-			hover: "group",
-			class: "group-hover:bg-[#312E81]/60",
-		},
-
-		// Violet variants
-		{
-			color: "violet",
-			hover: true,
-			class: "hover:text-[#EDE9FE] focus:text-[#EDE9FE] hover:bg-[#4C1D95]/60 focus:bg-[#4C1D95]/60 transition-all duration-200",
-		},
-		{
-			color: "violet",
-			hover: "group",
-			class: "group-hover:bg-[#4C1D95]/60",
-		},
-
-		// Teal variants
-		{
-			color: "teal",
-			hover: true,
-			class: "hover:text-[#CCFBF1] focus:text-[#CCFBF1] hover:bg-[#115E59]/60 focus:bg-[#115E59]/60 transition-all duration-200",
-		},
-		{
-			color: "teal",
-			hover: "group",
-			class: "group-hover:bg-[#115E59]/60",
-		},
-
-		// Cyan variants
-		{
-			color: "cyan",
-			hover: true,
-			class: "hover:text-[#CFFAFE] focus:text-[#CFFAFE] hover:bg-[#155E75]/60 focus:bg-[#155E75]/60 transition-all duration-200",
-		},
-		{
-			color: "cyan",
-			hover: "group",
-			class: "group-hover:bg-[#155E75]/60",
-		},
-
-		// Amber variants
-		{
-			color: "amber",
-			hover: true,
-			class: "hover:text-[#FEF3C7] focus:text-[#FEF3C7] hover:bg-[#92400E]/60 focus:bg-[#92400E]/60 transition-all duration-200",
-		},
-		{
-			color: "amber",
-			hover: "group",
-			class: "group-hover:bg-[#92400E]/60",
-		},
-
-		// Red variants
-		{
-			color: "red",
-			hover: true,
-			class: "hover:text-[#FEE2E2] focus:text-[#FEE2E2] hover:bg-[#991B1B]/60 focus:bg-[#991B1B]/60 transition-all duration-200",
-		},
-		{
-			color: "red",
-			hover: "group",
-			class: "group-hover:bg-[#991B1B]/60",
-		},
-
 		// Border styles for default context
 		{
-			color: "null",
-			context: "default",
-			class: "border border-neutral-800/50 shadow-sm",
-		},
-		{
 			color: "grey",
 			context: "default",
-			class: "border border-neutral-700/50 shadow-sm",
+			class: "border border-neutral-700/50 shadow-sm hover:border-transparent focus:border-transparent",
 		},
 		{
 			color: "blue",
 			context: "default",
-			class: "border border-[#1E3A8A]/50 shadow-sm",
-		},
-		{
-			color: "indigo",
-			context: "default",
-			class: "border border-[#312E81]/50 shadow-sm",
+			class: "border border-[#1E3A8A]/50 shadow-sm hover:border-transparent focus:border-transparent",
 		},
 		{
 			color: "violet",
 			context: "default",
-			class: "border border-[#4C1D95]/50 shadow-sm",
+			class: "border border-[#4C1D95]/50 shadow-sm hover:border-transparent focus:border-transparent",
 		},
 		{
 			color: "teal",
 			context: "default",
-			class: "border border-[#115E59]/50 shadow-sm",
+			class: "border border-[#115E59]/50 shadow-sm hover:border-transparent focus:border-transparent",
 		},
 		{
 			color: "cyan",
 			context: "default",
-			class: "border border-[#155E75]/50 shadow-sm",
+			class: "border border-[#155E75]/50 shadow-sm hover:border-transparent focus:border-transparent",
 		},
 		{
 			color: "amber",
 			context: "default",
-			class: "border border-[#92400E]/50 shadow-sm",
+			class: "border border-[#92400E]/50 shadow-sm hover:border-transparent focus:border-transparent",
 		},
 		{
 			color: "red",
 			context: "default",
-			class: "border border-[#991B1B]/50 shadow-sm",
+			class: "border border-[#991B1B]/50 shadow-sm hover:border-transparent focus:border-transparent",
 		},
-
-		// Hover effect for borders
 		{
-			hover: true,
+			color: "green",
 			context: "default",
-			class: "hover:border-transparent focus:border-transparent",
+			class: "border border-lime-700/50 shadow-sm hover:border-transparent focus:border-transparent",
 		},
 	],
 	defaultVariants: {
-		color: "null",
-		hover: false,
+		color: "grey",
 		context: "default",
 	},
 });
@@ -440,7 +312,7 @@ export const taskConfig: TaskConfig = {
 				key: "low",
 				displayName: "Low",
 				icon: <ArrowDownIcon className="h-4 w-4" />,
-				color: "indigo",
+				color: "violet",
 			},
 			{
 				key: "medium",
