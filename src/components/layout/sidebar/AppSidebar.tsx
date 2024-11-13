@@ -38,7 +38,7 @@ const sora = Sora({ subsets: ["latin"] });
 
 const AppSidebar = ({ projectId }: SidebarProps) => {
 	return (
-		<UiSidebar className="z-40">
+		<UiSidebar className="z-40 mt-4">
 			<SidebarContent
 				className={cn(
 					"relative flex h-full flex-col justify-between bg-background px-4 @container",

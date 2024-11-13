@@ -2,7 +2,9 @@ import React from "react";
 
 import { currentUser } from "@clerk/nextjs/server";
 
-import { SidebarTrigger } from "~/components/ui/sidebar";
+import PageHeader from "~/components/layout/PageHeader";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import InboxButtons from "~/features/notifications/components/InboxButtons";
 import NotificationList from "~/features/notifications/components/NotificationList";
 
@@ -26,17 +28,12 @@ export default async function InboxLayout({
 	return (
 		<div className="grid h-svh grid-cols-4">
 			<div className="col-span-1 flex flex-col border-r">
-				<header className="flex items-center justify-between gap-2 border-b bg-background px-4 py-2">
-					<div className="flex items-center gap-2">
-						<SidebarTrigger />
-						<h3 className="scroll-m-20 text-2xl font-bold tracking-tight">
-							Inbox
-						</h3>
-					</div>
-					<div className="flex gap-2">
-						<InboxButtons user={user.id} />
-					</div>
-				</header>
+				<PageHeader>
+					<h3 className="scroll-m-20 text-2xl font-medium tracking-tight">
+						Inbox
+					</h3>
+				</PageHeader>
+				<InboxButtons user={user.id} />
 				<section className="flex flex-col overflow-y-scroll">
 					<div className="flex flex-grow flex-col overflow-y-auto">
 						<NotificationList projectId={projectId} />

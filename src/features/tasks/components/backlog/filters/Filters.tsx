@@ -43,12 +43,9 @@ const Filters = ({ username }: Props) => {
 			animate={isFiltersOpen ? "open" : "closed"}
 			variants={variants}
 			transition={{ duration: 0.2, ease: [0.075, 0.82, 0.165, 1] }}
-			className={cn(
-				"sticky top-[57px] z-10 border-b bg-background/75 backdrop-blur-xl",
-				{
-					"pointer-events-none": !isFiltersOpen,
-				},
-			)}
+			className={cn("sticky top-[57px] z-10 border-b backdrop-blur-xl", {
+				"pointer-events-none": !isFiltersOpen,
+			})}
 		>
 			<div className="flex flex-wrap items-center gap-2 px-4 py-2 text-muted-foreground">
 				<p>Filters:</p>

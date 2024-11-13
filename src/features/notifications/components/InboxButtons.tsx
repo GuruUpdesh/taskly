@@ -35,7 +35,7 @@ export default function InboxButtons({ user }: Props) {
 	}
 
 	return (
-		<>
+		<div className="flex gap-2 px-4 py-2">
 			<SimpleTooltip label="Mark all as Read">
 				<Button
 					variant="outline"
@@ -83,6 +83,6 @@ export default function InboxButtons({ user }: Props) {
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
-		</>
+		</div>
 	);
 }
