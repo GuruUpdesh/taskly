@@ -92,7 +92,7 @@ export default async function ApplicationLayout({
 			/>
 			<SidebarProvider defaultOpen={defaultOpen}>
 				<AppSidebar projectId={projectId} />
-				<main className="flex h-svh w-full flex-1 flex-col bg-accent/25">
+				<main className="mt-4 flex h-svh w-full flex-1 flex-col rounded-tl-2xl border-l border-t bg-accent/25">
 					{children}
 				</main>
 			</SidebarProvider>
