@@ -94,7 +94,7 @@ function PropertySelect({
 										color: option?.color,
 										hover: true,
 									}),
-									"group/select flex items-center space-x-2 whitespace-nowrap rounded-xl py-1 pl-2 pr-3",
+									"group/select flex items-center space-x-2 whitespace-nowrap rounded-md py-1 pl-2 pr-3",
 								)}
 							>
 								<SelectValue asChild>
