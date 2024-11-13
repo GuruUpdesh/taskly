@@ -1,22 +1,19 @@
 "use client";
-
 import React, { useMemo } from "react";
 
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { format, formatDistanceToNow } from "date-fns";
 import { useShallow } from "zustand/react/shallow";
 
-import SimpleTooltip from "~/components/SimpleTooltip";
+import UserProfilePicture from "~/components/UserProfilePicture";
 import {
 	type TaskProperty as TaskPropertyType,
 	getPropertyConfig,
 } from "~/features/tasks/config/taskConfigType";
-import { cn } from "~/lib/utils";
 import { type TaskHistory, type User } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
-import typography from "~/styles/typography";
 
 import PropertyBadge from "./property/PropertyBadge";
+import { formatDateRelative } from "../utils/formatDateRelative";
 
 export interface TaskHistoryWithUser extends TaskHistory {
 	user: User;
@@ -41,89 +38,76 @@ const TaskHistoryItem = ({ history }: Props) => {
 		[history.propertyKey, assignees, sprints],
 	);
 
-	const newOption = useMemo(() => {
-		if (!config) return null;
-		if (config.type !== "enum" && config.type !== "dynamic") return null;
+	const { newOption, oldOption } = useMemo(() => {
+		if (!config || (config.type !== "enum" && config.type !== "dynamic")) {
+			return { newOption: null, oldOption: null };
+		}
+		return {
+			newOption: config.options.find(
+				(option) => option.key === history.propertyValue,
+			),
+			oldOption: config.options.find(
+				(option) => option.key === history.oldPropertyValue,
+			),
+		};
+	}, [config, history.propertyValue, history.oldPropertyValue]);
 
-		const options = config.options;
-		return options.find((option) => option.key === history.propertyValue);
-	}, [config, history.propertyValue]);
+	if (!config || !newOption) return null;
 
-	const oldOption = useMemo(() => {
-		if (!config) return null;
-		if (config.type !== "enum" && config.type !== "dynamic") return null;
-
-		const options = config.options;
-		return options.find(
-			(option) => option.key === history.oldPropertyValue,
-		);
-	}, [config, history.oldPropertyValue]);
-
-	if (!config || !newOption) {
-		return null;
-	}
+	const isGitHub = history.userId === "github";
 
 	return (
-		<div
-			className={cn(
-				"flex flex-col items-start space-y-2 text-sm sm:flex-row sm:items-center sm:space-x-3 sm:space-y-0",
-				typography.paragraph.p_muted,
-			)}
-		>
-			<div className="relative flex-shrink-0">
-				<PropertyBadge option={newOption} size="iconSm" />
-				<div className="absolute left-0 top-0 -z-10 h-full w-full bg-background" />
-				<div className="absolute left-[50%] -z-20 h-[200%] w-[1px] -translate-x-[50%] bg-muted" />
+		<div className="group relative flex items-start gap-4 py-2">
+			{/* Timeline and Icon */}
+			<div className="">
+				<div className="absolute left-4 top-0 -z-10 h-[120%] w-[2px] -translate-x-1/2 bg-border" />
+				<div className="bg-[#151515] py-2">
+					<PropertyBadge
+						option={newOption}
+						size="iconSm"
+						className="z-10"
+					/>
+				</div>
 			</div>
-			<div className="flex-grow">
-				{!oldOption || history.comment ? (
-					<p className="break-words">
-						{history.userId === "github" ? (
-							<b className="inline-flex items-baseline gap-1 text-foreground">
-								<GitHubLogoIcon className="h-4 w-4 translate-y-0.5" />{" "}
-								GitHub
-							</b>
-						) : (
-							<b className="text-foreground">
-								{history.user.username}
-							</b>
-						)}{" "}
-						{history.comment}
-					</p>
-				) : (
-					<p className="break-words">
-						{history.userId === "github" ? (
-							<b className="inline-flex items-baseline gap-1 text-foreground">
-								<GitHubLogoIcon className="h-4 w-4 translate-y-0.5" />{" "}
-								GitHub
-							</b>
-						) : (
-							<b className="text-foreground">
-								{history.user.username}
-							</b>
-						)}{" "}
-						changed {config.displayName} from{" "}
-						<b className="text-foreground">
-							{oldOption.displayName}
-						</b>{" "}
-						to{" "}
-						<b className="text-foreground">
-							{newOption.displayName}
-						</b>
-					</p>
-				)}
-			</div>
-			<div className="flex items-center space-x-2">
-				<SimpleTooltip
-					label={format(
-						history.insertedDate,
-						"MMM dd, yyyy, h:mm:ss aa",
+
+			{/* Content */}
+			<div className="flex-1 space-y-1 pt-1">
+				<div className="w-16 whitespace-nowrap pt-0.5 text-sm text-muted-foreground">
+					{formatDateRelative(history.insertedDate)}
+				</div>
+				<div className="text-base text-foreground">
+					{history.comment ? (
+						history.comment
+					) : (
+						<>
+							{config.displayName} changed from{" "}
+							<span className="rounded-xl bg-accent px-2 font-medium">
+								{oldOption?.displayName}
+							</span>
+							{" to "}
+							<span className="rounded-xl bg-accent px-2 font-medium">
+								{newOption.displayName}
+							</span>
+						</>
 					)}
-				>
-					<p className="whitespace-nowrap transition-colors hover:text-foreground">
-						{formatDistanceToNow(history.insertedDate)}
-					</p>
-				</SimpleTooltip>
+				</div>
+
+				{/* Additional Info */}
+				<div className="mt-0.5 flex items-center gap-2 text-sm text-muted-foreground">
+					{isGitHub ? (
+						<div className="flex items-center gap-1">
+							<GitHubLogoIcon className="h-4 w-4" />
+							<span>GitHub</span>
+						</div>
+					) : (
+						<div className="flex items-center gap-2">
+							<UserProfilePicture
+								src={history.user.profilePicture}
+							/>
+							<span>{history.user.username}</span>
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	);

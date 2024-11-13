@@ -92,7 +92,6 @@ function PropertySelect({
 									},
 									taskVariants({
 										color: option?.color,
-										hover: true,
 									}),
 									"group/select flex items-center space-x-2 whitespace-nowrap rounded-md py-1 pl-2 pr-3",
 								)}
@@ -124,7 +123,6 @@ function PropertySelect({
 										className={cn(
 											taskVariants({
 												color: option.color,
-												hover: true,
 											}),
 											"group/select-item flex items-center space-x-2 whitespace-nowrap rounded-sm border py-1 pl-2 pr-3",
 											"border-none bg-transparent !pl-2",

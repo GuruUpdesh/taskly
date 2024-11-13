@@ -300,7 +300,6 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 											className={cn(
 												taskVariants({
 													color: option.color,
-													hover: true,
 												}),
 												"border-none bg-transparent",
 											)}

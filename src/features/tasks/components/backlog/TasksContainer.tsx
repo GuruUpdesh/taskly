@@ -298,7 +298,6 @@ export default function TasksContainer({ projectId }: Props) {
 							className={cn(
 								taskVariants({
 									color: option.color,
-									hover: false,
 									context: "menu",
 								}),
 							)}

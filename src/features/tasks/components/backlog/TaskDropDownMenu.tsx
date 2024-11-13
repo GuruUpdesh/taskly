@@ -280,7 +280,6 @@ const PropertiesMenu = ({
 										className={cn(
 											taskVariants({
 												color: option.color,
-												hover: true,
 											}),
 											"flex items-center space-x-2 whitespace-nowrap rounded-sm border py-1 pl-2 pr-3",
 											"border-none bg-transparent !pl-2",

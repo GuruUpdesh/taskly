@@ -3,7 +3,6 @@ import {
 	QueryClient,
 	dehydrate,
 } from "@tanstack/react-query";
-import { cookies } from "next/headers";
 
 import { getTask } from "~/actions/task-actions";
 import { getPRStatusFromGithubRepo } from "~/features/github-integration/actions/get-pr-status-from-github-repo";
@@ -33,19 +32,12 @@ export async function TaskPageWrapper({
 		queryFn: () => getPRStatusFromGithubRepo(taskIdInt),
 	});
 
-	const layout = cookies().get("react-resizable-panels:task-layout");
-	let defaultLayout;
-	if (layout) {
-		defaultLayout = JSON.parse(layout.value) as number[] | undefined;
-	}
-
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
 			<TaskPage
 				taskId={taskIdInt}
 				projectId={projectId}
 				context={context}
-				defaultLayout={defaultLayout}
 			/>
 		</HydrationBoundary>
 	);

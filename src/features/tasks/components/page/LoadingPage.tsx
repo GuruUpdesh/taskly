@@ -3,19 +3,10 @@ import React from "react";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
 
-type Props = {
-	defaultLayout: number[] | undefined;
-};
-
-const LoadingPage = ({ defaultLayout }: Props) => {
+const LoadingPage = () => {
 	return (
 		<div className="relative flex h-screen w-full">
-			<div
-				className="flex-grow"
-				style={{
-					width: defaultLayout ? `${defaultLayout[0]}%` : "75%",
-				}}
-			>
+			<div className="w-[75%] flex-grow">
 				<header className="container flex h-[57px] items-center justify-between gap-2 border-b pb-2 pt-2">
 					<Skeleton className="h-[20px] w-[25%]" />
 				</header>
@@ -37,7 +28,7 @@ const LoadingPage = ({ defaultLayout }: Props) => {
 			<div
 				className="flex-grow bg-background-dialog"
 				style={{
-					width: defaultLayout ? `${defaultLayout[1]}%` : "25%",
+					width: "w-[25%]",
 				}}
 			>
 				<header className="container flex h-[57px] items-center justify-between gap-2 border-b pb-2 pt-2">

@@ -15,9 +15,9 @@ const propertyVariants = cva(["flex items-center gap-2"], {
 		size: {
 			default: "px-3",
 			sm: "rounded-sm px-3 text-sm",
-			icon: "h-10 w-10 flex items-center justify-center rounded-full",
-			iconSm: "h-6 w-6 flex items-center justify-center rounded-full",
-			iconXs: "h-4 w-4 flex items-center justify-center rounded-full",
+			icon: "h-10 w-10 flex items-center justify-center rounded-lg",
+			iconSm: "h-8 w-8 flex items-center justify-center rounded-lg",
+			iconXs: "h-4 w-4 flex items-center justify-center rounded-lg",
 		},
 	},
 	defaultVariants: {
@@ -36,7 +36,6 @@ interface TaskPropertyProps extends TaskVariantsProps {
 const PropertyBadge = ({
 	option,
 	size = "default",
-	hover = true,
 	className = "",
 }: TaskPropertyProps) => {
 	return (
@@ -47,7 +46,6 @@ const PropertyBadge = ({
 					className,
 					taskVariants({
 						color: option.color,
-						hover: hover,
 						context: "default",
 					}),
 				)}

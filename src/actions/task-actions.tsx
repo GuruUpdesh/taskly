@@ -391,6 +391,9 @@ export async function getTask(id: number) {
 						user: true,
 					},
 				},
+				views: {
+					where: (view) => eq(view.userId, userId),
+				},
 			},
 		});
 		if (!taskQuery) {

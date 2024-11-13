@@ -469,7 +469,7 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 			const progress = getSprintProgress(sprint);
 
 			const isActive = helperIsSprintActive(sprint);
-			const color: Color = isActive ? "teal" : "indigo";
+			const color: Color = isActive ? "teal" : "violet";
 
 			return {
 				key: sprint.id.toString(),

@@ -46,7 +46,7 @@ const buttons: ButtonType[] = [
 	{
 		icon: <CircleDashed className="h-4 w-4" />,
 		variant: "secondary",
-		color: "indigo",
+		color: "violet",
 		secondaryIcon: <PieChartIcon className="h-4 w-4" />,
 	},
 	{
@@ -64,7 +64,7 @@ const buttons: ButtonType[] = [
 		icon: <LayoutList className="h-4 w-4" />,
 		variant: "secondary",
 		secondaryIcon: <Feather className="h-4 w-4" />,
-		color: "indigo",
+		color: "violet",
 	},
 	{
 		icon: <PersonIcon className="h-4 w-4" />,
