@@ -13,7 +13,11 @@ import { type TaskHistory, type User } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
 
 import PropertyBadge from "./property/PropertyBadge";
-import { formatDateRelative } from "../../../utils/formatDateRelative";
+import {
+	formatDateRelative,
+	formatDateVerbose,
+} from "../../../utils/dateFormatters";
+import SimpleTooltip from "~/components/SimpleTooltip";
 
 export interface TaskHistoryWithUser extends TaskHistory {
 	user: User;
@@ -72,9 +76,11 @@ const TaskHistoryItem = ({ history }: Props) => {
 
 			{/* Content */}
 			<div className="flex-1 space-y-1 pt-1">
-				<div className="w-16 whitespace-nowrap pt-0.5 text-sm text-muted-foreground">
-					{formatDateRelative(history.insertedDate)}
-				</div>
+				<SimpleTooltip label={formatDateVerbose(history.insertedDate)}>
+					<div className="w-16 whitespace-nowrap pt-0.5 text-sm text-muted-foreground">
+						{formatDateRelative(history.insertedDate)}
+					</div>
+				</SimpleTooltip>
 				<div className="text-base text-foreground">
 					{history.comment ? (
 						history.comment

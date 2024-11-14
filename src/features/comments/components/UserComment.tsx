@@ -21,7 +21,7 @@ import { deleteComment } from "~/features/comments/actions/delete-comment";
 import { cn } from "~/lib/utils";
 import { type Comment, type User } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
-import { formatDateRelative } from "~/utils/formatDateRelative";
+import { formatDateRelative, formatDateVerbose } from "~/utils/dateFormatters";
 
 import getHTMLfromJSON from "../../text-editor/utils/getHTMLfromJSON";
 
@@ -143,9 +143,8 @@ const UserComment = ({
 							</div>
 							{isLastInGroup && (
 								<SimpleTooltip
-									label={format(
-										new Date(comment.insertedDate),
-										"MMM dd, yyyy, h:mm:ss aa",
+									label={formatDateVerbose(
+										comment.insertedDate,
 									)}
 								>
 									<p

@@ -11,10 +11,14 @@ export function formatDateRelative(date: Date) {
 		return format(date, "E " + timeFormat);
 	}
 
-	const dateFormat = "E MMM do";
+	const dateFormat = "MMM do";
 	if (isSameYear(date, new Date())) {
 		return format(date, dateFormat);
 	}
 
 	return format(date, dateFormat + " y");
+}
+
+export function formatDateVerbose(date: Date) {
+	return format(date, "MMM dd, yyyy, h:mm aaa");
 }
