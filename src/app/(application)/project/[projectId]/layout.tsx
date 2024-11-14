@@ -81,7 +81,8 @@ export default async function ApplicationLayout({
 
 	const aiUsageCount = await getAiLimitCount();
 
-	const defaultOpen = cookies().get("sidebar:state")?.value === "true";
+	const sidebarState = cookies().get("sidebar:state")?.value;
+	const defaultOpen = sidebarState === undefined || sidebarState === "true";
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>

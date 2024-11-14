@@ -13,7 +13,7 @@ import { type TaskHistory, type User } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
 
 import PropertyBadge from "./property/PropertyBadge";
-import { formatDateRelative } from "../utils/formatDateRelative";
+import { formatDateRelative } from "../../../utils/formatDateRelative";
 
 export interface TaskHistoryWithUser extends TaskHistory {
 	user: User;
