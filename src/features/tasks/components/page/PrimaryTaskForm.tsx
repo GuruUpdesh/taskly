@@ -119,7 +119,7 @@ const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	return (
 		<form
 			onSubmit={form.handleSubmit(onSubmit)}
-			className="mx-auto flex w-[600px] max-w-full flex-grow flex-col gap-2 px-4 pb-4 pt-2"
+			className="mx-auto flex w-[600px] max-w-full flex-grow flex-col gap-2 pb-4 pt-2"
 		>
 			<Input
 				type="text"
