@@ -164,22 +164,16 @@ export async function deleteTask(id: number) {
 		if (!task) return;
 
 		// update backlogOrder of the tasks
-		await db.transaction(async (tx) => {
-			await tx.delete(notifications).where(eq(notifications.taskId, id));
-			await tx
-				.update(tasks)
-				.set({ backlogOrder: sql`${tasks.backlogOrder} - 1` })
-				.where(
-					and(
-						eq(tasks.projectId, task.projectId),
-						gt(tasks.backlogOrder, task.backlogOrder),
-						ne(tasks.id, id),
-					),
-				);
-			await tx.delete(comments).where(eq(comments.taskId, id));
-			await tx.delete(taskHistory).where(eq(taskHistory.taskId, id));
-			await tx.delete(tasksToViews).where(eq(tasksToViews.taskId, id));
-		});
+		await db
+			.update(tasks)
+			.set({ backlogOrder: sql`${tasks.backlogOrder} - 1` })
+			.where(
+				and(
+					eq(tasks.projectId, task.projectId),
+					gt(tasks.backlogOrder, task.backlogOrder),
+					ne(tasks.id, id),
+				),
+			);
 
 		await db.delete(tasks).where(eq(tasks.id, id));
 

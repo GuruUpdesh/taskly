@@ -259,7 +259,9 @@ export const inviteRelations = relations(invites, ({ one }) => ({
 export const tasksToViews = pgTable(
 	"tasks_to_views",
 	{
-		taskId: integer("task_id").notNull(),
+		taskId: integer("task_id")
+			.references(() => tasks.id, { onDelete: "cascade" })
+			.notNull(),
 		userId: varchar("user_id", { length: 32 }).notNull(),
 		viewedAt: timestamp("viewed_at", {
 			precision: 6,
@@ -327,7 +329,9 @@ export const notifications = pgTable("notifications", {
 	date: timestamp("date", { precision: 6, withTimezone: true }).notNull(),
 	message: text("message").notNull(),
 	userId: varchar("user_id", { length: 32 }).notNull(),
-	taskId: integer("task_id"),
+	taskId: integer("task_id").references(() => tasks.id, {
+		onDelete: "cascade",
+	}),
 	projectId: integer("project_id").notNull(),
 	readAt: timestamp("read_at", { precision: 6, withTimezone: true }),
 });
@@ -370,7 +374,9 @@ export const PropertyKeyEnum = pgEnum("property_key", [
 export const taskHistory = pgTable("task_history", {
 	id: serial("id").primaryKey(),
 	comment: varchar("comment", { length: 255 }),
-	taskId: integer("task_id").notNull(),
+	taskId: integer("task_id")
+		.references(() => tasks.id, { onDelete: "cascade" })
+		.notNull(),
 	propertyKey: PropertyKeyEnum("property_key"),
 	propertyValue: varchar("property_value", { length: 255 }),
 	oldPropertyValue: varchar("old_property_value", { length: 255 }),
@@ -416,7 +422,9 @@ export const taskHistoryRelations = relations(taskHistory, ({ one }) => ({
 export const comments = pgTable("comments", {
 	id: serial("id").primaryKey(),
 	comment: text("comment").notNull(),
-	taskId: integer("task_id").notNull(),
+	taskId: integer("task_id")
+		.references(() => tasks.id, { onDelete: "cascade" })
+		.notNull(),
 	userId: varchar("user_id", { length: 255 }).notNull(),
 	insertedDate: timestamp("inserted_date", {
 		precision: 6,
