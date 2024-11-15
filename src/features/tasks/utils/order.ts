@@ -20,20 +20,22 @@ export async function updateOrder(taskOrder: Map<number, number>) {
 	const sqlChunks: SQL[] = [];
 	const ids: number[] = [];
 
-	sqlChunks.push(sql`(case`);
+	sqlChunks.push(sql`cast((case`);
 
 	for (const update of updatesData) {
 		sqlChunks.push(
-			sql`when ${tasks.id} = ${update.id} then CAST(${update.backlogOrder} AS INTEGER)`,
+			sql`when ${tasks.id} = ${update.id} then ${update.backlogOrder}`,
 		);
 		ids.push(update.id);
 	}
 
-	sqlChunks.push(sql`end)`);
+	sqlChunks.push(sql`end) as integer)`);
 	const finalSql: SQL = sql.join(sqlChunks, sql.raw(" "));
 
-	await db
+	const query = db
 		.update(tasks)
 		.set({ backlogOrder: finalSql })
 		.where(inArray(tasks.id, ids));
+
+	await query.execute();
 }
