@@ -2,7 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { addWeeks } from "date-fns";
-import { and, asc, eq, gte, lt } from "drizzle-orm";
+import { and, asc, eq, gte, inArray, lt, type SQL, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "~/db";
@@ -97,22 +97,49 @@ export async function updateSprintsForProject(
 			),
 		);
 
-	await db.transaction(async (tx) => {
-		let counter = 0;
-		for (const sprint of currentAndFutureSprints) {
-			await tx
-				.update(sprints)
-				.set({
-					startDate: addWeeks(sprintStart, counter * sprintDuration),
-					endDate: addWeeks(
-						sprintStart,
-						(counter + 1) * sprintDuration,
-					),
-				})
-				.where(eq(sprints.id, sprint.id));
-			counter++;
-		}
-	});
+	const startDateSqlChunks: SQL[] = [];
+	const endDateSqlChunks: SQL[] = [];
+	const ids: number[] = [];
+
+	let counter = 0;
+
+	startDateSqlChunks.push(sql`cast((case`);
+	endDateSqlChunks.push(sql`cast((case`);
+
+	for (const sprint of currentAndFutureSprints) {
+		const newSprintStartDate = addWeeks(
+			sprintStart,
+			counter * sprintDuration,
+		);
+		const newSprintEndDate = addWeeks(
+			sprintStart,
+			(counter + 1) * sprintDuration,
+		);
+
+		startDateSqlChunks.push(
+			sql`when ${sprints.id} = ${sprint.id} then ${newSprintStartDate}`,
+		);
+		endDateSqlChunks.push(
+			sql`when ${sprints.id} = ${sprint.id} then ${newSprintEndDate}`,
+		);
+
+		ids.push(sprint.id);
+
+		counter++;
+	}
+
+	startDateSqlChunks.push(sql`end) as date)`);
+	endDateSqlChunks.push(sql`end) as date)`);
+
+	const finalStartDateSql: SQL = sql.join(startDateSqlChunks, sql.raw(" "));
+	const finalEndDateSql: SQL = sql.join(endDateSqlChunks, sql.raw(" "));
+
+	const query = db
+		.update(sprints)
+		.set({ startDate: finalStartDateSql, endDate: finalEndDateSql })
+		.where(inArray(sprints.id, ids));
+
+	await query.execute();
 
 	await createSprintForProject();
 
