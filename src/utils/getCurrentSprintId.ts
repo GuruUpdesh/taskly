@@ -1,6 +1,6 @@
 import { isAfter, isBefore } from "date-fns";
 
-import { type Sprint } from "~/server/db/schema";
+import { type Sprint } from "~/schema";
 
 export function getCurrentSprintId(sprints: Sprint[]) {
 	const currentSprint = sprints.find((sprint) =>

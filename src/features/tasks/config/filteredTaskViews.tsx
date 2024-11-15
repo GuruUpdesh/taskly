@@ -1,4 +1,4 @@
-import { type Sprint } from "~/server/db/schema";
+import { type Sprint } from "~/schema";
 import { type Filter } from "~/store/app";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 

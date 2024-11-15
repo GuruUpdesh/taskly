@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-import { type Sprint } from "~/server/db/schema";
+import { type Sprint } from "~/schema";
 
 export function getSprintDateRage(sprint: Sprint) {
 	const startDate = format(new Date(sprint.startDate), "MMM d");

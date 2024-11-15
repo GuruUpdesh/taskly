@@ -3,7 +3,7 @@ import React from "react";
 import { auth } from "@clerk/nextjs/server";
 
 import { checkPermissions } from "~/actions/security/permissions";
-import { type UserRole } from "~/server/db/schema";
+import { type UserRole } from "~/schema";
 
 type PermissionProps = {
 	children: React.ReactNode;

@@ -4,8 +4,8 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-import { db } from "~/server/db";
-import { projectToIntegrations } from "~/server/db/schema";
+import { db } from "~/db";
+import { projectToIntegrations } from "~/schema";
 
 export async function cancelPendingIntegration(formData: FormData) {
 	const id = formData.get("integrationId");

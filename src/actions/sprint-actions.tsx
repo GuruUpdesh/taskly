@@ -5,9 +5,9 @@ import { addWeeks } from "date-fns";
 import { and, asc, eq, gte, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
+import { db } from "~/db";
 import { env } from "~/env.mjs";
-import { db } from "~/server/db";
-import { projects, sprints, usersToProjects } from "~/server/db/schema";
+import { projects, sprints, usersToProjects } from "~/schema";
 import buildUrl from "~/utils/buildUrl";
 
 export async function createSprintForProject() {

@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 
 import { authenticate } from "~/actions/security/authenticate";
 import { checkPermissions } from "~/actions/security/permissions";
-import { db } from "~/server/db";
+import { db } from "~/db";
 import {
 	type Project,
 	projects,
@@ -20,7 +20,7 @@ import {
 	comments,
 	taskHistory,
 	tasksToViews,
-} from "~/server/db/schema";
+} from "~/schema";
 
 export async function handleProjectInfo(
 	projectId: number,

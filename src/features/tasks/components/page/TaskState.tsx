@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import type { Task } from "~/server/db/schema";
+import type { Task } from "~/schema";
 import { useRealtimeStore } from "~/store/realtime";
 
 type Props = {

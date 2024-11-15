@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { db } from "~/server/db";
-import { taskHistory, tasks } from "~/server/db/schema";
+import { db } from "~/db";
+import { taskHistory, tasks } from "~/schema";
 
 export async function POST(request: Request) {
 	try {

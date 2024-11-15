@@ -12,7 +12,7 @@ import {
 	getPropertyConfig,
 } from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
-import { type TaskHistory, type User } from "~/server/db/schema";
+import { type TaskHistory, type User } from "~/schema";
 import { useRealtimeStore } from "~/store/realtime";
 import typography from "~/styles/typography";
 

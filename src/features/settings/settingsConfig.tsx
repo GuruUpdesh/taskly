@@ -7,7 +7,7 @@ import { AlertTriangle } from "lucide-react";
 import { AiOutlineTeam } from "react-icons/ai";
 import { PiPersonSimpleRun } from "react-icons/pi";
 
-import type { UserRole } from "~/server/db/schema";
+import type { UserRole } from "~/schema";
 
 export type settingsConfig = {
 	title: string;

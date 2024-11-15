@@ -1,9 +1,9 @@
 import { eq } from "drizzle-orm";
 import { type Metadata } from "next";
 
+import { db } from "~/db";
 import { TaskPageWrapper } from "~/features/tasks/components/page/TaskPageWrapper";
-import { db } from "~/server/db";
-import { tasks } from "~/server/db/schema";
+import { tasks } from "~/schema";
 
 type Params = {
 	params: {

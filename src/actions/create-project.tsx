@@ -10,15 +10,11 @@ import sharp from "sharp";
 import { authenticate } from "~/actions/security/authenticate";
 import { createSprintForProject } from "~/actions/sprint-actions";
 import { addUserToProject } from "~/actions/user-actions";
+import { db } from "~/db";
 import { env } from "~/env.mjs";
 import { createInvite } from "~/features/invite/actions/invite-actions";
 import { autoColor } from "~/features/settings/actions/settings-actions";
-import { db } from "~/server/db";
-import {
-	type NewProject,
-	projects,
-	insertProjectSchema,
-} from "~/server/db/schema";
+import { type NewProject, projects, insertProjectSchema } from "~/schema";
 
 type ProjectResponse = {
 	newProjectId: number;

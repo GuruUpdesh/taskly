@@ -25,7 +25,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "~/components/ui/card";
-import { type Sprint } from "~/server/db/schema";
+import { type Sprint } from "~/schema";
 
 import GraphTooltip from "./GraphTooltip";
 

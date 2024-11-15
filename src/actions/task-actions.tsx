@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 
+import { db } from "~/db";
 import { createNotification } from "~/features/notifications/actions/notification-actions";
 import { type TaskFormType as CreateTaskData } from "~/features/tasks/components/CreateTask";
 import {
@@ -14,7 +15,6 @@ import {
 	getPropertyConfig,
 } from "~/features/tasks/config/taskConfigType";
 import { taskNameToBranchName } from "~/features/tasks/utils/task-name-branch-converters";
-import { db } from "~/server/db";
 import {
 	comments,
 	insertTaskHistorySchema,
@@ -23,8 +23,8 @@ import {
 	tasks,
 	tasksToViews,
 	users,
-} from "~/server/db/schema";
-import { type Task } from "~/server/db/schema";
+} from "~/schema";
+import { type Task } from "~/schema";
 import { throwServerError } from "~/utils/errors";
 
 import { getCurrentSprintForProject } from "./sprint-actions";

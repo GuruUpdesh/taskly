@@ -2,8 +2,8 @@
 
 import { eq } from "drizzle-orm";
 
-import { db } from "~/server/db";
-import { projectToIntegrations, projects } from "~/server/db/schema";
+import { db } from "~/db";
+import { projectToIntegrations, projects } from "~/schema";
 
 import { authenticate } from "../../../actions/security/authenticate";
 

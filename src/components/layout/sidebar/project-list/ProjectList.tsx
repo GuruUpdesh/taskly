@@ -11,7 +11,7 @@ import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
 import { cn } from "~/lib/utils";
-import type { Project } from "~/server/db/schema";
+import type { Project } from "~/schema";
 import { useRealtimeStore } from "~/store/realtime";
 
 import CreateProjectDialog from "./CreateProjectDialog";

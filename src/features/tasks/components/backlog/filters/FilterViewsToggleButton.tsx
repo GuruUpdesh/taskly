@@ -6,7 +6,7 @@ import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import { type Sprint } from "~/server/db/schema";
+import { type Sprint } from "~/schema";
 import { useAppStore, type Filter } from "~/store/app";
 import { useRealtimeStore } from "~/store/realtime";
 
