@@ -2,12 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { type NotificationWithTask } from "~/features/notifications/actions/notification-actions";
-import {
-	type Project,
-	type Task,
-	type Sprint,
-	type User,
-} from "~/server/db/schema";
+import { type Project, type Task, type Sprint, type User } from "~/schema";
 
 interface RealtimeState {
 	project: Project | null;

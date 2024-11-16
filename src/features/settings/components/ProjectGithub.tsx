@@ -11,11 +11,11 @@ import Message from "~/components/Message";
 import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
+import { db } from "~/db";
 import { cancelPendingIntegration } from "~/features/github-integration/actions/cancel-pending-integration";
 import { getConnectedGithubRepo } from "~/features/github-integration/actions/get-connected-github-repo";
 import { cn } from "~/lib/utils";
-import { db } from "~/server/db";
-import { projectToIntegrations, type Project } from "~/server/db/schema";
+import { projectToIntegrations, type Project } from "~/schema";
 import typography from "~/styles/typography";
 
 import GithubAppConnect from "./GithubAppConnect";

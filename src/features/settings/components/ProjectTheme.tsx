@@ -37,7 +37,7 @@ import {
 } from "~/features/settings/actions/settings-actions";
 import safeAsync from "~/lib/safe-action";
 import { cn } from "~/lib/utils";
-import { type Project } from "~/server/db/schema";
+import { type Project } from "~/schema";
 
 type Props = {
 	project: Project;

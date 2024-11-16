@@ -1,9 +1,9 @@
 import { sql } from "drizzle-orm";
 import { z } from "zod";
 
+import { db } from "~/db";
 import { env } from "~/env.mjs";
-import { db } from "~/server/db";
-import { users } from "~/server/db/schema";
+import { users } from "~/schema";
 
 const clerkUserSchema = z.object({
 	id: z.string(),

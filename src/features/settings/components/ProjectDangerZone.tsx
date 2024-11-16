@@ -1,7 +1,7 @@
 import React from "react";
 
 import Permission from "~/components/Permission";
-import { type Project } from "~/server/db/schema";
+import { type Project } from "~/schema";
 
 import DeleteProjectButton from "./DeleteProjectButton";
 import LeaveProjectButton from "./LeaveProjectButton";

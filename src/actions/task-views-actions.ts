@@ -3,8 +3,8 @@
 import { and, eq } from "drizzle-orm";
 
 import { authenticate } from "~/actions/security/authenticate";
-import { db } from "~/server/db";
-import { tasksToViews } from "~/server/db/schema";
+import { db } from "~/db";
+import { tasksToViews } from "~/schema";
 
 export async function updateOrInsertTaskView(taskId: number, userId: string) {
 	const taskView = await db.query.tasksToViews.findFirst({
@@ -36,32 +36,23 @@ export async function getMostRecentTasks(projectId: number, number = 5) {
 	const userId = await authenticate();
 	if (!userId) return [];
 
-	const { recentlyViewed, recentlyEdited, recentlyCreated } =
-		await db.transaction(async (tx) => {
-			let recentlyViewed = await tx.query.tasksToViews.findMany({
-				where: (tasksToViews) => eq(tasksToViews.userId, userId),
-				orderBy: (tasksToViews, { desc }) => [
-					desc(tasksToViews.viewedAt),
-				],
-				with: {
-					task: true,
-				},
-			});
-			recentlyViewed = recentlyViewed.filter(
-				(v) => v.task.projectId === projectId,
-			);
-
-			const recentlyEdited = await tx.query.tasks.findMany({
-				where: (tasks) => eq(tasks.projectId, projectId),
-				orderBy: (tasks, { desc }) => [desc(tasks.lastEditedAt)],
-			});
-			const recentlyCreated = await tx.query.tasks.findMany({
-				where: (tasks) => eq(tasks.projectId, projectId),
-				orderBy: (tasks, { desc }) => [desc(tasks.insertedDate)],
-			});
-
-			return { recentlyViewed, recentlyEdited, recentlyCreated };
-		});
+	const [recentlyViewed, recentlyEdited, recentlyCreated] = await db.batch([
+		db.query.tasksToViews.findMany({
+			where: (tasksToViews) => eq(tasksToViews.userId, userId),
+			orderBy: (tasksToViews, { desc }) => [desc(tasksToViews.viewedAt)],
+			with: {
+				task: true,
+			},
+		}),
+		db.query.tasks.findMany({
+			where: (tasks) => eq(tasks.projectId, projectId),
+			orderBy: (tasks, { desc }) => [desc(tasks.lastEditedAt)],
+		}),
+		db.query.tasks.findMany({
+			where: (tasks) => eq(tasks.projectId, projectId),
+			orderBy: (tasks, { desc }) => [desc(tasks.insertedDate)],
+		}),
+	]);
 
 	// Deduplicate and categorize tasks
 	const categorizedTasks = {

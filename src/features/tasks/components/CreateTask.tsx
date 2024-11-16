@@ -42,12 +42,7 @@ import BubbleMenu from "~/features/text-editor/components/BubbleMenu";
 import RenderMentionOptions from "~/features/text-editor/components/RenderMentionOptions";
 import extensions from "~/features/text-editor/extensions";
 import { cn } from "~/lib/utils";
-import {
-	type NewTask,
-	type Sprint,
-	type Task,
-	type User,
-} from "~/server/db/schema";
+import { type NewTask, type Sprint, type Task, type User } from "~/schema";
 import { useRealtimeStore } from "~/store/realtime";
 import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";

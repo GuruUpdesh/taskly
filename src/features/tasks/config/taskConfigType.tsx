@@ -42,12 +42,7 @@ import {
 	getSprintProgress,
 	SprintProgressCircle,
 } from "~/features/tasks/utils/getSprintIcon";
-import {
-	type User,
-	type Task,
-	type Sprint,
-	selectTaskSchema,
-} from "~/server/db/schema";
+import { type User, type Task, type Sprint, selectTaskSchema } from "~/schema";
 import {
 	getCurrentSprintId,
 	helperIsSprintActive,

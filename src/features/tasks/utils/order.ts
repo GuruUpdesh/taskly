@@ -1,29 +1,41 @@
 "use server";
 
-import { kv } from "@vercel/kv";
-import { eq } from "drizzle-orm";
-import { z } from "zod";
+import { inArray, sql, type SQL } from "drizzle-orm";
 
-import { db } from "~/server/db";
-import { tasks } from "~/server/db/schema";
+import { db } from "~/db";
+import { tasks } from "~/schema";
 
 export async function updateOrder(taskOrder: Map<number, number>) {
-	const task_ids: string[] = Array.from(taskOrder.keys()).map(String);
-	const lockedTaskIds = await kv.get("taskOrder");
-	if (lockedTaskIds) {
-		const arrayOfLockedTaskIds = z.array(z.string()).parse(lockedTaskIds);
-		if (arrayOfLockedTaskIds.some((id) => task_ids.includes(id))) {
-			throw new Error("Some tasks are currently being updated");
-		}
+	const updatesData = Array.from(taskOrder.entries()).map(
+		([id, backlogOrder]) => ({
+			id,
+			backlogOrder,
+		}),
+	);
+
+	if (updatesData.length === 0) {
+		return;
 	}
-	await kv.set("taskOrder", task_ids);
-	await db.transaction(async (tx) => {
-		for (const [taskId, backlogOrder] of taskOrder) {
-			await tx
-				.update(tasks)
-				.set({ backlogOrder: backlogOrder })
-				.where(eq(tasks.id, taskId));
-		}
-	});
-	await kv.del("taskOrder");
+
+	const sqlChunks: SQL[] = [];
+	const ids: number[] = [];
+
+	sqlChunks.push(sql`cast((case`);
+
+	for (const update of updatesData) {
+		sqlChunks.push(
+			sql`when ${tasks.id} = ${update.id} then ${update.backlogOrder}`,
+		);
+		ids.push(update.id);
+	}
+
+	sqlChunks.push(sql`end) as integer)`);
+	const finalSql: SQL = sql.join(sqlChunks, sql.raw(" "));
+
+	const query = db
+		.update(tasks)
+		.set({ backlogOrder: finalSql })
+		.where(inArray(tasks.id, ids));
+
+	await query.execute();
 }

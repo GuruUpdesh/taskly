@@ -24,7 +24,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { handleProjectInfo } from "~/features/settings/actions/settings-actions";
 import safeAsync from "~/lib/safe-action";
 import { cn } from "~/lib/utils";
-import { type Project } from "~/server/db/schema";
+import { type Project } from "~/schema";
 import typography from "~/styles/typography";
 
 type Props = {

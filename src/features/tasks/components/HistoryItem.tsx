@@ -10,7 +10,7 @@ import {
 	type TaskProperty as TaskPropertyType,
 	getPropertyConfig,
 } from "~/features/tasks/config/taskConfigType";
-import { type TaskHistory, type User } from "~/server/db/schema";
+import { type TaskHistory, type User } from "~/schema";
 import { useRealtimeStore } from "~/store/realtime";
 import { formatDateRelative, formatDateVerbose } from "~/utils/dateFormatters";
 

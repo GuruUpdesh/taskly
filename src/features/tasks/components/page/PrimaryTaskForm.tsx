@@ -17,7 +17,7 @@ import { type UpdateTask } from "~/features/tasks/components/backlog/TasksContai
 import BubbleMenu from "~/features/text-editor/components/BubbleMenu";
 import RenderMentionOptions from "~/features/text-editor/components/RenderMentionOptions";
 import extensions from "~/features/text-editor/extensions";
-import type { NewTask, Task } from "~/server/db/schema";
+import type { NewTask, Task } from "~/schema";
 import { useRealtimeStore } from "~/store/realtime";
 
 import { type TaskHistoryWithUser } from "../HistoryItem";

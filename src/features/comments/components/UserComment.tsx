@@ -18,7 +18,7 @@ import {
 import UserProfilePicture from "~/components/UserProfilePicture";
 import { deleteComment } from "~/features/comments/actions/delete-comment";
 import { cn } from "~/lib/utils";
-import { type Comment, type User } from "~/server/db/schema";
+import { type Comment, type User } from "~/schema";
 import { useRealtimeStore } from "~/store/realtime";
 import { formatDateRelative, formatDateVerbose } from "~/utils/dateFormatters";
 

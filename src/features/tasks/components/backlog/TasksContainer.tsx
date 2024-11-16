@@ -26,7 +26,7 @@ import {
 import { updateOrder } from "~/features/tasks/utils/order";
 import { getRefetchIntervals } from "~/lib/refetchIntervals";
 import { cn } from "~/lib/utils";
-import type { Task as TaskType } from "~/server/db/schema";
+import type { Task as TaskType } from "~/schema";
 import { useAppStore } from "~/store/app";
 import { useRealtimeStore } from "~/store/realtime";
 

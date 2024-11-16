@@ -4,8 +4,8 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { authenticate } from "~/actions/security/authenticate";
-import { db } from "~/server/db";
-import { comments } from "~/server/db/schema";
+import { db } from "~/db";
+import { comments } from "~/schema";
 
 export async function deleteComment(commentId: number) {
 	const userId = await authenticate();

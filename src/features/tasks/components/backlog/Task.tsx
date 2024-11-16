@@ -25,7 +25,7 @@ import {
 	getPropertyConfig,
 } from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
-import { type Task as TaskType } from "~/server/db/schema";
+import { type Task as TaskType } from "~/schema";
 import { usePointStore } from "~/store/point";
 import { useRealtimeStore } from "~/store/realtime";
 

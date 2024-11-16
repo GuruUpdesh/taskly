@@ -3,8 +3,8 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { db } from "~/server/db";
-import { tasks, projects } from "~/server/db/schema";
+import { db } from "~/db";
+import { tasks, projects } from "~/schema";
 
 import { getAccessToken } from "../utils/get-access-token";
 import { getRepos } from "../utils/get-repos";

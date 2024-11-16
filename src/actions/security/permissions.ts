@@ -2,8 +2,8 @@
 
 import { and, eq } from "drizzle-orm";
 
-import { db } from "~/server/db";
-import { type UserRole } from "~/server/db/schema";
+import { db } from "~/db";
+import { type UserRole } from "~/schema";
 
 export async function checkPermissions(
 	userId: string,

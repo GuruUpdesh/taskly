@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 
 import { AnimatePresence } from "framer-motion";
 
-import { type User } from "~/server/db/schema";
+import { type User } from "~/schema";
 
 import CommentForm from "./CommentForm";
 import UserComment, { type CommentWithUser } from "./UserComment";

@@ -1,4 +1,4 @@
-import { type Sprint } from "~/server/db/schema";
+import { type Sprint } from "~/schema";
 interface SprintProgressCircleProps {
 	progress: number;
 	size?: number;

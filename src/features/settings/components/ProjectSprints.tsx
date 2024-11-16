@@ -5,7 +5,7 @@ import { ArrowRightIcon } from "lucide-react";
 
 import SprintOptionsForm from "~/features/settings/components/sprint-options/sprint-options-form";
 import { cn } from "~/lib/utils";
-import { type Project, type Sprint } from "~/server/db/schema";
+import { type Project, type Sprint } from "~/schema";
 
 type Props = {
 	sprints: Sprint[];

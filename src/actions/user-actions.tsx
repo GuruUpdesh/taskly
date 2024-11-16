@@ -2,8 +2,8 @@
 
 import { eq } from "drizzle-orm";
 
-import { db } from "~/server/db";
-import { type UserRole, usersToProjects } from "~/server/db/schema";
+import { db } from "~/db";
+import { type UserRole, usersToProjects } from "~/schema";
 
 export async function addUserToProject(
 	userId: string,

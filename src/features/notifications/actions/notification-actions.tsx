@@ -3,14 +3,14 @@
 import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-import { db } from "~/server/db";
+import { db } from "~/db";
 import {
 	notifications,
 	insertNotificationSchema,
 	type NewNotification,
 	type Task,
 	type Notification,
-} from "~/server/db/schema";
+} from "~/schema";
 import { type ActionReturnType } from "~/utils/actionReturnType";
 import { throwServerError } from "~/utils/errors";
 

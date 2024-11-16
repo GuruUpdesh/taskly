@@ -11,11 +11,11 @@ import { z } from "zod";
 
 import { authenticate } from "~/actions/security/authenticate";
 import { checkPermissions } from "~/actions/security/permissions";
+import { db } from "~/db";
 import { env } from "~/env.mjs";
 import ProjectInviteEmail from "~/features/invite/project-invite-email-template";
 import { createNotification } from "~/features/notifications/actions/notification-actions";
-import { db } from "~/server/db";
-import { invites, users, usersToProjects } from "~/server/db/schema";
+import { invites, users, usersToProjects } from "~/schema";
 
 const getInviteSchema = z.object({
 	userId: z.string(),

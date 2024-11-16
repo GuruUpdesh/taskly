@@ -5,9 +5,9 @@ import { kv } from "@vercel/kv";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
+import { db } from "~/db";
 import { AIDAILYLIMIT } from "~/features/ai/utils/aiLimit";
-import { db } from "~/server/db";
-import { users } from "~/server/db/schema";
+import { users } from "~/schema";
 
 // UserAiLimitSchema
 const UserAiLimitSchema = z.object({
