@@ -3,7 +3,6 @@ import React from "react";
 import { GearIcon, ReaderIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { LayoutDashboardIcon } from "lucide-react";
 import dynamic from "next/dynamic";
-import { Sora } from "next/font/google";
 
 import Logo from "~/components/Logo";
 const UserButton = dynamic(

@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useShallow } from "zustand/react/shallow";
 
+import SimpleTooltip from "~/components/SimpleTooltip";
 import UserProfilePicture from "~/components/UserProfilePicture";
 import {
 	type TaskProperty as TaskPropertyType,
@@ -11,13 +12,9 @@ import {
 } from "~/features/tasks/config/taskConfigType";
 import { type TaskHistory, type User } from "~/server/db/schema";
 import { useRealtimeStore } from "~/store/realtime";
+import { formatDateRelative, formatDateVerbose } from "~/utils/dateFormatters";
 
 import PropertyBadge from "./property/PropertyBadge";
-import {
-	formatDateRelative,
-	formatDateVerbose,
-} from "../../../utils/dateFormatters";
-import SimpleTooltip from "~/components/SimpleTooltip";
 
 export interface TaskHistoryWithUser extends TaskHistory {
 	user: User;
