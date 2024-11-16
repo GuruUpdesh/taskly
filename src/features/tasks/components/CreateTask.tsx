@@ -174,13 +174,13 @@ const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
 			>
 				{(form.watch("title") || form.watch("description")) &&
 				project?.isAiEnabled ? (
-					<SimpleTooltip label="Smart Properties">
+					<SimpleTooltip label="Apply Smart Properties">
 						<Button
 							disabled={isLoading}
 							type="button"
 							size="icon"
 							variant="outline"
-							className="h-[30px] w-[30px] bg-transparent"
+							className="h-[30px] w-[30px] rounded-lg bg-transparent"
 							onClick={() =>
 								aiAutoComplete(
 									form.watch("title"),
@@ -395,6 +395,7 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 						onClick={() => form.handleSubmit(handleSubmit)()}
 						disabled={!form.formState.isValid}
 						variant="secondary"
+						className="rounded-xl font-medium"
 					>
 						Create Task
 					</Button>
