@@ -80,7 +80,7 @@ async function createTaskCreateNotification(
 		taskId: taskId,
 		propertyKey: "assignee",
 		propertyValue: user.username,
-		comment: `created the task`,
+		comment: `Created the task`,
 		userId: user.id,
 		insertedDate: new Date(),
 	});

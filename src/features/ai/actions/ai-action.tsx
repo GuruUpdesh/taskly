@@ -4,10 +4,7 @@ import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
-import { getAssigneesForProject } from "~/actions/project-actions";
-import { getSprintsForProject } from "~/actions/sprint-actions";
 import { env } from "~/env.mjs";
-import { getTaskAiSchema } from "~/features/ai/utils/ai-context";
 import { schemaValidators } from "~/features/tasks/config/taskConfigType";
 import { type User } from "~/schema";
 
@@ -36,7 +33,6 @@ export async function aiAction(
 	});
 
 	const users = assignees.map((user) => user.username).join(", ");
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
 	const completion = await openai.beta.chat.completions.parse({
 		model: "gpt-4o-2024-08-06",
 		messages: [
@@ -49,12 +45,10 @@ export async function aiAction(
 				content: `What properties should I assign my task "${title}" which is described as: "${description}".`,
 			},
 		],
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		response_format: zodResponseFormat(TaskProperties, "task_properties"),
 	});
 
 	try {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
 		const task_properties = completion.choices[0]?.message.parsed;
 
 		if (!task_properties) {
@@ -62,8 +56,7 @@ export async function aiAction(
 			return;
 		}
 
-		const validated_properties = TaskProperties.parse(task_properties);
-		return validated_properties;
+		return task_properties;
 	} catch (e) {
 		console.error(e);
 		return;
@@ -77,67 +70,103 @@ const truncateDescription = (description: string, maxLength: number) => {
 	return description;
 };
 
-export async function aiGenerateTask(description: string, projectId: number) {
-	if (await isAiLimitReached()) {
-		return;
-	}
+export async function aiGenerateTask(
+	description: string,
+	projectId: number,
+	assignees: User[],
+) {
+	try {
+		if (description.length === 0) {
+			return { success: false, error: "No prompt provided" };
+		}
 
-	const context = await getMostRecentTasks(projectId, 5);
-	const contextJSON = JSON.stringify(
-		context.map((task) => ({
-			...task,
-			description: truncateDescription(task.description, 100),
-		})),
-	);
+		console.log("[AI] Task Creator - Starting generation", {
+			projectId,
+			assigneeCount: assignees.length,
+			descriptionLength: description.length,
+		});
 
-	const assignees = await getAssigneesForProject(projectId);
-	if (assignees.error !== null) {
-		console.error(assignees.error);
-		return;
-	}
-	const sprints = await getSprintsForProject(projectId);
+		if (await isAiLimitReached()) {
+			return { success: false, error: "AI usage limit reached" };
+		}
 
-	const taskSchema = getTaskAiSchema(assignees.data, sprints);
+		const Tasks = z.object({
+			tasks: z.array(
+				z.object({
+					title: z.string(),
+					description: z.string(),
+					status: schemaValidators.status,
+					points: schemaValidators.points,
+					priority: schemaValidators.priority,
+					type: schemaValidators.type,
+					assignee: z.string(),
+				}),
+			),
+		});
 
-	const prompt = `
-	RESPOND IN JSON FORMAT!
-	Create a new task for project management. Provide the following details:
-	Description of the task: ${description}
-	
-	If you feel this should be broken up into multiple tasks feel free to do so.
-	Please always return an array of tasks, even if it's just one task.
-
-	${taskSchema}
-
-	The most recent tasks are:
-	${contextJSON}
-
-	Note:
-		1. If the status is backlog, there cannot be a sprint.
-		2. If a sprint is selected, the status cannot be backlog.
-		3. The description can and should use basic markdown!
-			This includes: **bold**, #h1, ##h2, ###h3, *italic*, code (slanted quotes), <u>underlined</u>, [link](https://... "title), divider: ***
+		const systemOutlinePrompt = `
+	You are an expert in agile project management. You are responsible to create a new task or tasks that fulfill the users description. Generally avoid creating too many tasks, unless asked.
+	The description can and should use basic markdown! Please only include the following:
+	# h1,## h2,### h3,**bold**,*italic*,\`code\`,<u>underline</u>,~~slice~~,[link](https://),---,- bullet list,1. ordered list,- [ ] check list
+	\`\`\`
+	Code Block
+	\`\`\`
+	> Quote Block
 	`;
 
-	console.log(prompt);
+		const context = await getMostRecentTasks(projectId, 7);
+		const contextFormatted = [
+			"title,description,status,points,type,assignee,priority",
+			...context.map((item) =>
+				[
+					item.title,
+					truncateDescription(item.description, 20),
+					item.status,
+					item.points,
+					item.type,
+					item.assignee,
+					item.priority,
+				].join(","),
+			),
+		].join("\n");
+		const users = assignees.map((user) => user.username).join(", ");
 
-	const gptResponse = await openai.chat.completions.create({
-		messages: [
-			{
-				role: "assistant",
-				content: prompt,
-			},
-		],
-		model: "gpt-4o",
-	});
+		const completion = await openai.beta.chat.completions.parse({
+			model: "gpt-4o-2024-08-06",
+			messages: [
+				{
+					role: "system",
+					content: systemOutlinePrompt,
+				},
+				{
+					role: "user",
+					content: description,
+				},
+				{
+					role: "system",
+					content: `Context for this users request ${contextFormatted}. The only valid options for assignees are: ${users}`,
+				},
+			],
+			response_format: zodResponseFormat(Tasks, "tasks"),
+		});
 
-	if (!gptResponse.choices[0]?.message.content) {
-		return "";
+		const results = completion.choices[0]?.message.parsed;
+		if (!results?.tasks?.length) {
+			throw new Error("No tasks returned from OpenAI");
+		}
+
+		return {
+			success: true,
+			tasks: results.tasks,
+		};
+	} catch (error) {
+		console.error("[AI] Task Creator - Error:", error);
+		return {
+			success: false,
+			error:
+				error instanceof Error
+					? error.message
+					: "Unknown error occurred",
+		};
 	}
-
-	const jsonString = gptResponse.choices[0]?.message.content;
-	const jsonStart = jsonString.indexOf("[");
-	const jsonEnd = jsonString.lastIndexOf("]") + 1;
-
-	return jsonString.substring(jsonStart, jsonEnd);
 }
