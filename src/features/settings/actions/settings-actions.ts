@@ -1,7 +1,7 @@
 "use server";
 
 import chroma from "chroma-js";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { getAverageColor } from "fast-average-color-node";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -9,18 +9,7 @@ import { redirect } from "next/navigation";
 import { authenticate } from "~/actions/security/authenticate";
 import { checkPermissions } from "~/actions/security/permissions";
 import { db } from "~/db";
-import {
-	type Project,
-	projects,
-	tasks,
-	usersToProjects,
-	sprints,
-	invites,
-	notifications,
-	comments,
-	taskHistory,
-	tasksToViews,
-} from "~/schema";
+import { type Project, projects, tasks, usersToProjects } from "~/schema";
 
 export async function handleProjectInfo(
 	projectId: number,

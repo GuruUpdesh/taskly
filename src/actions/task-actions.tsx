@@ -12,11 +12,10 @@ import { type TaskFormType as CreateTaskData } from "~/features/tasks/components
 import {
 	type StatefulTask,
 	CreateTaskSchema,
-	getPropertyConfig,
 } from "~/features/tasks/config/taskConfigType";
 import { createTaskHistory } from "~/features/tasks/history/create-task-history";
 import { taskNameToBranchName } from "~/features/tasks/utils/task-name-branch-converters";
-import { insertTaskHistorySchema, taskHistory, tasks, users } from "~/schema";
+import { taskHistory, tasks, users } from "~/schema";
 import { type Task } from "~/schema";
 import { throwServerError } from "~/utils/errors";
 
