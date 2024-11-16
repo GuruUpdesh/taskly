@@ -54,7 +54,9 @@ export const tasks = pgTable("tasks", {
 		.defaultNow()
 		.notNull(),
 	assignee: varchar("assignee", { length: 255 }),
-	projectId: integer("project_id").notNull(),
+	projectId: integer("project_id")
+		.references(() => projects.id, { onDelete: "cascade" })
+		.notNull(),
 	sprintId: integer("sprint_id").default(-1).notNull(),
 	branchName: varchar("branch_name", { length: 255 }),
 });
@@ -135,7 +137,9 @@ export const projectsRelations = relations(projects, ({ many }) => ({
 export const IntegrationEnum = pgEnum("integration", ["github"]);
 export const projectToIntegrations = pgTable("project_to_integrations", {
 	id: serial("id").primaryKey(),
-	projectId: integer("project_id").notNull(),
+	projectId: integer("project_id")
+		.references(() => projects.id, { onDelete: "cascade" })
+		.notNull(),
 	integrationId: IntegrationEnum("type").default("github").notNull(),
 	userId: varchar("user_id", { length: 32 }).notNull(),
 });
@@ -193,7 +197,9 @@ export const usersToProjects = pgTable(
 	"users_to_projects",
 	{
 		userId: varchar("user_id", { length: 32 }).notNull(),
-		projectId: integer("project_id").notNull(),
+		projectId: integer("project_id")
+			.references(() => projects.id, { onDelete: "cascade" })
+			.notNull(),
 		userRole: UserRolesEnum("user_role").notNull(),
 	},
 	(t) => ({
@@ -230,7 +236,9 @@ export const invites = pgTable("invites", {
 	date: timestamp("date", { precision: 6, withTimezone: true }).notNull(),
 	token: varchar("token", { length: 255 }).notNull().unique(),
 	userId: varchar("user_id", { length: 32 }).notNull(),
-	projectId: integer("project_id").notNull(),
+	projectId: integer("project_id")
+		.references(() => projects.id, { onDelete: "cascade" })
+		.notNull(),
 });
 
 // validators
@@ -303,7 +311,9 @@ export const sprints = pgTable("sprints", {
 	endDate: timestamp("end_date", { precision: 6, withTimezone: true })
 		.default(addWeeks(startOfToday(), 2))
 		.notNull(),
-	projectId: integer("project_id").notNull(),
+	projectId: integer("project_id")
+		.references(() => projects.id, { onDelete: "cascade" })
+		.notNull(),
 });
 
 // types
@@ -332,7 +342,9 @@ export const notifications = pgTable("notifications", {
 	taskId: integer("task_id").references(() => tasks.id, {
 		onDelete: "cascade",
 	}),
-	projectId: integer("project_id").notNull(),
+	projectId: integer("project_id")
+		.references(() => projects.id, { onDelete: "cascade" })
+		.notNull(),
 	readAt: timestamp("read_at", { precision: 6, withTimezone: true }),
 });
 
