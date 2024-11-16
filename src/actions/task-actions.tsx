@@ -14,16 +14,9 @@ import {
 	CreateTaskSchema,
 	getPropertyConfig,
 } from "~/features/tasks/config/taskConfigType";
+import { createTaskHistory } from "~/features/tasks/history/create-task-history";
 import { taskNameToBranchName } from "~/features/tasks/utils/task-name-branch-converters";
-import {
-	comments,
-	insertTaskHistorySchema,
-	notifications,
-	taskHistory,
-	tasks,
-	tasksToViews,
-	users,
-} from "~/schema";
+import { insertTaskHistorySchema, taskHistory, tasks, users } from "~/schema";
 import { type Task } from "~/schema";
 import { throwServerError } from "~/utils/errors";
 
@@ -185,11 +178,7 @@ export async function deleteTask(id: number) {
 }
 
 export type UpdateTaskData = Partial<CreateTaskData>;
-export async function updateTask(
-	id: number,
-	data: UpdateTaskData,
-	waitForNotification = false,
-) {
+export async function updateTask(id: number, data: UpdateTaskData) {
 	try {
 		// validation
 		const requestedUpdates = CreateTaskSchema.partial().parse(data);
@@ -244,12 +233,8 @@ export async function updateTask(
 
 		await db.update(tasks).set(requestedTask).where(eq(tasks.id, id));
 
-		if (waitForNotification) {
-			await createTaskUpdateNotification(id, data, existingTask);
-			revalidatePath("/");
-		} else {
-			void createTaskUpdateNotification(id, data, existingTask);
-		}
+		await createTaskHistory(id, data, existingTask);
+		revalidatePath("/");
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			const validationError = fromZodError(error);
@@ -257,102 +242,6 @@ export async function updateTask(
 		}
 		if (error instanceof Error) throwServerError(error.message);
 	}
-	console.timeEnd("update task");
-}
-
-async function createTaskUpdateNotification(
-	taskId: number,
-	taskData: UpdateTaskData,
-	existingTask: Task,
-) {
-	const user = await currentUser();
-	if (!user) return;
-
-	const task = await db.query.tasks.findFirst({
-		where: (tasks) => eq(tasks.id, taskId),
-	});
-	if (!task) return;
-
-	taskData.sprintId = String(taskData.sprintId);
-	if (taskData.assignee === null) {
-		taskData.assignee = "unassigned";
-	}
-
-	const existingTaskTransformed = {
-		...existingTask,
-		sprintId: String(existingTask.sprintId),
-	};
-	if (existingTaskTransformed.assignee === null) {
-		existingTaskTransformed.assignee = "unassigned";
-	}
-
-	await db.transaction(async (tx) => {
-		for (const key in taskData) {
-			const value = taskData[key as keyof typeof taskData];
-			const excludedKeys = [
-				"lastEditedAt",
-				"insertedDate",
-				"backlogOrder",
-				"id",
-				"title",
-				"description",
-			];
-			if (value === undefined || excludedKeys.includes(key)) continue;
-
-			if (
-				Object.keys(taskData).length > 1 &&
-				(key === "sprintId" ||
-					(key === "assignee" &&
-						value === "unassigned" &&
-						Object.keys(taskData).length !== 2))
-			) {
-				continue;
-			}
-
-			const values = {
-				taskId: taskId,
-				propertyKey: key,
-				propertyValue: String(value),
-				oldPropertyValue: String(
-					existingTaskTransformed[key as keyof Task],
-				),
-				userId: user.id,
-				insertedDate: new Date(),
-			};
-
-			const validatedValues = insertTaskHistorySchema.parse(values);
-
-			await tx.insert(taskHistory).values(validatedValues);
-			if (
-				user?.username === task.assignee ||
-				!task.assignee ||
-				!validatedValues?.propertyKey
-			) {
-				console.log("Skipping notification");
-				return;
-			}
-
-			const config = getPropertyConfig(validatedValues.propertyKey);
-			const assignedUser = await db
-				.select()
-				.from(users)
-				.where(eq(users.username, task.assignee));
-			if (assignedUser.length === 0 || !assignedUser[0]) {
-				console.log("Skipping notification");
-				return;
-			}
-
-			await createNotification({
-				date: new Date(),
-				message: `${user.username} changed ${config.displayName} to ${validatedValues.propertyValue}`,
-				userId: assignedUser[0].userId,
-				taskId: taskId,
-				projectId: task.projectId,
-			});
-		}
-	});
-
-	revalidatePath("/");
 }
 
 export async function getTask(id: number) {
