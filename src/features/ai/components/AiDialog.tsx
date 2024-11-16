@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
 
+import { getCurrentSprintForProject } from "~/actions/sprint-actions";
 import { createTask } from "~/actions/task-actions";
 import Message from "~/components/Message";
 import SimpleTooltip from "~/components/SimpleTooltip";
@@ -31,7 +32,6 @@ import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
 import { taskNameToBranchName } from "~/features/tasks/utils/task-name-branch-converters";
 import { useRealtimeStore } from "~/store/realtime";
 import { useUserStore } from "~/store/user";
-import { getCurrentSprintForProject } from "~/actions/sprint-actions";
 
 type Props = {
 	projectId: string;
