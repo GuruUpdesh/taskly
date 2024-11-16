@@ -35,6 +35,12 @@ export async function createTaskHistory(
 	for (const key in incomingTaskData) {
 		const value = incomingTaskData[key as keyof typeof incomingTaskData];
 		if (value === undefined || excludedKeys.includes(key)) continue;
+		if (value === existingTaskTransformed[key as keyof Task]) continue;
+		console.log(
+			"Creating history item",
+			value,
+			existingTaskTransformed[key as keyof Task],
+		);
 
 		const newHistoryItem = {
 			taskId: taskId,
