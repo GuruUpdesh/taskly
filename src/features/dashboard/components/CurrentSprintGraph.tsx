@@ -7,8 +7,8 @@ import { and, eq, inArray } from "drizzle-orm";
 import dynamic from "next/dynamic";
 
 import { Skeleton } from "~/components/ui/skeleton";
-import { db } from "~/server/db";
-import { sprints, tasks } from "~/server/db/schema";
+import { db } from "~/db";
+import { sprints, tasks } from "~/schema";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
 import { type Result } from "./CurrentSprintAreaGraph";

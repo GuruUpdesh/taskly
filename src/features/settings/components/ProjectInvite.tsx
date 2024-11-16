@@ -2,7 +2,7 @@ import React from "react";
 
 import EmailInviteWrapper from "~/features/invite/components/by-email/email-invite-wrapper";
 import InviteLinkWrapper from "~/features/invite/components/invite-link-wrapper";
-import { type Project } from "~/server/db/schema";
+import { type Project } from "~/schema";
 
 type Props = {
 	project: Project;

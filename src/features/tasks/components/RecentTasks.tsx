@@ -7,7 +7,7 @@ import { getMostRecentTasks } from "~/actions/task-views-actions";
 import PropertyBadge from "~/features/tasks/components/property/PropertyBadge";
 import { getEnumOptionByKey } from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
-import { type Task as TaskType } from "~/server/db/schema";
+import { type Task as TaskType } from "~/schema";
 
 type RecentTasksProps = {
 	projectId: number;

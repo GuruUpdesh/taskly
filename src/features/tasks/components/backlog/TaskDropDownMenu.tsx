@@ -43,7 +43,7 @@ import {
 	taskVariants,
 } from "~/features/tasks/config/taskConfigType";
 import { cn } from "~/lib/utils";
-import type { Sprint, Task, User } from "~/server/db/schema";
+import type { Sprint, Task, User } from "~/schema";
 import { useAppStore } from "~/store/app";
 import { type Cmd } from "~/store/cmd";
 import { useRealtimeStore } from "~/store/realtime";

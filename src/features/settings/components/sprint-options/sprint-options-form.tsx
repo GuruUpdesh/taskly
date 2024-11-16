@@ -11,7 +11,7 @@ import { z } from "zod";
 
 import { updateSprintsForProject } from "~/actions/sprint-actions";
 import { Button } from "~/components/ui/button";
-import { type Project } from "~/server/db/schema";
+import { type Project } from "~/schema";
 
 import SprintOptions from "./sprint-options";
 

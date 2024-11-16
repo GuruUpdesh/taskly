@@ -3,11 +3,8 @@
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-import { db } from "~/server/db";
-import {
-	projectToIntegrations,
-	projectToIntegrationsSchema,
-} from "~/server/db/schema";
+import { db } from "~/db";
+import { projectToIntegrations, projectToIntegrationsSchema } from "~/schema";
 
 import { authenticate } from "../../../actions/security/authenticate";
 

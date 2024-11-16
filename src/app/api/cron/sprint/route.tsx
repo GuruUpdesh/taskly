@@ -2,9 +2,9 @@ import { addWeeks } from "date-fns";
 import { and, asc, desc, eq, ne } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 
+import { db } from "~/db";
 import { env } from "~/env.mjs";
-import { db } from "~/server/db";
-import { projects, sprints, tasks } from "~/server/db/schema";
+import { projects, sprints, tasks } from "~/schema";
 
 type Sprint =
 	| {

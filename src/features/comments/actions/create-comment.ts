@@ -5,9 +5,9 @@ import { revalidatePath } from "next/cache";
 
 import { authenticate } from "~/actions/security/authenticate";
 import { checkPermissions } from "~/actions/security/permissions";
+import { db } from "~/db";
 import { createNotification } from "~/features/notifications/actions/notification-actions";
-import { db } from "~/server/db";
-import { comments } from "~/server/db/schema";
+import { comments } from "~/schema";
 
 export async function createComment(comment: string, taskId: number) {
 	const userId = await authenticate();

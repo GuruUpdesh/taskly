@@ -1,26 +1,15 @@
 "use server";
 
 import chroma from "chroma-js";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { getAverageColor } from "fast-average-color-node";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { authenticate } from "~/actions/security/authenticate";
 import { checkPermissions } from "~/actions/security/permissions";
-import { db } from "~/server/db";
-import {
-	type Project,
-	projects,
-	tasks,
-	usersToProjects,
-	sprints,
-	invites,
-	notifications,
-	comments,
-	taskHistory,
-	tasksToViews,
-} from "~/server/db/schema";
+import { db } from "~/db";
+import { type Project, projects, tasks, usersToProjects } from "~/schema";
 
 export async function handleProjectInfo(
 	projectId: number,
@@ -79,34 +68,8 @@ export async function handleDeleteProject(projectId: number) {
 	if (!projectData) {
 		return { success: false, message: "Project not found" };
 	}
-	await db.transaction(async (tx) => {
-		const tasksToDelete = await tx
-			.select({ id: tasks.id })
-			.from(tasks)
-			.where(eq(tasks.projectId, projectData.id));
-		const tasksToDeleteIds: number[] = tasksToDelete.map((task) => task.id);
-		await tx
-			.delete(notifications)
-			.where(eq(notifications.projectId, projectData.id));
-		await tx.delete(projects).where(eq(projects.id, projectData.id));
-		await tx
-			.delete(usersToProjects)
-			.where(eq(usersToProjects.projectId, projectData.id));
-		await tx.delete(tasks).where(eq(tasks.projectId, projectData.id));
-		await tx.delete(sprints).where(eq(sprints.projectId, projectData.id));
-		await tx.delete(invites).where(eq(invites.projectId, projectData.id));
-		if (tasksToDeleteIds.length > 0) {
-			await tx
-				.delete(comments)
-				.where(inArray(comments.taskId, tasksToDeleteIds));
-			await tx
-				.delete(taskHistory)
-				.where(inArray(taskHistory.taskId, tasksToDeleteIds));
-			await tx
-				.delete(tasksToViews)
-				.where(inArray(tasksToViews.taskId, tasksToDeleteIds));
-		}
-	});
+
+	await db.delete(projects).where(eq(projects.id, projectData.id));
 	redirect("/");
 }
 

@@ -7,7 +7,7 @@ import React, {
 
 import UserProfilePicture from "~/components/UserProfilePicture";
 import { cn } from "~/lib/utils";
-import { type User } from "~/server/db/schema";
+import { type User } from "~/schema";
 
 interface DropdownProps {
 	items: User[];

@@ -3,7 +3,7 @@
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-import { db } from "~/server/db";
+import { db } from "~/db";
 import {
 	projects,
 	insertProjectSchema,
@@ -11,8 +11,8 @@ import {
 	type UserRole,
 	type UsersToProjects,
 	type Project,
-} from "~/server/db/schema";
-import { type NewProject } from "~/server/db/schema";
+} from "~/schema";
+import { type NewProject } from "~/schema";
 import { type ActionReturnType } from "~/utils/actionReturnType";
 import { throwServerError } from "~/utils/errors";
 

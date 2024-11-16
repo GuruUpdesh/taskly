@@ -1,7 +1,7 @@
 import Mention from "@tiptap/extension-mention";
 import { generateHTML, type JSONContent } from "@tiptap/react";
 
-import { type User } from "~/server/db/schema";
+import { type User } from "~/schema";
 
 import RenderMentionOptions from "../components/RenderMentionOptions";
 import extensions from "../extensions";

@@ -54,7 +54,9 @@ export const tasks = pgTable("tasks", {
 		.defaultNow()
 		.notNull(),
 	assignee: varchar("assignee", { length: 255 }),
-	projectId: integer("project_id").notNull(),
+	projectId: integer("project_id")
+		.references(() => projects.id, { onDelete: "cascade" })
+		.notNull(),
 	sprintId: integer("sprint_id").default(-1).notNull(),
 	branchName: varchar("branch_name", { length: 255 }),
 });
@@ -135,7 +137,9 @@ export const projectsRelations = relations(projects, ({ many }) => ({
 export const IntegrationEnum = pgEnum("integration", ["github"]);
 export const projectToIntegrations = pgTable("project_to_integrations", {
 	id: serial("id").primaryKey(),
-	projectId: integer("project_id").notNull(),
+	projectId: integer("project_id")
+		.references(() => projects.id, { onDelete: "cascade" })
+		.notNull(),
 	integrationId: IntegrationEnum("type").default("github").notNull(),
 	userId: varchar("user_id", { length: 32 }).notNull(),
 });
@@ -193,7 +197,9 @@ export const usersToProjects = pgTable(
 	"users_to_projects",
 	{
 		userId: varchar("user_id", { length: 32 }).notNull(),
-		projectId: integer("project_id").notNull(),
+		projectId: integer("project_id")
+			.references(() => projects.id, { onDelete: "cascade" })
+			.notNull(),
 		userRole: UserRolesEnum("user_role").notNull(),
 	},
 	(t) => ({
@@ -230,7 +236,9 @@ export const invites = pgTable("invites", {
 	date: timestamp("date", { precision: 6, withTimezone: true }).notNull(),
 	token: varchar("token", { length: 255 }).notNull().unique(),
 	userId: varchar("user_id", { length: 32 }).notNull(),
-	projectId: integer("project_id").notNull(),
+	projectId: integer("project_id")
+		.references(() => projects.id, { onDelete: "cascade" })
+		.notNull(),
 });
 
 // validators
@@ -259,7 +267,9 @@ export const inviteRelations = relations(invites, ({ one }) => ({
 export const tasksToViews = pgTable(
 	"tasks_to_views",
 	{
-		taskId: integer("task_id").notNull(),
+		taskId: integer("task_id")
+			.references(() => tasks.id, { onDelete: "cascade" })
+			.notNull(),
 		userId: varchar("user_id", { length: 32 }).notNull(),
 		viewedAt: timestamp("viewed_at", {
 			precision: 6,
@@ -301,7 +311,9 @@ export const sprints = pgTable("sprints", {
 	endDate: timestamp("end_date", { precision: 6, withTimezone: true })
 		.default(addWeeks(startOfToday(), 2))
 		.notNull(),
-	projectId: integer("project_id").notNull(),
+	projectId: integer("project_id")
+		.references(() => projects.id, { onDelete: "cascade" })
+		.notNull(),
 });
 
 // types
@@ -327,8 +339,12 @@ export const notifications = pgTable("notifications", {
 	date: timestamp("date", { precision: 6, withTimezone: true }).notNull(),
 	message: text("message").notNull(),
 	userId: varchar("user_id", { length: 32 }).notNull(),
-	taskId: integer("task_id"),
-	projectId: integer("project_id").notNull(),
+	taskId: integer("task_id").references(() => tasks.id, {
+		onDelete: "cascade",
+	}),
+	projectId: integer("project_id")
+		.references(() => projects.id, { onDelete: "cascade" })
+		.notNull(),
 	readAt: timestamp("read_at", { precision: 6, withTimezone: true }),
 });
 
@@ -370,7 +386,9 @@ export const PropertyKeyEnum = pgEnum("property_key", [
 export const taskHistory = pgTable("task_history", {
 	id: serial("id").primaryKey(),
 	comment: varchar("comment", { length: 255 }),
-	taskId: integer("task_id").notNull(),
+	taskId: integer("task_id")
+		.references(() => tasks.id, { onDelete: "cascade" })
+		.notNull(),
 	propertyKey: PropertyKeyEnum("property_key"),
 	propertyValue: varchar("property_value", { length: 255 }),
 	oldPropertyValue: varchar("old_property_value", { length: 255 }),
@@ -416,7 +434,9 @@ export const taskHistoryRelations = relations(taskHistory, ({ one }) => ({
 export const comments = pgTable("comments", {
 	id: serial("id").primaryKey(),
 	comment: text("comment").notNull(),
-	taskId: integer("task_id").notNull(),
+	taskId: integer("task_id")
+		.references(() => tasks.id, { onDelete: "cascade" })
+		.notNull(),
 	userId: varchar("user_id", { length: 255 }).notNull(),
 	insertedDate: timestamp("inserted_date", {
 		precision: 6,

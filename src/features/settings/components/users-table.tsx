@@ -39,7 +39,7 @@ import {
 	removeUserFromProject,
 } from "~/features/settings/actions/settings-actions";
 import { cn } from "~/lib/utils";
-import { userRoles } from "~/server/db/schema";
+import { userRoles } from "~/schema";
 
 function UsersTable({
 	users,

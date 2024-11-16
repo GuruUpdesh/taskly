@@ -13,7 +13,7 @@ import {
 	Clock12,
 } from "lucide-react";
 
-import { type Sprint } from "~/server/db/schema";
+import { type Sprint } from "~/schema";
 
 const clockIcons = [
 	<Clock1 key={1} className="h-4 w-4" />,

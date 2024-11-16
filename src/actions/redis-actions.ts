@@ -5,7 +5,7 @@ import { kv } from "@vercel/kv";
 import { z } from "zod";
 
 import { authenticate } from "~/actions/security/authenticate";
-import { type Project, selectProjectSchema } from "~/server/db/schema";
+import { type Project, selectProjectSchema } from "~/schema";
 
 import { getAllProjects } from "./project-actions";
 

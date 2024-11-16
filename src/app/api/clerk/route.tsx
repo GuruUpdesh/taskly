@@ -3,14 +3,9 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { Webhook as svixWebhook } from "svix";
 
+import { db } from "~/db";
 import { env } from "~/env.mjs";
-import { db } from "~/server/db";
-import {
-	type NewUser,
-	insertUserSchema,
-	users,
-	tasks,
-} from "~/server/db/schema";
+import { type NewUser, insertUserSchema, users, tasks } from "~/schema";
 
 const webhookSecret = env.CLERK_WEBHOOK_SECRET;
 

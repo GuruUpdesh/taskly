@@ -1,7 +1,7 @@
 import React from "react";
 
 import { getTasksFromProject } from "~/actions/task-actions";
-import { type Task } from "~/server/db/schema";
+import { type Task } from "~/schema";
 
 import { DataCardFigure } from "./DataCard";
 

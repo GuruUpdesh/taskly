@@ -1,9 +1,9 @@
 import { kv } from "@vercel/kv";
 import { type NextRequest } from "next/server";
 
+import { db } from "~/db";
 import { env } from "~/env.mjs";
-import { db } from "~/server/db";
-import { users } from "~/server/db/schema";
+import { users } from "~/schema";
 
 export async function GET(request: NextRequest) {
 	const authHeader = request.headers.get("authorization");
