@@ -1,5 +1,7 @@
 import { env } from "process";
 
+import { logger } from "~/lib/logger";
+
 export function getRefetchIntervals() {
 	const defaultIntervals = {
 		tasks: 6 * 1000,
@@ -10,6 +12,7 @@ export function getRefetchIntervals() {
 	};
 
 	if (env.NEXT_PUBLIC_NODE_ENV === "development") {
+		logger.warn("[React Query] Using development refetch intervals!");
 		const devIntervals = {
 			tasks: defaultIntervals.tasks * 5,
 			projects: defaultIntervals.projects * 5,
@@ -18,6 +21,9 @@ export function getRefetchIntervals() {
 			task: defaultIntervals.task * 5,
 		};
 		return devIntervals;
+	} else {
+		logger.warn("[React Query] Using production refetch intervals!");
 	}
+
 	return defaultIntervals;
 }

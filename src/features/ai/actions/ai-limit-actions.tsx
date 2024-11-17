@@ -7,6 +7,7 @@ import { z } from "zod";
 
 import { db } from "~/db";
 import { AIDAILYLIMIT } from "~/features/ai/utils/aiLimit";
+import { logger } from "~/lib/logger";
 import { users } from "~/schema";
 
 // UserAiLimitSchema
@@ -15,12 +16,15 @@ const UserAiLimitSchema = z.object({
 });
 
 export async function isAiLimitReached() {
-	console.log("Checking if AI limit is reached...");
 	const { userId } = await auth();
+	const childLogger = logger.child({ userId });
+
 	if (!userId) {
-		console.log("No user ID found.");
+		childLogger.error("[AI] Limit userId not found");
 		return true;
 	}
+
+	childLogger.info("[AI] Limit check");
 
 	const userResults = await db
 		.select()
@@ -30,32 +34,34 @@ export async function isAiLimitReached() {
 
 	const user = userResults[0];
 	if (!user) {
-		console.log("No user found.");
+		logger.error("[AI] Limit user not found");
 		return true;
 	}
 
 	const data = await kv.get(user.userId + "aiDailyLimit");
 	if (!data) {
-		console.log("No data found. Setting count to 0.");
+		logger.debug("[AI] [Redis] Value not found, setting to 0");
 		await kv.set(user.userId + "aiDailyLimit", { count: 0 });
 		return false;
 	}
 
 	const parsedData = UserAiLimitSchema.parse(data);
 	if (parsedData.count >= AIDAILYLIMIT) {
-		console.log("AI daily limit reached.");
+		logger.debug(`[AI] Limit Reached! ${parsedData.count}/${AIDAILYLIMIT}`);
 		return true;
 	}
 
 	await kv.set(user.userId + "aiDailyLimit", { count: parsedData.count + 1 });
-	console.log("AI daily limit not reached.");
+	logger.debug(
+		`[AI] Limit incremented ${parsedData.count + 1}/${AIDAILYLIMIT}`,
+	);
 	return false;
 }
 
 export async function getAiLimitCount() {
 	const { userId } = await auth();
 	if (!userId) {
-		console.log("No user ID found.");
+		logger.error("[AI] Get Limit no userId found!");
 		return 0;
 	}
 
@@ -67,18 +73,18 @@ export async function getAiLimitCount() {
 
 	const user = userResults[0];
 	if (!user) {
-		console.log("No user found.");
+		logger.error("[AI] Get Limit no user found!");
 		return 0;
 	}
 
 	const data = await kv.get(user.userId + "aiDailyLimit");
 	if (!data) {
-		console.log("No data found. Setting count to 0.");
+		logger.debug("[AI] [Redis] Get Limit not found, setting to 0");
 		await kv.set(user.userId + "aiDailyLimit", { count: 0 });
 		return 0;
 	}
 
 	const parsedData = UserAiLimitSchema.parse(data);
-	console.log("AI limit count:", parsedData.count);
+	logger.info({ userId, limit: parsedData.count }, "[AI] Get Limit");
 	return parsedData.count;
 }

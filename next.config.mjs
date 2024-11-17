@@ -30,10 +30,11 @@ const config = {
 		],
 	},
 	devIndicators: {
-		buildActivityPosition: 'bottom-right',
+		buildActivityPosition: "bottom-right",
 	},
 	experimental: {
 		instrumentationHook: true,
+		serverComponentsExternalPackages: ["pino"],
 	},
 };
 
