@@ -120,6 +120,7 @@ const TaskList = ({
 													"pointer-events-none":
 														task.options.isPending,
 													"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
+														task.options.isNew &&
 														!task.options.isPending,
 												},
 											)}
