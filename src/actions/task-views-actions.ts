@@ -121,17 +121,3 @@ export async function getMostRecentTasks(projectId: number, number = 5) {
 	const sortedTasks = distributeTasksDynamically().slice(0, number);
 	return sortedTasks;
 }
-
-export async function deleteViewsForTask(taskId: number) {
-	const userId = await authenticate();
-	if (!userId) return;
-
-	await db
-		.delete(tasksToViews)
-		.where(
-			and(
-				eq(tasksToViews.taskId, taskId),
-				eq(tasksToViews.userId, userId),
-			),
-		);
-}

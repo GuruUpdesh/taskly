@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { env } from "~/env.mjs";
 import { schemaValidators } from "~/features/tasks/config/taskConfigType";
+import { logger } from "~/lib/logger";
 import { type User } from "~/schema";
 
 import { isAiLimitReached } from "./ai-limit-actions";
@@ -80,13 +81,15 @@ export async function aiGenerateTask(
 			return { success: false, error: "No prompt provided" };
 		}
 
-		console.log("[AI] Task Creator - Starting generation", {
+		const loggerContext = {
 			projectId,
 			assigneeCount: assignees.length,
-			descriptionLength: description.length,
-		});
+			descriptionLength: description,
+		};
+		logger.info(loggerContext, "[AI] Task creator starting generation");
 
 		if (await isAiLimitReached()) {
+			logger.warn("[AI] Usage limit reached");
 			return { success: false, error: "AI usage limit reached" };
 		}
 
@@ -160,7 +163,7 @@ export async function aiGenerateTask(
 			tasks: results.tasks,
 		};
 	} catch (error) {
-		console.error("[AI] Task Creator - Error:", error);
+		logger.error(error, "[AI] Task creator");
 		return {
 			success: false,
 			error:

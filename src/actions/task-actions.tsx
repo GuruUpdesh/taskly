@@ -16,18 +16,23 @@ import {
 import { createTaskHistory } from "~/features/tasks/history/create-task-history";
 import { normalizeTaskSprintStatus } from "~/features/tasks/utils/normalizeTaskSprintStatus";
 import { taskNameToBranchName } from "~/features/tasks/utils/task-name-branch-converters";
+import { logger } from "~/lib/logger";
 import { taskHistory, tasks, users } from "~/schema";
 import { type Task } from "~/schema";
 import { throwServerError } from "~/utils/errors";
 
+import { authenticate } from "./security/authenticate";
+import { checkPermissions } from "./security/permissions";
 import { getCurrentSprintForProject } from "./sprint-actions";
-import {
-	deleteViewsForTask,
-	updateOrInsertTaskView,
-} from "./task-views-actions";
+import { updateOrInsertTaskView } from "./task-views-actions";
 
 export async function createTask(data: CreateTaskData) {
 	try {
+		const userId = await authenticate();
+		await checkPermissions(userId, data.projectId);
+
+		const childLogger = logger.child({ data, userId });
+
 		const newTask = CreateTaskSchema.parse(data);
 
 		const maxBacklogOrder = await db
@@ -53,6 +58,8 @@ export async function createTask(data: CreateTaskData) {
 			newTask,
 			sprint?.id ?? -1,
 		);
+
+		childLogger.debug(normalizedNewTask, "[TASK] Create normalized task");
 
 		const task = await db
 			.insert(tasks)
@@ -160,11 +167,20 @@ export async function getAllActiveTasksForProject(projectId: number) {
 
 export async function deleteTask(id: number) {
 	try {
-		// get all the tasks from the project that who's order is greater than the task being deleted
+		const userId = await authenticate();
+
+		const childLogger = logger.child({ id, userId });
+		childLogger.info("[TASK] Delete");
+
 		const task = await db.query.tasks.findFirst({
 			where: (tasks) => eq(tasks.id, id),
 		});
-		if (!task) return;
+		if (!task) {
+			childLogger.error("[TASK] Delete cannot found task");
+			return;
+		}
+
+		await checkPermissions(userId, task.projectId);
 
 		// update backlogOrder of the tasks
 		await db
@@ -180,21 +196,22 @@ export async function deleteTask(id: number) {
 
 		await db.delete(tasks).where(eq(tasks.id, id));
 
-		void deleteViewsForTask(id);
 		revalidatePath("/");
 	} catch (error) {
-		// if (error instanceof Error) throwServerError(error.message);
-		console.error(error);
+		logger.error(error, "[TASK] Delete");
 	}
 }
 
 export type UpdateTaskData = Partial<CreateTaskData>;
 export async function updateTask(id: number, data: UpdateTaskData) {
 	try {
+		const userId = await authenticate();
+		const childLogger = logger.child({ id, data, userId });
+
 		// validation
 		const requestedUpdates = CreateTaskSchema.partial().parse(data);
 		if (Object.keys(requestedUpdates).length === 0) {
-			console.warn("No data to update");
+			childLogger.warn("[TASK] Update requested no changes!");
 			return;
 		}
 
@@ -204,9 +221,11 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 		});
 
 		if (!existingTask) {
-			console.error(`Failed to fetch existing task ${id}`);
+			childLogger.error("[TASK] Update current task not found!");
 			return;
 		}
+
+		await checkPermissions(userId, existingTask.projectId);
 
 		// get the proposed task object
 		const requestedTask = {
@@ -226,10 +245,15 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 			requestedTask,
 		);
 
-		console.log("NORMALIZED: ----------------", {
-			status: normalizedUpdates.status,
-			sprintId: normalizedUpdates.sprintId,
-		});
+		logger.info(
+			{
+				normalized: {
+					status: normalizedUpdates.status,
+					sprintId: normalizedUpdates.sprintId,
+				},
+			},
+			"[TASK] Update normalized",
+		);
 
 		await db.update(tasks).set(normalizedUpdates).where(eq(tasks.id, id));
 

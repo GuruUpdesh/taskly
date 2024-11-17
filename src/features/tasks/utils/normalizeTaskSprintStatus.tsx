@@ -1,3 +1,4 @@
+import { logger } from "~/lib/logger";
 import { type Task } from "~/schema";
 
 type TaskStatus = Task["status"];
@@ -32,17 +33,18 @@ export function normalizeTaskSprintStatus<T extends TaskKeys>(
 		return from;
 	}
 
-	console.log(
-		"FROM: ----------------",
+	logger.debug(
 		{
-			status: from.status,
-			sprintId: from.sprintId,
+			from: {
+				status: from.status,
+				sprintId: from.sprintId,
+			},
+			to: {
+				status: to.status,
+				spritId: to.sprintId,
+			},
 		},
-		"TO: ----------------",
-		{
-			status: to.status,
-			spritId: to.sprintId,
-		},
+		"[TASK] normalizer",
 	);
 
 	const changedKeys = getChangedKeys(from, to);
