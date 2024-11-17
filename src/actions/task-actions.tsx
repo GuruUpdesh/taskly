@@ -14,19 +14,25 @@ import {
 	CreateTaskSchema,
 } from "~/features/tasks/config/taskConfigType";
 import { createTaskHistory } from "~/features/tasks/history/create-task-history";
+import { normalizeTaskSprintStatus } from "~/features/tasks/utils/normalizeTaskSprintStatus";
 import { taskNameToBranchName } from "~/features/tasks/utils/task-name-branch-converters";
+import { logger } from "~/lib/logger";
 import { taskHistory, tasks, users } from "~/schema";
 import { type Task } from "~/schema";
 import { throwServerError } from "~/utils/errors";
 
+import { authenticate } from "./security/authenticate";
+import { checkPermissions } from "./security/permissions";
 import { getCurrentSprintForProject } from "./sprint-actions";
-import {
-	deleteViewsForTask,
-	updateOrInsertTaskView,
-} from "./task-views-actions";
+import { updateOrInsertTaskView } from "./task-views-actions";
 
 export async function createTask(data: CreateTaskData) {
 	try {
+		const userId = await authenticate();
+		await checkPermissions(userId, data.projectId);
+
+		const childLogger = logger.child({ data, userId });
+
 		const newTask = CreateTaskSchema.parse(data);
 
 		const maxBacklogOrder = await db
@@ -46,7 +52,19 @@ export async function createTask(data: CreateTaskData) {
 
 		newTask.branchName = taskNameToBranchName(newTask.title);
 
-		const task = await db.insert(tasks).values(newTask).returning();
+		const sprint = await getCurrentSprintForProject(newTask.projectId);
+
+		const normalizedNewTask = normalizeTaskSprintStatus(
+			newTask,
+			sprint?.id ?? -1,
+		);
+
+		childLogger.debug(normalizedNewTask, "[TASK] Create normalized task");
+
+		const task = await db
+			.insert(tasks)
+			.values(normalizedNewTask)
+			.returning();
 
 		if (task[0]) {
 			void createTaskCreateNotification(task[0].id, newTask);
@@ -80,7 +98,7 @@ async function createTaskCreateNotification(
 		taskId: taskId,
 		propertyKey: "assignee",
 		propertyValue: user.username,
-		comment: `created the task`,
+		comment: `Created the task`,
 		userId: user.id,
 		insertedDate: new Date(),
 	});
@@ -149,11 +167,20 @@ export async function getAllActiveTasksForProject(projectId: number) {
 
 export async function deleteTask(id: number) {
 	try {
-		// get all the tasks from the project that who's order is greater than the task being deleted
+		const userId = await authenticate();
+
+		const childLogger = logger.child({ id, userId });
+		childLogger.info("[TASK] Delete");
+
 		const task = await db.query.tasks.findFirst({
 			where: (tasks) => eq(tasks.id, id),
 		});
-		if (!task) return;
+		if (!task) {
+			childLogger.error("[TASK] Delete cannot found task");
+			return;
+		}
+
+		await checkPermissions(userId, task.projectId);
 
 		// update backlogOrder of the tasks
 		await db
@@ -169,20 +196,22 @@ export async function deleteTask(id: number) {
 
 		await db.delete(tasks).where(eq(tasks.id, id));
 
-		void deleteViewsForTask(id);
 		revalidatePath("/");
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
+		logger.error(error, "[TASK] Delete");
 	}
 }
 
 export type UpdateTaskData = Partial<CreateTaskData>;
 export async function updateTask(id: number, data: UpdateTaskData) {
 	try {
+		const userId = await authenticate();
+		const childLogger = logger.child({ id, data, userId });
+
 		// validation
 		const requestedUpdates = CreateTaskSchema.partial().parse(data);
 		if (Object.keys(requestedUpdates).length === 0) {
-			console.warn("No data to update");
+			childLogger.warn("[TASK] Update requested no changes!");
 			return;
 		}
 
@@ -190,10 +219,13 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 		const existingTask = await db.query.tasks.findFirst({
 			where: (tasks) => eq(tasks.id, id),
 		});
+
 		if (!existingTask) {
-			console.error(`Failed to fetch existing task ${id}`);
+			childLogger.error("[TASK] Update current task not found!");
 			return;
 		}
+
+		await checkPermissions(userId, existingTask.projectId);
 
 		// get the proposed task object
 		const requestedTask = {
@@ -202,35 +234,28 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 			lastEditedAt: new Date(),
 		};
 
-		// get the current sprint in case of auto changes
+		// normalize the sprint and status
 		const sprint = await getCurrentSprintForProject(
 			requestedTask.projectId,
 		);
 
-		if (requestedUpdates.status !== undefined) {
-			if (
-				requestedTask.sprintId === -1 &&
-				requestedTask.status !== "backlog" &&
-				sprint
-			) {
-				requestedTask.sprintId = sprint.id;
-			} else if (requestedTask.sprintId !== -1) {
-				requestedTask.sprintId = -1;
-			}
-		}
+		const normalizedUpdates = normalizeTaskSprintStatus(
+			existingTask,
+			sprint?.id ?? -1,
+			requestedTask,
+		);
 
-		if (requestedUpdates.sprintId !== undefined) {
-			if (
-				requestedTask.sprintId !== -1 &&
-				requestedTask.status === "backlog"
-			) {
-				requestedTask.status = "todo";
-			} else if (requestedTask.sprintId === -1) {
-				requestedTask.status = "backlog";
-			}
-		}
+		logger.info(
+			{
+				normalized: {
+					status: normalizedUpdates.status,
+					sprintId: normalizedUpdates.sprintId,
+				},
+			},
+			"[TASK] Update normalized",
+		);
 
-		await db.update(tasks).set(requestedTask).where(eq(tasks.id, id));
+		await db.update(tasks).set(normalizedUpdates).where(eq(tasks.id, id));
 
 		await createTaskHistory(id, data, existingTask);
 		revalidatePath("/");
