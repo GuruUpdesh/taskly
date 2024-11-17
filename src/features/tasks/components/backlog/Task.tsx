@@ -257,6 +257,7 @@ const Task = ({
 						? ""
 						: `/project/${projectId}/task/${task.id}`
 				}
+				prefetch
 			>
 				<div className={taskVariants({ variant: variant })}>
 					{renderProperties()}

@@ -1,5 +1,4 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import {
 	dehydrate,
 	HydrationBoundary,
@@ -56,8 +55,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 						size="sm"
 						variant="secondary"
 					>
-						{/* <PlusCircledIcon /> */}
-						<span className="hidden @3xl:block">Add Task</span>
+						Add Task
 					</Button>
 				</CreateTask>
 			</PageHeader>

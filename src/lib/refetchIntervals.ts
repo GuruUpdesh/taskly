@@ -22,7 +22,7 @@ export function getRefetchIntervals() {
 		};
 		return devIntervals;
 	} else {
-		logger.warn("[React Query] Using production refetch intervals!");
+		// logger.warn("[React Query] Using production refetch intervals!");
 	}
 
 	return defaultIntervals;

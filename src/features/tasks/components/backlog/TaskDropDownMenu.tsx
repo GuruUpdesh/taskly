@@ -268,7 +268,7 @@ const PropertiesMenu = ({
 				const config = getPropertyConfig(property, assignees, sprints);
 				if (config.type === "enum" || config.type === "dynamic")
 					return (
-						<ContextMenuSub>
+						<ContextMenuSub key={config.key}>
 							<ContextMenuSubTrigger className="gap-2">
 								{config.icon}
 								{config.displayName}

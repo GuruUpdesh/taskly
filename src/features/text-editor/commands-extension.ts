@@ -5,7 +5,7 @@ import Suggestion from "@tiptap/suggestion";
 import { type Item } from "./components/items";
 
 export default Extension.create({
-	name: "commands",
+	name: "commands-menu",
 
 	addOptions() {
 		return {

@@ -162,7 +162,7 @@ module.exports = {
 				"fade-down":
 					"fade-down 0.5s cubic-bezier(0.075, 0.82, 0.165, 1) forwards",
 				gradient: "gradient 15s ease infinite",
-				load_background: "loadBackground 1.5s linear forwards",
+				load_background: "loadBackground 3s linear forwards",
 			},
 			containers: {
 				sidebar: "60px",

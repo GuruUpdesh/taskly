@@ -112,17 +112,13 @@ async function createTaskCreateNotification(
 	});
 }
 
-export async function getAllTasks() {
-	try {
-		const allTasks: Task[] = await db.select().from(tasks);
-		return allTasks;
-	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
-	}
-}
-
 export async function getTasksFromProject(projectId: number) {
 	try {
+		const userId = await authenticate();
+		await checkPermissions(userId, projectId);
+
+		logger.info({ userId, projectId }, "[TASK] Get all");
+
 		const allTasks = await db.query.tasks.findMany({
 			where: (tasks) => eq(tasks.projectId, projectId),
 			with: {
