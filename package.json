@@ -7,7 +7,7 @@
 		"db:push": "dotenv drizzle-kit push:pg",
 		"db:migrations": "npx drizzle-kit generate:pg",
 		"db:studio": "dotenv drizzle-kit studio",
-		"dev": "next dev",
+		"dev": "next dev | pino-pretty",
 		"dev:turbo": "next dev --turbo",
 		"start": "next start",
 		"lint": "next lint",
