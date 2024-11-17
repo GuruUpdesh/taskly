@@ -237,7 +237,7 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 	useRegisterCommands([
 		{
 			id: "create-task",
-			label: "Create Task",
+			label: "Add Task",
 			icon: <PlusCircledIcon />,
 			priority: 5,
 			shortcut: [],
@@ -392,7 +392,7 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 						variant="secondary"
 						className="rounded-xl font-medium"
 					>
-						Create Task
+						Create
 					</Button>
 				</DialogFooter>
 			</DialogContent>

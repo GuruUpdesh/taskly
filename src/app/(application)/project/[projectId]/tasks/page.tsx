@@ -56,12 +56,12 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 						size="sm"
 						variant="secondary"
 					>
-						<PlusCircledIcon />
-						<span className="hidden @3xl:block">New Task</span>
+						{/* <PlusCircledIcon /> */}
+						<span className="hidden @3xl:block">Add Task</span>
 					</Button>
 				</CreateTask>
 			</PageHeader>
-			<section className="flex flex-1 flex-col">
+			<section className="flex flex-1 flex-col overflow-scroll">
 				<Filters username={user?.username} />
 				<HydrationBoundary state={dehydrate(queryClient)}>
 					<TasksContainer projectId={projectId} />

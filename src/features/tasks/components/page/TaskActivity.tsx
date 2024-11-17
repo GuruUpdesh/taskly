@@ -6,7 +6,7 @@ import { formatRelative } from "date-fns";
 
 import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
-import { type TaskToView } from "~/server/db/schema";
+import { type TaskToView } from "~/schema";
 
 import TaskHistoryItem, { type TaskHistoryWithUser } from "../HistoryItem";
 
