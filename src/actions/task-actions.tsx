@@ -14,6 +14,7 @@ import {
 	CreateTaskSchema,
 } from "~/features/tasks/config/taskConfigType";
 import { createTaskHistory } from "~/features/tasks/history/create-task-history";
+import { normalizeTaskSprintStatus } from "~/features/tasks/utils/normalizeTaskSprintStatus";
 import { taskNameToBranchName } from "~/features/tasks/utils/task-name-branch-converters";
 import { taskHistory, tasks, users } from "~/schema";
 import { type Task } from "~/schema";
@@ -46,7 +47,17 @@ export async function createTask(data: CreateTaskData) {
 
 		newTask.branchName = taskNameToBranchName(newTask.title);
 
-		const task = await db.insert(tasks).values(newTask).returning();
+		const sprint = await getCurrentSprintForProject(newTask.projectId);
+
+		const normalizedNewTask = normalizeTaskSprintStatus(
+			newTask,
+			sprint?.id ?? -1,
+		);
+
+		const task = await db
+			.insert(tasks)
+			.values(normalizedNewTask)
+			.returning();
 
 		if (task[0]) {
 			void createTaskCreateNotification(task[0].id, newTask);
@@ -172,7 +183,8 @@ export async function deleteTask(id: number) {
 		void deleteViewsForTask(id);
 		revalidatePath("/");
 	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
+		// if (error instanceof Error) throwServerError(error.message);
+		console.error(error);
 	}
 }
 
@@ -202,37 +214,25 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 			lastEditedAt: new Date(),
 		};
 
-		// get the current sprint in case of auto changes
+		// normalize the sprint and status
 		const sprint = await getCurrentSprintForProject(
 			requestedTask.projectId,
 		);
 
-		if (requestedUpdates.status !== undefined) {
-			if (
-				requestedTask.sprintId === -1 &&
-				requestedTask.status !== "backlog" &&
-				sprint
-			) {
-				requestedTask.sprintId = sprint.id;
-			} else if (requestedTask.sprintId !== -1) {
-				requestedTask.sprintId = -1;
-			}
-		}
+		const normalizedUpdates = normalizeTaskSprintStatus(
+			existingTask,
+			sprint?.id ?? -1,
+			requestedTask,
+		);
 
-		if (requestedUpdates.sprintId !== undefined) {
-			if (
-				requestedTask.sprintId !== -1 &&
-				requestedTask.status === "backlog"
-			) {
-				requestedTask.status = "todo";
-			} else if (requestedTask.sprintId === -1) {
-				requestedTask.status = "backlog";
-			}
-		}
+		console.log("NORMALIZED: ----------------", {
+			status: normalizedUpdates.status,
+			sprintId: normalizedUpdates.sprintId,
+		});
 
-		await db.update(tasks).set(requestedTask).where(eq(tasks.id, id));
+		await db.update(tasks).set(normalizedUpdates).where(eq(tasks.id, id));
 
-		await createTaskHistory(id, data, existingTask);
+		// await createTaskHistory(id, data, normalizedUpdates);
 		revalidatePath("/");
 	} catch (error) {
 		if (error instanceof z.ZodError) {

@@ -10,6 +10,7 @@ export function getRefetchIntervals() {
 	};
 
 	if (env.NEXT_PUBLIC_NODE_ENV === "development") {
+		console.warn("USING DEV PREFETCH INTERVALS");
 		const devIntervals = {
 			tasks: defaultIntervals.tasks * 5,
 			projects: defaultIntervals.projects * 5,
@@ -19,5 +20,6 @@ export function getRefetchIntervals() {
 		};
 		return devIntervals;
 	}
+
 	return defaultIntervals;
 }
