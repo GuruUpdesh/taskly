@@ -202,6 +202,7 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 		const existingTask = await db.query.tasks.findFirst({
 			where: (tasks) => eq(tasks.id, id),
 		});
+
 		if (!existingTask) {
 			console.error(`Failed to fetch existing task ${id}`);
 			return;
@@ -232,7 +233,7 @@ export async function updateTask(id: number, data: UpdateTaskData) {
 
 		await db.update(tasks).set(normalizedUpdates).where(eq(tasks.id, id));
 
-		// await createTaskHistory(id, data, normalizedUpdates);
+		await createTaskHistory(id, data, existingTask);
 		revalidatePath("/");
 	} catch (error) {
 		if (error instanceof z.ZodError) {
