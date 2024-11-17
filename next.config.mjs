@@ -36,6 +36,16 @@ const config = {
 		instrumentationHook: true,
 		serverComponentsExternalPackages: ["pino", "pino-pretty"],
 	},
+	// resolves client-side module resolution error
+	// @see https://github.com/pinojs/pino/issues/1841#issuecomment-2244564289
+	webpack: (config, context) => {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+		config.externals.push({
+			"thread-stream": "commonjs thread-stream",
+		});
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+		return config;
+	},
 };
 
 export default config;
