@@ -83,17 +83,16 @@ export const taskProperties: TaskProperty[] = [
 	"branchName",
 ] as const;
 
-export const taskVariants = cva([], {
+export const taskVariants = cva(["transition-all duration-200"], {
 	variants: {
 		color: {
-			grey: "text-neutral-100 bg-neutral-800 hover:text-neutral-50 focus:text-neutral-50 hover:bg-neutral-700/60 focus:bg-neutral-700/60 transition-all duration-200",
-			blue: "text-sky-300 bg-sky-700/80 hover:text-[#D7E6F5] focus:text-[#D7E6F5] hover:bg-[#1E3A8A]/60 focus:bg-[#1E3A8A]/60 transition-all duration-200",
-			violet: "text-indigo-300 bg-[#2E1065]/80 hover:text-[#EDE9FE] focus:text-[#EDE9FE] hover:bg-[#4C1D95]/60 focus:bg-[#4C1D95]/60 transition-all duration-200",
-			teal: "text-[#AFECEF] bg-[#134E4A]/80 hover:text-[#CCFBF1] focus:text-[#CCFBF1] hover:bg-[#115E59]/60 focus:bg-[#115E59]/60 transition-all duration-200",
-			cyan: "text-[#A5F3FC] bg-[#164E63]/80 hover:text-[#CFFAFE] focus:text-[#CFFAFE] hover:bg-[#155E75]/60 focus:bg-[#155E75]/60 transition-all duration-200",
-			amber: "text-yellow-300 bg-yellow-700/80 hover:text-[#FEF3C7] focus:text-[#FEF3C7] hover:bg-[#92400E]/60 focus:bg-[#92400E]/60 transition-all duration-200",
-			red: "text-[#FECACA] bg-[#7F1D1D]/80 hover:text-[#FEE2E2] focus:text-[#FEE2E2] hover:bg-[#991B1B]/60 focus:bg-[#991B1B]/60 transition-all duration-200",
-			green: "text-lime-300 bg-lime-700/80 hover:text-lime-50 focus:text-lime-50 hover:bg-lime-800/60 focus:bg-lime-800/60 transition-all duration-200",
+			grey: "text-neutral-300 bg-neutral-800 hover:text-neutral-50 focus:text-neutral-50 hover:bg-neutral-700/60 focus:bg-neutral-700/60",
+			green: "text-lime-300 bg-lime-700/80 hover:text-lime-50 focus:text-lime-50 data-[state=open]:text-lime-50 hover:bg-lime-800/80 focus:bg-lime-800/80 data-[state=open]:bg-lime-800/80",
+			amber: "text-yellow-300 bg-yellow-700/80 hover:text-yellow-50 focus:text-yellow-50 data-[state=open]:text-yellow-50 hover:bg-yellow-800/80 focus:bg-yellow-800/80 data-[state=open]:bg-yellow-800/80",
+			blue: "text-sky-200 bg-sky-700/60 hover:text-sky-50 focus:text-sky-50 data-[state=open]:text-sky-50 hover:bg-sky-800/60 focus:bg-sky-800/60 data-[state=open]:bg-sky-800/60",
+			teal: "text-[#AFECEF] bg-[#134E4A]/80 hover:text-[#CCFBF1] focus:text-[#CCFBF1] data-[state=open]:text-[#CCFBF1] hover:bg-[#134E4A]/60 focus:bg-[#134E4A]/60 data-[state=open]:bg-[#134E4A]/60",
+			violet: "text-indigo-200 bg-indigo-800/50 hover:text-indigo-50 focus:text-indigo-50 data-[state=open]:text-indigo-50 hover:bg-indigo-900/50 focus:bg-indigo-900/50 data-[state=open]:bg-indigo-900/50",
+			red: "text-[#FECACA] bg-[#7F1D1D]/80 hover:text-[#FEE2E2] focus:text-[#FEE2E2] data-[state=open]:text-[#FEE2E2] hover:bg-[#7F1D1D]/60 focus:bg-[#7F1D1D]/60 data-[state=open]:bg-[#7F1D1D]/60",
 		},
 		context: {
 			default: "",
@@ -105,42 +104,37 @@ export const taskVariants = cva([], {
 		{
 			color: "grey",
 			context: "default",
-			class: "border border-neutral-700/50 shadow-sm hover:border-transparent focus:border-transparent",
-		},
-		{
-			color: "blue",
-			context: "default",
-			class: "border border-[#1E3A8A]/50 shadow-sm hover:border-transparent focus:border-transparent",
-		},
-		{
-			color: "violet",
-			context: "default",
-			class: "border border-[#4C1D95]/50 shadow-sm hover:border-transparent focus:border-transparent",
-		},
-		{
-			color: "teal",
-			context: "default",
-			class: "border border-[#115E59]/50 shadow-sm hover:border-transparent focus:border-transparent",
-		},
-		{
-			color: "cyan",
-			context: "default",
-			class: "border border-[#155E75]/50 shadow-sm hover:border-transparent focus:border-transparent",
-		},
-		{
-			color: "amber",
-			context: "default",
-			class: "border border-[#92400E]/50 shadow-sm hover:border-transparent focus:border-transparent",
-		},
-		{
-			color: "red",
-			context: "default",
-			class: "border border-[#991B1B]/50 shadow-sm hover:border-transparent focus:border-transparent",
+			class: "border border-neutral-700/50 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
 		},
 		{
 			color: "green",
 			context: "default",
-			class: "border border-lime-700/50 shadow-sm hover:border-transparent focus:border-transparent",
+			class: "border border-lime-300/10 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
+		},
+		{
+			color: "amber",
+			context: "default",
+			class: "border border-yellow-300/10 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
+		},
+		{
+			color: "blue",
+			context: "default",
+			class: "border border-sky-200/10 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
+		},
+		{
+			color: "teal",
+			context: "default",
+			class: "border border-[#115E59]/50 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
+		},
+		{
+			color: "violet",
+			context: "default",
+			class: "border border-indigo-200/10 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
+		},
+		{
+			color: "red",
+			context: "default",
+			class: "border border-[#991B1B]/50 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
 		},
 	],
 	defaultVariants: {
@@ -237,7 +231,7 @@ export const taskConfig: TaskConfig = {
 				key: "inreview",
 				displayName: "In Review",
 				icon: <EyeOpenIcon className="h-4 w-4" />,
-				color: "cyan",
+				color: "blue",
 			},
 			{
 				key: "done",
