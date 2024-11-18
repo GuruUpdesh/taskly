@@ -24,7 +24,7 @@
 	font-size: 18px;
 	padding: 20px;
 	outline: none;
-	background: hsl(var(--border));
+	background: hsl(var(--background));
 	color: hsl(var(--foreground));
 	border-radius: 0;
 	border-bottom: 1px solid hsl(var(--border));
@@ -44,6 +44,7 @@
 	gap: 12px;
 	padding: 0 16px;
 	color: hsl(var(--foreground));
+	background-color: hsl(var(--background));
 	user-select: none;
 	will-change: background, color;
 	transition: all 150ms ease;

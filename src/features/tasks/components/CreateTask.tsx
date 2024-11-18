@@ -10,6 +10,7 @@ import Mention from "@tiptap/extension-mention";
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { Loader2, SparkleIcon } from "lucide-react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
@@ -48,7 +49,6 @@ import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
 import "~/features/text-editor/tiptap.css";
-import Link from "next/link";
 
 export const taskFormSchema = buildValidator([
 	"projectId",
@@ -119,7 +119,7 @@ const TaskCreateForm = ({
 
 			return { previousTasks };
 		},
-		onSuccess: (data, variables, context) => {
+		onSuccess: (data) => {
 			if (data) {
 				const url = `/project/${data.projectId}/task/${data.id}`;
 				toast.success("Task added", {
