@@ -43,7 +43,7 @@ const Filters = ({ username }: Props) => {
 			animate={isFiltersOpen ? "open" : "closed"}
 			variants={variants}
 			transition={{ duration: 0.2, ease: [0.075, 0.82, 0.165, 1] }}
-			className={cn("sticky top-[57px] z-10 border-b backdrop-blur-xl", {
+			className={cn("border-b", {
 				"pointer-events-none": !isFiltersOpen,
 			})}
 		>

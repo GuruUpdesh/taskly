@@ -45,7 +45,7 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 	const user = await currentUser();
 
 	return (
-		<div className="relative flex flex-1 flex-col overflow-y-scroll">
+		<div className="relative flex flex-1 flex-col overflow-y-hidden">
 			<PageHeader breadCrumbs>
 				<FilterAndGroupToggles />
 				<AiDialog projectId={projectId} />
@@ -59,8 +59,8 @@ export default async function BacklogPage({ params: { projectId } }: Params) {
 					</Button>
 				</CreateTask>
 			</PageHeader>
+			<Filters username={user?.username} />
 			<section className="flex flex-1 flex-col overflow-scroll">
-				<Filters username={user?.username} />
 				<HydrationBoundary state={dehydrate(queryClient)}>
 					<TasksContainer projectId={projectId} />
 				</HydrationBoundary>

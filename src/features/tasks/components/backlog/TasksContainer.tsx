@@ -16,6 +16,7 @@ import {
 	updateTask,
 } from "~/actions/task-actions";
 import Message from "~/components/Message";
+import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import CreateTask from "~/features/tasks/components/CreateTask";
 import {
@@ -33,7 +34,6 @@ import { useRealtimeStore } from "~/store/realtime";
 import TaskList from "./TaskList";
 import LoadingTaskList from "../LoadingTaskList";
 import TotalTaskListPoints from "../TotalTaskListPoints";
-import SimpleTooltip from "~/components/SimpleTooltip";
 
 export type UpdateTask = {
 	id: number;
