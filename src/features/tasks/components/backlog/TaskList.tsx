@@ -94,62 +94,42 @@ const TaskList = ({
 									provided: DraggableProvided,
 									snapshot: DraggableStateSnapshot,
 								) => (
-									<motion.div
-										initial={{ opacity: 0 }}
-										animate={{
-											opacity: 1,
-											transition: {
-												duration: 0.3,
-												ease: [0.6, 0.6, 0, 1],
+									<div
+										className={cn(
+											"group relative backdrop-blur-xl transition-all",
+											{
+												"bg-accent-foreground/5":
+													snapshot.isDragging,
+												"pointer-events-none":
+													task.options.isPending,
+												"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
+													task.options.isNew &&
+													!task.options.isPending,
 											},
-										}}
-										exit={{
-											opacity: 0,
-											transition: {
-												duration: 0.3,
-												ease: [0.6, 0.6, 0, 1],
-											},
-										}}
+										)}
+										{...provided.draggableProps}
+										{...provided.dragHandleProps}
+										ref={provided.innerRef}
 									>
-										<div
+										<DragHandleDots2Icon
 											className={cn(
-												"group relative backdrop-blur-xl transition-all",
-												{
-													"bg-accent-foreground/5":
-														snapshot.isDragging,
-													"pointer-events-none":
-														task.options.isPending,
-													"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
-														task.options.isNew &&
-														!task.options.isPending,
-												},
+												"absolute bottom-[50%] left-0 translate-y-[50%] text-foreground opacity-0 group-hover:opacity-50",
+												snapshot.isDragging &&
+													"opacity-100",
 											)}
-											{...provided.draggableProps}
-											{...provided.dragHandleProps}
-											ref={provided.innerRef}
-										>
-											<DragHandleDots2Icon
-												className={cn(
-													"absolute bottom-[50%] left-0 translate-y-[50%] text-foreground opacity-0 group-hover:opacity-50",
-													snapshot.isDragging &&
-														"opacity-100",
-												)}
-											/>
-											<Task
-												key={task.id}
-												task={task}
-												addTaskMutation={
-													addTaskMutation
-												}
-												deleteTaskMutation={
-													deleteTaskMutation
-												}
-												projectId={projectId}
-												listId={listId}
-												comments={task.comments}
-											/>
-										</div>
-									</motion.div>
+										/>
+										<Task
+											key={task.id}
+											task={task}
+											addTaskMutation={addTaskMutation}
+											deleteTaskMutation={
+												deleteTaskMutation
+											}
+											projectId={projectId}
+											listId={listId}
+											comments={task.comments}
+										/>
+									</div>
 								)}
 							</Draggable>
 						) : null;

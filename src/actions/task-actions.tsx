@@ -68,9 +68,10 @@ export async function createTask(data: CreateTaskData) {
 
 		if (task[0]) {
 			void createTaskCreateNotification(task[0].id, newTask);
-		}
+			revalidatePath("/");
 
-		revalidatePath("/");
+			return task[0];
+		}
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			const validationError = fromZodError(error);

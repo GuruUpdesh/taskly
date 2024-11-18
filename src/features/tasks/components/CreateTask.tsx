@@ -48,6 +48,7 @@ import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
 import "~/features/text-editor/tiptap.css";
+import Link from "next/link";
 
 export const taskFormSchema = buildValidator([
 	"projectId",
@@ -118,11 +119,24 @@ const TaskCreateForm = ({
 
 			return { previousTasks };
 		},
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({
-				queryKey: ["tasks", projectId],
-			});
-			toast.success("Task added");
+		onSuccess: (data, variables, context) => {
+			if (data) {
+				const url = `/project/${data.projectId}/task/${data.id}`;
+				toast.success("Task added", {
+					action: (
+						<Button
+							size="sm"
+							variant="ghost"
+							asChild
+							className="text-foreground underline"
+						>
+							<Link href={url}>View</Link>
+						</Button>
+					),
+				});
+			} else {
+				toast.success("Task added");
+			}
 			close();
 			form.reset();
 		},
