@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
@@ -10,7 +10,7 @@ import Mention from "@tiptap/extension-mention";
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { Loader2, SparkleIcon } from "lucide-react";
-import { useForm, type UseFormReturn } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
@@ -42,19 +42,12 @@ import BubbleMenu from "~/features/text-editor/components/BubbleMenu";
 import RenderMentionOptions from "~/features/text-editor/components/RenderMentionOptions";
 import extensions from "~/features/text-editor/extensions";
 import { cn } from "~/lib/utils";
-import { type NewTask, type Sprint, type Task, type User } from "~/schema";
+import { type NewTask, type Task } from "~/schema";
 import { useRealtimeStore } from "~/store/realtime";
 import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
 import "~/features/text-editor/tiptap.css";
-
-type FormProps = {
-	onSubmit: (newTask: TaskFormType) => void;
-	form: UseFormReturn<TaskFormType, undefined>;
-	assignees: User[];
-	sprints: Sprint[];
-};
 
 export const taskFormSchema = buildValidator([
 	"projectId",
@@ -78,174 +71,21 @@ export const taskFormSchema = buildValidator([
 
 export type TaskFormType = Omit<NewTask, "sprintId"> & { sprintId: string };
 
-const TaskCreateForm = ({ onSubmit, form, assignees, sprints }: FormProps) => {
-	const project = useRealtimeStore((state) => state.project);
-	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
-
-	const [isLoading, setIsLoading] = useState(false);
-
-	const aiAutoComplete = async (title: string, description: string) => {
-		if (aiUsageCount >= AIDAILYLIMIT) {
-			toast.error(
-				`AI daily limit reached. Please try again in ${timeTillNextReset()} hours.`,
-			);
-			return;
-		}
-		setIsLoading(true);
-		const airesponse = await aiAction(title, description, assignees);
-		setIsLoading(false);
-		if (airesponse) {
-			const userName = assignees.find(
-				(user) => user.username === airesponse.assignee,
-			)?.username;
-			form.setValue("status", airesponse.status);
-			form.setValue("priority", airesponse.priority);
-			form.setValue("type", airesponse.type);
-			form.setValue("points", airesponse.points);
-			if (userName) {
-				form.setValue("assignee", userName);
-			}
-		}
-	};
-
-	const editor = useEditor({
-		immediatelyRender: false,
-		extensions: [
-			...extensions,
-			Placeholder.configure({
-				placeholder: "Add a description or type '/' for commands...",
-			}),
-			Mention.configure({
-				HTMLAttributes: {
-					class: "mention",
-				},
-				suggestion: {
-					items: ({ query }) => {
-						return assignees
-							.filter((user) =>
-								user.username
-									.toLowerCase()
-									.startsWith(query.toLowerCase()),
-							)
-							.slice(0, 5);
-					},
-					render: RenderMentionOptions,
-				},
-			}),
-		],
-		content: form.watch("description"),
-		onUpdate: (e) => {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-			const content = e.editor.storage.markdown.getMarkdown();
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-			form.setValue("description", content, {
-				shouldDirty: true,
-				shouldValidate: true,
-			});
-		},
-	});
-
-	return (
-		<form className="flex-1 px-4" onSubmit={form.handleSubmit(onSubmit)}>
-			<input type="hidden" {...form.register("projectId")} />
-			<Input
-				type="text"
-				className="m-0 border-none bg-transparent p-0 text-lg ring-offset-transparent focus-visible:ring-transparent"
-				placeholder="New Task"
-				{...form.register("title")}
-				autoFocus
-				autoComplete="off"
-			/>
-			<div className="max-h-[60vh] flex-1 overflow-scroll">
-				{editor && <BubbleMenu editor={editor} />}
-				<EditorContent editor={editor} />
-			</div>
-			<div
-				className={cn(
-					"mt-2 flex gap-2",
-					isLoading ? "pointer-events-none opacity-50" : "",
-				)}
-				aria-disabled={isLoading}
-			>
-				{(form.watch("title") || form.watch("description")) &&
-				project?.isAiEnabled ? (
-					<SimpleTooltip label="Apply Smart Properties">
-						<Button
-							disabled={isLoading}
-							type="button"
-							size="icon"
-							variant="outline"
-							className="h-[30px] w-[30px] rounded-lg bg-transparent"
-							onClick={() =>
-								aiAutoComplete(
-									form.watch("title"),
-									form.watch("description"),
-								)
-							}
-						>
-							{isLoading ? (
-								<Loader2 className="h-4 w-4 animate-spin" />
-							) : (
-								<SparkleIcon className="h-4 w-4" />
-							)}
-						</Button>
-					</SimpleTooltip>
-				) : null}
-				{taskProperties.map((property) => {
-					const config = getPropertyConfig(
-						property,
-						assignees,
-						sprints,
-					);
-					if (config.type === "enum" || config.type === "dynamic")
-						return (
-							<PropertySelect
-								key={property}
-								config={config}
-								form={form}
-								onSubmit={onSubmit}
-								autoSubmit={false}
-								size={
-									["sprintId", "assignee", "points"].includes(
-										config.key,
-									)
-										? "icon"
-										: "default"
-								}
-								autoFocus={true}
-							/>
-						);
-				})}
-			</div>
-		</form>
-	);
-};
-
-type Props = {
+type FormProps = {
 	projectId: string;
-	children: React.ReactNode;
+	close: () => void;
 	overrideDefaultValues?: Partial<TaskFormType>;
 };
 
-const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
+const TaskCreateForm = ({
+	projectId,
+	close,
+	overrideDefaultValues,
+}: FormProps) => {
 	const [project, assignees, sprints] = useRealtimeStore(
 		useShallow((state) => [state.project, state.assignees, state.sprints]),
 	);
-	const [open, setOpen] = useState(false);
 	const queryClient = useQueryClient();
-
-	useRegisterCommands([
-		{
-			id: "create-task",
-			label: "Add Task",
-			icon: <PlusCircledIcon />,
-			priority: 5,
-			shortcut: [],
-			action: () => {
-				setOpen(true);
-			},
-		},
-	]);
 
 	const addTaskMutation = useMutation({
 		mutationFn: ({ data }: { data: TaskFormType }) => createTask(data),
@@ -274,7 +114,7 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 					},
 				],
 			);
-			setOpen(false);
+			close();
 
 			return { previousTasks };
 		},
@@ -283,11 +123,11 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 				queryKey: ["tasks", projectId],
 			});
 			toast.success("Task added");
-			setOpen(false);
+			close();
 			form.reset();
 		},
 		onError: (err) => {
-			setOpen(true);
+			close();
 			toast.error(`Failed to create task: ${err.message}`);
 		},
 	});
@@ -295,26 +135,13 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 	const form = useForm<TaskFormType>({
 		resolver: zodResolver(taskFormSchema),
 		defaultValues: {
-			title: defaultValues.title,
-			description: defaultValues.description,
-			status: overrideDefaultValues?.status
-				? overrideDefaultValues.status
-				: defaultValues.status,
-			priority: overrideDefaultValues?.priority
-				? overrideDefaultValues.priority
-				: defaultValues.priority,
-			type: overrideDefaultValues?.type
-				? overrideDefaultValues.type
-				: defaultValues.type,
-			assignee: overrideDefaultValues?.assignee
-				? overrideDefaultValues.assignee
-				: defaultValues.assignee,
-			points: overrideDefaultValues?.points
-				? overrideDefaultValues.points
-				: defaultValues.points,
-			sprintId: overrideDefaultValues?.sprintId
-				? overrideDefaultValues.sprintId
-				: defaultValues.sprintId,
+			...defaultValues,
+			status: overrideDefaultValues?.status ?? defaultValues.status,
+			priority: overrideDefaultValues?.priority ?? defaultValues.priority,
+			type: overrideDefaultValues?.type ?? defaultValues.type,
+			assignee: overrideDefaultValues?.assignee ?? defaultValues.assignee,
+			points: overrideDefaultValues?.points ?? defaultValues.points,
+			sprintId: overrideDefaultValues?.sprintId ?? defaultValues.sprintId,
 			projectId: parseInt(projectId),
 			backlogOrder: 1000000,
 			branchName: null,
@@ -322,79 +149,258 @@ const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
 		mode: "onChange",
 	});
 
-	useEffect(() => {
-		const sprintId = form.watch("sprintId");
-		const status = form.watch("status");
-		if (status === "backlog" && sprintId !== "-1") {
-			form.setValue("status", "todo", {
-				shouldDirty: true,
-				shouldValidate: true,
-			});
-		} else if (status !== "backlog" && sprintId === "-1") {
-			form.setValue("status", "backlog", {
-				shouldDirty: true,
-				shouldValidate: true,
-			});
+	function handleChangeCallback(val: string) {
+		// This doesn't cover default value case (current handled by backend)
+		const currentSprintId = form.watch("sprintId");
+		const currentStatus = form.watch("status");
+
+		// If this is a status change
+		if (
+			["backlog", "todo", "in_progress", "review", "done"].includes(val)
+		) {
+			// New status is backlog but sprint isn't -1
+			if (val === "backlog" && currentSprintId !== "-1") {
+				form.setValue("sprintId", "-1", {
+					shouldDirty: true,
+					shouldValidate: true,
+				});
+			}
+			// New status isn't backlog but sprint is -1
+			else if (val !== "backlog" && currentSprintId === "-1") {
+				form.setValue("sprintId", `${getCurrentSprintId(sprints)}`, {
+					shouldDirty: true,
+					shouldValidate: true,
+				});
+			}
 		}
-	}, [form.watch("sprintId")]);
-
-	useEffect(() => {
-		const sprintId = form.watch("sprintId");
-		const status = form.watch("status");
-		if (status === "backlog" && sprintId !== "-1") {
-			console.log("setting sprintId to -1");
-			form.setValue("sprintId", "-1", {
-				shouldDirty: true,
-				shouldValidate: true,
-			});
-		} else if (status !== "backlog" && sprintId === "-1") {
-			console.log("setting sprintId to current sprint");
-			form.setValue("sprintId", `${getCurrentSprintId(sprints)}`, {
-				shouldDirty: true,
-				shouldValidate: true,
-			});
+		// If this is a sprintId change
+		else if (val === "-1" || !isNaN(parseInt(val))) {
+			// New sprint is -1 but status isn't backlog
+			if (val === "-1" && currentStatus !== "backlog") {
+				form.setValue("status", "backlog", {
+					shouldDirty: true,
+					shouldValidate: true,
+				});
+			}
+			// New sprint isn't -1 but status is backlog
+			else if (val !== "-1" && currentStatus === "backlog") {
+				form.setValue("status", "todo", {
+					shouldDirty: true,
+					shouldValidate: true,
+				});
+			}
 		}
-	}, [form.watch("status")]);
+	}
 
-	useValidationErrors(form.formState.errors);
+	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
 
-	function handleSubmit(newTask: TaskFormType) {
+	const [isLoading, setIsLoading] = useState(false);
+
+	const aiAutoComplete = async (title: string, description: string) => {
+		if (aiUsageCount >= AIDAILYLIMIT) {
+			toast.error(
+				`AI daily limit reached. Please try again in ${timeTillNextReset()} hours.`,
+			);
+			return;
+		}
+		setIsLoading(true);
+		const airesponse = await aiAction(title, description, assignees);
+		setIsLoading(false);
+		if (airesponse) {
+			const userName = assignees.find(
+				(user) => user.username === airesponse.assignee,
+			)?.username;
+			form.setValue("status", airesponse.status);
+			form.setValue("priority", airesponse.priority);
+			form.setValue("type", airesponse.type);
+			form.setValue("points", airesponse.points);
+			if (userName) {
+				form.setValue("assignee", userName);
+			}
+		}
+	};
+
+	function onSubmit(newTask: TaskFormType) {
 		console.log(newTask);
 		addTaskMutation.mutate({ data: newTask });
 	}
+
+	useValidationErrors(form.formState.errors);
+
+	const editor = useEditor({
+		immediatelyRender: false,
+		extensions: [
+			...extensions,
+			Placeholder.configure({
+				placeholder: "Add a description or type '/' for commands...",
+			}),
+			Mention.configure({
+				HTMLAttributes: {
+					class: "mention",
+				},
+				suggestion: {
+					items: ({ query }) => {
+						return assignees
+							.filter((user) =>
+								user.username
+									.toLowerCase()
+									.startsWith(query.toLowerCase()),
+							)
+							.slice(0, 5);
+					},
+					render: RenderMentionOptions,
+				},
+			}),
+		],
+		content: form.watch("description"),
+		onUpdate: (e) => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+			const content = e.editor.storage.markdown.getMarkdown() as string;
+			form.setValue("description", content, {
+				shouldDirty: true,
+				shouldValidate: true,
+			});
+		},
+	});
+
+	return (
+		<>
+			<DialogHeader className="px-4 pt-4">
+				<DialogTitle className="flex items-center gap-[0.5ch]">
+					{project ? (
+						<div className="flex items-center gap-[0.5ch] text-sm">
+							<p className="rounded-sm bg-accent px-2 py-1">
+								{project.name}
+							</p>
+						</div>
+					) : null}
+				</DialogTitle>
+			</DialogHeader>
+
+			<form
+				className="flex-1 px-4"
+				onSubmit={form.handleSubmit(onSubmit)}
+			>
+				<input type="hidden" {...form.register("projectId")} />
+				<Input
+					type="text"
+					className="m-0 border-none bg-transparent p-0 text-lg ring-offset-transparent focus-visible:ring-transparent"
+					placeholder="New Task"
+					{...form.register("title")}
+					autoFocus
+					autoComplete="off"
+				/>
+				<div className="max-h-[60vh] flex-1 overflow-scroll">
+					{editor && <BubbleMenu editor={editor} />}
+					<EditorContent editor={editor} />
+				</div>
+				<div
+					className={cn(
+						"mt-2 flex gap-2",
+						isLoading ? "pointer-events-none opacity-50" : "",
+					)}
+					aria-disabled={isLoading}
+				>
+					{(form.watch("title") || form.watch("description")) &&
+					project?.isAiEnabled ? (
+						<SimpleTooltip label="Apply Smart Properties">
+							<Button
+								disabled={isLoading}
+								type="button"
+								size="icon"
+								variant="outline"
+								className="h-[30px] w-[30px] rounded-lg bg-transparent"
+								onClick={() =>
+									aiAutoComplete(
+										form.watch("title"),
+										form.watch("description"),
+									)
+								}
+							>
+								{isLoading ? (
+									<Loader2 className="h-4 w-4 animate-spin" />
+								) : (
+									<SparkleIcon className="h-4 w-4" />
+								)}
+							</Button>
+						</SimpleTooltip>
+					) : null}
+					{taskProperties.map((property) => {
+						const config = getPropertyConfig(
+							property,
+							assignees,
+							sprints,
+						);
+						if (config.type === "enum" || config.type === "dynamic")
+							return (
+								<PropertySelect
+									key={property}
+									config={config}
+									form={form}
+									onSubmit={onSubmit}
+									autoSubmit={false}
+									size={
+										[
+											"sprintId",
+											"assignee",
+											"points",
+										].includes(config.key)
+											? "icon"
+											: "default"
+									}
+									autoFocus={true}
+									onChangeCallback={handleChangeCallback}
+								/>
+							);
+					})}
+				</div>
+			</form>
+			<DialogFooter className="border-t px-4 py-2">
+				<Button
+					size="sm"
+					onClick={() => form.handleSubmit(onSubmit)()}
+					disabled={!form.formState.isValid}
+					variant="secondary"
+					className="rounded-xl font-medium"
+				>
+					Create
+				</Button>
+			</DialogFooter>
+		</>
+	);
+};
+
+type Props = {
+	projectId: string;
+	children: React.ReactNode;
+	overrideDefaultValues?: Partial<TaskFormType>;
+};
+
+const CreateTask = ({ projectId, children, overrideDefaultValues }: Props) => {
+	const [open, setOpen] = useState(false);
+
+	useRegisterCommands([
+		{
+			id: "create-task",
+			label: "Add Task",
+			icon: <PlusCircledIcon />,
+			priority: 5,
+			shortcut: [],
+			action: () => {
+				setOpen(true);
+			},
+		},
+	]);
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className="flex w-[600px] min-w-[600px] max-w-fit flex-col justify-between p-0">
-				<DialogHeader className="px-4 pt-4">
-					<DialogTitle className="flex items-center gap-[0.5ch]">
-						{project ? (
-							<div className="flex items-center gap-[0.5ch] text-sm">
-								<p className="rounded-sm bg-accent px-2 py-1">
-									{project.name}
-								</p>
-							</div>
-						) : null}
-					</DialogTitle>
-				</DialogHeader>
 				<TaskCreateForm
-					onSubmit={handleSubmit}
-					form={form}
-					assignees={assignees}
-					sprints={sprints}
+					projectId={projectId}
+					overrideDefaultValues={overrideDefaultValues}
+					close={() => setOpen(false)}
 				/>
-				<DialogFooter className="border-t px-4 py-2">
-					<Button
-						size="sm"
-						onClick={() => form.handleSubmit(handleSubmit)()}
-						disabled={!form.formState.isValid}
-						variant="secondary"
-						className="rounded-xl font-medium"
-					>
-						Create
-					</Button>
-				</DialogFooter>
 			</DialogContent>
 		</Dialog>
 	);

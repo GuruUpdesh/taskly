@@ -33,6 +33,7 @@ import { useRealtimeStore } from "~/store/realtime";
 import TaskList from "./TaskList";
 import LoadingTaskList from "../LoadingTaskList";
 import TotalTaskListPoints from "../TotalTaskListPoints";
+import SimpleTooltip from "~/components/SimpleTooltip";
 
 export type UpdateTask = {
 	id: number;
@@ -302,7 +303,7 @@ export default function TasksContainer({ projectId }: Props) {
 								}),
 							)}
 						>
-							<div className="flex w-full items-center gap-2 px-4 py-2 pb-0">
+							<div className="flex w-full items-center gap-2 pl-4 pr-2 pt-2">
 								{option.icon}
 								<p>
 									{option.displayName
@@ -318,13 +319,19 @@ export default function TasksContainer({ projectId }: Props) {
 										[groupBy]: option.key,
 									}}
 								>
-									<Button
-										size="icon"
-										variant="ghost"
-										className="text-muted-foreground"
-									>
-										<PlusCircledIcon />
-									</Button>
+									<div>
+										<SimpleTooltip
+											label={`Add ${option.displayName} Task`}
+										>
+											<Button
+												size="icon"
+												variant="ghost"
+												className="text-muted-foreground"
+											>
+												<PlusCircledIcon />
+											</Button>
+										</SimpleTooltip>
+									</div>
 								</CreateTask>
 							</div>
 							<div className="pb-2">

@@ -10,7 +10,7 @@ import {
 } from "@hello-pangea/dnd";
 import { DragHandleDots2Icon } from "@radix-ui/react-icons";
 import { type UseMutationResult } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 import Task from "~/features/tasks/components/backlog/Task";
 import { type UpdateTask } from "~/features/tasks/components/backlog/TasksContainer";

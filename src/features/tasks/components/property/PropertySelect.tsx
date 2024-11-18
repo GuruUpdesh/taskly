@@ -29,6 +29,7 @@ type DataCellProps = {
 	autoSubmit?: boolean;
 	className?: string;
 	autoFocus?: boolean;
+	onChangeCallback?: (val: string) => void;
 };
 
 function PropertySelect({
@@ -39,6 +40,7 @@ function PropertySelect({
 	autoSubmit = true,
 	className = "",
 	autoFocus = false,
+	onChangeCallback,
 }: DataCellProps) {
 	const getOptionByStringValue = (value: string) => {
 		if (config.type !== "enum" && config.type !== "dynamic") return null;
@@ -71,7 +73,7 @@ function PropertySelect({
 						<Select
 							onValueChange={(val) => {
 								onChange(convertToOriginalType(val));
-								console.time("value change");
+								if (onChangeCallback) onChangeCallback(val);
 								if (autoSubmit) void onSubmit(form.getValues());
 							}}
 							value={currentValue}
