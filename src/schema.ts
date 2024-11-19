@@ -17,29 +17,37 @@ import { z } from "zod";
 /**
  * Task Schema
  */
-export const StatusEnum = pgEnum("status", [
+export const statuses = [
 	"backlog",
 	"todo",
 	"inprogress",
 	"inreview",
 	"done",
-]);
-export const PointsEnum = pgEnum("points", ["0", "1", "2", "3", "4", "5"]);
-export const PriorityEnum = pgEnum("priority", [
+] as const;
+export const StatusEnum = pgEnum("status", statuses);
+
+export const points = ["0", "1", "2", "3", "4", "5"] as const;
+export const PointsEnum = pgEnum("points", points);
+
+export const priorities = [
 	"none",
 	"low",
 	"medium",
 	"high",
 	"critical",
-]);
-export const TypeEnum = pgEnum("type", [
+] as const;
+export const PriorityEnum = pgEnum("priority", priorities);
+
+export const types = [
 	"task",
 	"bug",
 	"feature",
 	"improvement",
 	"research",
 	"testing",
-]);
+] as const;
+export const TypeEnum = pgEnum("type", types);
+
 export const tasks = pgTable("tasks", {
 	id: serial("id").primaryKey(),
 	title: varchar("title", { length: 255 }).notNull(),

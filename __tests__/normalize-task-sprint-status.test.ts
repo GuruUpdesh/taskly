@@ -1,4 +1,5 @@
 import { normalizeTaskSprintStatus } from "../src/features/tasks/utils/normalizeTaskSprintStatus";
+import { points, priorities, types } from "../src/schema";
 
 describe("normalizeTaskSprintStatus", () => {
 	test("[Creation Case] Do Nothing", () => {
@@ -146,5 +147,33 @@ describe("normalizeTaskSprintStatus", () => {
 			status: "todo",
 			sprintId: 5,
 		});
+	});
+
+	test("[CREATE Case] All properties (not status or sprintId) shouldn't result in change", () => {
+		const properties = {
+			points,
+			priorities,
+			types,
+		};
+
+		for (const key in properties) {
+			for (const val in properties[key]) {
+				const fromTask = {
+					status: "todo",
+					[key]: val,
+					sprintId: 3,
+				};
+
+				const currentSprintId = 3;
+
+				expect(
+					normalizeTaskSprintStatus(fromTask, currentSprintId),
+				).toEqual({
+					status: "todo",
+					[key]: val,
+					sprintId: 3,
+				});
+			}
+		}
 	});
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,6 +44,7 @@ import RenderMentionOptions from "~/features/text-editor/components/RenderMentio
 import extensions from "~/features/text-editor/extensions";
 import { cn } from "~/lib/utils";
 import { type NewTask, type Task } from "~/schema";
+import { useAppStore } from "~/store/app";
 import { useRealtimeStore } from "~/store/realtime";
 import { useUserStore } from "~/store/user";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
@@ -86,6 +87,72 @@ const TaskCreateForm = ({
 	const [project, assignees, sprints] = useRealtimeStore(
 		useShallow((state) => [state.project, state.assignees, state.sprints]),
 	);
+	const [taskFormState, setTaskFormState, clearTaskFormState] = useAppStore(
+		useShallow((state) => [
+			state.taskFormState,
+			state.setTaskFormState,
+			state.clearTaskFormState,
+		]),
+	);
+
+	const form = useForm<TaskFormType>({
+		resolver: zodResolver(taskFormSchema),
+		defaultValues: {
+			...defaultValues,
+			...(taskFormState ?? {}),
+			...overrideDefaultValues,
+			projectId: parseInt(projectId),
+			backlogOrder: 1000000,
+			branchName: null,
+		},
+		mode: "onChange",
+	});
+
+	// Save form state to store whenever it changes
+	useEffect(() => {
+		const subscription = form.watch((values) => {
+			// Exclude certain fields that shouldn't be persisted
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { projectId, ...persistableValues } = values;
+			setTaskFormState(persistableValues);
+		});
+
+		return () => subscription.unsubscribe();
+	}, [form, setTaskFormState]);
+
+	function handleChangeCallback(val: string) {
+		// This doesn't cover default value case (current handled by backend)
+		const currentSprintId = form.watch("sprintId");
+		const currentStatus = form.watch("status");
+
+		const formOption = {
+			shouldDirty: true,
+			shouldValidate: true,
+		};
+
+		if (val === currentStatus) {
+			if (val === "backlog" && currentSprintId !== "-1") {
+				form.setValue("sprintId", "-1", formOption);
+			} else if (val !== "backlog" && currentSprintId === "-1") {
+				form.setValue(
+					"sprintId",
+					`${getCurrentSprintId(sprints)}`,
+					formOption,
+				);
+			}
+		} else if (val === currentSprintId) {
+			if (val === "-1" && currentStatus !== "backlog") {
+				form.setValue("status", "backlog", formOption);
+			} else if (val !== "-1" && currentStatus === "backlog") {
+				form.setValue("status", "todo", formOption);
+			}
+		}
+	}
+
+	function onSubmit(newTask: TaskFormType) {
+		addTaskMutation.mutate({ data: newTask });
+	}
+
 	const queryClient = useQueryClient();
 
 	const addTaskMutation = useMutation({
@@ -115,6 +182,7 @@ const TaskCreateForm = ({
 					},
 				],
 			);
+			clearTaskFormState();
 			close();
 
 			return { previousTasks };
@@ -146,66 +214,6 @@ const TaskCreateForm = ({
 		},
 	});
 
-	const form = useForm<TaskFormType>({
-		resolver: zodResolver(taskFormSchema),
-		defaultValues: {
-			...defaultValues,
-			status: overrideDefaultValues?.status ?? defaultValues.status,
-			priority: overrideDefaultValues?.priority ?? defaultValues.priority,
-			type: overrideDefaultValues?.type ?? defaultValues.type,
-			assignee: overrideDefaultValues?.assignee ?? defaultValues.assignee,
-			points: overrideDefaultValues?.points ?? defaultValues.points,
-			sprintId: overrideDefaultValues?.sprintId ?? defaultValues.sprintId,
-			projectId: parseInt(projectId),
-			backlogOrder: 1000000,
-			branchName: null,
-		},
-		mode: "onChange",
-	});
-
-	function handleChangeCallback(val: string) {
-		// This doesn't cover default value case (current handled by backend)
-		const currentSprintId = form.watch("sprintId");
-		const currentStatus = form.watch("status");
-
-		// If this is a status change
-		if (
-			["backlog", "todo", "in_progress", "review", "done"].includes(val)
-		) {
-			// New status is backlog but sprint isn't -1
-			if (val === "backlog" && currentSprintId !== "-1") {
-				form.setValue("sprintId", "-1", {
-					shouldDirty: true,
-					shouldValidate: true,
-				});
-			}
-			// New status isn't backlog but sprint is -1
-			else if (val !== "backlog" && currentSprintId === "-1") {
-				form.setValue("sprintId", `${getCurrentSprintId(sprints)}`, {
-					shouldDirty: true,
-					shouldValidate: true,
-				});
-			}
-		}
-		// If this is a sprintId change
-		else if (val === "-1" || !isNaN(parseInt(val))) {
-			// New sprint is -1 but status isn't backlog
-			if (val === "-1" && currentStatus !== "backlog") {
-				form.setValue("status", "backlog", {
-					shouldDirty: true,
-					shouldValidate: true,
-				});
-			}
-			// New sprint isn't -1 but status is backlog
-			else if (val !== "-1" && currentStatus === "backlog") {
-				form.setValue("status", "todo", {
-					shouldDirty: true,
-					shouldValidate: true,
-				});
-			}
-		}
-	}
-
 	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -233,11 +241,6 @@ const TaskCreateForm = ({
 			}
 		}
 	};
-
-	function onSubmit(newTask: TaskFormType) {
-		console.log(newTask);
-		addTaskMutation.mutate({ data: newTask });
-	}
 
 	useValidationErrors(form.formState.errors);
 
@@ -317,13 +320,16 @@ const TaskCreateForm = ({
 				>
 					{(form.watch("title") || form.watch("description")) &&
 					project?.isAiEnabled ? (
-						<SimpleTooltip label="Apply Smart Properties">
+						<SimpleTooltip
+							label="Apply Smart Properties"
+							side="right"
+						>
 							<Button
 								disabled={isLoading}
 								type="button"
 								size="icon"
 								variant="outline"
-								className="h-[30px] w-[30px] rounded-lg bg-transparent"
+								className="h-[30px] w-[30px] rounded-lg bg-accent"
 								onClick={() =>
 									aiAutoComplete(
 										form.watch("title"),
