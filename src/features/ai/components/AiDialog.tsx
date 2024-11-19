@@ -99,7 +99,7 @@ const AiDialog = ({ projectId }: Props) => {
 		const createTasksPromises = response.tasks.map((task) =>
 			createTask({
 				...task,
-				title: "🤖 " + task.title,
+				title: task.title,
 				projectId: parseInt(projectId),
 				backlogOrder: 1000000,
 				insertedDate: new Date(),
@@ -111,16 +111,25 @@ const AiDialog = ({ projectId }: Props) => {
 
 		const results = await Promise.allSettled(createTasksPromises);
 
+		const addedIds = [];
 		results.forEach((result, index) => {
 			if (result.status === "fulfilled") {
 				console.log(
 					`Task ${index} created successfully:`,
 					result.value,
 				);
+				if (result.value) {
+					addedIds.push(result.value.id);
+				}
 			} else {
 				console.error(`Task ${index} failed to create:`, result.reason);
 			}
 		});
+
+		if (addedIds.length === 0) {
+			toast.error("Something went wrong while creating AI tasks");
+		}
+		toast.success(`AI created ${addedIds.length} tasks`);
 
 		resetForm();
 		setOpen(false);

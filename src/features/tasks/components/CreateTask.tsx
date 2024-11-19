@@ -177,6 +177,7 @@ const TaskCreateForm = ({
 						id: -1,
 						options: {
 							isPending: true,
+							isNew: true,
 						},
 						comments: 0,
 					},

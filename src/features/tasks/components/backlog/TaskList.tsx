@@ -57,7 +57,7 @@ const TaskList = ({
 					{...provided.droppableProps}
 					ref={provided.innerRef}
 					className={cn("min-h-2", {
-						"bg-background/50":
+						"bg-accent/50":
 							snapshot.isDraggingOver && listId !== "tasks",
 					})}
 				>
@@ -102,8 +102,7 @@ const TaskList = ({
 												"pointer-events-none":
 													task.options.isPending,
 												"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
-													task.options.isNew &&
-													!task.options.isPending,
+													task.options.isNew,
 											},
 										)}
 										{...provided.draggableProps}
