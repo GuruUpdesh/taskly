@@ -338,6 +338,7 @@ export default function TasksContainer({ projectId }: Props) {
 													Task
 												</span>
 											}
+											side="left"
 										>
 											<Button
 												size="icon"

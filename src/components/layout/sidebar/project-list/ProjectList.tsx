@@ -15,6 +15,7 @@ import type { Project } from "~/schema";
 import { useRealtimeStore } from "~/store/realtime";
 
 import CreateProjectDialog from "./CreateProjectDialog";
+import SimpleTooltip from "~/components/SimpleTooltip";
 
 type Props = {
 	projects: Project[];
@@ -65,36 +66,6 @@ const ProjectList = ({ projects }: Props) => {
 
 	return (
 		<div>
-			<div className="sticky top-0 z-10 flex items-center justify-between bg-background py-1">
-				<p className="font-medium">Projects</p>
-			</div>
-			{projects.map((project) => {
-				return (
-					<Link
-						key={project.id}
-						href={`/project/${project.id}/tasks`}
-					>
-						<Button
-							variant="ghost"
-							className={cn(
-								"group relative h-[36px] w-full justify-between gap-2 rounded-xl font-normal text-foreground opacity-50 transition-all hover:opacity-100",
-								{
-									"opacity-100":
-										project.id === currentProject?.id,
-								},
-							)}
-						>
-							{project.name}
-							<span
-								className="relative h-3 w-3 rounded-full saturate-200"
-								style={{
-									backgroundColor: project?.color,
-								}}
-							></span>
-						</Button>
-					</Link>
-				);
-			})}
 			<CreateProjectDialog>
 				<Button
 					variant="ghost"
@@ -104,6 +75,36 @@ const ProjectList = ({ projects }: Props) => {
 					Add Project
 				</Button>
 			</CreateProjectDialog>
+			{projects.map((project) => {
+				return (
+					<SimpleTooltip
+						key={project.id}
+						label={`Project ${project.id}`}
+						side="right"
+					>
+						<Link href={`/project/${project.id}/tasks`}>
+							<Button
+								variant="ghost"
+								className={cn(
+									"group relative h-[36px] w-full justify-between gap-2 rounded-xl font-normal text-foreground opacity-50 transition-all hover:opacity-100",
+									{
+										"opacity-100":
+											project.id === currentProject?.id,
+									},
+								)}
+							>
+								{project.name}
+								<span
+									className="relative h-3 w-3 rounded-full"
+									style={{
+										backgroundColor: project?.color,
+									}}
+								></span>
+							</Button>
+						</Link>
+					</SimpleTooltip>
+				);
+			})}
 		</div>
 	);
 };
