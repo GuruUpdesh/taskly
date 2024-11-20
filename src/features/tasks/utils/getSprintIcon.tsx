@@ -53,6 +53,10 @@ export function SprintProgressCircle({
 }
 
 export function getSprintProgress(sprint: Sprint) {
+	if (!sprint.startDate || !sprint.endDate) {
+		return 0;
+	}
+
 	const now = new Date();
 	const sprintDuration =
 		sprint.endDate.getTime() - sprint.startDate.getTime();
