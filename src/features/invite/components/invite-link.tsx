@@ -29,7 +29,7 @@ function InviteLink({ token }: Props) {
 				onChange={(e) => {
 					e.preventDefault();
 				}}
-				className="flex-1 overflow-hidden whitespace-nowrap rounded-sm border bg-background-dialog p-2 text-muted-foreground"
+				className="flex-1 overflow-hidden whitespace-nowrap rounded-sm border bg-accent/50 p-2 text-muted-foreground"
 			/>
 			<Button
 				onClick={handleCopyToClipboard}

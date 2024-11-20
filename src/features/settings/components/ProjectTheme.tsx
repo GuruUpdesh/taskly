@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { generateAndUpdateProjectImage } from "~/actions/create-project";
+// import { generateAndUpdateProjectImage } from "~/actions/create-project";
 import ImageUploadArea from "~/components/ImageUploadArea";
 import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
@@ -94,7 +94,7 @@ const ProjectTheme = ({ project, aiLimitCount }: Props) => {
 
 	const [isRegenerating, setIsRegenerating] = useState(false);
 
-	async function handleAIGenerate() {
+	function handleAIGenerate() {
 		if (aiLimitCount >= AIDAILYLIMIT) {
 			toast.error(
 				`AI daily limit reached. Please try again in ${timeTillNextReset()} hours.`,
@@ -102,11 +102,11 @@ const ProjectTheme = ({ project, aiLimitCount }: Props) => {
 			return;
 		}
 		setIsRegenerating(true);
-		await generateAndUpdateProjectImage(
-			project.id,
-			project.name,
-			project.description,
-		);
+		// await generateAndUpdateProjectImage(
+		// 	project.id,
+		// 	project.name,
+		// 	project.description,
+		// );
 		setIsRegenerating(false);
 	}
 

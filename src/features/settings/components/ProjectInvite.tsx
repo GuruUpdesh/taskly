@@ -11,7 +11,7 @@ type Props = {
 const ProjectInvite = ({ project }: Props) => {
 	return (
 		<div className="flex flex-col gap-4">
-			<EmailInviteWrapper projectId={project.id} />
+			{/* <EmailInviteWrapper projectId={project.id} /> */}
 			<InviteLinkWrapper projectId={project.id} />
 		</div>
 	);

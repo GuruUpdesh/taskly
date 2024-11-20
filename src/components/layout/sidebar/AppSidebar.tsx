@@ -53,7 +53,7 @@ const AppSidebar = ({ projectId }: SidebarProps) => {
 								<div>
 									<SimpleTooltip label="Add Task">
 										<Button
-											className="aspect-square h-[36px] w-[36px] rounded-md bg-foreground/10"
+											className="aspect-square h-[36px] w-[36px] rounded-md bg-foreground/10 text-muted-foreground hover:text-foreground focus:text-foreground"
 											variant="outline"
 											size="iconSm"
 										>

@@ -56,12 +56,12 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 	return (
 		<form className="flex flex-col">
 			<div className="flex items-center">
-				<EmailInviteForm
+				{/* <EmailInviteForm
 					invitees={form.watch("invitees").join(", ")}
 					setInvitees={(invitees) =>
 						form.setValue("invitees", invitees)
 					}
-				/>
+				/> */}
 				<Button
 					variant="secondary"
 					disabled={form.watch("invitees").length === 0 || isLoading}

@@ -65,16 +65,8 @@ const ProjectList = ({ projects }: Props) => {
 
 	return (
 		<div>
-			<div className="sticky top-0 z-10 flex items-center justify-between bg-background">
-				<p className="text-sm uppercase">Projects</p>
-				<div className="flex flex-nowrap">
-					<CreateProjectDialog>
-						<Button variant="ghost" size="icon">
-							<DiamondPlus className="h-4 w-4" />
-							<span className="sr-only">New Project</span>
-						</Button>
-					</CreateProjectDialog>
-				</div>
+			<div className="sticky top-0 z-10 flex items-center justify-between bg-background py-1">
+				<p className="font-medium">Projects</p>
 			</div>
 			{projects.map((project) => {
 				return (
@@ -85,26 +77,33 @@ const ProjectList = ({ projects }: Props) => {
 						<Button
 							variant="ghost"
 							className={cn(
-								"group w-full justify-between gap-2 overflow-hidden font-normal text-foreground opacity-50 transition-all hover:opacity-100",
+								"group relative h-[36px] w-full justify-between gap-2 rounded-xl font-normal text-foreground opacity-50 transition-all hover:opacity-100",
 								{
 									"opacity-100":
 										project.id === currentProject?.id,
 								},
 							)}
 						>
-							<div className="flex items-center gap-2 whitespace-nowrap">
-								<span
-									className="relative h-4 w-4 rounded-full saturate-200"
-									style={{
-										backgroundColor: project?.color,
-									}}
-								></span>
-								{project.name}
-							</div>
+							{project.name}
+							<span
+								className="relative h-3 w-3 rounded-full saturate-200"
+								style={{
+									backgroundColor: project?.color,
+								}}
+							></span>
 						</Button>
 					</Link>
 				);
 			})}
+			<CreateProjectDialog>
+				<Button
+					variant="ghost"
+					className="h-[36px] w-full justify-start gap-2 rounded-xl"
+				>
+					<DiamondPlus className="h-4 w-4" />
+					Add Project
+				</Button>
+			</CreateProjectDialog>
 		</div>
 	);
 };
