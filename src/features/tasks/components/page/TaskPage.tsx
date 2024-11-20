@@ -143,8 +143,8 @@ const TaskPage = ({ taskId, projectId, context }: Props) => {
 							pullRequests={pullRequests.data}
 						/>
 						<Separator />
-						<div className="flex justify-center">
-							<section className="flex flex-col gap-2 pb-2">
+						<div className="flex flex-col items-center">
+							<section className="flex w-full max-w-[600px] flex-col gap-2 py-2">
 								{pullRequests.data?.map((pr) => {
 									return (
 										<PullRequest
