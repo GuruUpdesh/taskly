@@ -84,9 +84,9 @@ export function CreateGithubTicket() {
 					<Button
 						variant="outline"
 						size="icon"
-						className="rounded-full"
+						className="rounded-full bg-background-dialog shadow-none"
 					>
-						<QuestionMarkIcon className="h-4 w-4" />
+						<QuestionMarkIcon className="h-3 w-3" />
 					</Button>
 				</div>
 			</DialogTrigger>

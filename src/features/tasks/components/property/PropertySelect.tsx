@@ -29,6 +29,7 @@ type DataCellProps = {
 	autoSubmit?: boolean;
 	className?: string;
 	autoFocus?: boolean;
+	onChangeCallback?: (val: string) => void;
 };
 
 function PropertySelect({
@@ -39,6 +40,7 @@ function PropertySelect({
 	autoSubmit = true,
 	className = "",
 	autoFocus = false,
+	onChangeCallback,
 }: DataCellProps) {
 	const getOptionByStringValue = (value: string) => {
 		if (config.type !== "enum" && config.type !== "dynamic") return null;
@@ -71,7 +73,7 @@ function PropertySelect({
 						<Select
 							onValueChange={(val) => {
 								onChange(convertToOriginalType(val));
-								console.time("value change");
+								if (onChangeCallback) onChangeCallback(val);
 								if (autoSubmit) void onSubmit(form.getValues());
 							}}
 							value={currentValue}
@@ -79,7 +81,7 @@ function PropertySelect({
 						>
 							<SelectTrigger
 								className={cn(
-									"h-min overflow-hidden saturate-[95%]",
+									"h-min overflow-hidden saturate-[1.2]",
 									{
 										"aspect-square max-h-[30px] w-[30px] justify-center":
 											size === "icon",
@@ -92,9 +94,8 @@ function PropertySelect({
 									},
 									taskVariants({
 										color: option?.color,
-										hover: true,
 									}),
-									"flex items-center space-x-2 whitespace-nowrap rounded-sm py-1 pl-2 pr-3",
+									"group/select flex items-center space-x-2 whitespace-nowrap rounded-md py-1 pl-2 pr-3",
 								)}
 							>
 								<SelectValue asChild>
@@ -107,7 +108,7 @@ function PropertySelect({
 								</SelectValue>
 								{size === "icon" ? null : (
 									<SelectPrimitive.Icon asChild>
-										<ChevronDown className="h-4 w-4 opacity-50" />
+										<ChevronDown className="chevron h-4 w-4 opacity-50 transition-transform group-data-[state=open]/select:-rotate-180" />
 									</SelectPrimitive.Icon>
 								)}
 							</SelectTrigger>
@@ -124,15 +125,16 @@ function PropertySelect({
 										className={cn(
 											taskVariants({
 												color: option.color,
-												hover: true,
 											}),
-											"flex items-center space-x-2 whitespace-nowrap rounded-sm border py-1 pl-2 pr-3",
+											"group/select-item flex items-center space-x-2 whitespace-nowrap rounded-sm border py-1 pl-2 pr-3",
 											"border-none bg-transparent !pl-2",
 										)}
 										value={stringifyValue(option.key)}
 									>
 										<div className="flex min-w-[8rem] items-center gap-2">
-											<span>{option.icon}</span>
+											<span className="group-data-[state=checked]/select-item:hidden">
+												{option.icon}
+											</span>
 											<p>{option.displayName}</p>
 										</div>
 									</SelectItem>

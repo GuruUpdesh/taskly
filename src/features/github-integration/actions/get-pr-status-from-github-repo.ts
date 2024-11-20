@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "~/db";
+import { logger } from "~/lib/logger";
 import { tasks, projects } from "~/schema";
 
 import { getAccessToken } from "../utils/get-access-token";
@@ -67,21 +68,19 @@ export async function getPRStatusFromGithubRepo(taskId: number) {
 						Accept: "application/vnd.github.v3+json",
 					},
 				});
-				console.log(mergedUrl);
 				// if status is 204, then PR is merged
 				if (mergedResponse.status === 204) {
-					console.log("GitHub Integration: PR is merged");
 					pr.state = "merged";
 				}
 			}
-			console.log(
-				"GitHub Integration: successful got PRs",
-				pullRequestResults,
+			logger.info(
+				{ pullRequestResults },
+				"[GITHUB INTEGRATION] successful got PRs",
 			);
 			return pullRequestResults;
 		}
 	} catch (error) {
-		console.error("Failed to get GitHub PR from branch name:", error);
+		logger.error("Failed to get GitHub PR from branch name:", error);
 		return null;
 	}
 }

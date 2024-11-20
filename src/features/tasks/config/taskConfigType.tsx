@@ -39,8 +39,8 @@ import { z } from "zod";
 
 import UserProfilePicture from "~/components/UserProfilePicture";
 import {
-	getClockIconForSprintProgress,
 	getSprintProgress,
+	SprintProgressCircle,
 } from "~/features/tasks/utils/getSprintIcon";
 import { type User, type Task, type Sprint, selectTaskSchema } from "~/schema";
 import {
@@ -83,24 +83,16 @@ export const taskProperties: TaskProperty[] = [
 	"branchName",
 ] as const;
 
-export const taskVariants = cva([], {
+export const taskVariants = cva(["transition-all duration-200"], {
 	variants: {
 		color: {
-			null: "text-neutral-400 bg-neutral-900/50",
-			grey: "text-neutral-200 bg-neutral-800/50",
-			orange: "text-orange-200 bg-orange-800/50",
-			yellow: "text-yellow-200 bg-yellow-800/50",
-			red: "text-red-200 bg-red-800/50",
-			blue: "text-blue-200 bg-blue-800/50",
-			green: "text-green-200 bg-green-800/50",
-			purple: "text-violet-200 bg-violet-800/50",
-			teal: "text-teal-200 bg-teal-800/50",
-			fuchsia: "text-fuchsia-200 bg-fuchsia-800/50",
-		},
-		hover: {
-			true: "",
-			false: "",
-			group: "",
+			grey: "text-neutral-300 bg-neutral-800 hover:text-neutral-50 focus:text-neutral-50 hover:bg-neutral-700/60 focus:bg-neutral-700/60",
+			green: "text-lime-300 bg-lime-700/80 hover:text-lime-50 focus:text-lime-50 data-[state=open]:text-lime-50 hover:bg-lime-800/80 focus:bg-lime-800/80 data-[state=open]:bg-lime-800/80",
+			amber: "text-yellow-300 bg-yellow-700/80 hover:text-yellow-50 focus:text-yellow-50 data-[state=open]:text-yellow-50 hover:bg-yellow-800/80 focus:bg-yellow-800/80 data-[state=open]:bg-yellow-800/80",
+			blue: "text-sky-200 bg-sky-700/60 hover:text-sky-50 focus:text-sky-50 data-[state=open]:text-sky-50 hover:bg-sky-800/60 focus:bg-sky-800/60 data-[state=open]:bg-sky-800/60",
+			teal: "text-[#AFECEF] bg-[#134E4A]/80 hover:text-[#CCFBF1] focus:text-[#CCFBF1] data-[state=open]:text-[#CCFBF1] hover:bg-[#134E4A]/60 focus:bg-[#134E4A]/60 data-[state=open]:bg-[#134E4A]/60",
+			violet: "text-indigo-200 bg-indigo-800/50 hover:text-indigo-50 focus:text-indigo-50 data-[state=open]:text-indigo-50 hover:bg-indigo-900/50 focus:bg-indigo-900/50 data-[state=open]:bg-indigo-900/50",
+			red: "text-[#FECACA] bg-[#7F1D1D]/80 hover:text-[#FEE2E2] focus:text-[#FEE2E2] data-[state=open]:text-[#FEE2E2] hover:bg-[#7F1D1D]/60 focus:bg-[#7F1D1D]/60 data-[state=open]:bg-[#7F1D1D]/60",
 		},
 		context: {
 			default: "",
@@ -108,162 +100,45 @@ export const taskVariants = cva([], {
 		},
 	},
 	compoundVariants: [
-		{
-			color: "null",
-			hover: true,
-			class: "hover:text-slate-300 focus:text-slate-300 hover:bg-accent focus:bg-accent transition-colors",
-		},
-		{
-			color: "null",
-			hover: "group",
-			class: "group-hover:bg-accent",
-		},
+		// Border styles for default context
 		{
 			color: "grey",
-			hover: true,
-			class: "hover:text-slate-200 focus:text-slate-200 hover:bg-slate-400/25 focus:bg-slate-400/25 transition-colors",
+			context: "default",
+			class: "border border-neutral-700/50 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
 		},
 		{
-			color: "grey",
-			hover: "group",
-			class: "group-hover:bg-slate-400/25",
+			color: "green",
+			context: "default",
+			class: "border border-lime-300/10 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
 		},
 		{
-			color: "orange",
-			hover: true,
-			class: "hover:text-orange-200 focus:text-orange-200 hover:bg-orange-400/25 focus:bg-orange-400/25 transition-colors",
+			color: "amber",
+			context: "default",
+			class: "border border-yellow-300/10 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
 		},
 		{
-			color: "orange",
-			hover: "group",
-			class: "group-hover:bg-orange-400/25",
+			color: "blue",
+			context: "default",
+			class: "border border-sky-200/10 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
 		},
 		{
-			color: "yellow",
-			hover: true,
-			class: "hover:text-yellow-100 focus:text-yellow-100 hover:bg-yellow-400/25 focus:bg-yellow-400/25 transition-colors",
+			color: "teal",
+			context: "default",
+			class: "border border-[#115E59]/50 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
 		},
 		{
-			color: "yellow",
-			hover: "group",
-			class: "group-hover:bg-yellow-400/25",
+			color: "violet",
+			context: "default",
+			class: "border border-indigo-200/10 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
 		},
 		{
 			color: "red",
-			hover: true,
-			class: "hover:text-red-200 focus:text-red-200 hover:bg-red-400/25 focus:bg-red-400/25 transition-colors",
-		},
-		{
-			color: "red",
-			hover: "group",
-			class: "group-hover:bg-red-400/25",
-		},
-		{
-			color: "blue",
-			hover: true,
-			class: "hover:text-blue-100 focus:text-blue-100 hover:bg-blue-400/25 focus:bg-blue-400/25 transition-colors",
-		},
-		{
-			color: "blue",
-			hover: "group",
-			class: "group-hover:bg-blue-400/25",
-		},
-		{
-			color: "green",
-			hover: true,
-			class: "hover:text-green-200 focus:text-green-200 hover:bg-green-400/25 focus:bg-green-400/25 transition-colors",
-		},
-		{
-			color: "green",
-			hover: "group",
-			class: "group-hover:bg-green-400/25",
-		},
-		{
-			color: "purple",
-			hover: true,
-			class: "hover:text-purple-200 focus:text-purple-200 hover:bg-violet-400/25 focus:bg-violet-400/25 transition-colors",
-		},
-		{
-			color: "purple",
-			hover: "group",
-			class: "group-hover:bg-violet-400/25",
-		},
-		{
-			color: "teal",
-			hover: true,
-			class: "hover:text-teal-200 focus:text-teal-200 hover:bg-teal-400/25 focus:bg-teal-400/25 transition-colors",
-		},
-		{
-			color: "teal",
-			hover: "group",
-			class: "group-hover:bg-teal-400/25",
-		},
-		{
-			color: "fuchsia",
-			hover: true,
-			context: ["default", "menu"],
-			class: "hover:text-fuchsia-200 focus:text-fuchsia-200 hover:bg-fuchsia-400/25 focus:bg-fuchsia-400/25 transition-colors",
-		},
-		{
-			color: "fuchsia",
-			hover: "group",
-			class: "group-hover:bg-fuchsia-400/25",
-		},
-		{
-			color: "null",
 			context: "default",
-			class: "border",
-		},
-		{
-			color: "grey",
-			context: "default",
-			class: "border border-slate-400/25",
-		},
-		{ color: "red", context: "default", class: "border border-red-400/25" },
-		{
-			color: "blue",
-			context: "default",
-			class: "border border-blue-400/25",
-		},
-		{
-			color: "green",
-			context: "default",
-			class: "border border-green-400/25",
-		},
-		{
-			color: "purple",
-			context: "default",
-			class: "border border-violet-400/25",
-		},
-		{
-			color: "teal",
-			context: "default",
-			class: "border border-teal-400/25",
-		},
-		{
-			color: "orange",
-			context: "default",
-			class: "border border-orange-400/25",
-		},
-		{
-			color: "yellow",
-			context: "default",
-			class: "border border-yellow-400/25",
-		},
-		{
-			color: "fuchsia",
-			context: "default",
-			class: "border border-fuchsia-400/25",
-		},
-		{
-			hover: true,
-			context: "default",
-			class: "hover:border-transparent focus:border-transparent",
+			class: "border border-[#991B1B]/50 hover:border-transparent focus:border-transparent data-[state=open]:border-transparent",
 		},
 	],
 	defaultVariants: {
-		color: "null",
-		hover: false,
+		color: "grey",
 		context: "default",
 	},
 });
@@ -338,19 +213,19 @@ export const taskConfig: TaskConfig = {
 				key: "backlog",
 				displayName: "Backlog",
 				icon: <CircleDashed className="h-4 w-4" />,
-				color: "null",
+				color: "grey",
 			},
 			{
 				key: "todo",
 				displayName: "To Do",
 				icon: <RadiobuttonIcon className="h-4 w-4" />,
-				color: "grey",
+				color: "green",
 			},
 			{
 				key: "inprogress",
 				displayName: "In Progress",
 				icon: <PieChartIcon className="h-4 w-4" />,
-				color: "yellow",
+				color: "amber",
 			},
 			{
 				key: "inreview",
@@ -362,7 +237,7 @@ export const taskConfig: TaskConfig = {
 				key: "done",
 				displayName: "Done",
 				icon: <CheckCircledIcon className="h-4 w-4" />,
-				color: "green",
+				color: "teal",
 			},
 		],
 	},
@@ -376,37 +251,37 @@ export const taskConfig: TaskConfig = {
 				key: "0",
 				displayName: "No Estimate",
 				icon: <TbHexagon className="h-4 w-4" />,
-				color: "null",
+				color: "grey",
 			},
 			{
 				key: "1",
 				displayName: "1 Point",
 				icon: <TbHexagonNumber1 className="h-4 w-4" />,
-				color: "null",
+				color: "grey",
 			},
 			{
 				key: "2",
 				displayName: "2 Points",
 				icon: <TbHexagonNumber2 className="h-4 w-4" />,
-				color: "null",
+				color: "grey",
 			},
 			{
 				key: "3",
 				displayName: "3 Points",
 				icon: <TbHexagonNumber3 className="h-4 w-4" />,
-				color: "null",
+				color: "grey",
 			},
 			{
 				key: "4",
 				displayName: "4 Points",
 				icon: <TbHexagonNumber4 className="h-4 w-4" />,
-				color: "null",
+				color: "grey",
 			},
 			{
 				key: "5",
 				displayName: "5 Points",
 				icon: <TbHexagonNumber5 className="h-4 w-4" />,
-				color: "null",
+				color: "grey",
 			},
 		],
 	},
@@ -420,25 +295,25 @@ export const taskConfig: TaskConfig = {
 				key: "none",
 				displayName: "None",
 				icon: <Minus className="h-4 w-4" />,
-				color: "null",
+				color: "grey",
 			},
 			{
 				key: "low",
 				displayName: "Low",
 				icon: <ArrowDownIcon className="h-4 w-4" />,
-				color: "blue",
+				color: "violet",
 			},
 			{
 				key: "medium",
 				displayName: "Medium",
 				icon: <ArrowRightIcon className="h-4 w-4" />,
-				color: "yellow",
+				color: "blue",
 			},
 			{
 				key: "high",
 				displayName: "High",
 				icon: <ArrowUpIcon className="h-4 w-4" />,
-				color: "orange",
+				color: "amber",
 			},
 			{
 				key: "critical",
@@ -458,37 +333,37 @@ export const taskConfig: TaskConfig = {
 				key: "task",
 				displayName: "Task",
 				icon: <LayoutList className="h-4 w-4" />,
-				color: "purple",
+				color: "grey",
 			},
 			{
 				key: "feature",
 				displayName: "Feature",
 				icon: <Feather className="h-4 w-4" />,
-				color: "fuchsia",
+				color: "grey",
 			},
 			{
 				key: "improvement",
 				displayName: "Improvement",
 				icon: <Activity className="h-4 w-4" />,
-				color: "blue",
+				color: "grey",
 			},
 			{
 				key: "research",
 				displayName: "Research",
 				icon: <Search className="h-4 w-4" />,
-				color: "green",
+				color: "grey",
 			},
 			{
 				key: "testing",
 				displayName: "Testing",
 				icon: <Beaker className="h-4 w-4" />,
-				color: "yellow",
+				color: "grey",
 			},
 			{
 				key: "bug",
 				displayName: "Bug",
 				icon: <BugIcon className="h-4 w-4" />,
-				color: "red",
+				color: "grey",
 			},
 		],
 	},
@@ -502,7 +377,7 @@ export const taskConfig: TaskConfig = {
 				key: "unassigned",
 				displayName: "Unassigned",
 				icon: <PersonIcon className="h-4 w-4" />,
-				color: "null",
+				color: "grey",
 			},
 		],
 	},
@@ -510,13 +385,13 @@ export const taskConfig: TaskConfig = {
 		key: "sprintId",
 		displayName: "Sprint",
 		type: "dynamic",
-		icon: <Clock className="h-4 w-4" />,
+		icon: <SprintProgressCircle progress={1} />,
 		options: [
 			{
 				key: "-1",
 				displayName: "No Sprint",
-				icon: <Clock className="h-4 w-4 opacity-50" />,
-				color: "null",
+				icon: <SprintProgressCircle progress={0} />,
+				color: "grey",
 			},
 		],
 	},
@@ -555,6 +430,8 @@ export const taskConfig: TaskConfig = {
 function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 	const config = _.cloneDeep(taskConfig);
 
+	const assigneeColor: Color = "grey";
+
 	config.assignee.options = [
 		...taskConfig.assignee.options,
 		...assignees.map((assignee) => ({
@@ -563,7 +440,7 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 			icon: (
 				<UserProfilePicture size={18} src={assignee.profilePicture} />
 			),
-			color: "grey" as Color,
+			color: assigneeColor,
 		})),
 	];
 
@@ -578,21 +455,21 @@ function getDynamicConfig(assignees: User[], sprints: Sprint[]) {
 	config.sprintId.options = [
 		...taskConfig.sprintId.options,
 		...sprintsToDisplay.map((sprint) => {
+			const progress = getSprintProgress(sprint);
+
 			const isActive = helperIsSprintActive(sprint);
-			let ClockIcon = <Clock className="h-4 w-4" />;
-			if (isActive) {
-				const progress = getSprintProgress(sprint);
-				const dynamicIcon = getClockIconForSprintProgress(progress);
-				if (dynamicIcon) {
-					ClockIcon = dynamicIcon;
-				}
-			}
+			const color: Color = isActive ? "teal" : "violet";
 
 			return {
 				key: sprint.id.toString(),
 				displayName: `${sprint.name} [${getSprintDateRage(sprint)}]`,
-				icon: ClockIcon,
-				color: isActive ? "green" : ("orange" as Color),
+				icon: (
+					<SprintProgressCircle
+						progress={progress}
+						className="h-4 w-4"
+					/>
+				),
+				color: color,
 			};
 		}),
 	];

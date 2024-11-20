@@ -5,6 +5,7 @@ import { Webhook as svixWebhook } from "svix";
 
 import { db } from "~/db";
 import { env } from "~/env.mjs";
+import { logger } from "~/lib/logger";
 import { type NewUser, insertUserSchema, users, tasks } from "~/schema";
 
 const webhookSecret = env.CLERK_WEBHOOK_SECRET;
@@ -34,8 +35,8 @@ async function validateRequest(request: Request) {
  */
 async function onUserCreated(payload: WebhookEvent) {
 	if (payload.type !== "user.created") {
-		console.error(
-			`🪩 Clerk Webhook: onUserCreated > Invalid payload type (${payload.type}) expected user.created`,
+		logger.error(
+			`[CLERK WEBHOOK] onUserCreated > Invalid payload type (${payload.type}) expected user.created`,
 		);
 		return;
 	}
@@ -43,8 +44,8 @@ async function onUserCreated(payload: WebhookEvent) {
 	const data = payload.data;
 
 	if (!data.id || !data.username || !data.image_url) {
-		console.error(
-			"🪩 Clerk Webhook: onUserCreated > Required data not found in webhook payload",
+		logger.error(
+			"[CLERK WEBHOOK] onUserCreated > Required data not found in webhook payload",
 		);
 		return;
 	}
@@ -57,7 +58,7 @@ async function helperCreateUser(
 	username: string,
 	profilePicture: string,
 ) {
-	console.log(`🪩 Clerk Webhook: Creating user > ${username} (${userId})`);
+	logger.info(`[CLERK WEBHOOK] Creating user > ${username} (${userId})`);
 	const data: NewUser = {
 		userId,
 		username,
@@ -69,8 +70,8 @@ async function helperCreateUser(
 
 async function onUserDeleted(payload: WebhookEvent) {
 	if (payload.type !== "user.deleted") {
-		console.error(
-			`🪩 Clerk Webhook: onUserDeleted > Invalid payload type (${payload.type}) expected user.deleted`,
+		logger.error(
+			`[CLERK WEBHOOK] onUserDeleted > Invalid payload type (${payload.type}) expected user.deleted`,
 		);
 		return;
 	}
@@ -78,7 +79,7 @@ async function onUserDeleted(payload: WebhookEvent) {
 	const userId = payload.data.id;
 
 	if (!userId) {
-		console.error("Clerk Webhook: onUserDeleted > No user ID provided");
+		logger.error("[CLERK WEBHOOK] onUserDeleted > No user ID provided");
 		return;
 	}
 
@@ -87,17 +88,15 @@ async function onUserDeleted(payload: WebhookEvent) {
 
 async function onSessionCreated(payload: WebhookEvent) {
 	if (payload.type !== "session.created") {
-		console.error(
-			`🪩 Clerk Webhook: onSessionCreated > Invalid payload type (${payload.type}) expected session.created`,
+		logger.error(
+			`[CLERK WEBHOOK] onSessionCreated > Invalid payload type (${payload.type}) expected session.created`,
 		);
 		return;
 	}
 
 	const userId = payload.data.user_id;
 	if (!userId) {
-		console.error(
-			"🪩 Clerk Webhook: onSessionCreated > No user ID provided",
-		);
+		logger.error("[CLERK WEBHOOK] onSessionCreated > No user ID provided");
 		return;
 	}
 
@@ -112,20 +111,18 @@ async function onSessionCreated(payload: WebhookEvent) {
 	if (user.length === 0) {
 		const user = await client.users.getUser(userId);
 		if (!user) {
-			console.error(
-				"🪩 Clerk Webhook: onSessionCreated > User not found",
-			);
+			logger.error("[CLERK WEBHOOK] onSessionCreated > User not found");
 			return;
 		}
 		if (!user.username) {
-			console.error(
-				"🪩 Clerk Webhook: onSessionCreated > User does not have a username",
+			logger.error(
+				"[CLERK WEBHOOK] onSessionCreated > User does not have a username",
 			);
 			return;
 		}
 		if (!user.imageUrl) {
-			console.error(
-				"🪩 Clerk Webhook: onSessionCreated > User does not have a profile picture",
+			logger.error(
+				"[CLERK WEBHOOK] onSessionCreated > User does not have a profile picture",
 			);
 			return;
 		}
@@ -134,15 +131,15 @@ async function onSessionCreated(payload: WebhookEvent) {
 		// check that the username still matches
 		const clerkUser = await client.users.getUser(userId);
 		if (!clerkUser.username) {
-			console.error(
-				"🪩 Clerk Webhook: onSessionCreated > User does not have a username",
+			logger.error(
+				"[CLERK WEBHOOK] onSessionCreated > User does not have a username",
 			);
 			return;
 		}
 
 		// if not update the username
 		if (clerkUser.username !== user[0].username) {
-			console.log("🪩 Clerk Webhook: updating username");
+			logger.info("[CLERK WEBHOOK] updating username");
 			await db
 				.update(users)
 				.set({ username: clerkUser.username })
@@ -152,15 +149,15 @@ async function onSessionCreated(payload: WebhookEvent) {
 }
 async function onUserUpdated(payload: WebhookEvent) {
 	if (payload.type !== "session.created") {
-		console.error(
-			`🪩 Clerk Webhook: onUserUpdated > Invalid payload type (${payload.type}) expected session.created`,
+		logger.error(
+			`[CLERK WEBHOOK] onUserUpdated > Invalid payload type (${payload.type}) expected session.created`,
 		);
 		return;
 	}
 
 	const userId = payload.data.user_id;
 	if (!userId) {
-		console.error("🪩 Clerk Webhook: onUserUpdated > No user ID provided");
+		logger.error("[CLERK WEBHOOK] onUserUpdated > No user ID provided");
 		return;
 	}
 
@@ -168,20 +165,20 @@ async function onUserUpdated(payload: WebhookEvent) {
 	const clerkUser = await client.users.getUser(userId);
 
 	if (!clerkUser) {
-		console.error("🪩 Clerk Webhook: onUserUpdated > User not found");
+		logger.error("[CLERK WEBHOOK] onUserUpdated > User not found");
 		return;
 	}
 
 	if (!clerkUser.username) {
-		console.error(
-			"🪩 Clerk Webhook: onUserUpdated > User does not have a username",
+		logger.error(
+			"[CLERK WEBHOOK] onUserUpdated > User does not have a username",
 		);
 		return;
 	}
 
 	if (!clerkUser.imageUrl) {
-		console.error(
-			"🪩 Clerk Webhook: onUserUpdated > User does not have a profile picture",
+		logger.error(
+			"[CLERK WEBHOOK] onUserUpdated > User does not have a profile picture",
 		);
 		return;
 	}
@@ -216,7 +213,7 @@ async function onUserUpdated(payload: WebhookEvent) {
 export async function POST(request: Request) {
 	try {
 		const payload = await validateRequest(request);
-		console.log("🪩 Clerk Webhook: ", payload.type);
+		logger.info({ payload: payload.type }, "[CLERK WEBHOOK] ");
 
 		switch (payload.type) {
 			case "user.created":
@@ -231,12 +228,12 @@ export async function POST(request: Request) {
 			case "user.updated":
 				await onUserUpdated(payload);
 			default:
-				console.error("🪩 Clerk Webhook: Unhandled webhook event");
+				logger.error("[CLERK WEBHOOK] Unhandled webhook event");
 		}
 
 		return Response.json({ message: "Received" });
 	} catch (e) {
-		console.error(e);
+		logger.error(e);
 		return new Response("Bad Request", {
 			status: 404,
 		});

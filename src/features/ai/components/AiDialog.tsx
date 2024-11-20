@@ -3,9 +3,8 @@
 import React, { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { ChevronRight, Loader2, SparklesIcon } from "lucide-react";
+import { ChevronRight, Loader2, Sparkle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -52,7 +51,7 @@ const AiDialog = ({ projectId }: Props) => {
 		{
 			id: "ai-task-creation",
 			label: "AI Task Creation",
-			icon: <SparklesIcon className="h-4 w-4" />,
+			icon: <Sparkle className="h-4 w-4" />,
 			priority: 4,
 			shortcut: [],
 			action: () => {
@@ -99,7 +98,7 @@ const AiDialog = ({ projectId }: Props) => {
 		const createTasksPromises = response.tasks.map((task) =>
 			createTask({
 				...task,
-				title: "🤖 " + task.title,
+				title: task.title,
 				projectId: parseInt(projectId),
 				backlogOrder: 1000000,
 				insertedDate: new Date(),
@@ -111,16 +110,25 @@ const AiDialog = ({ projectId }: Props) => {
 
 		const results = await Promise.allSettled(createTasksPromises);
 
+		const addedIds = [];
 		results.forEach((result, index) => {
 			if (result.status === "fulfilled") {
 				console.log(
 					`Task ${index} created successfully:`,
 					result.value,
 				);
+				if (result.value) {
+					addedIds.push(result.value.id);
+				}
 			} else {
 				console.error(`Task ${index} failed to create:`, result.reason);
 			}
 		});
+
+		if (addedIds.length === 0) {
+			toast.error("Something went wrong while creating AI tasks");
+		}
+		toast.success(`AI created ${addedIds.length} tasks`);
 
 		resetForm();
 		setOpen(false);
@@ -141,25 +149,23 @@ const AiDialog = ({ projectId }: Props) => {
 					setOpen(open);
 				}}
 			>
-				<SimpleTooltip label="AI Task Creation">
+				<SimpleTooltip label="Task Creator">
 					<DialogTrigger asChild>
 						<Button
 							variant="outline"
-							size="sm"
-							className="bg-transparent"
+							size="icon"
+							className="h-[36px] rounded-xl bg-background-dialog"
 						>
-							<SparklesIcon className="h-4 w-4" />
-							<span className="sr-only">
-								Open AI Task Creation
-							</span>
+							<Sparkle className="h-4 w-4" />
+							<span className="sr-only">Open Task Creator</span>
 						</Button>
 					</DialogTrigger>
 				</SimpleTooltip>
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle className="flex items-center gap-2">
-							<SparklesIcon className="h-4 w-4" />
-							AI Task Creation
+							<Sparkle className="h-4 w-4" />
+							AI Task Creator
 						</DialogTitle>
 						{aiUsageCount >= AIDAILYLIMIT && (
 							<Message
@@ -181,7 +187,7 @@ const AiDialog = ({ projectId }: Props) => {
 									render={({ field }) => (
 										<FormItem>
 											<Textarea
-												placeholder="Describe the task or tasks you would like to create..."
+												placeholder="Describe the tasks you would like to create..."
 												className="h-[200px] max-h-[180px] bg-transparent"
 												{...field}
 											/>
@@ -202,16 +208,6 @@ const AiDialog = ({ projectId }: Props) => {
 							</span>
 						</SimpleTooltip>
 						<div className="flex-1" />
-						<DialogClose asChild>
-							<Button
-								type="button"
-								variant="outline"
-								onClick={resetForm}
-								className="bg-transparent"
-							>
-								Close
-							</Button>
-						</DialogClose>
 						<Button
 							className="flex items-center gap-2"
 							onClick={form.handleSubmit(onSubmit)}
@@ -223,8 +219,8 @@ const AiDialog = ({ projectId }: Props) => {
 							variant="secondary"
 						>
 							{form.formState.isSubmitting
-								? "Submitting"
-								: "Submit"}
+								? "Creating"
+								: "Create"}
 							{form.formState.isSubmitting ? (
 								<Loader2 className="h-4 w-4 animate-spin" />
 							) : (

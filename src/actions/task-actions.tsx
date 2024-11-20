@@ -68,15 +68,16 @@ export async function createTask(data: CreateTaskData) {
 
 		if (task[0]) {
 			void createTaskCreateNotification(task[0].id, newTask);
-		}
+			revalidatePath("/");
 
-		revalidatePath("/");
+			return task[0];
+		}
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			const validationError = fromZodError(error);
 			if (validationError) throw Error(validationError.message);
 		}
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) throwServerError(error.message);
 	}
 }
@@ -105,24 +106,20 @@ async function createTaskCreateNotification(
 
 	await createNotification({
 		date: new Date(),
-		message: `Task "${newTask.title}" was created and assigned to you.`,
+		message: `was created and assigned to you.`,
 		userId: assignee[0]?.userId ?? "unassigned",
 		taskId: taskId,
 		projectId: newTask.projectId,
 	});
 }
 
-export async function getAllTasks() {
-	try {
-		const allTasks: Task[] = await db.select().from(tasks);
-		return allTasks;
-	} catch (error) {
-		if (error instanceof Error) throwServerError(error.message);
-	}
-}
-
 export async function getTasksFromProject(projectId: number) {
 	try {
+		const userId = await authenticate();
+		await checkPermissions(userId, projectId);
+
+		logger.info({ userId, projectId }, "[TASK] Get all");
+
 		const allTasks = await db.query.tasks.findMany({
 			where: (tasks) => eq(tasks.projectId, projectId),
 			with: {
@@ -298,6 +295,9 @@ export async function getTask(id: number) {
 						user: true,
 					},
 				},
+				views: {
+					where: (view) => eq(view.userId, userId),
+				},
 			},
 		});
 		if (!taskQuery) {
@@ -314,7 +314,7 @@ export async function getTask(id: number) {
 
 		return { data: taskQuery, error: null };
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) {
 			return { data: null, error: error.message };
 		}

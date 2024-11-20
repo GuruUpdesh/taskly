@@ -1,6 +1,9 @@
+"use server";
+
 import { authenticate } from "~/actions/security/authenticate";
 import { type UpdateTaskData } from "~/actions/task-actions";
 import { db } from "~/db";
+import { logger } from "~/lib/logger";
 import { insertTaskHistorySchema, type Task, taskHistory } from "~/schema";
 
 // task object keys that will non be included in task history
@@ -36,10 +39,9 @@ export async function createTaskHistory(
 		const value = incomingTaskData[key as keyof typeof incomingTaskData];
 		if (value === undefined || excludedKeys.includes(key)) continue;
 		if (value === existingTaskTransformed[key as keyof Task]) continue;
-		console.log(
+		logger.info(
+			{ value, existingTask: existingTaskTransformed[key as keyof Task] },
 			"Creating history item",
-			value,
-			existingTaskTransformed[key as keyof Task],
 		);
 
 		const newHistoryItem = {

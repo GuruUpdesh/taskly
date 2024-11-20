@@ -32,7 +32,7 @@ const CommandMenu = () => {
 	return (
 		<div>
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="overflow-hidden p-0">
+				<DialogContent className="overflow-hidden bg-background p-0">
 					<Commands
 						commands={commands}
 						selectCallback={() => setOpen(false)}

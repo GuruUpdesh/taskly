@@ -46,7 +46,7 @@ const buttons: ButtonType[] = [
 	{
 		icon: <CircleDashed className="h-4 w-4" />,
 		variant: "secondary",
-		color: "yellow",
+		color: "violet",
 		secondaryIcon: <PieChartIcon className="h-4 w-4" />,
 	},
 	{
@@ -58,13 +58,13 @@ const buttons: ButtonType[] = [
 		icon: <Minus className="h-4 w-4" />,
 		variant: "secondary",
 		secondaryIcon: <ArrowUpIcon className="h-4 w-4" />,
-		color: "orange",
+		color: "amber",
 	},
 	{
 		icon: <LayoutList className="h-4 w-4" />,
 		variant: "secondary",
 		secondaryIcon: <Feather className="h-4 w-4" />,
-		color: "fuchsia",
+		color: "violet",
 	},
 	{
 		icon: <PersonIcon className="h-4 w-4" />,
@@ -76,7 +76,7 @@ const buttons: ButtonType[] = [
 	{
 		icon: <Component1Icon className="h-4 w-4" />,
 		variant: "secondary",
-		color: "green",
+		color: "teal",
 	},
 ];
 

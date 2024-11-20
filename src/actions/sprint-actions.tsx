@@ -10,8 +10,8 @@ import { env } from "~/env.mjs";
 import { projects, sprints, usersToProjects } from "~/schema";
 import buildUrl from "~/utils/buildUrl";
 
-export async function createSprintForProject() {
-	await fetch(buildUrl("/api/cron/sprint"), {
+export async function createSprintForProject(projectId: number) {
+	await fetch(buildUrl(`/api/cron/sprint?projectId=${projectId}`), {
 		method: "GET",
 		headers: {
 			authorization: "Bearer " + env.CRON_SECRET,
@@ -141,7 +141,7 @@ export async function updateSprintsForProject(
 
 	await query.execute();
 
-	await createSprintForProject();
+	await createSprintForProject(projectId);
 
 	revalidatePath(`/`);
 

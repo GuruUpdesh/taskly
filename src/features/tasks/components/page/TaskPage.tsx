@@ -1,23 +1,16 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 
-import { ArrowLeftIcon, TrashIcon } from "@radix-ui/react-icons";
+import { TrashIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-	ChevronRight,
-	ClipboardCopy,
-	GitBranch,
-	Link as LinkIcon,
-} from "lucide-react";
-import dynamic from "next/dynamic";
+import { ClipboardCopy, GitBranch, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getPanelElement } from "react-resizable-panels";
 import { toast } from "sonner";
 
 import { deleteTask, getTask, updateTask } from "~/actions/task-actions";
-import LoadingBreadCrumbs from "~/components/layout/breadcrumbs/LoadingBreadCrumbs";
+import PageHeader from "~/components/layout/PageHeader";
 import Message from "~/components/Message";
 import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
@@ -30,64 +23,30 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "~/components/ui/dialog";
-import {
-	ResizableHandle,
-	ResizablePanel,
-	ResizablePanelGroup,
-} from "~/components/ui/resizable";
 import { Separator } from "~/components/ui/separator";
-import { SidebarTrigger } from "~/components/ui/sidebar";
 import { createComment } from "~/features/comments/actions/create-comment";
 import Comments from "~/features/comments/components/Comments";
 import { getPRStatusFromGithubRepo } from "~/features/github-integration/actions/get-pr-status-from-github-repo";
+import PullRequest from "~/features/github-integration/components/PullRequest";
 import Task from "~/features/tasks/components/backlog/Task";
 import { type UpdateTask } from "~/features/tasks/components/backlog/TasksContainer";
 import { getRefetchIntervals } from "~/lib/refetchIntervals";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
-import { useLayoutStore } from "~/store/layout";
 
 import LoadingPage from "./LoadingPage";
 import PrimaryTaskForm from "./PrimaryTaskForm";
+import TaskActivity from "./TaskActivity";
 import TaskState from "./TaskState";
-
-const BreadCrumbs = dynamic(
-	() => import("~/components/layout/breadcrumbs/breadcrumbs"),
-	{
-		ssr: false,
-		loading: () => <LoadingBreadCrumbs />,
-	},
-);
 
 type Props = {
 	taskId: number;
 	projectId: string;
 	context: "page" | "inbox";
-	defaultLayout?: number[];
 };
 
-const TaskPage = ({
-	taskId,
-	projectId,
-	context,
-	defaultLayout = [75, 25],
-}: Props) => {
+const TaskPage = ({ taskId, projectId, context }: Props) => {
 	const queryClient = useQueryClient();
 	const router = useRouter();
-
-	const setRightSidebarWidth = useLayoutStore(
-		(state) => state.setRightSidebarWidth,
-	);
-
-	useEffect(() => {
-		const rightPanelElement = getPanelElement("task-info");
-		if (rightPanelElement) {
-			const width = rightPanelElement.getBoundingClientRect().width;
-			setRightSidebarWidth(width);
-		}
-		return () => {
-			setRightSidebarWidth(0);
-		};
-	}, []);
 
 	const result = useQuery({
 		queryKey: ["task", taskId],
@@ -138,7 +97,7 @@ const TaskPage = ({
 	};
 
 	if (!result.data) {
-		return <LoadingPage defaultLayout={defaultLayout} />;
+		return <LoadingPage />;
 	}
 
 	if (result.data.error !== null) {
@@ -156,85 +115,59 @@ const TaskPage = ({
 		);
 	}
 
-	const onLayout = (sizes: number[]) => {
-		const rightPanelElement = getPanelElement("task-info");
-		if (rightPanelElement) {
-			const width = rightPanelElement.getBoundingClientRect().width;
-			setRightSidebarWidth(width);
-		}
-		const cookieValue = `react-resizable-panels:task-layout=${JSON.stringify(sizes)}`;
-		document.cookie = `${cookieValue}; SameSite=Lax`;
-	};
-
 	return (
 		<>
 			<TaskState task={result.data.data} />
-			<ResizablePanelGroup
-				direction="horizontal"
-				onLayout={onLayout}
-				id="task-group"
-			>
-				<ResizablePanel
-					id="task"
-					defaultSize={defaultLayout?.[0]}
-					minSize={50}
-					order={0}
-				>
-					<div className="flex max-h-screen flex-col overflow-y-scroll">
-						<header className="sticky top-0 z-50 flex items-center justify-between gap-2 border-b bg-background px-4 py-2 pb-2 pt-2 backdrop-blur-xl">
-							<div className="flex items-center gap-2">
-								{context === "page" && (
-									<>
-										<SidebarTrigger />
-										<Link
-											href={`/project/${projectId}/tasks`}
-										>
-											<Button
-												size="sm"
-												variant="outline"
-												className="flex items-center gap-2 rounded-xl bg-background-dialog"
-											>
-												<ArrowLeftIcon />
-												Tasks
-											</Button>
-										</Link>
-									</>
-								)}
-								<BreadCrumbs />
-							</div>
-							<div className="flex items-center gap-2">
-								{context === "inbox" && (
-									<Link
-										href={`/project/${projectId}/task/${taskId}`}
+			<div className="flex h-full">
+				{/* Main Task Panel */}
+				<div className="flex max-h-[calc(100svh-1rem)] w-3/4 flex-col border-r border-foreground/10">
+					<div className="flex-1 overflow-y-auto">
+						<PageHeader breadCrumbs>
+							{context === "inbox" && (
+								<Link
+									href={`/project/${projectId}/task/${result.data.data.id}`}
+								>
+									<Button
+										size="sm"
+										variant="outline"
+										className="flex items-center gap-2 rounded-xl bg-background-dialog"
 									>
-										<Button
-											size="sm"
-											variant="outline"
-											className="gap-2 bg-transparent"
-										>
-											Open
-											<ChevronRight className="h-4 w-4" />
-										</Button>
-									</Link>
-								)}
-							</div>
-						</header>
+										Open
+									</Button>
+								</Link>
+							)}
+						</PageHeader>
 						<PrimaryTaskForm
 							task={result.data.data}
 							editTaskMutation={editTaskMutation}
 							pullRequests={pullRequests.data}
 						/>
+						<Separator />
+						<div className="flex justify-center">
+							<section className="flex flex-col gap-2 pb-2">
+								{pullRequests.data?.map((pr) => {
+									return (
+										<PullRequest
+											key={pr.number}
+											pullRequest={pr}
+										/>
+									);
+								})}
+							</section>
+							<section className="w-full max-w-[600px]">
+								<TaskActivity
+									lastViewed={result.data.data.views}
+									taskHistory={result.data.data.taskHistory}
+								/>
+							</section>
+						</div>
 					</div>
-				</ResizablePanel>
-				<ResizableHandle className="bg-foreground/15" />
-				<ResizablePanel
-					id="task-info"
-					defaultSize={defaultLayout?.[1]}
-					minSize={20}
-					order={1}
-				>
-					<div className="flex h-screen max-h-screen flex-col bg-background-dialog">
-						<header className="flex items-center justify-between gap-2 border-b border-foreground/10 px-4 py-2 pb-2 pt-2">
+				</div>
+
+				{/* Right Sidebar */}
+				<div className="w-1/4 flex-shrink-0 bg-background-dialog">
+					<div className="flex h-full flex-col">
+						<header className="flex items-center justify-between gap-2 border-b border-foreground/10 px-4 py-2">
 							<div className="flex w-full items-center gap-2">
 								<SimpleTooltip label="Copy Link">
 									<Button
@@ -316,10 +249,8 @@ const TaskPage = ({
 								</Dialog>
 							</div>
 						</header>
+
 						<section className="flex flex-col gap-2 p-4">
-							<h3 className="mb-2 scroll-m-20 text-xl font-semibold tracking-tight">
-								Attributes
-							</h3>
 							<Task
 								task={result.data.data}
 								addTaskMutation={editTaskMutation}
@@ -329,7 +260,7 @@ const TaskPage = ({
 							/>
 						</section>
 						<Separator className="my-4 bg-foreground/10" />
-						<section className="comments-container mb-3 mt-2 flex max-w-full flex-grow flex-col gap-4 overflow-scroll px-4 pb-1">
+						<section className="comments-container flex-grow overflow-auto px-4 pb-1">
 							<Comments
 								taskComments={result.data.data.comments}
 								taskId={result.data.data.id}
@@ -337,8 +268,8 @@ const TaskPage = ({
 							/>
 						</section>
 					</div>
-				</ResizablePanel>
-			</ResizablePanelGroup>
+				</div>
+			</div>
 		</>
 	);
 };

@@ -16,6 +16,7 @@ import {
 	updateTask,
 } from "~/actions/task-actions";
 import Message from "~/components/Message";
+import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import CreateTask from "~/features/tasks/components/CreateTask";
 import {
@@ -298,29 +299,56 @@ export default function TasksContainer({ projectId }: Props) {
 							className={cn(
 								taskVariants({
 									color: option.color,
-									hover: false,
 									context: "menu",
 								}),
 							)}
 						>
-							<div className="flex w-full items-center gap-2 px-4 py-2 pb-0">
+							<div className="flex w-full items-center gap-2 pl-4 pr-2 pt-2">
 								{option.icon}
-								{option.displayName}
-								<div className="flex-grow" />
+								<p>
+									{option.displayName
+										.replace(/\[.*?\]/g, "")
+										.trim()}{" "}
+									-{" "}
+								</p>
 								<TotalTaskListPoints listId={option.key} />
+								<div className="flex-grow" />
 								<CreateTask
 									projectId={projectId}
 									overrideDefaultValues={{
 										[groupBy]: option.key,
 									}}
 								>
-									<Button
-										size="icon"
-										variant="ghost"
-										className="text-muted-foreground"
-									>
-										<PlusCircledIcon />
-									</Button>
+									<div>
+										<SimpleTooltip
+											label={
+												<span className="flex items-center gap-1">
+													Add{" "}
+													<span
+														className={cn(
+															"test-xs flex items-center gap-1 rounded-xl px-1",
+															taskVariants({
+																color: option.color,
+															}),
+														)}
+													>
+														{option.icon}
+														{option.displayName}
+													</span>
+													Task
+												</span>
+											}
+											side="left"
+										>
+											<Button
+												size="icon"
+												variant="ghost"
+												className="text-muted-foreground"
+											>
+												<PlusCircledIcon />
+											</Button>
+										</SimpleTooltip>
+									</div>
 								</CreateTask>
 							</div>
 							<div className="pb-2">

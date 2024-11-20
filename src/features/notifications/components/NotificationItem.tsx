@@ -3,13 +3,13 @@
 import React, { useMemo } from "react";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { BellIcon, Mail, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 
+import SimpleTooltip from "~/components/SimpleTooltip";
 import {
 	ContextMenu,
 	ContextMenuContent,
@@ -26,6 +26,7 @@ import { TaskStatus } from "~/features/tasks/components/RecentTasks";
 import { cn } from "~/lib/utils";
 import { useAppStore } from "~/store/app";
 import typography from "~/styles/typography";
+import { formatDateRelative, formatDateVerbose } from "~/utils/dateFormatters";
 
 type Props = {
 	notification: NotificationWithTask;
@@ -119,9 +120,7 @@ const NotificationItem = ({ notification, projectId }: Props) => {
 		!active
 			? {
 					id: notification.readAt ? "markUnRead" : "markRead",
-					name: notification.readAt
-						? "Mark as Unread"
-						: "Mark as Read",
+					name: notification.readAt ? "Mark Unread" : "Mark Read",
 					icon: <Mail className="h-4 w-4" />,
 					shortcut: notification.readAt ? ["u"] : ["r"],
 					perform: () => {
@@ -172,57 +171,103 @@ const NotificationItem = ({ notification, projectId }: Props) => {
 						setHoveredNotificationId(notification.id)
 					}
 				>
-					<Link href={`${path}inbox/notification/${notification.id}`}>
-						<div
-							onMouseUp={handleClick}
-							className={cn(
-								"cursor-pointer rounded-none border-b px-4 py-2 hover:bg-accent",
-								{
-									"bg-accent opacity-75": active,
-									"opacity-50": notification.readAt !== null,
-									"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
-										notification.options?.isNew,
-								},
-							)}
+					<SimpleTooltip
+						label={
+							<div className="max-w-[250px]">
+								<p>
+									<span>
+										{notification.task
+											? notification.task.title
+											: notification.message}
+									</span>{" "}
+									{notification.task && (
+										<span>{notification.message}</span>
+									)}
+								</p>
+							</div>
+						}
+						side="right"
+					>
+						<Link
+							href={`${path}inbox/notification/${notification.id}`}
 						>
-							<div className="flex items-center justify-between gap-2">
-								<p className="flex-shrink overflow-hidden overflow-ellipsis whitespace-nowrap">
-									{notification.task
-										? notification.task.title
-										: notification.message}
-								</p>
-
-								<p
-									suppressHydrationWarning
-									className={cn(
-										"whitespace-nowrap",
-										typography.paragraph.p_muted,
-									)}
-								>
-									{format(notification.date, "EEE p")}
-								</p>
-							</div>
-							<div className="mt-2 flex items-center justify-between gap-2">
-								{notification.task ? (
-									<TaskStatus
-										status={notification.task.status}
-									/>
-								) : (
-									<div className="flex h-6 w-6 items-center justify-center rounded-full border">
-										<BellIcon className="h-4 w-4 text-muted-foreground" />
-									</div>
+							<div
+								onMouseUp={handleClick}
+								className={cn(
+									"cursor-pointer rounded-none border-b p-4 hover:bg-accent",
+									{
+										"bg-accent": active,
+										"opacity-50":
+											notification.readAt !== null,
+										"animate-load_background bg-gradient-to-r from-green-500/25 to-transparent to-50% bg-[length:400%]":
+											notification.options?.isNew,
+									},
 								)}
-								<p
-									className={cn(
-										"flex-shrink overflow-hidden overflow-ellipsis whitespace-nowrap pb-1",
-										typography.paragraph.p_muted,
-									)}
-								>
-									{notification.message}
-								</p>
+							>
+								<div className="flex items-center justify-between gap-2">
+									<div
+										className={cn(
+											"flex min-w-0 items-center gap-2",
+											{
+												"saturate-0":
+													notification.readAt !==
+													null,
+											},
+										)}
+									>
+										<div className="flex-shrink-0">
+											{" "}
+											{notification.task ? (
+												<TaskStatus
+													status={
+														notification.task.status
+													}
+												/>
+											) : (
+												<div className="flex h-6 w-6 items-center justify-center rounded-full border">
+													<BellIcon className="h-4 w-4 text-muted-foreground" />
+												</div>
+											)}
+										</div>
+										<div className="min-w-0 flex-1">
+											{" "}
+											<p className="truncate">
+												<span className="mr-1">
+													{notification.task
+														? notification.task
+																.title
+														: notification.message}
+												</span>
+												{notification.task && (
+													<span className="text-muted-foreground">
+														{notification.message}
+													</span>
+												)}
+											</p>
+										</div>
+									</div>
+
+									<SimpleTooltip
+										label={formatDateVerbose(
+											notification.date,
+										)}
+									>
+										<p
+											suppressHydrationWarning
+											className={cn(
+												"flex-shrink-0 whitespace-nowrap",
+												typography.paragraph.p_muted,
+											)}
+										>
+											{formatDateRelative(
+												notification.date,
+											)}
+										</p>
+									</SimpleTooltip>
+								</div>
 							</div>
-						</div>
-					</Link>
+						</Link>
+					</SimpleTooltip>
 				</motion.div>
 			</ContextMenuTrigger>
 			<ContextMenuContent>

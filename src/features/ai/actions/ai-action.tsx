@@ -53,13 +53,13 @@ export async function aiAction(
 		const task_properties = completion.choices[0]?.message.parsed;
 
 		if (!task_properties) {
-			console.error("task properties not returned from OpenAI");
+			logger.error("task properties not returned from OpenAI");
 			return;
 		}
 
 		return task_properties;
 	} catch (e) {
-		console.error(e);
+		logger.error(e);
 		return;
 	}
 }

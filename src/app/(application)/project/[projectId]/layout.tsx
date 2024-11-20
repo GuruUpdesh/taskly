@@ -16,6 +16,7 @@ import AppSidebar from "~/components/layout/sidebar/AppSidebar";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import { getAiLimitCount } from "~/features/ai/actions/ai-limit-actions";
 import { getAllNotifications } from "~/features/notifications/actions/notification-actions";
+import { logger } from "~/lib/logger";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 import ProjectState from "./project-state";
@@ -72,7 +73,7 @@ export default async function ApplicationLayout({
 		queryFn: async () => {
 			const result = await getAllNotifications(user.id);
 			if (result.error !== null) {
-				console.error(result.error);
+				logger.error(result.error);
 				return [];
 			}
 			return result.data;
@@ -81,7 +82,8 @@ export default async function ApplicationLayout({
 
 	const aiUsageCount = await getAiLimitCount();
 
-	const defaultOpen = cookies().get("sidebar:state")?.value === "true";
+	const sidebarState = cookies().get("sidebar:state")?.value;
+	const defaultOpen = sidebarState === undefined || sidebarState === "true";
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
@@ -92,7 +94,7 @@ export default async function ApplicationLayout({
 			/>
 			<SidebarProvider defaultOpen={defaultOpen}>
 				<AppSidebar projectId={projectId} />
-				<main className="flex h-svh w-full flex-1 flex-col bg-accent/25">
+				<main className="mt-4 flex h-[calc(100svh-1rem)] w-full flex-1 flex-col rounded-tl-2xl border-l border-t bg-accent/25">
 					{children}
 				</main>
 			</SidebarProvider>

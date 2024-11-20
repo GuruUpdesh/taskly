@@ -3,14 +3,15 @@
 import { eq } from "drizzle-orm";
 
 import { db } from "~/db";
+import { logger } from "~/lib/logger";
 import { projectToIntegrations, projects } from "~/schema";
 
 import { authenticate } from "../../../actions/security/authenticate";
 
 export async function resolvePendingIntegration(installationId: number) {
-	console.log(
-		"GitHub Integration: resolvePendingIntegration",
-		installationId,
+	logger.info(
+		{ installationId },
+		"[GITHUB INTEGRATION] resolvePendingIntegration",
 	);
 	const userId = await authenticate();
 	const pendingIntegration = await db.query.projectToIntegrations.findFirst({
@@ -18,9 +19,9 @@ export async function resolvePendingIntegration(installationId: number) {
 			eq(projectToIntegrations.userId, userId) &&
 			eq(projectToIntegrations.integrationId, "github"),
 	});
-	console.log(
-		"GitHub Integration: resolvePendingIntegration",
-		pendingIntegration,
+	logger.info(
+		{ pendingIntegration },
+		"[GITHUB INTEGRATION] resolvePendingIntegration",
 	);
 
 	if (!pendingIntegration) {

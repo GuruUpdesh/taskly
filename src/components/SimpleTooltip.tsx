@@ -11,8 +11,9 @@ import {
 
 type Props = {
 	children: React.ReactNode;
-	label: string;
+	label: React.ReactNode;
 	side?: TooltipContentProps["side"];
+	shortcut?: string[];
 };
 
 const SimpleTooltip = ({ children, label, side = "bottom" }: Props) => {

@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { UseMutationResult } from "@tanstack/react-query";
 import Mention from "@tiptap/extension-mention";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -12,11 +11,8 @@ import _debounce from "lodash/debounce";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import SimpleTooltip from "~/components/SimpleTooltip";
-import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { type getPRStatusFromGithubRepo } from "~/features/github-integration/actions/get-pr-status-from-github-repo";
-import PullRequest from "~/features/github-integration/components/PullRequest";
 import { type UpdateTask } from "~/features/tasks/components/backlog/TasksContainer";
 import BubbleMenu from "~/features/text-editor/components/BubbleMenu";
 import RenderMentionOptions from "~/features/text-editor/components/RenderMentionOptions";
@@ -24,7 +20,7 @@ import extensions from "~/features/text-editor/extensions";
 import type { NewTask, Task } from "~/schema";
 import { useRealtimeStore } from "~/store/realtime";
 
-import TaskHistoryItem, { type TaskHistoryWithUser } from "../HistoryItem";
+import { type TaskHistoryWithUser } from "../HistoryItem";
 import "~/features/text-editor/tiptap.css";
 
 interface TaskWithComments extends Task {
@@ -44,7 +40,7 @@ const insertTaskSchema__Primary = z.object({
 
 type FormType = Pick<NewTask, "title" | "description">;
 
-const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
+const PrimaryTaskForm = ({ task, editTaskMutation }: Props) => {
 	const form = useForm<FormType>({
 		resolver: zodResolver(insertTaskSchema__Primary),
 		mode: "onChange",
@@ -77,21 +73,11 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 			await form.handleSubmit(onSubmit)();
 		}
 	}
+
 	const debouncedHandleChange = useCallback(
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		_debounce(handleChange, 1000) as () => void,
 		[],
-	);
-
-	const [showAllHistory, setShowAllHistory] = useState(false);
-
-	const displayedHistory = useMemo(
-		() =>
-			showAllHistory
-				? task.taskHistory.reverse()
-				: task.taskHistory.reverse().slice(0, 10),
-
-		[task.taskHistory, showAllHistory],
 	);
 
 	const assignees = useRealtimeStore((state) => state.assignees);
@@ -133,11 +119,11 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 	return (
 		<form
 			onSubmit={form.handleSubmit(onSubmit)}
-			className="mx-auto flex w-[800px] max-w-full flex-grow flex-col gap-2 px-4 pb-4 pt-2"
+			className="mx-auto flex w-[600px] max-w-full flex-grow flex-col gap-2 pb-4 pt-2"
 		>
 			<Input
 				type="text"
-				className="m-0 border-none bg-transparent p-0 py-2 text-2xl ring-offset-transparent focus-visible:ring-transparent"
+				className="m-0 border-none bg-transparent p-0 py-2 text-2xl font-medium ring-offset-transparent focus-visible:ring-transparent"
 				placeholder="Task Title"
 				autoFocus
 				autoComplete="off"
@@ -147,55 +133,6 @@ const PrimaryTaskForm = ({ task, editTaskMutation, pullRequests }: Props) => {
 			<div>
 				{editor && <BubbleMenu editor={editor} />}
 				<EditorContent editor={editor} />
-			</div>
-			<div className="py-4">
-				<div className="flex flex-col gap-2 overflow-hidden">
-					<h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-						Activity
-					</h3>
-					<div className="flex flex-col gap-2 pb-2">
-						{pullRequests?.map((pr) => {
-							return (
-								<PullRequest key={pr.number} pullRequest={pr} />
-							);
-						})}
-					</div>
-					<div className="flex flex-col gap-4 px-3">
-						{displayedHistory.map((history) => {
-							return (
-								<TaskHistoryItem
-									key={history.id}
-									history={history}
-								/>
-							);
-						})}
-					</div>
-					{task.taskHistory.length > 10 && (
-						<div className="relative flex w-full justify-center bg-[#101010]">
-							<span className="absolute top-[50%] z-10 h-[1px] w-full bg-gradient-to-r from-transparent via-border  to-transparent" />
-							<SimpleTooltip
-								label={
-									showAllHistory ? "Show Less" : "Show All"
-								}
-							>
-								<Button
-									size="icon"
-									variant="outline"
-									onClick={() =>
-										setShowAllHistory(!showAllHistory)
-									}
-									className="z-10 rounded-full bg-[#101010]"
-								>
-									{showAllHistory ? (
-										<ChevronDownIcon className="rotate-180" />
-									) : (
-										<ChevronDownIcon />
-									)}
-								</Button>
-							</SimpleTooltip>
-						</div>
-					)}
-				</div>
 			</div>
 		</form>
 	);

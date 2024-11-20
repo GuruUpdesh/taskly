@@ -3,7 +3,6 @@ import React from "react";
 import { GearIcon, ReaderIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { LayoutDashboardIcon } from "lucide-react";
 import dynamic from "next/dynamic";
-import { Sora } from "next/font/google";
 
 import Logo from "~/components/Logo";
 const UserButton = dynamic(
@@ -13,6 +12,7 @@ const UserButton = dynamic(
 		loading: () => <Skeleton className="h-[52px] rounded-xl" />,
 	},
 );
+import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import {
 	Sidebar as UiSidebar,
@@ -34,15 +34,12 @@ interface SidebarProps {
 	projectId: string;
 }
 
-const sora = Sora({ subsets: ["latin"] });
-
 const AppSidebar = ({ projectId }: SidebarProps) => {
 	return (
 		<UiSidebar className="z-40">
 			<SidebarContent
 				className={cn(
 					"relative flex h-full flex-col justify-between bg-background px-4 @container",
-					sora.className,
 				)}
 			>
 				<div>
@@ -53,14 +50,20 @@ const AppSidebar = ({ projectId }: SidebarProps) => {
 						<SidebarSearch />
 						<div className="hidden @sidebar:block">
 							<CreateTask projectId={projectId}>
-								<Button
-									className="aspect-square h-[36px] w-[36px] rounded-md bg-foreground/10"
-									variant="outline"
-									size="iconSm"
-								>
-									<PlusCircledIcon />
-									<span className="sr-only">New Task</span>
-								</Button>
+								<div>
+									<SimpleTooltip label="Add Task">
+										<Button
+											className="aspect-square h-[36px] w-[36px] rounded-md bg-foreground/10 text-muted-foreground hover:text-foreground focus:text-foreground"
+											variant="outline"
+											size="iconSm"
+										>
+											<PlusCircledIcon />
+											<span className="sr-only">
+												Add Task
+											</span>
+										</Button>
+									</SimpleTooltip>
+								</div>
 							</CreateTask>
 						</div>
 					</div>
@@ -86,7 +89,9 @@ const AppSidebar = ({ projectId }: SidebarProps) => {
 					/>
 				</div>
 				<div className="min-h-20 shrink overflow-x-hidden overflow-y-scroll">
-					<ProjectListWrapper />
+					<ProjectListWrapper
+						currentProjectId={parseInt(projectId)}
+					/>
 				</div>
 				<SidebarFooter className="p-0 pb-4">
 					<UserButton size="large" />

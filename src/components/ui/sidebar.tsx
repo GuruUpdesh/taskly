@@ -20,12 +20,14 @@ import {
 import { useIsMobile } from "~/hooks/use-mobile";
 import { cn } from "~/lib/utils";
 
+import SimpleTooltip from "../SimpleTooltip";
+
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
-const SIDEBAR_KEYBOARD_SHORTCUT = "b";
+const SIDEBAR_KEYBOARD_SHORTCUT = "[";
 
 type SidebarContext = {
 	state: "expanded" | "collapsed";
@@ -231,7 +233,7 @@ const Sidebar = React.forwardRef<
 		return (
 			<div
 				ref={ref}
-				className="group peer hidden text-sidebar-foreground md:block"
+				className="group peer mr-4 hidden text-sidebar-foreground md:block"
 				data-state={state}
 				data-collapsible={state === "collapsed" ? collapsible : ""}
 				data-variant={variant}
@@ -257,7 +259,7 @@ const Sidebar = React.forwardRef<
 						// Adjust the padding for floating and inset variants.
 						variant === "floating" || variant === "inset"
 							? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
-							: "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
+							: "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=right]:border-l",
 						className,
 					)}
 					{...props}
@@ -282,21 +284,23 @@ const SidebarTrigger = React.forwardRef<
 	const { toggleSidebar } = useSidebar();
 
 	return (
-		<Button
-			ref={ref}
-			data-sidebar="trigger"
-			variant="ghost"
-			size="icon"
-			className={cn("h-7 w-7", className)}
-			onClick={(event) => {
-				onClick?.(event);
-				toggleSidebar();
-			}}
-			{...props}
-		>
-			<PanelLeft className="h-4 w-4" />
-			<span className="sr-only">Toggle Sidebar</span>
-		</Button>
+		<SimpleTooltip label="Toggle Sidebar" side="right">
+			<Button
+				ref={ref}
+				data-sidebar="trigger"
+				variant="ghost"
+				size="icon"
+				className={cn("h-7 w-7", className)}
+				onClick={(event) => {
+					onClick?.(event);
+					toggleSidebar();
+				}}
+				{...props}
+			>
+				<PanelLeft className="h-4 w-4" />
+				<span className="sr-only">Toggle Sidebar</span>
+			</Button>
+		</SimpleTooltip>
 	);
 });
 SidebarTrigger.displayName = "SidebarTrigger";

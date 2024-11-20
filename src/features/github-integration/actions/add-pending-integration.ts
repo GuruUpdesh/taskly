@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "~/db";
+import { logger } from "~/lib/logger";
 import { projectToIntegrations, projectToIntegrationsSchema } from "~/schema";
 
 import { authenticate } from "../../../actions/security/authenticate";
@@ -15,7 +16,7 @@ export async function addPendingIntegration(
 	const userId = await authenticate();
 	const data = { projectId, integrationId, userId };
 
-	console.log("GitHub Integration: addPendingIntegration", data);
+	logger.info({ data }, "[GITHUB INTEGRATION] addPendingIntegration");
 	const validData = projectToIntegrationsSchema
 		.pick({ projectId: true, integrationId: true, userId: true })
 		.parse(data);

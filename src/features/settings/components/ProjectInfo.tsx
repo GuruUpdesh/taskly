@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
+import { HexColorPicker } from "react-colorful";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -19,6 +20,11 @@ import {
 	FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "~/components/ui/popover";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import { handleProjectInfo } from "~/features/settings/actions/settings-actions";
@@ -31,10 +37,12 @@ type Props = {
 	project: Project;
 };
 
+const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 const formSchema = z.object({
 	name: z.string().min(3).max(100),
 	description: z.string().max(1000),
 	isAiEnabled: z.boolean(),
+	color: z.string().regex(hexColorRegex, "Invalid hex color"),
 });
 
 const ProjectInfo = ({ project }: Props) => {
@@ -44,6 +52,7 @@ const ProjectInfo = ({ project }: Props) => {
 			name: "",
 			description: "",
 			isAiEnabled: false,
+			color: project.color,
 		},
 	});
 
@@ -52,6 +61,7 @@ const ProjectInfo = ({ project }: Props) => {
 			name: project.name,
 			description: project.description ?? "",
 			isAiEnabled: project.isAiEnabled,
+			color: project.color,
 		});
 	}
 
@@ -142,6 +152,63 @@ const ProjectInfo = ({ project }: Props) => {
 										onCheckedChange={field.onChange}
 									/>
 								</FormControl>
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="color"
+						render={({ field }) => (
+							<FormItem className="mb-4 flex flex-row items-center justify-between rounded-md border bg-background-dialog px-4 py-3">
+								<div className="mr-8 space-y-0.5">
+									<FormLabel>Customize theme color</FormLabel>
+									<FormDescription>
+										Choose a color that represents your
+										project.
+									</FormDescription>
+									<FormMessage />
+								</div>
+								<div className="flex items-center gap-2">
+									<Popover>
+										<PopoverTrigger asChild>
+											<button
+												className="aspect-square h-[30px] rounded border"
+												style={{
+													backgroundColor: form
+														.formState.isValid
+														? form.getValues(
+																"color",
+															)
+														: project.color,
+												}}
+											></button>
+										</PopoverTrigger>
+										<PopoverContent className="max-w-min border-none bg-transparent">
+											<HexColorPicker
+												color={form.watch("color")}
+												onChange={(color) =>
+													form.setValue(
+														"color",
+														color,
+														{
+															shouldValidate:
+																true,
+															shouldDirty: true,
+														},
+													)
+												}
+											/>
+										</PopoverContent>
+									</Popover>
+									<FormControl>
+										<Input
+											type="text"
+											id="projectName"
+											className="text-md w-24 border-none bg-transparent"
+											{...field}
+										/>
+									</FormControl>
+								</div>
 							</FormItem>
 						)}
 					/>

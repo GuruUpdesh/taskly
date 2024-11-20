@@ -18,7 +18,6 @@ export async function createComment(comment: string, taskId: number) {
 		const start = commentWithUsers.indexOf("(user_");
 		const end = commentWithUsers.indexOf(")", start);
 		const userId = commentWithUsers.substring(start + 1, end);
-		console.log(userId);
 		const user = await db.query.users.findFirst({
 			where: (user) => eq(user.userId, userId),
 		});

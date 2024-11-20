@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef } from "react";
 
+import { DialogTrigger } from "@radix-ui/react-dialog";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import type { UseMutationResult } from "@tanstack/react-query";
 import {
@@ -69,7 +70,7 @@ const TaskDropDownMenu = ({
 		useShallow((state) => [state.hoveredTaskId, state.setHoveredTaskId]),
 	);
 	const aiUsageCount = useUserStore((state) => state.aiUsageCount);
-	const [smartPropertiesDialog, setSmartPropertiesDialog] = useState(false);
+	const smartPropertiesDialogRef = useRef<HTMLButtonElement>(null);
 	const [assignees, sprints] = useRealtimeStore(
 		useShallow((state) => [state.assignees, state.sprints]),
 	);
@@ -79,9 +80,8 @@ const TaskDropDownMenu = ({
 		label: "Apply Smart Properties",
 		icon: <SparkleIcon className="h-4 w-4" />,
 		priority: 4,
-		action: () => {
-			setSmartPropertiesDialog(true);
-		},
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		action: () => {},
 		shortcut: [],
 		group: "Task Commands",
 	};
@@ -140,119 +140,112 @@ const TaskDropDownMenu = ({
 		hoveredTaskId === task.id,
 	);
 
+	async function handleSmartProperties() {
+		if (aiUsageCount >= AIDAILYLIMIT) {
+			toast.error(
+				`AI daily limit reached. Please try again in ${timeTillNextReset()} hours.`,
+			);
+			return;
+		}
+
+		const airesponse = await aiAction(
+			task.title,
+			task.description,
+			assignees,
+		);
+
+		if (airesponse) {
+			const userName = assignees.find(
+				(user) => user.username === airesponse.assignee,
+			)?.username;
+
+			if (userName) {
+				airesponse.assignee = userName;
+			}
+
+			void onSubmit({
+				...task,
+				sprintId: stringifyValue(task.sprintId),
+				...airesponse,
+			});
+
+			toast.success("Applied smart properties", {
+				icon: <SparkleIcon className="h-4 w-4" />,
+			});
+		}
+	}
+
 	return (
-		<>
-			<Dialog
-				open={smartPropertiesDialog}
-				onOpenChange={setSmartPropertiesDialog}
+		<ContextMenu>
+			<ContextMenuTrigger
+				asChild
+				onMouseEnter={() => setHoveredTaskId(task.id)}
+				className="group/context"
 			>
-				<DialogContent className="sm:max-w-md">
-					<DialogHeader>
-						<DialogTitle className="mb-4">
-							This will override current properties!
-						</DialogTitle>
-						<DialogDescription>
-							Smart properties can potentially change every
-							property currently applied to this task. Are you
-							sure you want to do this?
-						</DialogDescription>
-					</DialogHeader>
-					<DialogFooter className="sm:justify-start">
-						<DialogClose asChild>
-							<Button
-								type="submit"
-								size="sm"
-								// onClick={deleteProject}
-								onClick={async () => {
-									if (aiUsageCount >= AIDAILYLIMIT) {
-										toast.error(
-											`AI daily limit reached. Please try again in ${timeTillNextReset()} hours.`,
-										);
-										return;
-									}
-
-									const airesponse = await aiAction(
-										task.title,
-										task.description,
-										assignees,
-									);
-
-									if (airesponse) {
-										const userName = assignees.find(
-											(user) =>
-												user.username ===
-												airesponse.assignee,
-										)?.username;
-
-										if (userName) {
-											airesponse.assignee = userName;
-										}
-
-										void onSubmit({
-											...task,
-											sprintId: stringifyValue(
-												task.sprintId,
-											),
-											...airesponse,
-										});
-
-										toast.success(
-											"Applied smart properties",
-											{
-												icon: (
-													<SparkleIcon className="h-4 w-4" />
-												),
-											},
-										);
-									}
-								}}
-								className="w-full"
-							>
-								Continue
-							</Button>
-						</DialogClose>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
-			<ContextMenu>
-				<ContextMenuTrigger
-					asChild
-					onMouseEnter={() => setHoveredTaskId(task.id)}
-				>
-					{children}
-				</ContextMenuTrigger>
-				<ContextMenuContent>
-					<ContextMenuItem
-						key="smart-properties"
-						className="gap-2"
-						onClick={() => {
-							setSmartPropertiesDialog(true);
-						}}
+				{children}
+			</ContextMenuTrigger>
+			<ContextMenuContent>
+				<Dialog>
+					<DialogTrigger
+						ref={smartPropertiesDialogRef}
+						className="w-full"
 					>
-						<SparkleIcon className="h-4 w-4" />
-						Smart Properties
-						{/* <ContextMenuShortcut>S</ContextMenuShortcut> */}
-					</ContextMenuItem>
-					<PropertiesMenu
-						task={task}
-						onSubmit={onSubmit}
-						assignees={assignees}
-						sprints={sprints}
-					/>
-					<ContextMenuSeparator />
-					{commands.map((cmd) => (
 						<ContextMenuItem
-							key={cmd.label}
-							className="gap-2"
-							onClick={cmd.action}
+							key="smart-properties"
+							className="w-full gap-2"
+							onClick={(e) => {
+								e.preventDefault();
+								smartPropertiesDialogRef?.current?.click();
+							}}
 						>
-							{cmd.icon}
-							{cmd.label}
+							<SparkleIcon className="h-4 w-4" />
+							Smart Properties
 						</ContextMenuItem>
-					))}
-				</ContextMenuContent>
-			</ContextMenu>
-		</>
+					</DialogTrigger>
+					<DialogContent className="sm:max-w-md">
+						<DialogHeader>
+							<DialogTitle className="mb-4">
+								This will override current properties!
+							</DialogTitle>
+							<DialogDescription>
+								Smart properties can potentially change every
+								property currently applied to this task. Are you
+								sure you want to do this?
+							</DialogDescription>
+						</DialogHeader>
+						<DialogFooter className="sm:justify-start">
+							<DialogClose asChild>
+								<Button
+									type="submit"
+									onClick={handleSmartProperties}
+									size="sm"
+									className="w-full"
+								>
+									Continue
+								</Button>
+							</DialogClose>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
+				<PropertiesMenu
+					task={task}
+					onSubmit={onSubmit}
+					assignees={assignees}
+					sprints={sprints}
+				/>
+				<ContextMenuSeparator />
+				{commands.map((cmd) => (
+					<ContextMenuItem
+						key={cmd.label}
+						className="gap-2"
+						onClick={cmd.action}
+					>
+						{cmd.icon}
+						{cmd.label}
+					</ContextMenuItem>
+				))}
+			</ContextMenuContent>
+		</ContextMenu>
 	);
 };
 
@@ -275,7 +268,7 @@ const PropertiesMenu = ({
 				const config = getPropertyConfig(property, assignees, sprints);
 				if (config.type === "enum" || config.type === "dynamic")
 					return (
-						<ContextMenuSub>
+						<ContextMenuSub key={config.key}>
 							<ContextMenuSubTrigger className="gap-2">
 								{config.icon}
 								{config.displayName}
@@ -287,7 +280,6 @@ const PropertiesMenu = ({
 										className={cn(
 											taskVariants({
 												color: option.color,
-												hover: true,
 											}),
 											"flex items-center space-x-2 whitespace-nowrap rounded-sm border py-1 pl-2 pr-3",
 											"border-none bg-transparent !pl-2",

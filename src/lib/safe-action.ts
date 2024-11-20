@@ -1,5 +1,7 @@
 import { toast } from "sonner";
 
+import { logger } from "./logger";
+
 export default async function safeAsync<T>(
 	promise: Promise<T>,
 ): Promise<[T | null, Error | null]> {
@@ -7,7 +9,7 @@ export default async function safeAsync<T>(
 		const data = await promise;
 		return [data, null];
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) {
 			toast.error(error.message);
 			return [null, error];

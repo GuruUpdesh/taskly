@@ -5,8 +5,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { GeistSans } from "geist/font/sans";
 import dynamic from "next/dynamic";
+import { Poppins } from "next/font/google";
 
 import { Toaster } from "~/components/ui/sonner";
 import CommandMenu from "~/features/cmd-menu/CommandMenu";
@@ -18,6 +18,11 @@ const GlobalToastHandler = dynamic(
 import { cn } from "~/lib/utils";
 
 export const maxDuration = 60;
+
+const poppins = Poppins({
+	weight: ["400", "500", "600", "700"],
+	subsets: ["latin"],
+});
 
 export const metadata = {
 	metadataBase: new URL("https://tasklypm.com"),
@@ -40,7 +45,7 @@ export default function RootLayout({
 				<body
 					className={cn(
 						"!m-0 min-h-screen bg-background bg-gradient-to-b font-sans antialiased",
-						GeistSans.className,
+						poppins.className,
 					)}
 				>
 					<Suspense>

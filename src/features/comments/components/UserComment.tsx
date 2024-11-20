@@ -4,7 +4,6 @@ import React, { useEffect, useRef } from "react";
 
 import { useUser } from "@clerk/clerk-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { format, formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
 import { Trash, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
@@ -21,6 +20,7 @@ import { deleteComment } from "~/features/comments/actions/delete-comment";
 import { cn } from "~/lib/utils";
 import { type Comment, type User } from "~/schema";
 import { useRealtimeStore } from "~/store/realtime";
+import { formatDateRelative, formatDateVerbose } from "~/utils/dateFormatters";
 
 import getHTMLfromJSON from "../../text-editor/utils/getHTMLfromJSON";
 
@@ -142,16 +142,15 @@ const UserComment = ({
 							</div>
 							{isLastInGroup && (
 								<SimpleTooltip
-									label={format(
-										new Date(comment.insertedDate),
-										"MMM dd, yyyy, h:mm:ss aa",
+									label={formatDateVerbose(
+										comment.insertedDate,
 									)}
 								>
 									<p
 										className="w-max whitespace-nowrap px-4 text-xs text-muted-foreground"
 										suppressHydrationWarning
 									>
-										{formatDistanceToNow(
+										{formatDateRelative(
 											comment.insertedDate,
 										)}
 									</p>

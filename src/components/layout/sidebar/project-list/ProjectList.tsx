@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
@@ -18,13 +19,14 @@ import CreateProjectDialog from "./CreateProjectDialog";
 
 type Props = {
 	projects: Project[];
+	children: React.ReactNode;
 };
 
 function getProjectImageURL(url: string) {
 	return url;
 }
 
-const ProjectList = ({ projects }: Props) => {
+const ProjectList = ({ projects, children }: Props) => {
 	const currentProject = useRealtimeStore((state) => state.project);
 
 	function renderProjectImage(project: Project | null | undefined) {
@@ -65,44 +67,47 @@ const ProjectList = ({ projects }: Props) => {
 
 	return (
 		<div>
-			<div className="sticky top-0 z-10 flex items-center justify-between bg-background">
-				<p className="text-sm uppercase">Projects</p>
-				<div className="flex flex-nowrap">
-					<CreateProjectDialog>
-						<Button variant="ghost" size="icon">
-							<DiamondPlus className="h-4 w-4" />
-							<span className="sr-only">New Project</span>
-						</Button>
-					</CreateProjectDialog>
-				</div>
+			<div className="flex items-center gap-1">
+				<CreateProjectDialog>
+					<Button
+						variant="ghost"
+						className="h-[36px] w-full justify-start gap-2 rounded-l-xl"
+					>
+						<DiamondPlus className="h-4 w-4" />
+						Add Project
+					</Button>
+				</CreateProjectDialog>
+				{children}
 			</div>
 			{projects.map((project) => {
 				return (
-					<Link
+					<SimpleTooltip
 						key={project.id}
-						href={`/project/${project.id}/tasks`}
+						label={`Project ${project.id}`}
+						side="right"
 					>
 						<Button
 							variant="ghost"
 							className={cn(
-								"group w-full justify-between gap-2 overflow-hidden font-normal text-foreground opacity-50 transition-all hover:opacity-100",
+								"group relative h-[36px] w-full justify-between gap-2 rounded-xl font-normal text-foreground opacity-50 transition-all hover:opacity-100",
 								{
 									"opacity-100":
 										project.id === currentProject?.id,
 								},
 							)}
+							asChild
 						>
-							<div className="flex items-center gap-2 whitespace-nowrap">
+							<Link href={`/project/${project.id}/tasks`}>
+								{project.name}
 								<span
-									className="relative h-4 w-4 rounded-full saturate-200"
+									className="relative h-3 w-3 rounded-full"
 									style={{
 										backgroundColor: project?.color,
 									}}
 								></span>
-								{project.name}
-							</div>
+							</Link>
 						</Button>
-					</Link>
+					</SimpleTooltip>
 				);
 			})}
 		</div>

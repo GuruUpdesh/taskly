@@ -163,11 +163,11 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 										onValueChange={field.onChange}
 										defaultValue={field.value}
 									>
-										<SelectTrigger className="max-w-[400px] rounded-none border-b border-l-0 border-r-0 border-t-0 bg-accent/25 hover:bg-accent/50 focus:bg-accent/50 focus:ring-0">
+										<SelectTrigger className="group/select max-w-[400px] rounded-none border-b border-l-0 border-r-0 border-t-0 bg-accent/25 hover:bg-accent/50 focus:bg-accent/50 focus:ring-0">
 											<SelectValue placeholder="Select Property..." />
-											<ChevronDown className="ml-2 h-4 w-4" />
+											<ChevronDown className="ml-2 h-4 w-4 transition-transform group-data-[state=open]/select:-rotate-180" />
 										</SelectTrigger>
-										<SelectContent className="bg-accent/50 backdrop-blur-lg">
+										<SelectContent>
 											{properties
 												.filter((p) => {
 													if (
@@ -206,13 +206,13 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 														return (
 															<SelectItem
 																key={config.key}
+																className="group/select-item flex items-center space-x-2 !pl-2 focus:bg-accent"
 																value={
 																	config.key
 																}
-																className="flex items-center justify-between space-x-2 !pl-2 focus:bg-accent/50"
 															>
 																<div className="flex min-w-[8rem] items-center gap-2">
-																	<span className="text-muted-foreground">
+																	<span className="text-muted-foreground group-data-[state=checked]/select-item:hidden">
 																		{
 																			config.icon
 																		}
@@ -232,15 +232,15 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 								</FormItem>
 							)}
 						/>
-						<div className="grid grid-flow-row grid-cols-2">
+						<div className="group grid grid-flow-row grid-cols-2">
 							<Button
 								type="button"
 								variant="outline"
 								size="sm"
 								className={cn(
-									"rounded-none border-none bg-accent/25 !ring-0 focus:ring-0",
+									"rounded-none border-none bg-accent/25 !ring-0 hover:bg-accent focus:ring-0",
 									{
-										"bg-accent": form.watch("is"),
+										"bg-accent/75": form.watch("is"),
 									},
 								)}
 								onClick={() =>
@@ -257,9 +257,9 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 								variant="outline"
 								size="sm"
 								className={cn(
-									"rounded-none border-none bg-accent/25 !ring-0 focus:ring-0",
+									"rounded-none border-none bg-accent/25 !ring-0 hover:bg-accent focus:ring-0",
 									{
-										"bg-accent": !form.watch("is"),
+										"bg-accent/75": !form.watch("is"),
 									},
 								)}
 								onClick={() =>
@@ -284,7 +284,7 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 									<ChevronDown className="ml-2 h-4 w-4" />
 								</button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent className="w-[286px] bg-accent/50 shadow-md backdrop-blur-lg">
+							<DropdownMenuContent className="w-[286px] bg-background-menu shadow-md">
 								{(currentConfig?.type === "enum" ||
 									currentConfig?.type === "dynamic") &&
 									currentConfig?.options.map((option) => (
@@ -300,7 +300,6 @@ const FilterMenu = ({ children, defaultValues, disabled }: Props) => {
 											className={cn(
 												taskVariants({
 													color: option.color,
-													hover: true,
 												}),
 												"border-none bg-transparent",
 											)}

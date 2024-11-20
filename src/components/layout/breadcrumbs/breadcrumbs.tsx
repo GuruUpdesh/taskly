@@ -44,6 +44,14 @@ function getCrumbs(
 			const crumbType: CrumbType = validCrumbType.data;
 			name = getFromState(nextCrumb, crumbType);
 			link = "/" + crumbs.slice(0, i + 2).join("/");
+
+			if (crumbType === "task") {
+				breadcrumbList.push({
+					name: "Tasks",
+					link: `/${crumbs[0]}/${crumbs[1]}/tasks`,
+				});
+			}
+
 			i++; // Skip the next crumb as it's already handled
 		} else {
 			// Static page or a numeric ID without a preceding name

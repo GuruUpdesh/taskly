@@ -17,7 +17,7 @@ export function getTaskAiSchema(assignees: User[], sprints: Sprint[]): string {
 		}
 
 		if (config.type === "enum" || config.type === "dynamic") {
-			return `- ${config.key}: [${config.options.map((option) => `"${option.key} ${config.key === "sprintId" && option.color === "green" ? "(Current Sprint)" : ""}"`).join(", ")}]\n`;
+			return `- ${config.key}: [${config.options.map((option) => `"${option.key} ${config.key === "sprintId" && option.color === "teal" ? "(Current Sprint)" : ""}"`).join(", ")}]\n`;
 		} else if (config.type === "text") {
 			let instruction = `- ${config.key}: `;
 			if (config.key === "description") {

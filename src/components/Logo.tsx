@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { cn } from "~/lib/utils";
 
-import MarketingTaskChips from "../app/(landing)/components/AnimatedLogoChips";
+import LogoChips from "./LogoChips";
 
 const sora = Sora({ subsets: ["latin"] });
 
@@ -15,7 +15,7 @@ const Logo = () => {
 			href="/"
 			className={cn(sora.className, "relative flex items-baseline")}
 		>
-			<MarketingTaskChips />
+			<LogoChips />
 			<h1 className="text-2xl font-medium">Taskly</h1>
 		</Link>
 	);

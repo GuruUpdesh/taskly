@@ -2,9 +2,8 @@ import React, { Suspense } from "react";
 
 import { currentUser } from "@clerk/nextjs/server";
 import { type Metadata } from "next";
-import dynamic from "next/dynamic";
 
-import LoadingBreadCrumbs from "~/components/layout/breadcrumbs/LoadingBreadCrumbs";
+import PageHeader from "~/components/layout/PageHeader";
 import Message from "~/components/Message";
 import {
 	Card,
@@ -12,21 +11,13 @@ import {
 	CardDescription,
 	CardHeader,
 } from "~/components/ui/card";
-import { SidebarTrigger } from "~/components/ui/sidebar";
 import { Skeleton } from "~/components/ui/skeleton";
 import CurrentSprintGraph from "~/features/dashboard/components/CurrentSprintGraph";
 import Figures from "~/features/dashboard/components/Figures";
 import UserGreeting from "~/features/dashboard/components/UserGreeting";
 import { getAllNotifications } from "~/features/notifications/actions/notification-actions";
 import RecentTasks from "~/features/tasks/components/RecentTasks";
-
-const BreadCrumbs = dynamic(
-	() => import("~/components/layout/breadcrumbs/breadcrumbs"),
-	{
-		ssr: false,
-		loading: () => <LoadingBreadCrumbs />,
-	},
-);
+import { logger } from "~/lib/logger";
 
 export const metadata: Metadata = {
 	title: "Dashboard",
@@ -52,7 +43,7 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 
 	const notificationsResult = await getAllNotifications(user.id);
 	if (notificationsResult.error !== null) {
-		console.error(notificationsResult.error);
+		logger.error(notificationsResult.error);
 		return (
 			<Message type="error" className="min-w-[600px]">
 				{notificationsResult.error}
@@ -62,14 +53,8 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 	const notifications = notificationsResult.data;
 
 	return (
-		<div className="max-h-screen overflow-y-scroll pt-2">
-			<header className="flex items-center justify-between gap-2 border-b bg-background px-4 pb-2">
-				<div className="flex items-center gap-2">
-					<SidebarTrigger />
-					<BreadCrumbs />
-				</div>
-				<div className="flex items-center gap-2"></div>
-			</header>
+		<div className="max-h-screen overflow-y-scroll">
+			<PageHeader breadCrumbs />
 			<section className="container flex flex-col pt-8">
 				<UserGreeting />
 				<section className="my-4 grid grid-cols-2 gap-4">

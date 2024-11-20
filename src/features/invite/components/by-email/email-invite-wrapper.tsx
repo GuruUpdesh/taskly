@@ -35,11 +35,7 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 
 	const [isLoading, startTransition] = useTransition();
 	async function onSubmit(formData: z.infer<typeof EmailInviteFormSchema>) {
-		const result = await sendEmailInvites(
-			projectId,
-			formData.invitees,
-			project?.name,
-		);
+		const result = await sendEmailInvites(projectId, formData.invitees);
 
 		if (result.status) {
 			toast.success(result.message);
@@ -54,29 +50,24 @@ const EmailInviteWrapper = ({ projectId }: Props) => {
 	}
 
 	return (
-		<form className="flex flex-col">
-			<div className="flex items-center">
-				<EmailInviteForm
-					invitees={form.watch("invitees").join(", ")}
-					setInvitees={(invitees) =>
-						form.setValue("invitees", invitees)
-					}
-				/>
-				<Button
-					variant="secondary"
-					disabled={form.watch("invitees").length === 0 || isLoading}
-					onClick={() => startTransition(form.handleSubmit(onSubmit))}
-					className="ml-2 gap-2" // Added ml-2 for left margin
-					size="sm"
-				>
-					{isLoading ? "Sending invites..." : "Invite"}
-					{isLoading ? (
-						<Loader2 className="ml-2 h-4 w-4 animate-spin" />
-					) : (
-						<ChevronRight className="h-4 w-4" />
-					)}
-				</Button>
-			</div>
+		<form className="flex w-full flex-col gap-4">
+			<EmailInviteForm
+				setInvitees={(invitees) => form.setValue("invitees", invitees)}
+			/>
+			<Button
+				variant="secondary"
+				disabled={form.watch("invitees").length === 0 || isLoading}
+				onClick={() => startTransition(form.handleSubmit(onSubmit))}
+				className="ml-2 gap-2" // Added ml-2 for left margin
+				size="sm"
+			>
+				{isLoading ? "Sending invites..." : "Invite"}
+				{isLoading ? (
+					<Loader2 className="ml-2 h-4 w-4 animate-spin" />
+				) : (
+					<ChevronRight className="h-4 w-4" />
+				)}
+			</Button>
 		</form>
 	);
 };

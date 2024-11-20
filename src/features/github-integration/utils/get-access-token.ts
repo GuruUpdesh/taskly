@@ -6,6 +6,7 @@ import { SignJWT } from "jose";
 import { z } from "zod";
 
 import { env } from "~/env.mjs";
+import { logger } from "~/lib/logger";
 
 export async function getAccessToken(installationId: number) {
 	const privateKey = Buffer.from(
@@ -42,6 +43,6 @@ export async function getAccessToken(installationId: number) {
 		token: z.string(),
 	});
 	const result = resultSchema.parse(data);
-	console.log("GitHub Integration: successful got access token");
+	logger.info("[GITHUB INTEGRATION] successful got access token");
 	return result.token;
 }
