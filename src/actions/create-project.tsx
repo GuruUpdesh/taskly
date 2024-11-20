@@ -27,6 +27,31 @@ export type CreateForm = {
 	timezoneOffset: number;
 };
 
+const PROJECT_COLOR_OPTIONS = [
+	"#FF6B6B", // Coral Red
+	"#4ECDC4", // Turquoise
+	"#45B7D1", // Sky Blue
+	"#96CEB4", // Sage Green
+	"#FFBE0B", // Golden Yellow
+	"#FF006E", // Hot Pink
+	"#8338EC", // Purple
+	"#3A86FF", // Royal Blue
+	"#FB5607", // Orange
+	"#38B000", // Lime Green
+	"#7209B7", // Deep Purple
+	"#F15BB5", // Pink
+	"#00AFB9", // Teal
+	"#0077B6", // Ocean Blue
+	"#9B5DE5", // Lavender
+];
+
+function getRandomColor(): string {
+	const randomIndex = Math.floor(
+		Math.random() * PROJECT_COLOR_OPTIONS.length,
+	);
+	return PROJECT_COLOR_OPTIONS[randomIndex] ?? "#000000"; // Fallback to black
+}
+
 export async function createProject(
 	data: CreateForm,
 ): Promise<ProjectResponse> {
@@ -35,14 +60,15 @@ export async function createProject(
 		const childLogger = logger.child({ userId, data });
 		childLogger.info("[CREATE PROJECT]");
 
-		// modify project data to account for timezone
+		// Modify project data to account for timezone
 		data.sprintStart = addMinutes(
 			startOfDay(data.sprintStart),
 			data.timezoneOffset,
 		);
 
-		// insert project
 		const newProject: NewProject = insertProjectSchema.parse(data);
+		newProject.color = getRandomColor();
+
 		const result = await db.insert(projects).values(newProject).returning();
 		childLogger.debug({ result }, "[CREATE PROJECT] Created");
 		const insertId = result[0]?.id;
@@ -56,7 +82,7 @@ export async function createProject(
 		}
 
 		await addUserToProject(userId, insertId, "owner");
-		await createSprintForProject();
+		await createSprintForProject(insertId);
 
 		const tokenResult = await createInvite(insertId);
 

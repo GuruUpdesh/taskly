@@ -8,13 +8,11 @@ import { redirect } from "next/navigation";
 import { getAllUsersInProject, getProject } from "~/actions/project-actions";
 import { getSprintsForProject } from "~/actions/sprint-actions";
 import Permission from "~/components/Permission";
-import { getAiLimitCount } from "~/features/ai/actions/ai-limit-actions";
 import ProjectDangerZone from "~/features/settings/components/ProjectDangerZone";
 import ProjectGithub from "~/features/settings/components/ProjectGithub";
 import ProjectInfo from "~/features/settings/components/ProjectInfo";
 import ProjectInvite from "~/features/settings/components/ProjectInvite";
 import ProjectSprints from "~/features/settings/components/ProjectSprints";
-import ProjectTheme from "~/features/settings/components/ProjectTheme";
 import SettingsSection from "~/features/settings/components/SettingsSection";
 import UsersTable from "~/features/settings/components/users-table";
 import { generalSettings } from "~/features/settings/settingsConfig";
@@ -28,7 +26,6 @@ type Params = {
 
 async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 	const user = await currentUser();
-	const aiLimitCount = await getAiLimitCount();
 	if (!user) {
 		redirect(
 			constructToastURL(
@@ -50,9 +47,6 @@ async function ProjectSettingsGeneral({ params: { projectId } }: Params) {
 
 	const componentMap = {
 		General: <ProjectInfo project={project} />,
-		Appearance: (
-			<ProjectTheme project={project} aiLimitCount={aiLimitCount} />
-		),
 		Invite: <ProjectInvite project={project} />,
 		Sprints: <ProjectSprints sprints={sprints ?? []} project={project} />,
 		GitHub: <ProjectGithub project={project} />,

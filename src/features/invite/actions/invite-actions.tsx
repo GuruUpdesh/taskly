@@ -15,7 +15,7 @@ import { db } from "~/db";
 import { env } from "~/env.mjs";
 import ProjectInviteEmail from "~/features/invite/project-invite-email-template";
 import { createNotification } from "~/features/notifications/actions/notification-actions";
-import { invites, users, usersToProjects } from "~/schema";
+import { invites, projects, users, usersToProjects } from "~/schema";
 
 const getInviteSchema = z.object({
 	userId: z.string(),
@@ -122,11 +122,7 @@ export async function joinProject(token: string) {
 	}
 }
 
-export async function sendEmailInvites(
-	projectId: number,
-	emails: string[],
-	projectName = "",
-) {
+export async function sendEmailInvites(projectId: number, emails: string[]) {
 	const { userId } = await auth();
 	if (!userId) {
 		return {
@@ -155,12 +151,24 @@ export async function sendEmailInvites(
 		};
 	}
 
+	const projectResults = await db
+		.select()
+		.from(projects)
+		.where(eq(projects.id, projectId));
+
+	if (!projectResults[0]) {
+		return {
+			status: false,
+			message: "Invites failed to send",
+		};
+	}
+
 	const email = {
-		from: "no-reply@tasklypm.com",
-		subject: `Invitation to join a project ${projectName} on Taskly`,
+		from: "Taskly@tasklypm.com",
+		subject: `You are Invited! Join ${projectResults[0].name} on Taskly`,
 		html: render(
 			<ProjectInviteEmail
-				projectName={projectName}
+				projectName={projectResults[0].name}
 				token={inviteToken}
 				inviteUserName={user.username}
 			/>,

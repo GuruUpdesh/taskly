@@ -19,13 +19,14 @@ import CreateProjectDialog from "./CreateProjectDialog";
 
 type Props = {
 	projects: Project[];
+	children: React.ReactNode;
 };
 
 function getProjectImageURL(url: string) {
 	return url;
 }
 
-const ProjectList = ({ projects }: Props) => {
+const ProjectList = ({ projects, children }: Props) => {
 	const currentProject = useRealtimeStore((state) => state.project);
 
 	function renderProjectImage(project: Project | null | undefined) {
@@ -66,15 +67,18 @@ const ProjectList = ({ projects }: Props) => {
 
 	return (
 		<div>
-			<CreateProjectDialog>
-				<Button
-					variant="ghost"
-					className="h-[36px] w-full justify-start gap-2 rounded-xl"
-				>
-					<DiamondPlus className="h-4 w-4" />
-					Add Project
-				</Button>
-			</CreateProjectDialog>
+			<div className="flex items-center gap-1">
+				<CreateProjectDialog>
+					<Button
+						variant="ghost"
+						className="h-[36px] w-full justify-start gap-2 rounded-l-xl"
+					>
+						<DiamondPlus className="h-4 w-4" />
+						Add Project
+					</Button>
+				</CreateProjectDialog>
+				{children}
+			</div>
 			{projects.map((project) => {
 				return (
 					<SimpleTooltip
@@ -82,17 +86,18 @@ const ProjectList = ({ projects }: Props) => {
 						label={`Project ${project.id}`}
 						side="right"
 					>
-						<Link href={`/project/${project.id}/tasks`}>
-							<Button
-								variant="ghost"
-								className={cn(
-									"group relative h-[36px] w-full justify-between gap-2 rounded-xl font-normal text-foreground opacity-50 transition-all hover:opacity-100",
-									{
-										"opacity-100":
-											project.id === currentProject?.id,
-									},
-								)}
-							>
+						<Button
+							variant="ghost"
+							className={cn(
+								"group relative h-[36px] w-full justify-between gap-2 rounded-xl font-normal text-foreground opacity-50 transition-all hover:opacity-100",
+								{
+									"opacity-100":
+										project.id === currentProject?.id,
+								},
+							)}
+							asChild
+						>
+							<Link href={`/project/${project.id}/tasks`}>
 								{project.name}
 								<span
 									className="relative h-3 w-3 rounded-full"
@@ -100,8 +105,8 @@ const ProjectList = ({ projects }: Props) => {
 										backgroundColor: project?.color,
 									}}
 								></span>
-							</Button>
-						</Link>
+							</Link>
+						</Button>
 					</SimpleTooltip>
 				);
 			})}

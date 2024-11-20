@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import Message from "~/components/Message";
 import { Button } from "~/components/ui/button";
 import {
@@ -33,9 +35,12 @@ function DeleteProjectButton({ projectName, projectId }: Props) {
 		setIsMatch(value === projectName);
 	};
 
+	const router = useRouter();
 	const deleteProject = async () => {
 		if (isMatch) {
+			router.prefetch("/app");
 			await handleDeleteProject(projectId);
+			router.push("/app");
 		}
 	};
 

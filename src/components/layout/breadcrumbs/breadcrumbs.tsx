@@ -48,7 +48,7 @@ function getCrumbs(
 			if (crumbType === "task") {
 				breadcrumbList.push({
 					name: "Tasks",
-					link: `/${crumbs[0]}/${nextCrumb}/tasks`,
+					link: `/${crumbs[0]}/${crumbs[1]}/tasks`,
 				});
 			}
 

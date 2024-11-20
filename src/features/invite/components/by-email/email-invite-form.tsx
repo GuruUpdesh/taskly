@@ -71,7 +71,7 @@ const EmailInviteForm = ({
 	};
 
 	return (
-		<div className="space-y-2">
+		<div className="w-full space-y-2">
 			<Input
 				value={inputValue}
 				onChange={(e) => setInputValue(e.target.value)}

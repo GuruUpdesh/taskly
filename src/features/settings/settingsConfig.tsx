@@ -1,8 +1,4 @@
-import {
-	GitHubLogoIcon,
-	InfoCircledIcon,
-	MarginIcon,
-} from "@radix-ui/react-icons";
+import { GitHubLogoIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { AlertTriangle } from "lucide-react";
 import { AiOutlineTeam } from "react-icons/ai";
 import { PiPersonSimpleRun } from "react-icons/pi";
@@ -21,10 +17,6 @@ export const generalSettings: settingsConfig[] = [
 		title: "General",
 		icon: <InfoCircledIcon />,
 		allowedRoles: ["owner", "admin"],
-	},
-	{
-		title: "Appearance",
-		icon: <MarginIcon />,
 	},
 	{
 		title: "GitHub",

@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 
 import { db } from "~/db";
 import { env } from "~/env.mjs";
-import { projects, sprints, tasks } from "~/schema";
+import { type Project, projects, sprints, tasks } from "~/schema";
 
 type Sprint =
 	| {
@@ -74,10 +74,27 @@ export async function GET(request: NextRequest) {
 		});
 	}
 
-	const allProjects = await db.select().from(projects);
+	const searchParams = request.nextUrl.searchParams;
+	const projectId = searchParams.get("projectId");
+
+	let projectsToRun: Project[] = [];
+	if (projectId) {
+		const requestedProjectResults = await db
+			.select()
+			.from(projects)
+			.where(eq(projects.id, parseInt(projectId)));
+
+		if (requestedProjectResults[0]) {
+			projectsToRun = [requestedProjectResults[0]];
+		}
+	} else {
+		const allProjects = await db.select().from(projects);
+		projectsToRun = allProjects;
+	}
+
 	const results: Results = {};
 
-	for (const project of allProjects) {
+	for (const project of projectsToRun) {
 		const projectId = project.id;
 		results[projectId] = [];
 
@@ -128,7 +145,7 @@ export async function GET(request: NextRequest) {
 	}
 
 	// update non-finished tasks of current sprint to backlog
-	for (const project of allProjects) {
+	for (const project of projectsToRun) {
 		const projectId = project.id;
 		console.log("------------------\n\n");
 		console.log(projectId, project.name);

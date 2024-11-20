@@ -68,7 +68,7 @@ export const ProjectInviteEmail = ({
 							href={"https://www.tasklypm.com/"}
 							className="text-blue-600 no-underline"
 						>
-							TasklyPM.com
+							tasklypm.com
 						</Link>
 						, simplified project management.
 					</Text>
