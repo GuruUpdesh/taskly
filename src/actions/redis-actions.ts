@@ -5,6 +5,7 @@ import { kv } from "@vercel/kv";
 import { z } from "zod";
 
 import { authenticate } from "~/actions/security/authenticate";
+import { logger } from "~/lib/logger";
 import { type Project, selectProjectSchema } from "~/schema";
 
 import { getAllProjects } from "./project-actions";
@@ -20,57 +21,58 @@ export async function updateUserApplicationData(pathname: string) {
 }
 
 export async function getUserApplicationData() {
-	const user = await auth();
+	const userId = await authenticate();
 
-	if (!user || !user.userId) {
-		return;
-	}
+	const childLogger = logger.child({ userId });
+	childLogger.info("[APP ROUTER]");
 
-	const projectsForUser = await getAllProjects(user.userId);
-	console.log(
-		"Application Router > projects for user",
-		user.userId,
-		projectsForUser?.map((p) => p.id),
+	const projectsForUser = await getAllProjects(userId);
+	childLogger.debug(
+		{ projectsForUser: projectsForUser?.map((p) => p.id) },
+		"[APP ROUTER] projects for user",
 	);
+
 	let validUrlPrefix = [] as string[];
 	if (projectsForUser) {
 		validUrlPrefix = projectsForUser.map(
 			(project) => `/project/${project.id}`,
 		);
 	}
-	console.log("Application Router > validUrlPrefix", validUrlPrefix);
+	childLogger.debug({ validUrlPrefix }, "[APP ROUTER] valid URL Prefixes");
 
-	const data = await kv.get(user.userId);
+	const data = await kv.get(userId);
 	const dataValidation = UserApplicationDataSchema.safeParse(data);
 	if (!dataValidation.success) {
-		console.log("Application Router > validation failed");
+		childLogger.warn("[APP ROUTER] validation failed");
 		if (validUrlPrefix.length === 0) {
-			console.log("Application Router -> create project");
+			childLogger.info("[APP ROUTER] -> create project");
 			return { lastApplicationPath: "/create-project" };
 		} else if (validUrlPrefix[0]) {
-			console.log("Application Router -> tasks");
+			childLogger.info(`[APP ROUTER] -> ${validUrlPrefix[0] + "/tasks"}`);
 			return {
 				lastApplicationPath: validUrlPrefix[0] + "/tasks",
 			};
 		}
-		console.log("Application Router -> home");
+		childLogger.info("[APP ROUTER] -> home");
 		return { lastApplicationPath: "/" };
 	}
 
 	const applicationData = dataValidation.data;
-	console.log("Application Router > applicationData", applicationData);
+	childLogger.debug({ applicationData }, "[APP ROUTER] applicationData");
 
 	// check that applicationData starts with one of the validUrlPrefixes
 	const validProjectPaths = validUrlPrefix.filter((prefix) =>
 		applicationData.lastApplicationPath.startsWith(prefix),
 	);
 	if (validProjectPaths.length === 0) {
-		console.log("Application Router > No valid project paths");
+		childLogger.warn("[APP ROUTER] No valid project paths");
 		if (validUrlPrefix.length === 0) {
-			console.log("Application Router -> create project");
+			childLogger.info(
+				"[APP ROUTER] -> create project (User has no projects)",
+			);
 			return { lastApplicationPath: "/create-project" };
 		} else if (validUrlPrefix[0]) {
-			console.log("Application Router -> tasks");
+			childLogger.info(`[APP ROUTER] -> ${validUrlPrefix[0] + "/tasks"}`);
 			return {
 				lastApplicationPath: validUrlPrefix[0] + "/tasks",
 			};

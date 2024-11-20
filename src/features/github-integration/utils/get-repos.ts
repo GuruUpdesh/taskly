@@ -2,6 +2,8 @@
 
 import { z } from "zod";
 
+import { logger } from "~/lib/logger";
+
 export async function getRepos(accessToken: string) {
 	const url = `https://api.github.com/installation/repositories`;
 	const response = await fetch(url, {
@@ -27,8 +29,8 @@ export async function getRepos(accessToken: string) {
 	});
 	const result = resultSchema.parse(data);
 
-	console.log(
-		"GitHub Integration: successful got repos",
+	logger.info(
+		"[GITHUB INTEGRATION]: successful got repos",
 		result.repositories,
 	);
 	return result.repositories;

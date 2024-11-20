@@ -5,6 +5,8 @@ import { db } from "~/db";
 import { env } from "~/env.mjs";
 import { users } from "~/schema";
 
+import { logger } from "./lib/logger";
+
 const clerkUserSchema = z.object({
 	id: z.string(),
 	username: z.string(),
@@ -55,7 +57,7 @@ export async function register() {
 			profilePicture: user.image_url,
 		}));
 		untrackedUsers.push(...usersData);
-		console.log(`Inserting ${usersData.length} users into the database`);
+		logger.info(`Inserting ${usersData.length} users into the database`);
 	}
 
 	await db

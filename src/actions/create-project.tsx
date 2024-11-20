@@ -102,7 +102,7 @@ export async function createProject(
 			message: `Project "${newProject.name}" created`,
 		};
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		return handleCreateProjectError(error);
 	}
 }

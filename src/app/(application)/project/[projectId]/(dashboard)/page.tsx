@@ -17,6 +17,7 @@ import Figures from "~/features/dashboard/components/Figures";
 import UserGreeting from "~/features/dashboard/components/UserGreeting";
 import { getAllNotifications } from "~/features/notifications/actions/notification-actions";
 import RecentTasks from "~/features/tasks/components/RecentTasks";
+import { logger } from "~/lib/logger";
 
 export const metadata: Metadata = {
 	title: "Dashboard",
@@ -42,7 +43,7 @@ async function ProjectPage({ params: { projectId } }: ProjectPageProps) {
 
 	const notificationsResult = await getAllNotifications(user.id);
 	if (notificationsResult.error !== null) {
-		console.error(notificationsResult.error);
+		logger.error(notificationsResult.error);
 		return (
 			<Message type="error" className="min-w-[600px]">
 				{notificationsResult.error}

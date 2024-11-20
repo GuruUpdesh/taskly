@@ -16,6 +16,7 @@ import AppSidebar from "~/components/layout/sidebar/AppSidebar";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import { getAiLimitCount } from "~/features/ai/actions/ai-limit-actions";
 import { getAllNotifications } from "~/features/notifications/actions/notification-actions";
+import { logger } from "~/lib/logger";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
 
 import ProjectState from "./project-state";
@@ -72,7 +73,7 @@ export default async function ApplicationLayout({
 		queryFn: async () => {
 			const result = await getAllNotifications(user.id);
 			if (result.error !== null) {
-				console.error(result.error);
+				logger.error(result.error);
 				return [];
 			}
 			return result.data;

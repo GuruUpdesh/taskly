@@ -4,6 +4,7 @@ import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "~/db";
+import { logger } from "~/lib/logger";
 import {
 	notifications,
 	insertNotificationSchema,
@@ -22,7 +23,7 @@ export async function createNotification(data: NewNotification) {
 
 		return { success: true, message: "Notification created" };
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) {
 			throwServerError(error.message ?? "Error creating notification");
 		}
@@ -62,7 +63,7 @@ export async function getAllNotifications(
 		});
 		return { data: allNotifications, error: null };
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) {
 			return { data: null, error: error.message };
 		}
@@ -80,7 +81,7 @@ export async function readNotification(notificationId: number) {
 			.where(eq(notifications.id, notificationId));
 		revalidatePath("/");
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) throwServerError(error.message);
 	}
 }
@@ -95,7 +96,7 @@ export async function unreadNotification(notificationId: number) {
 			.where(eq(notifications.id, notificationId));
 		revalidatePath("/");
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) throwServerError(error.message);
 	}
 }
@@ -107,7 +108,7 @@ export async function deleteNotification(notificationId: number) {
 			.where(eq(notifications.id, notificationId));
 		revalidatePath("/");
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) throwServerError(error.message);
 	}
 }
@@ -117,7 +118,7 @@ export async function deleteAllNotifications(userId: string) {
 		await db.delete(notifications).where(eq(notifications.userId, userId));
 		revalidatePath("/");
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) throwServerError(error.message);
 	}
 }
@@ -132,7 +133,7 @@ export async function readAllNotifications(userId: string) {
 			.where(eq(notifications.userId, userId));
 		revalidatePath("/");
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) throwServerError(error.message);
 	}
 }

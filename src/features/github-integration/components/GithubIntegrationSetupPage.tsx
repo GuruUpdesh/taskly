@@ -10,6 +10,7 @@ import { toast } from "sonner";
 
 import { Button } from "~/components/ui/button";
 import { resolvePendingIntegration } from "~/features/github-integration/actions/resolve-pending-integration";
+import { logger } from "~/lib/logger";
 import { cn } from "~/lib/utils";
 import typography from "~/styles/typography";
 
@@ -29,8 +30,8 @@ const GithubIntegrationSetupPage = () => {
 				})
 				.catch((error) => {
 					setError(true);
-					console.error(
-						"Failed to resolve pending integration:",
+					logger.error(
+						"[GITHUB INTEGRATION] Failed to resolve pending integration:",
 						error,
 					);
 					toast.error("Failed to resolve pending integration", {

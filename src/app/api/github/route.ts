@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "~/db";
+import { logger } from "~/lib/logger";
 import { taskHistory, tasks } from "~/schema";
 
 export async function POST(request: Request) {
@@ -23,13 +24,14 @@ export async function POST(request: Request) {
 			}),
 		});
 		const result = schema.parse(body);
-		console.log("Github Webhook", result);
+
+		logger.info({ result }, "[GITHUB WEBHOOK]");
 		const project = await db.query.projects.findFirst({
 			where: (project) =>
 				eq(project.githubIntegrationId, result.installation.id),
 		});
 		if (!project) {
-			console.error("Project not found");
+			logger.error("[GITHUB WEBHOOK] Project not found");
 			return Response.json({ message: "Project not found" });
 		}
 
@@ -38,7 +40,7 @@ export async function POST(request: Request) {
 		});
 
 		if (!task) {
-			console.error("Task not found");
+			logger.error("[GITHUB WEBHOOK] Task not found");
 			return Response.json({ message: "Task not found" });
 		}
 
@@ -138,7 +140,7 @@ export async function POST(request: Request) {
 
 		return Response.json({ message: "Received" });
 	} catch (e) {
-		console.error(e);
+		logger.error(e);
 		return new Response("Bad Request", {
 			status: 404,
 		});

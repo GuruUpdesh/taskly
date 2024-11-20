@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 
 import { Skeleton } from "~/components/ui/skeleton";
 import { db } from "~/db";
+import { logger } from "~/lib/logger";
 import { sprints, tasks } from "~/schema";
 import { getCurrentSprintId } from "~/utils/getCurrentSprintId";
 
@@ -52,7 +53,7 @@ const CurrentSprintGraph = async ({ projectId }: Props) => {
 	);
 
 	if (!currentSprint) {
-		console.warn("No active sprint found.");
+		logger.warn("No active sprint found.");
 		return;
 	}
 

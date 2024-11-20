@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "~/db";
+import { logger } from "~/lib/logger";
 import {
 	projects,
 	insertProjectSchema,
@@ -34,8 +35,7 @@ export async function getAllProjects(userId: string) {
 
 		return allProjects;
 	} catch (error) {
-		// if (error instanceof Error) throwServerError(error.message);
-		console.error(error);
+		logger.error(error);
 	}
 }
 
@@ -71,7 +71,7 @@ export async function getProject(
 
 		return { data: projectQuery, error: null };
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) {
 			return { data: null, error: error.message };
 		}
@@ -113,7 +113,7 @@ export async function getAssigneesForProject(
 
 		return { data: assignees, error: null };
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) {
 			return { data: null, error: error.message };
 		}

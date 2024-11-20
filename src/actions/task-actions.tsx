@@ -77,7 +77,7 @@ export async function createTask(data: CreateTaskData) {
 			const validationError = fromZodError(error);
 			if (validationError) throw Error(validationError.message);
 		}
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) throwServerError(error.message);
 	}
 }
@@ -314,7 +314,7 @@ export async function getTask(id: number) {
 
 		return { data: taskQuery, error: null };
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		if (error instanceof Error) {
 			return { data: null, error: error.message };
 		}
