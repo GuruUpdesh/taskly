@@ -1,11 +1,6 @@
 "use server";
 
-import { put } from "@vercel/blob";
 import { addMinutes, startOfDay } from "date-fns";
-import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
-import OpenAI from "openai";
-import sharp from "sharp";
 
 import { authenticate } from "~/actions/security/authenticate";
 import { createSprintForProject } from "~/actions/sprint-actions";

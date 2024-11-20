@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
@@ -15,7 +16,6 @@ import type { Project } from "~/schema";
 import { useRealtimeStore } from "~/store/realtime";
 
 import CreateProjectDialog from "./CreateProjectDialog";
-import SimpleTooltip from "~/components/SimpleTooltip";
 
 type Props = {
 	projects: Project[];
