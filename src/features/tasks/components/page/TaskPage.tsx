@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { ArrowLeftIcon, TrashIcon } from "@radix-ui/react-icons";
+import { TrashIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ClipboardCopy, GitBranch, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
@@ -123,16 +123,19 @@ const TaskPage = ({ taskId, projectId, context }: Props) => {
 				<div className="flex max-h-[calc(100svh-1rem)] w-3/4 flex-col border-r border-foreground/10">
 					<div className="flex-1 overflow-y-auto">
 						<PageHeader breadCrumbs>
-							<Link href={`/project/${projectId}/tasks`}>
-								<Button
-									size="sm"
-									variant="outline"
-									className="flex items-center gap-2 rounded-xl bg-background-dialog"
+							{context === "inbox" && (
+								<Link
+									href={`/project/${projectId}/task/${result.data.data.id}`}
 								>
-									<ArrowLeftIcon />
-									Tasks
-								</Button>
-							</Link>
+									<Button
+										size="sm"
+										variant="outline"
+										className="flex items-center gap-2 rounded-xl bg-background-dialog"
+									>
+										Open
+									</Button>
+								</Link>
+							)}
 						</PageHeader>
 						<PrimaryTaskForm
 							task={result.data.data}

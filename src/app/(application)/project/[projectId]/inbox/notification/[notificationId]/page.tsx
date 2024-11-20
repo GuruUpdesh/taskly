@@ -1,11 +1,13 @@
 import React from "react";
 
+import { BellIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
-import Message from "~/components/Message";
+import SimpleTooltip from "~/components/SimpleTooltip";
 import { getNotification } from "~/features/notifications/actions/notification-actions";
 import { TaskPageWrapper } from "~/features/tasks/components/page/TaskPageWrapper";
 import constructToastURL from "~/lib/toast/global-toast-url-constructor";
+import { formatDateRelative, formatDateVerbose } from "~/utils/dateFormatters";
 
 type Params = {
 	params: {
@@ -34,11 +36,28 @@ export default async function InboxPage({
 	}
 
 	if (!notification[0].taskId) {
-		console.log("task id is null");
 		return (
-			<Message type="info">
-				<p>{notification[0].message}</p>
-			</Message>
+			<div className="flex w-full justify-center py-[57px]">
+				<div className="flex flex-col gap-2 rounded-lg bg-foreground/5 px-6 py-6">
+					<div className="flex items-center gap-2 border-b pb-2">
+						<BellIcon className="h-4 w-4" />
+						<p className="font-medium">System Notification</p>
+						<SimpleTooltip
+							label={formatDateVerbose(notification[0].date)}
+						>
+							<p
+								suppressHydrationWarning
+								className="flex-shrink-0 whitespace-nowrap text-muted-foreground"
+							>
+								{formatDateRelative(notification[0].date)}
+							</p>
+						</SimpleTooltip>
+					</div>
+					<div className="rounded-lg bg-accent p-4">
+						{notification[0].message}
+					</div>
+				</div>
+			</div>
 		);
 	}
 

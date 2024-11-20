@@ -64,7 +64,7 @@ export const TaskStatus = ({ status }: Props) => {
 	return (
 		<PropertyBadge
 			option={option}
-			size="iconSm"
+			size="iconXs"
 			className={cn("aspect-square group-hover:shadow-lg", {
 				"group-hover:border-background": status === "backlog",
 			})}

@@ -321,7 +321,23 @@ export default function TasksContainer({ projectId }: Props) {
 								>
 									<div>
 										<SimpleTooltip
-											label={`Add ${option.displayName} Task`}
+											label={
+												<span className="flex items-center gap-1">
+													Add{" "}
+													<span
+														className={cn(
+															"test-xs flex items-center gap-1 rounded-xl px-1",
+															taskVariants({
+																color: option.color,
+															}),
+														)}
+													>
+														{option.icon}
+														{option.displayName}
+													</span>
+													Task
+												</span>
+											}
 										>
 											<Button
 												size="icon"

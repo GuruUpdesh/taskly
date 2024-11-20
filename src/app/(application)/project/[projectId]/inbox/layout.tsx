@@ -24,18 +24,17 @@ export default async function InboxLayout({
 	}
 
 	return (
-		<div className="grid h-svh grid-cols-4">
-			<div className="col-span-1 flex flex-col border-r">
-				<PageHeader>
-					<h3 className="scroll-m-20 text-2xl font-medium tracking-tight">
+		<div className="relative grid h-[calc(100svh-1rem-1px)] grid-cols-4">
+			<div className="col-span-1 flex h-full flex-col overflow-hidden border-r">
+				<PageHeader className="h-[57px]" toggle={false}>
+					<h3 className="text-2xl font-medium tracking-tight">
 						Inbox
 					</h3>
+					<div className="flex-1" />
+					<InboxButtons user={user.id} />
 				</PageHeader>
-				<InboxButtons user={user.id} />
-				<section className="flex flex-col overflow-y-scroll">
-					<div className="flex flex-grow flex-col overflow-y-auto">
-						<NotificationList projectId={projectId} />
-					</div>
+				<section className="max-w-full flex-1 overflow-y-auto overflow-x-hidden">
+					<NotificationList projectId={projectId} />
 				</section>
 			</div>
 			<div className="col-span-3">{children}</div>

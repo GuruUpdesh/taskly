@@ -15,10 +15,14 @@ import { cn } from "~/lib/utils";
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
 	breadCrumbs?: boolean;
+	toggle?: boolean;
 };
 
 const PageHeader = React.forwardRef<HTMLDivElement, Props>(
-	({ children, className, breadCrumbs = false, ...props }, ref) => {
+	(
+		{ children, className, toggle = true, breadCrumbs = false, ...props },
+		ref,
+	) => {
 		return (
 			<header
 				className={cn(
@@ -28,11 +32,15 @@ const PageHeader = React.forwardRef<HTMLDivElement, Props>(
 				ref={ref}
 				{...props}
 			>
-				<div className="flex items-center gap-2">
-					<SidebarTrigger />
-					{breadCrumbs && <BreadCrumbs />}
+				{toggle && (
+					<div className="flex items-center gap-2">
+						<SidebarTrigger />
+						{breadCrumbs && <BreadCrumbs />}
+					</div>
+				)}
+				<div className="flex w-full items-center justify-end gap-2">
+					{children}
 				</div>
-				<div className="flex items-center gap-2">{children}</div>
 			</header>
 		);
 	},

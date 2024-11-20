@@ -106,7 +106,7 @@ async function createTaskCreateNotification(
 
 	await createNotification({
 		date: new Date(),
-		message: `Task "${newTask.title}" was created and assigned to you.`,
+		message: `was created and assigned to you.`,
 		userId: assignee[0]?.userId ?? "unassigned",
 		taskId: taskId,
 		projectId: newTask.projectId,

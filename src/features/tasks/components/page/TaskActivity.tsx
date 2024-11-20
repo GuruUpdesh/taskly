@@ -2,11 +2,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { formatRelative } from "date-fns";
+import { isAfter, subHours } from "date-fns";
 
 import SimpleTooltip from "~/components/SimpleTooltip";
 import { Button } from "~/components/ui/button";
 import { type TaskToView } from "~/schema";
+import { formatDateRelative, formatDateVerbose } from "~/utils/dateFormatters";
 
 import TaskHistoryItem, { type TaskHistoryWithUser } from "../HistoryItem";
 
@@ -48,13 +49,21 @@ const TaskActivity = ({ taskHistory, lastViewed }: Props) => {
 	const displayedHistory = useMemo(() => {
 		if (lastViewedDate) {
 			// Show only new activity if showAllHistory is false
-			let filteredHistory = sortedHistory.filter(
-				(item) => new Date(item.insertedDate) > lastViewedDate,
+			let filteredHistory = sortedHistory.filter((item) =>
+				isAfter(new Date(item.insertedDate), lastViewedDate),
 			);
 
-			// Always the latest history
-			if (filteredHistory.length < 1 && sortedHistory.length > 1) {
-				if (sortedHistory[0]) filteredHistory = [sortedHistory[0]];
+			// Show latest history within the last hour if no new items
+			if (filteredHistory.length < 1 && sortedHistory.length > 0) {
+				const oneHourAgo = subHours(new Date(), 1);
+				filteredHistory = sortedHistory.filter((item) =>
+					isAfter(new Date(item.insertedDate), oneHourAgo),
+				);
+
+				// If still no items within last hour, show the most recent item
+				if (filteredHistory.length === 0 && sortedHistory[0]) {
+					filteredHistory = [sortedHistory[0]];
+				}
 			}
 
 			return showAllHistory ? sortedHistory : filteredHistory;
@@ -72,8 +81,12 @@ const TaskActivity = ({ taskHistory, lastViewed }: Props) => {
 				</h3>
 				{lastViewedDate && (
 					<p className="text-sm text-muted-foreground">
-						You last viewed{" "}
-						{formatRelative(lastViewedDate, new Date())}
+						You last viewed at{" "}
+						<SimpleTooltip
+							label={formatDateVerbose(lastViewedDate)}
+						>
+							<span>{formatDateRelative(lastViewedDate)}</span>
+						</SimpleTooltip>
 					</p>
 				)}
 				<div className="flex flex-col gap-4 px-3">
@@ -81,29 +94,29 @@ const TaskActivity = ({ taskHistory, lastViewed }: Props) => {
 						<TaskHistoryItem key={history.id} history={history} />
 					))}
 				</div>
-				{sortedHistory.length > 10 && (
-					<div className="relative flex w-full justify-center">
-						<span className="absolute top-[50%] z-10 h-[1px] w-full bg-gradient-to-r from-transparent via-border to-transparent" />
-						<SimpleTooltip
-							label={showAllHistory ? "Show Less" : "Show All"}
+
+				<div className="relative flex w-full justify-center">
+					<span className="absolute top-[50%] z-10 h-[1px] w-full bg-gradient-to-r from-transparent via-border to-transparent" />
+					<SimpleTooltip
+						label={showAllHistory ? "Show Less" : "Show All"}
+					>
+						<Button
+							size="icon"
+							variant="outline"
+							onClick={() => setShowAllHistory(!showAllHistory)}
+							className="z-10 rounded-xl bg-background-dialog p-1"
 						>
-							<Button
-								size="icon"
-								variant="outline"
-								onClick={() =>
-									setShowAllHistory(!showAllHistory)
-								}
-								className="z-10 rounded-xl bg-background-dialog p-1"
-							>
-								{showAllHistory ? (
-									<ChevronDownIcon className="rotate-180" />
-								) : (
-									<ChevronDownIcon />
-								)}
-							</Button>
-						</SimpleTooltip>
-					</div>
-				)}
+							<span className="sr-only">
+								{showAllHistory ? "Show Less" : "Show All"}
+							</span>
+							{showAllHistory ? (
+								<ChevronDownIcon className="rotate-180" />
+							) : (
+								<ChevronDownIcon />
+							)}
+						</Button>
+					</SimpleTooltip>
+				</div>
 			</div>
 		</div>
 	);

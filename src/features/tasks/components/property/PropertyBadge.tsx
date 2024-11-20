@@ -17,7 +17,7 @@ const propertyVariants = cva(["flex items-center gap-2"], {
 			sm: "rounded-sm px-3 text-sm",
 			icon: "h-10 w-10 flex items-center justify-center rounded-lg",
 			iconSm: "h-8 w-8 flex items-center justify-center rounded-lg",
-			iconXs: "h-4 w-4 flex items-center justify-center rounded-lg",
+			iconXs: "h-6 w-6 flex items-center justify-center rounded-lg",
 		},
 	},
 	defaultVariants: {

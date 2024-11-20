@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { ChevronRight, Loader2, Sparkle } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -188,7 +187,7 @@ const AiDialog = ({ projectId }: Props) => {
 									render={({ field }) => (
 										<FormItem>
 											<Textarea
-												placeholder="Describe the task/s you would like to create..."
+												placeholder="Describe the tasks you would like to create..."
 												className="h-[200px] max-h-[180px] bg-transparent"
 												{...field}
 											/>
@@ -209,16 +208,6 @@ const AiDialog = ({ projectId }: Props) => {
 							</span>
 						</SimpleTooltip>
 						<div className="flex-1" />
-						<DialogClose asChild>
-							<Button
-								type="button"
-								variant="outline"
-								onClick={resetForm}
-								className="bg-transparent"
-							>
-								Close
-							</Button>
-						</DialogClose>
 						<Button
 							className="flex items-center gap-2"
 							onClick={form.handleSubmit(onSubmit)}
@@ -230,8 +219,8 @@ const AiDialog = ({ projectId }: Props) => {
 							variant="secondary"
 						>
 							{form.formState.isSubmitting
-								? "Submitting"
-								: "Submit"}
+								? "Creating"
+								: "Create"}
 							{form.formState.isSubmitting ? (
 								<Loader2 className="h-4 w-4 animate-spin" />
 							) : (
