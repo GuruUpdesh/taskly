@@ -57,9 +57,13 @@ export function getSprintProgress(sprint: Sprint) {
 		return 0;
 	}
 
-	const now = new Date();
-	const sprintDuration =
-		sprint.endDate.getTime() - sprint.startDate.getTime();
-	const elapsed = now.getTime() - sprint.startDate.getTime();
-	return Math.min(Math.max(elapsed / sprintDuration, 0), 1); // Clamp between 0 and 1
+	try {
+		const now = new Date();
+		const sprintDuration =
+			sprint.endDate.getTime() - sprint.startDate.getTime();
+		const elapsed = now.getTime() - sprint.startDate.getTime();
+		return Math.min(Math.max(elapsed / sprintDuration, 0), 1); // Clamp between 0 and 1
+	} catch (error) {
+		return 0;
+	}
 }
