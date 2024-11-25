@@ -27,7 +27,7 @@ import {
 	DialogTrigger,
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
-import { aiAction } from "~/features/ai/actions/ai-action";
+import { smartPropertiesAction } from "~/features/ai/actions/ai-action";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/features/ai/utils/aiLimit";
 import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
 import PropertySelect from "~/features/tasks/components/property/PropertySelect";
@@ -227,7 +227,11 @@ const TaskCreateForm = ({
 			return;
 		}
 		setIsLoading(true);
-		const airesponse = await aiAction(title, description, assignees);
+		const airesponse = await smartPropertiesAction(
+			title,
+			description,
+			assignees,
+		);
 		setIsLoading(false);
 		if (airesponse) {
 			const userName = assignees.find(

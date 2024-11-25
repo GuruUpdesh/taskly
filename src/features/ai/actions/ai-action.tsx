@@ -16,7 +16,7 @@ const openai = new OpenAI({
 	apiKey: env.OPENAI_API_KEY,
 });
 
-export async function aiAction(
+export async function smartPropertiesAction(
 	title: string,
 	description: string,
 	assignees: User[],
@@ -35,15 +35,19 @@ export async function aiAction(
 
 	const users = assignees.map((user) => user.username).join(", ");
 	const completion = await openai.beta.chat.completions.parse({
-		model: "gpt-4o-2024-08-06",
+		model: "gpt-4o-mini",
 		messages: [
 			{
 				role: "system",
-				content: `You are an expert in evaluating task information and assigning appropriate properties. The potential values for assignee are: ${users}`,
+				content: `You are an expert in evaluating task information and assigning appropriate properties.
+				The task title should give you a good idea of the subject and the description should include implementation details.
+				Valid assignee values: ${users}
+				`,
 			},
 			{
 				role: "user",
-				content: `What properties should I assign my task "${title}" which is described as: "${description}".`,
+				content: `Assign properties for the following task.
+				Title: ${title}  Description:${description}`,
 			},
 		],
 		response_format: zodResponseFormat(TaskProperties, "task_properties"),
@@ -108,13 +112,17 @@ export async function aiGenerateTask(
 		});
 
 		const systemOutlinePrompt = `
-	You are an expert in agile project management. You are responsible to create a new task or tasks that fulfill the users description. Generally avoid creating too many tasks, unless asked.
-	The description can and should use basic markdown! Please only include the following:
-	# h1,## h2,### h3,**bold**,*italic*,\`code\`,<u>underline</u>,~~slice~~,[link](https://),---,- bullet list,1. ordered list,- [ ] check list
-	\`\`\`
-	Code Block
-	\`\`\`
-	> Quote Block
+	You are an expert in managing projects. It is your job to create a new task or tasks that fulfill the users description. 
+	Guidelines:
+		1. Generally avoid creating too many tasks, unless asked.
+		2. The description can and should use basic markdown!
+		
+	The only valid markdown:
+		# h1,## h2,### h3,**bold**,*italic*,\`code\`,<u>underline</u>,~~slice~~,[link](https://),---,- bullet list,1. ordered list,- [ ] check list
+		\`\`\`
+		Code Block
+		\`\`\`
+		> Quote Block
 	`;
 
 		const context = await getMostRecentTasks(projectId, 7);
@@ -135,19 +143,22 @@ export async function aiGenerateTask(
 		const users = assignees.map((user) => user.username).join(", ");
 
 		const completion = await openai.beta.chat.completions.parse({
-			model: "gpt-4o-2024-08-06",
+			model: "gpt-4o",
 			messages: [
 				{
 					role: "system",
 					content: systemOutlinePrompt,
 				},
 				{
-					role: "user",
-					content: description,
+					role: "system",
+					content: `Context for the project:
+					${contextFormatted}
+					Possible values for assignee:
+					${users}`,
 				},
 				{
-					role: "system",
-					content: `Context for this users request ${contextFormatted}. The only valid options for assignees are: ${users}`,
+					role: "user",
+					content: description,
 				},
 			],
 			response_format: zodResponseFormat(Tasks, "tasks"),

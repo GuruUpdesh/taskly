@@ -35,7 +35,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "~/components/ui/dialog";
-import { aiAction } from "~/features/ai/actions/ai-action";
+import { smartPropertiesAction } from "~/features/ai/actions/ai-action";
 import { AIDAILYLIMIT, timeTillNextReset } from "~/features/ai/utils/aiLimit";
 import { useRegisterCommands } from "~/features/cmd-menu/registerCommands";
 import {
@@ -148,7 +148,7 @@ const TaskDropDownMenu = ({
 			return;
 		}
 
-		const airesponse = await aiAction(
+		const airesponse = await smartPropertiesAction(
 			task.title,
 			task.description,
 			assignees,

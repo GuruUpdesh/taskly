@@ -1,6 +1,6 @@
 import { addDays, differenceInMilliseconds } from "date-fns";
 
-export const AIDAILYLIMIT = 40;
+export const AIDAILYLIMIT = 20;
 
 export function timeTillNextReset() {
 	const now = new Date();
